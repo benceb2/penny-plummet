@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
-import { type GameResult } from '@/types/BlackjackResult';
+import { type BlackjackResult } from '@/types/BlackjackResult';
 
 export const useUserStore = defineStore('user', () => {
   const chips = ref(1000)
@@ -15,7 +15,7 @@ export const useUserStore = defineStore('user', () => {
     chips.value += amount
   }
 
-  function updateStats(gameResult: GameResult) {
+  function updateStats(gameResult: BlackjackResult) {
 
   }
 

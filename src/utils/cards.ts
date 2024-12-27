@@ -18,9 +18,7 @@ export function shuffleDeck(deck: Card[]): Card[] {
 }
 
 export function calculateHandValue(cards: Card[]): number {
-  let value = 0
-  let aces = 0
-
+  let value = cards.reduce((acc, card) => acc + card.value, 0)
 
   return value
 }

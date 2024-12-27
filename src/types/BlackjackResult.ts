@@ -1,4 +1,4 @@
-export interface GameResult {
+export interface BlackjackResult {
   winner: string;
   loser: string;
   winningHand: string;

@@ -1,19 +1,22 @@
-import { GameState } from '@/types/BlackjackGameState';
+import { BlackjackState } from '@/types/BlackjackGameState';
 import type { Card } from '@/types/Card';
+import { generateDeck } from '@/utils/cards';
 import { defineStore } from 'pinia'
 import { ref } from 'vue';
 
 export const useGameStore = defineStore('game', () => {
 
-  const deck = ref([])
-  const playerHand = ref([] as Card[])
-  const dealerHand = ref([])
-  const gameState = ref(GameState)
+  const deck = ref<Card[]>([])
+  const playerHand = ref<Card[]>([])
+  const dealerHand = ref<Card[]>([])
+  const gameState = ref(BlackjackState.betting)
   const currentBet = ref(0)
 
   function dealCards() {
-    console.log('dealing cards')
-
+    deck.value = generateDeck()
+    playerHand.value = [deck.value.pop()!, deck.value.pop()!]
+    dealerHand.value = [deck.value.pop()!, { ...deck.value.pop()!, faceUp: false }]
+    gameState.value = BlackjackState.playerTurn
   }
 
   function hit() {

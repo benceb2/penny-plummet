@@ -1,22 +1,37 @@
+import { GameState } from '@/types/GameState';
 import { defineStore } from 'pinia'
+import { ref } from 'vue';
 
-export const useGameStore = defineStore('game', {
-  state: () => ({
-    deck: [],
-    playerHand: [],
-    dealerHand: [],
-    gameState: 'betting', // betting | playerTurn | dealerTurn | roundOver
-    currentBet: 0
-  }),
-  actions: {
-    dealCards() {
+export const useGameStore = defineStore('game', () => {
 
-    },
-    hit() {
+  const deck = ref([])
+  const playerHand = ref([])
+  const dealerHand = ref([])
+  const gameState = ref(GameState)
+  const currentBet = ref(0)
 
-    },
-    stand() {
+  function dealCards() {
 
-    }
   }
+
+  function hit() {
+
+  }
+
+  function stand() {
+
+  }
+
+
+  return {
+    deck,
+    playerHand,
+    dealerHand,
+    gameState,
+    currentBet,
+    dealCards,
+    hit,
+    stand
+  }
+
 });

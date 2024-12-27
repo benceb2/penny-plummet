@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
-import { type GameResult } from '@/types/GameResult';
+import { type GameResult } from '@/types/BlackjackResult';
 
 export const useUserStore = defineStore('user', () => {
   const chips = ref(1000)

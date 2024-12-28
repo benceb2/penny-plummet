@@ -237,34 +237,55 @@ function setPresetBet(amount: number) {
               </div>
 
               <!-- Action Controls -->
-              <div class="col-md-6">
-                <div
-                  class="d-flex gap-2 flex-wrap justify-content-md-end justify-content-center h-100 align-items-center">
-                  <button
-                    v-if="gameStore.gameState === BlackjackState.betting"
-                    class="btn btn-primary btn-lg"
-                    @click="handleDeal"
-                    :disabled="betAmount <= 0 || betAmount > userStore.chips">
-                    Deal Cards
-                  </button>
+              <div
+                :class="`col-md-${[BlackjackState.playerTurn, BlackjackState.gameOver].includes(gameStore.gameState) ? '12' : '6'}`">
+                <div class="h-100 d-flex flex-column justify-content-center">
+                  <div class="bg-light p-3 rounded text-center">
+                    <h6 class="mb-3">Actions</h6>
 
-                  <template v-if="gameStore.gameState === BlackjackState.playerTurn">
-                    <button
-                      class="btn btn-success btn-lg"
-                      @click="handleHit">
-                      Hit
-                    </button>
-                    <button
-                      class="btn btn-warning btn-lg text-white"
-                      @click="handleStand">
-                      Stand
-                    </button>
-                  </template>
+                    <!-- Betting State -->
+                    <div v-if="gameStore.gameState === BlackjackState.betting"
+                      class="d-grid">
+                      <button
+                        class="btn btn-primary btn-lg"
+                        @click="handleDeal"
+                        :disabled="betAmount <= 0 || betAmount > userStore.chips">
+                        <i class="bi bi-play-fill me-2"></i>
+                        Deal Cards
+                      </button>
+                    </div>
 
-                  <button v-if="gameStore.gameState === BlackjackState.gameOver" class="btn btn-primary btn-lg"
-                    @click="handleNewGame">
-                    New Game
-                  </button>
+                    <!-- Player Turn State -->
+                    <div v-if="gameStore.gameState === BlackjackState.playerTurn"
+                      class="d-flex gap-3 justify-content-center">
+                      <button
+                        class="btn btn-success btn-lg"
+                        style="width: 140px;"
+                        @click="handleHit">
+                        <i class="bi bi-plus-lg me-2"></i>
+                        Hit
+                      </button>
+                      <button
+                        class="btn btn-warning btn-lg text-white"
+                        style="width: 140px;"
+                        @click="handleStand">
+                        <i class="bi bi-hand-thumbs-up-fill me-2"></i>
+                        Stand
+                      </button>
+                    </div>
+
+                    <!-- Game Over State -->
+                    <div v-if="gameStore.gameState === BlackjackState.gameOver"
+                      class="d-flex justify-content-center">
+                      <button
+                        class="btn btn-primary btn-lg"
+                        style="width: 140px;"
+                        @click="handleNewGame">
+                        <i class="bi bi-arrow-repeat me-2"></i>
+                        New Game
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -290,9 +311,5 @@ function setPresetBet(amount: number) {
 
 .playing-card:hover {
   transform: translateY(-10px);
-}
-
-.btn-lg {
-  min-width: 120px;
 }
 </style>

@@ -10,7 +10,7 @@ const isNavOpen = ref(false)
     <div class="d-flex align-items-center justify-content-center">
       <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">Penny Plummet</a>
+          <RouterLink class="navbar-brand" to="/">Penny Plummet</RouterLink>
           <button
             class="navbar-toggler"
             type="button"
@@ -26,7 +26,7 @@ const isNavOpen = ref(false)
             id="navbarNav">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <RouterLink class="nav-link" @click="isNavOpen = false" to="/">Home</RouterLink>
+                <RouterLink class="nav-link" @click="isNavOpen = false" to="/blackjack">Blackjack</RouterLink>
               </li>
               <li class="nav-item">
                 <RouterLink class="nav-link" @click="isNavOpen = false" to="/about">About</RouterLink>

@@ -144,7 +144,7 @@ function setPresetBet(amount: number) {
     </div>
 
     <!-- Dealer's Hand -->
-    <div class="row mb-4">
+    <div v-if="gameStore.dealerHand.length" class="row mb-4">
       <div class="col-12">
         <div class="card shadow-sm">
           <div class="card-header bg-light">
@@ -155,14 +155,11 @@ function setPresetBet(amount: number) {
           </div>
           <div class="card-body">
             <div class="d-flex justify-content-center">
-              <div v-if="gameStore.dealerHand.length" class="hand-display">
+              <div class="hand-display">
                 <PlayingCard
                   v-for="(card, index) in gameStore.dealerHand"
                   :key="index"
                   :card="card" />
-              </div>
-              <div v-else class="text-muted">
-                No cards dealt yet
               </div>
             </div>
           </div>
@@ -171,7 +168,7 @@ function setPresetBet(amount: number) {
     </div>
 
     <!-- Player's Hand -->
-    <div class="row mb-4">
+    <div v-if="gameStore.playerHand.length" class="row mb-4">
       <div class="col-12">
         <div class="card shadow-sm">
           <div class="card-header bg-light">
@@ -182,14 +179,11 @@ function setPresetBet(amount: number) {
           </div>
           <div class="card-body">
             <div class="d-flex justify-content-center">
-              <div v-if="gameStore.playerHand.length" class="hand-display">
+              <div class="hand-display">
                 <PlayingCard
                   v-for="(card, index) in gameStore.playerHand"
                   :key="index"
                   :card="card" />
-              </div>
-              <div v-else class="text-muted">
-                No cards dealt yet
               </div>
             </div>
           </div>
@@ -208,29 +202,31 @@ function setPresetBet(amount: number) {
             <div class="row g-4">
               <!-- Betting Controls -->
               <div class="col-md-6" v-if="gameStore.gameState === BlackjackState.betting">
-                <div class="bg-light p-3 rounded">
-                  <h6 class="mb-3">Quick Bet</h6>
-                  <div class="d-flex flex-wrap gap-2">
-                    <button
-                      v-for="amount in DEFAULT_BETS"
-                      :key="amount"
-                      class="btn btn-outline-primary"
-                      :class="{ 'active': betAmount === amount }"
-                      :disabled="amount > userStore.chips"
-                      @click="setPresetBet(amount)">
-                      {{ new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount) }}
-                    </button>
-                  </div>
-                  <div class="mt-3">
-                    <div class="form-floating">
-                      <input
-                        type="number"
-                        class="form-control"
-                        id="betAmount"
-                        v-model="betAmount"
-                        :max="userStore.chips"
-                        min="1">
-                      <label for="betAmount">Custom Bet Amount</label>
+                <div class="h-100 d-flex flex-column justify-content-center">
+                  <div class="bg-light p-3 rounded h-100">
+                    <h6 class="mb-3">Quick Bet</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                      <button
+                        v-for="amount in DEFAULT_BETS"
+                        :key="amount"
+                        class="btn btn-outline-primary"
+                        :class="{ 'active': betAmount === amount }"
+                        :disabled="amount > userStore.chips"
+                        @click="setPresetBet(amount)">
+                        {{ new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount) }}
+                      </button>
+                    </div>
+                    <div class="mt-3">
+                      <div class="form-floating">
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="betAmount"
+                          v-model="betAmount"
+                          :max="userStore.chips"
+                          min="1">
+                        <label for="betAmount">Custom Bet Amount</label>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -240,12 +236,12 @@ function setPresetBet(amount: number) {
               <div
                 :class="`col-md-${[BlackjackState.playerTurn, BlackjackState.gameOver].includes(gameStore.gameState) ? '12' : '6'}`">
                 <div class="h-100 d-flex flex-column justify-content-center">
-                  <div class="bg-light p-3 rounded text-center">
-                    <h6 class="mb-3">Actions</h6>
+                  <div class="bg-light p-3 rounded text-center h-100">
+                    <h6>Actions</h6>
 
                     <!-- Betting State -->
                     <div v-if="gameStore.gameState === BlackjackState.betting"
-                      class="d-grid">
+                      class="d-flex justify-content-center align-items-center mt-5">
                       <button
                         class="btn btn-primary btn-lg"
                         @click="handleDeal"

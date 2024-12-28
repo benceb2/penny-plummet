@@ -1,5 +1,6 @@
 import { BlackjackState } from '@/types/BlackjackGameState';
 import type { Card } from '@/types/Card';
+import type { BlackjackResult } from '@/types/BlackjackResult';
 import { generateDeck, shuffleDeck, calculateHandValue } from '@/utils/cards';
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue';
@@ -15,7 +16,6 @@ export const useGameStore = defineStore('game', () => {
   const dealerScore = computed(() => calculateHandValue(dealerHand.value))
 
   function dealCards() {
-    currentBet.value = 0
     deck.value = shuffleDeck(generateDeck())
     playerHand.value = [deck.value.pop()!, deck.value.pop()!]
     dealerHand.value = [deck.value.pop()!, { ...deck.value.pop()!, faceUp: false }]
@@ -28,9 +28,7 @@ export const useGameStore = defineStore('game', () => {
     playerHand.value.push(deck.value.pop()!)
 
     if (playerScore.value > 21) {
-      gameState.value = BlackjackState.gameOver
-      // Reveal dealer's hole card
-      dealerHand.value[1].faceUp = true
+      endGame()
     }
   }
 
@@ -38,7 +36,6 @@ export const useGameStore = defineStore('game', () => {
     if (gameState.value !== BlackjackState.playerTurn) return
 
     gameState.value = BlackjackState.dealerTurn
-    // Reveal dealer's hole card
     dealerHand.value[1].faceUp = true
 
     // Dealer must hit on 16 and below, stand on 17 and above
@@ -46,21 +43,38 @@ export const useGameStore = defineStore('game', () => {
       dealerHand.value.push(deck.value.pop()!)
     }
 
-    determineWinner()
+    endGame()
   }
 
-  function determineWinner() {
-    if (dealerScore.value > 21 || playerScore.value > dealerScore.value) {
-      // Player wins
-      currentBet.value *= 2
-    } else if (dealerScore.value > playerScore.value) {
-      // Dealer wins
-      currentBet.value = 0
-    } else {
-      // Push - return original bet
+  function endGame(): BlackjackResult {
+    dealerHand.value[1].faceUp = true
+    gameState.value = BlackjackState.gameOver
+
+    const result: BlackjackResult = {
+      isWin: false,
+      isPush: false,
+      amount: currentBet.value * 2, // Full payout amount for wins
+      playerScore: playerScore.value,
+      dealerScore: dealerScore.value,
+      initialBet: currentBet.value
     }
 
-    gameState.value = BlackjackState.gameOver
+    if (playerScore.value > 21) {
+      result.isWin = false
+      result.amount = 0
+    } else if (dealerScore.value > 21) {
+      result.isWin = true
+    } else if (playerScore.value > dealerScore.value) {
+      result.isWin = true
+    } else if (playerScore.value < dealerScore.value) {
+      result.isWin = false
+      result.amount = 0
+    } else {
+      result.isPush = true
+      result.amount = currentBet.value
+    }
+
+    return result
   }
 
   function reset() {
@@ -82,6 +96,7 @@ export const useGameStore = defineStore('game', () => {
     dealCards,
     hit,
     stand,
-    reset
+    reset,
+    endGame
   }
 })

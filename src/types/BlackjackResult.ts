@@ -1,6 +1,8 @@
 export interface BlackjackResult {
-  winner: string;
-  loser: string;
-  winningHand: string;
-  losingHand: string;
+  isWin: boolean
+  isPush: boolean
+  amount: number
+  playerScore: number
+  dealerScore: number
+  initialBet: number
 }

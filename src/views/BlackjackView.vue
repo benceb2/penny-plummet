@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useGameStore } from '@/stores/game'
 import PlayingCard from '@/components/PlayingCard.vue'
 import { BlackjackState } from '@/types/BlackjackGameState'
@@ -7,20 +7,54 @@ import { BlackjackState } from '@/types/BlackjackGameState'
 const gameStore = useGameStore()
 const betAmount = ref(0)
 
+const gameStatus = computed(() => {
+  if (gameStore.gameState === BlackjackState.gameOver) {
+    if (gameStore.playerScore > 21) {
+      return 'Bust! Dealer wins!'
+    } else if (gameStore.dealerScore > 21) {
+      return 'Dealer busts! You win!'
+    } else if (gameStore.playerScore > gameStore.dealerScore) {
+      return 'You win!'
+    } else if (gameStore.playerScore < gameStore.dealerScore) {
+      return 'Dealer wins!'
+    } else {
+      return 'Push!'
+    }
+  }
+  return ''
+})
+
 function handleDeal() {
   if (betAmount.value > 0) {
+    gameStore.currentBet = betAmount.value
     gameStore.dealCards()
   }
+}
+
+function handleNewGame() {
+  gameStore.reset()
+  betAmount.value = 0
 }
 </script>
 
 <template>
   <main class="container mt-4">
+    <div v-if="gameStore.gameState === BlackjackState.gameOver"
+      class="alert"
+      :class="{
+        'alert-success': gameStatus.includes('You win'),
+        'alert-danger': gameStatus.includes('Dealer wins'),
+        'alert-warning': gameStatus.includes('Push')
+      }"
+      role="alert">
+      {{ gameStatus }}
+    </div>
+
     <div class="row mb-4">
       <div class="col-12">
         <div class="card">
           <div class="card-header">
-            <h5>Dealer's Hand</h5>
+            <h5>Dealer's Hand ({{ gameStore.dealerScore }})</h5>
           </div>
           <div class="card-body">
             <div class="d-flex justify-content-center">
@@ -43,7 +77,7 @@ function handleDeal() {
       <div class="col-12">
         <div class="card">
           <div class="card-header">
-            <h5>Your Hand</h5>
+            <h5>Your Hand ({{ gameStore.playerScore }})</h5>
           </div>
           <div class="card-body">
             <div class="d-flex justify-content-center">
@@ -84,9 +118,10 @@ function handleDeal() {
               <div class="col-md-6">
                 <div class="d-flex gap-2">
                   <button
+                    v-if="gameStore.gameState === BlackjackState.betting"
                     class="btn btn-primary"
                     @click="handleDeal"
-                    :disabled="betAmount <= 0 || gameStore.gameState !== BlackjackState.betting">
+                    :disabled="betAmount <= 0">
                     Deal Cards
                   </button>
                   <button
@@ -96,10 +131,16 @@ function handleDeal() {
                     Hit
                   </button>
                   <button
-                    v-if="gameStore.gameState === BlackjackState.dealerTurn"
-                    class="btn btn-danger"
+                    v-if="gameStore.gameState === BlackjackState.playerTurn"
+                    class="btn btn-warning"
                     @click="gameStore.stand">
                     Stand
+                  </button>
+                  <button
+                    v-if="gameStore.gameState === BlackjackState.gameOver"
+                    class="btn btn-primary"
+                    @click="handleNewGame">
+                    New Game
                   </button>
                 </div>
               </div>
@@ -120,7 +161,6 @@ function handleDeal() {
   padding: 20px;
 }
 
-/* Optional: Add a nice transition effect for cards */
 .playing-card {
   transition: transform 0.2s ease-in-out;
 }

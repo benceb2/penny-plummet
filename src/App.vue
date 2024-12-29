@@ -1,80 +1,79 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import { ref } from 'vue'
-import { useUserStore } from './stores/user';
+import { useUserStore } from './stores/user'
 import UsernameModal from './components/UsernameModal.vue'
 
 const userStore = useUserStore()
-
 const isNavOpen = ref(false)
-
-function handleUsernameChange(newUsername: string) {
-  userStore.updateUsername(newUsername)
-}
-
 </script>
 
 <template>
   <UsernameModal />
   <header>
-    <div class="d-flex align-items-center justify-content-center">
-      <nav class="navbar navbar-expand-lg bg-body-tertiary w-100">
-        <div class="container-fluid">
-          <RouterLink class="navbar-brand" to="/">Penny Plummet</RouterLink>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <!-- Brand -->
+        <RouterLink class="navbar-brand fw-bold" to="/">Penny Plummet</RouterLink>
 
-          <!-- User Stats Section -->
-          <div class="user-stats me-3">
-            <span class="badge bg-success me-2">
-              <i class="bi bi-person"></i> {{ userStore.username }}
-            </span>
-            <span class="badge bg-primary">
-              <i class="bi bi-coin"></i> {{ userStore.formattedChips }}
-            </span>
-          </div>
+        <!-- Mobile Toggle -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          @click="isNavOpen = !isNavOpen"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-          <button
-            class="navbar-toggler"
-            type="button"
-            @click="isNavOpen = !isNavOpen"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-
-          <div
-            class="navbar-collapse"
-            :class="{ 'show': isNavOpen, 'collapse': !isNavOpen }"
-            id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <RouterLink class="nav-link" @click="isNavOpen = false" to="/blackjack">Blackjack</RouterLink>
-              </li>
-              <li class="nav-item">
-                <RouterLink class="nav-link" @click="isNavOpen = false" to="/about">About</RouterLink>
-              </li>
-            </ul>
-          </div>
+        <!-- Navigation Items -->
+        <div
+          class="navbar-collapse"
+          :class="{ 'show': isNavOpen, 'collapse': !isNavOpen }"
+          id="navbarNav">
+          <ul class="navbar-nav ms-auto align-items-lg-center">
+            <!-- User Stats -->
+            <li class="nav-item me-lg-3 mb-2 mb-lg-0">
+              <div class="d-flex gap-2">
+                <span class="badge bg-primary p-2 px-3">
+                  <i class="bi bi-person me-1"></i>{{ userStore.username }}
+                </span>
+                <span class="badge bg-success p-2 px-3">
+                  <i class="bi bi-coin me-1"></i>{{ userStore.formattedChips }}
+                </span>
+              </div>
+            </li>
+            <!-- Navigation Links -->
+            <li class="nav-item">
+              <RouterLink
+                class="nav-link px-3"
+                @click="isNavOpen = false"
+                to="/blackjack">
+                Blackjack
+              </RouterLink>
+            </li>
+            <li class="nav-item">
+              <RouterLink
+                class="nav-link px-3"
+                @click="isNavOpen = false"
+                to="/about">
+                About
+              </RouterLink>
+            </li>
+          </ul>
         </div>
-      </nav>
-    </div>
+      </div>
+    </nav>
   </header>
-
   <RouterView />
 </template>
 
 <style scoped>
-.user-stats {
-  font-size: 1rem;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .user-stats {
-    order: -1;
-    width: 100%;
-    margin-bottom: 1rem;
-    text-align: center;
+/* Only minimal custom CSS for specific adjustments */
+@media (max-width: 991px) {
+  .navbar-nav {
+    padding: 1rem 0;
   }
 }
 </style>

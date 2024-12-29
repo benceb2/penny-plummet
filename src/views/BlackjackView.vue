@@ -69,9 +69,12 @@ function setPresetBet(amount: number) {
     <div class="row mb-4">
       <div class="col-12">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-          <h2 class="text-primary mb-0">Blackjack</h2>
+          <h2 class="text-primary mb-0">
+            <i class="bi bi-suit-spade-fill me-2"></i>Blackjack
+          </h2>
           <div class="d-flex gap-3 align-items-center">
             <div class="bg-light text-white px-4 py-2 rounded-3">
+              <i class="bi bi-wallet2 me-1"></i>
               <span class="text-muted me-2">Chips:</span>
               <span class="text-primary fw-bold">{{ userStore.formattedChips }}</span>
             </div>
@@ -79,6 +82,7 @@ function setPresetBet(amount: number) {
               class="btn btn-outline-primary"
               type="button"
               @click="showStats = !showStats">
+              <i class="bi" :class="showStats ? 'bi-eye-slash' : 'bi-eye'"></i>
               {{ showStats ? 'Hide Stats' : 'View Stats' }}
             </button>
           </div>
@@ -91,19 +95,25 @@ function setPresetBet(amount: number) {
       <div class="col-12">
         <div class="card">
           <div class="card-header bg-light">
-            <h5 class="mb-0">Statistics</h5>
+            <h5 class="mb-0">
+              <i class="bi bi-graph-up me-2"></i>Statistics
+            </h5>
           </div>
           <div class="card-body">
             <div class="row g-3">
               <div class="col-md-4">
                 <div class="border rounded p-3 text-center">
-                  <h6 class="text-muted mb-2">Hands Played</h6>
+                  <h6 class="text-muted mb-2">
+                    <i class="bi bi-collection me-1"></i>Hands Played
+                  </h6>
                   <span class="h4">{{ userStore.stats.handsPlayed }}</span>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="border rounded p-3 text-center">
-                  <h6 class="text-muted mb-2">Total Winnings</h6>
+                  <h6 class="text-muted mb-2">
+                    <i class="bi bi-cash-stack me-1"></i>Total Winnings
+                  </h6>
                   <span class="h4"
                     :class="{ 'text-success': userStore.stats.totalWinnings > 0, 'text-danger': userStore.stats.totalWinnings < 0 }">
                     {{ new Intl.NumberFormat('en-US', {
@@ -114,7 +124,9 @@ function setPresetBet(amount: number) {
               </div>
               <div class="col-md-4">
                 <div class="border rounded p-3 text-center">
-                  <h6 class="text-muted mb-2">Biggest Win</h6>
+                  <h6 class="text-muted mb-2">
+                    <i class="bi bi-trophy me-1"></i>Biggest Win
+                  </h6>
                   <span class="h4 text-success">
                     {{ new Intl.NumberFormat('en-US', {
                       style: 'currency', currency: 'USD'
@@ -138,7 +150,14 @@ function setPresetBet(amount: number) {
       }"
       role="alert">
       <div class="d-flex justify-content-between align-items-center">
-        <span class="h5 mb-0">{{ gameStatus }}</span>
+        <span class="h5 mb-0">
+          <i class="bi" :class="{
+            'bi-trophy-fill': gameStatus.includes('You win'),
+            'bi-x-circle-fill': gameStatus.includes('Dealer wins'),
+            'bi-dash-circle-fill': gameStatus.includes('Push')
+          }"></i>
+          {{ gameStatus }}
+        </span>
       </div>
     </div>
 
@@ -148,8 +167,12 @@ function setPresetBet(amount: number) {
         <div class="card shadow-sm">
           <div class="card-header bg-light">
             <div class="d-flex align-items-center">
-              <h5 class="mb-0">Dealer's Hand</h5>
-              <span class="badge bg-dark ms-2">{{ gameStore.dealerScore }}</span>
+              <h5 class="mb-0">
+                <i class="bi bi-person-fill me-2"></i>Dealer's Hand
+              </h5>
+              <span class="badge bg-dark ms-2">
+                {{ gameStore.dealerScore }}
+              </span>
             </div>
           </div>
           <div class="card-body">
@@ -172,8 +195,12 @@ function setPresetBet(amount: number) {
         <div class="card shadow-sm">
           <div class="card-header bg-light">
             <div class="d-flex align-items-center">
-              <h5 class="mb-0">Your Hand</h5>
-              <span class="badge bg-dark ms-2">{{ gameStore.playerScore }}</span>
+              <h5 class="mb-0">
+                <i class="bi bi-person-circle me-2"></i>Your Hand
+              </h5>
+              <span class="badge bg-dark ms-2">
+                {{ gameStore.playerScore }}
+              </span>
             </div>
           </div>
           <div class="card-body">
@@ -195,7 +222,9 @@ function setPresetBet(amount: number) {
       <div class="col-12">
         <div class="card shadow-sm">
           <div class="card-header bg-light">
-            <h5 class="mb-0">Game Controls</h5>
+            <h5 class="mb-0">
+              <i class="bi bi-joystick me-2"></i>Game Controls
+            </h5>
           </div>
           <div class="card-body">
             <div class="row g-4">
@@ -203,7 +232,9 @@ function setPresetBet(amount: number) {
               <div class="col-md-6" v-if="gameStore.gameState === BlackjackState.betting">
                 <div class="h-100 d-flex flex-column justify-content-center">
                   <div class="bg-light p-3 rounded h-100">
-                    <h6 class="mb-3">Quick Bet</h6>
+                    <h6 class="mb-3">
+                      <i class="bi bi-lightning-fill me-1"></i>Quick Bet
+                    </h6>
                     <div class="d-flex flex-wrap gap-2">
                       <button
                         v-for="amount in DEFAULT_BETS"
@@ -212,6 +243,7 @@ function setPresetBet(amount: number) {
                         :class="{ 'active': betAmount === amount }"
                         :disabled="amount > userStore.chips"
                         @click="setPresetBet(amount)">
+                        <i class="bi bi-currency-dollar me-1"></i>
                         {{ new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount) }}
                       </button>
                     </div>
@@ -224,7 +256,9 @@ function setPresetBet(amount: number) {
                           v-model="betAmount"
                           :max="userStore.chips"
                           min="1">
-                        <label for="betAmount">Custom Bet Amount</label>
+                        <label for="betAmount">
+                          <i class="bi bi-cash me-1"></i>Custom Bet Amount
+                        </label>
                       </div>
                     </div>
                   </div>
@@ -236,7 +270,9 @@ function setPresetBet(amount: number) {
                 :class="`col-md-${[BlackjackState.playerTurn, BlackjackState.gameOver].includes(gameStore.gameState) ? '12' : '6'}`">
                 <div class="h-100 d-flex flex-column justify-content-center">
                   <div class="bg-light p-3 rounded text-center h-100">
-                    <h6>Actions</h6>
+                    <h6>
+                      <i class="bi bi-gear-fill me-1"></i>Actions
+                    </h6>
 
                     <!-- Betting State -->
                     <div v-if="gameStore.gameState === BlackjackState.betting"
@@ -245,7 +281,7 @@ function setPresetBet(amount: number) {
                         class="btn btn-primary btn-lg"
                         @click="handleDeal"
                         :disabled="betAmount <= 0 || betAmount > userStore.chips">
-                        <i class="bi bi-play-fill me-2"></i>
+                        <i class="bi bi-play-circle-fill me-2"></i>
                         Deal Cards
                       </button>
                     </div>
@@ -256,7 +292,7 @@ function setPresetBet(amount: number) {
                       <button
                         class="btn btn-success btn-lg"
                         @click="handleHit">
-                        <i class="bi bi-plus-lg me-2"></i>
+                        <i class="bi bi-plus-circle-fill me-2"></i>
                         Hit
                       </button>
                       <button
@@ -273,7 +309,7 @@ function setPresetBet(amount: number) {
                       <button
                         class="btn btn-primary btn-lg"
                         @click="handleNewGame">
-                        <i class="bi bi-arrow-repeat me-2"></i>
+                        <i class="bi bi-arrow-clockwise me-2"></i>
                         New Game
                       </button>
                     </div>
@@ -287,7 +323,6 @@ function setPresetBet(amount: number) {
     </div>
   </main>
 </template>
-
 <style scoped>
 .hand-display {
   display: flex;

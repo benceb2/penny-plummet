@@ -13,8 +13,11 @@ const isNavOpen = ref(false)
   <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container">
-        <!-- Brand -->
-        <RouterLink class="navbar-brand fw-bold" to="/">Penny Plummet</RouterLink>
+        <!-- Brand with icon -->
+        <RouterLink class="navbar-brand fw-bold" to="/">
+          <i class="bi bi-coin-fill me-2"></i>
+          Penny Plummet
+        </RouterLink>
 
         <!-- Mobile Toggle -->
         <button
@@ -37,10 +40,12 @@ const isNavOpen = ref(false)
             <li class="nav-item me-lg-3 mb-2 mb-lg-0">
               <div class="d-flex gap-2">
                 <span class="badge bg-primary p-2 px-3">
-                  <i class="bi bi-person me-1"></i>{{ userStore.username }}
+                  <i class="bi bi-person-circle me-1"></i>
+                  {{ userStore.username }}
                 </span>
                 <span class="badge bg-success p-2 px-3">
-                  <i class="bi bi-coin me-1"></i>{{ userStore.formattedChips }}
+                  <i class="bi bi-wallet2 me-1"></i>
+                  {{ userStore.formattedChips }}
                 </span>
               </div>
             </li>
@@ -50,6 +55,7 @@ const isNavOpen = ref(false)
                 class="nav-link px-3"
                 @click="isNavOpen = false"
                 to="/blackjack">
+                <i class="bi bi-suit-spade-fill me-1"></i>
                 Blackjack
               </RouterLink>
             </li>
@@ -58,6 +64,7 @@ const isNavOpen = ref(false)
                 class="nav-link px-3"
                 @click="isNavOpen = false"
                 to="/about">
+                <i class="bi bi-info-circle-fill me-1"></i>
                 About
               </RouterLink>
             </li>
@@ -70,10 +77,14 @@ const isNavOpen = ref(false)
 </template>
 
 <style scoped>
-/* Only minimal custom CSS for specific adjustments */
 @media (max-width: 991px) {
   .navbar-nav {
     padding: 1rem 0;
   }
+}
+
+.nav-link:hover i {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
 }
 </style>

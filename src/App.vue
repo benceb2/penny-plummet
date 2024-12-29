@@ -1,24 +1,12 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
+import { useUserStore } from './stores/user';
+
+const userStore = useUserStore()
 
 const isNavOpen = ref(false)
-const userBalance = ref(1000) // Starting balance
-const username = ref('Player') // Could be customizable
-
-// You could load these from localStorage on mount
-onMounted(() => {
-  const savedBalance = localStorage.getItem('userBalance')
-  if (savedBalance) {
-    userBalance.value = parseInt(savedBalance)
-  }
-})
-
-// Function to update balance (could be exposed globally)
-const updateBalance = (amount: number) => {
-  userBalance.value += amount
-  localStorage.setItem('userBalance', userBalance.value.toString())
-}
+const username = ref('Player')
 </script>
 
 <template>
@@ -34,7 +22,7 @@ const updateBalance = (amount: number) => {
               <i class="bi bi-person"></i> {{ username }}
             </span>
             <span class="badge bg-primary">
-              <i class="bi bi-coin"></i> ${{ userBalance.toLocaleString() }}
+              <i class="bi bi-coin"></i> {{ userStore.formattedChips }}
             </span>
           </div>
 
@@ -66,8 +54,7 @@ const updateBalance = (amount: number) => {
     </div>
   </header>
 
-  <!-- Pass the balance update function to child routes -->
-  <RouterView :update-balance="updateBalance" />
+  <RouterView />
 </template>
 
 <style scoped>

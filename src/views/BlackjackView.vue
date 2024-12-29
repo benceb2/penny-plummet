@@ -10,7 +10,16 @@ const userStore = useUserStore()
 const betAmount = ref(0)
 const showStats = ref(false)
 
-const DEFAULT_BETS = [10, 25, 50, 100]
+const PERCENTAGE_BETS = [0.05, 0.10, 0.25, 0.50] // 5%, 10%, 25%, 50% of current chips
+
+const quickBetAmounts = computed(() => {
+  return PERCENTAGE_BETS.map(percentage => {
+    // Calculate the bet amount based on percentage of current chips
+    const amount = Math.floor(userStore.chips * percentage)
+    // Ensure minimum bet of 1 chip
+    return Math.max(1, amount)
+  })
+})
 
 const gameStatus = computed(() => {
   if (gameStore.gameState === BlackjackState.gameOver) {
@@ -237,14 +246,19 @@ function setPresetBet(amount: number) {
                     </h6>
                     <div class="d-flex flex-wrap gap-2">
                       <button
-                        v-for="amount in DEFAULT_BETS"
+                        v-for="amount in quickBetAmounts"
                         :key="amount"
                         class="btn btn-outline-primary"
                         :class="{ 'active': betAmount === amount }"
                         :disabled="amount > userStore.chips"
                         @click="setPresetBet(amount)">
-                        <i class="bi bi-currency-dollar me-1"></i>
-                        {{ new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount) }}
+                        {{ new Intl.NumberFormat('en-US', {
+                          style: 'currency',
+                        currency: 'USD'
+                        }).format(amount) }}
+                        <small class="text-muted ms-1">
+                          ({{ Math.round((amount / userStore.chips) * 100) }}%)
+                        </small>
                       </button>
                     </div>
                     <div class="mt-3">

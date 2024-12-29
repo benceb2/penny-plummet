@@ -16,7 +16,7 @@ import { generateDeck, shuffleDeck, calculateHandValue } from '@/utils/cards';
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue';
 
-export const useGameStore = defineStore('game', () => {
+export const useBlackjackStore = defineStore('blackjack', () => {
   // Game state references
   const deck = ref<Card[]>([])
   const playerHand = ref<Card[]>([])

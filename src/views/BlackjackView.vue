@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useGameStore } from '@/stores/game'
+import { useBlackjackStore } from '@/stores/blackjack'
 import { useUserStore } from '@/stores/user'
 import PlayingCard from '@/components/PlayingCard.vue'
 import { BlackjackState } from '@/types/BlackjackGameState'
 
-const gameStore = useGameStore()
+const gameStore = useBlackjackStore()
 const userStore = useUserStore()
 const betAmount = ref(0)
 const showStats = ref(false)
@@ -71,9 +71,9 @@ function setPresetBet(amount: number) {
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
           <h2 class="text-primary mb-0">Blackjack</h2>
           <div class="d-flex gap-3 align-items-center">
-            <div class="bg-dark text-white px-4 py-2 rounded-3">
+            <div class="bg-light text-white px-4 py-2 rounded-3">
               <span class="text-muted me-2">Chips:</span>
-              <span class="fw-bold">{{ userStore.formattedChips }}</span>
+              <span class="text-primary fw-bold">{{ userStore.formattedChips }}</span>
             </div>
             <button
               class="btn btn-outline-primary"

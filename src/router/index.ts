@@ -29,6 +29,14 @@ const router = createRouter({
         title: 'About'
       }
     },
+    {
+      path: '/earn',
+      name: 'earn',
+      component: () => import('../views/EarnView.vue'),
+      meta: {
+        title: 'Earn'
+      }
+    }
   ],
 })
 

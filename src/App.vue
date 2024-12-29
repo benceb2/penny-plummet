@@ -12,7 +12,7 @@ function handleAccountSettings() {
 }
 
 function handleEarnMoney() {
-  // Your earn money logic
+  // navigate to Earn
 }
 </script>
 
@@ -76,10 +76,10 @@ function handleEarnMoney() {
                       <h6 class="dropdown-header">Need more chips?</h6>
                     </li>
                     <li>
-                      <a class="dropdown-item py-2" href="#" @click="handleEarnMoney">
+                      <RouterLink class="dropdown-item py-2" to="/earn">
                         <i class="bi bi-piggy-bank me-2 opacity-75"></i>
                         Earn More Chips
-                      </a>
+                      </RouterLink>
                     </li>
                     <li>
                       <hr class="dropdown-divider">

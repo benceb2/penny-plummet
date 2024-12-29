@@ -16,7 +16,7 @@ const isNavOpen = ref(false)
         <!-- Brand with icon -->
         <RouterLink class="navbar-brand fw-bold" to="/">
           <i class="bi bi-coin-fill me-2"></i>
-          Penny Plummet
+          <i class="bi bi-graph-down-arrow me-2"></i> Penny Plummet
         </RouterLink>
 
         <!-- Mobile Toggle -->

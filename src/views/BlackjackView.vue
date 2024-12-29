@@ -254,7 +254,7 @@ function setPresetBet(amount: number) {
                         @click="setPresetBet(amount)">
                         {{ new Intl.NumberFormat('en-US', {
                           style: 'currency',
-                        currency: 'USD'
+                          currency: 'USD'
                         }).format(amount) }}
                         <small class="text-muted ms-1">
                           ({{ Math.round((amount / userStore.chips) * 100) }}%)
@@ -283,7 +283,7 @@ function setPresetBet(amount: number) {
               <div
                 :class="`col-md-${[BlackjackState.playerTurn, BlackjackState.gameOver].includes(gameStore.gameState) ? '12' : '6'}`">
                 <div class="h-100 d-flex flex-column justify-content-center">
-                  <div class="bg-light p-3 rounded text-center h-100">
+                  <div class="bg-light p-3 rounded h-100">
                     <h6>
                       <i class="bi bi-gear-fill me-1"></i>Actions
                     </h6>

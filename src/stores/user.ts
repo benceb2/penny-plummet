@@ -45,4 +45,6 @@ export const useUserStore = defineStore('user', () => {
     updateChips,
     updateStats
   }
+}, {
+  persist: true
 })

@@ -256,14 +256,12 @@ function setPresetBet(amount: number) {
                       class="d-flex gap-3 justify-content-center">
                       <button
                         class="btn btn-success btn-lg"
-                        style="width: 140px;"
                         @click="handleHit">
                         <i class="bi bi-plus-lg me-2"></i>
                         Hit
                       </button>
                       <button
                         class="btn btn-warning btn-lg text-white"
-                        style="width: 140px;"
                         @click="handleStand">
                         <i class="bi bi-hand-thumbs-up-fill me-2"></i>
                         Stand
@@ -275,7 +273,6 @@ function setPresetBet(amount: number) {
                       class="d-flex justify-content-center">
                       <button
                         class="btn btn-primary btn-lg"
-                        style="width: 140px;"
                         @click="handleNewGame">
                         <i class="bi bi-arrow-repeat me-2"></i>
                         New Game

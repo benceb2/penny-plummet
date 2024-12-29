@@ -9,7 +9,7 @@ const router = createRouter({
       name: 'Blackjack',
       component: GameView,
       meta: {
-        title: 'Blackjack'  // Add this meta field
+        title: 'Blackjack'
       }
     },
     {
@@ -17,7 +17,7 @@ const router = createRouter({
       name: 'about',
       component: () => import('../views/AboutView.vue'),
       meta: {
-        title: 'About'  // Add this meta field
+        title: 'About'
       }
     },
   ],

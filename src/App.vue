@@ -2,14 +2,20 @@
 import { RouterLink, RouterView } from 'vue-router'
 import { ref } from 'vue'
 import { useUserStore } from './stores/user';
+import UsernameModal from './components/UsernameModal.vue'
 
 const userStore = useUserStore()
 
 const isNavOpen = ref(false)
-const username = ref('Player')
+
+function handleUsernameChange(newUsername: string) {
+  userStore.updateUsername(newUsername)
+}
+
 </script>
 
 <template>
+  <UsernameModal />
   <header>
     <div class="d-flex align-items-center justify-content-center">
       <nav class="navbar navbar-expand-lg bg-body-tertiary w-100">
@@ -19,7 +25,7 @@ const username = ref('Player')
           <!-- User Stats Section -->
           <div class="user-stats me-3">
             <span class="badge bg-success me-2">
-              <i class="bi bi-person"></i> {{ username }}
+              <i class="bi bi-person"></i> {{ userStore.username }}
             </span>
             <span class="badge bg-primary">
               <i class="bi bi-coin"></i> {{ userStore.formattedChips }}

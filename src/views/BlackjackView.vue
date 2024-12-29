@@ -128,7 +128,6 @@ function setPresetBet(amount: number) {
       </div>
     </div>
 
-    <!-- Rest of the template remains the same, just update button handlers -->
     <!-- Game Status Alert -->
     <div v-if="gameStore.gameState === BlackjackState.gameOver"
       class="alert mb-4"

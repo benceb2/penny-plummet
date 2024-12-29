@@ -37,13 +37,18 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+  function updateUsername(newUsername: string) {
+    username.value = newUsername
+  }
+
   return {
     chips,
     username,
     stats,
     formattedChips,
     updateChips,
-    updateStats
+    updateStats,
+    updateUsername
   }
 }, {
   persist: true

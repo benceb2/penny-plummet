@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { formatIntAsCurrency } from '@/utils/currency'
+import BaseLayout from '@/components/BaseLayout.vue'
 
 const userStore = useUserStore()
 
@@ -56,16 +57,10 @@ setInterval(() => {
 </script>
 
 <template>
-  <main class="container-fluid py-4">
-    <!-- Header Section -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h5 class="mb-0">
-        <i class="bi bi-coin me-2"></i>Earn Chips
-      </h5>
-      <div class="text-muted">
-        <i class="bi bi-wallet2 me-1"></i>Balance: {{ userStore.formattedChips }}
-      </div>
-    </div>
+  <BaseLayout
+    title="Earn Chips"
+    icon="coin"
+    :showBalance="true">
 
     <div class="row g-4">
       <!-- Main Clicker Area -->
@@ -161,7 +156,7 @@ setInterval(() => {
         </div>
       </div>
     </div>
-  </main>
+  </BaseLayout>
 </template>
 
 <style scoped>

@@ -100,7 +100,7 @@ const isNavOpen = ref(false)
                     </a>
                   </li>
                   <li>
-                    <RouterLink class="dropdown-item py-2" to="/blackjack">
+                    <RouterLink class="dropdown-item py-2" to="/profile">
                       <i class="bi bi-person me-2 opacity-75"></i>
                       View Profile
                     </RouterLink>

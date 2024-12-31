@@ -16,26 +16,41 @@ import type { Card } from '@/types/Card';
 import type { BlackjackResult } from '@/types/BlackjackResult';
 import { generateDeck, shuffleDeck, calculateHandValue } from '@/utils/cards';
 import { calculateStorageKey, createGameSerializer } from '../utils/serializer';
+import { useAchievementStore } from './achievement';
+import { useUserStore } from './user';
 
 export const useBlackjackStore = defineStore('blackjack', () => {
   // Game state references
+  const achievementStore = useAchievementStore()
+  const userStore = useUserStore()
   const deck = ref<Card[]>([])
   const playerHand = ref<Card[]>([])
   const dealerHand = ref<Card[]>([])
   const gameState = ref(BlackjackState.betting)
   const currentBet = ref(0)
 
+  const sessionStats = ref({
+    consecutiveWins: 0,
+    maxConsecutiveWins: 0,
+    blackjacks: 0,
+    perfectPlays: 0
+  });
+
   /**
    * Computed property for player's current hand value
    * Always calculated from all cards as player's cards are always face up
    */
-  const playerScore = computed(() => calculateHandValue(playerHand.value))
+  const playerScore = computed(() => calculateHandValue(playerHand.value));
 
   /**
    * Computed property for dealer's visible hand value
    * Includes all cards as they become face up during gameplay
    */
-  const dealerScore = computed(() => calculateHandValue(dealerHand.value))
+  const dealerScore = computed(() => calculateHandValue(dealerHand.value));
+
+  const isBlackjack = computed(() => {
+    return playerHand.value.length === 2 && playerScore.value === 21
+  })
 
   /**
    * Initiates a new round by dealing initial cards
@@ -47,6 +62,9 @@ export const useBlackjackStore = defineStore('blackjack', () => {
     playerHand.value = [deck.value.pop()!, deck.value.pop()!]
     dealerHand.value = [deck.value.pop()!, { ...deck.value.pop()!, faceUp: false }]
     gameState.value = BlackjackState.playerTurn
+
+    // Achievement tracking for first hand
+    achievementStore.updateAchievementProgress('first_hand', 1)
   }
 
   /**
@@ -58,7 +76,8 @@ export const useBlackjackStore = defineStore('blackjack', () => {
     if (gameState.value !== BlackjackState.playerTurn) return
     playerHand.value.push(deck.value.pop()!)
     if (playerScore.value > 21) {
-      endGame()
+      const result = endGame()
+      handleGameResult(result)
     }
   }
 
@@ -71,14 +90,58 @@ export const useBlackjackStore = defineStore('blackjack', () => {
   function stand() {
     if (gameState.value !== BlackjackState.playerTurn) return
     gameState.value = BlackjackState.dealerTurn
-    dealerHand.value[1].faceUp = true // Reveal dealer's hole card
+    dealerHand.value[1].faceUp = true
 
-    // Dealer's automated play
     while (dealerScore.value < 17) {
       dealerHand.value.push(deck.value.pop()!)
     }
-    endGame()
+
+    const result = endGame()
+    handleGameResult(result)
   }
+
+  function handleGameResult(result: BlackjackResult) {
+    // Update user stats first
+    userStore.updateStats(result)
+
+    // Track achievements
+    if (result.isWin) {
+      sessionStats.value.consecutiveWins++
+      sessionStats.value.maxConsecutiveWins = Math.max(
+        sessionStats.value.maxConsecutiveWins,
+        sessionStats.value.consecutiveWins
+      )
+
+      // Blackjack achievement
+      if (isBlackjack.value) {
+        sessionStats.value.blackjacks++
+        achievementStore.updateAchievementProgress('blackjack_master', sessionStats.value.blackjacks)
+      }
+
+      // Big win achievement
+      if (result.amount >= 1000) {
+        achievementStore.updateAchievementProgress('high_roller', result.amount)
+      }
+
+      // Consecutive wins achievement
+      achievementStore.updateAchievementProgress('winning_streak', sessionStats.value.consecutiveWins)
+
+      // Add XP based on win amount (10% of winnings)
+      const xpGain = Math.floor((result.amount - result.initialBet) * 0.1)
+      achievementStore.addXP(xpGain)
+    } else {
+      sessionStats.value.consecutiveWins = 0
+    }
+
+    // Track total hands played
+    achievementStore.updateAchievementProgress('blackjack_veteran', userStore.stats.handsPlayed)
+
+    // High stakes achievement
+    if (result.initialBet >= 500) {
+      achievementStore.updateAchievementProgress('high_stakes', result.initialBet)
+    }
+  }
+
 
   /**
    * Determines the game outcome and calculates payout
@@ -147,6 +210,8 @@ export const useBlackjackStore = defineStore('blackjack', () => {
     currentBet,
     playerScore,
     dealerScore,
+    sessionStats,
+    isBlackjack,
     dealCards,
     hit,
     stand,

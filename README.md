@@ -6,7 +6,7 @@ Penny Plummet is an browser-based casino game built with:
 - Vue 3
 - Vite
 - Pinia
-- Bootstrap
+- Bootstrap 5
 - Bootstrap Icons
 - Local Storage
 

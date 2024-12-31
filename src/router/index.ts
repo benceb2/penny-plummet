@@ -36,6 +36,14 @@ const router = createRouter({
       meta: {
         title: 'Earn'
       }
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('../views/ProfileView.vue'),
+      meta: {
+        title: 'Profile'
+      }
     }
   ],
 })

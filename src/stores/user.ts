@@ -1,24 +1,19 @@
-import { ref, computed } from 'vue';
+import { computed, ref } from 'vue';
 import { defineStore } from 'pinia';
 
 import { type BlackjackResult } from '@/types/BlackjackResult';
 import { calculateStorageKey, createGameSerializer } from '../utils/serializer';
+import { formatIntAsCurrency } from '@/utils/currency';
 
 export const useUserStore = defineStore('user', () => {
   const consented = ref(false)
   const chips = ref(50)
+  const formattedChips = computed(() => formatIntAsCurrency(chips.value))
   const username = ref<string | null>(null)
   const stats = ref({
     handsPlayed: 0,
     totalWinnings: 0,
     biggestWin: 0
-  })
-
-  const formattedChips = computed(() => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(chips.value)
   })
 
   function updateChips(amount: number) {
@@ -51,9 +46,9 @@ export const useUserStore = defineStore('user', () => {
   return {
     consented,
     chips,
+    formattedChips,
     username,
     stats,
-    formattedChips,
     updateChips,
     updateStats,
     updateUsername,

@@ -1,3 +1,5 @@
+import type { StateTree } from "pinia"
+
 const SHIFT = 11
 const SIGNATURE = btoa("penny-plummet-2024")
 
@@ -13,7 +15,7 @@ const unshiftString = (str: string, shift: number): string => {
   ).join('')
 }
 
-const encode = (state: any): string => {
+const encode = (state: StateTree): string => {
   const saveData = {
     state: state,
     timestamp: Date.now()
@@ -25,20 +27,19 @@ const encode = (state: any): string => {
   return encoded.split('').reverse().join('') + SIGNATURE
 }
 
-const decode = (stored: string): any => {
+const decode = (stored: string): StateTree => {
   try {
     if (!stored.endsWith(SIGNATURE)) {
-      return null
+      return {} as StateTree
     }
     const encoded = stored.slice(0, -SIGNATURE.length)
     const reversed = encoded.split('').reverse().join('')
     const decoded = atob(reversed)
-    // Unshift after base64 decode
     const unshifted = unshiftString(decoded, SHIFT)
     const saveData = JSON.parse(unshifted)
     return saveData.state
   } catch {
-    return null
+    return {} as StateTree
   }
 }
 

@@ -65,3 +65,5 @@ export const useUserStore = defineStore('user', () => {
     serializer: createGameSerializer()
   }
 })
+
+export type UserStore = ReturnType<typeof useUserStore>

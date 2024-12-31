@@ -2,11 +2,11 @@ import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 
 import { type BlackjackResult } from '@/types/BlackjackResult';
-import { calculateStorageKey, createGameSerializer } from './serializer';
+import { calculateStorageKey, createGameSerializer } from '../utils/serializer';
 
 export const useUserStore = defineStore('user', () => {
   const consented = ref(false)
-  const chips = ref(1000)
+  const chips = ref(50)
   const username = ref<string | null>(null)
   const stats = ref({
     handsPlayed: 0,

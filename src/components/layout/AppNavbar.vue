@@ -134,6 +134,10 @@ const isNavOpen = ref(false)
   cursor: pointer;
 }
 
+.dropdown-toggle {
+  cursor: pointer !important;
+}
+
 .min-w-200 {
   min-width: 200px;
 }

@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
 import { formatIntAsCurrency } from '@/utils/currency'
-import { calculateStorageKey, createGameSerializer } from './serializer'
+import { calculateStorageKey, createGameSerializer } from '../utils/serializer'
 import type { UserStore } from './user'
 
 export const useClickerStore = defineStore('clicker', () => {

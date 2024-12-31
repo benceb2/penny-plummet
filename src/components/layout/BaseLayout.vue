@@ -17,7 +17,7 @@ const userStore = useUserStore()
     <div class="row mb-4">
       <div class="col-12">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-          <h2 class="text-primary mb-0">
+          <h2 class="text-dark mb-0">
             <i v-if="icon" :class="`bi bi-${icon} me-2`"></i>{{ title }}
           </h2>
           <div v-if="showBalance" class="d-flex gap-3 align-items-center">

@@ -104,7 +104,7 @@ export const useBlackjackStore = defineStore('blackjack', () => {
     // Update user stats first
     userStore.updateStats(result)
 
-    // Track achievements
+    // Only handle win-related updates if it's a win (not a push)
     if (result.isWin) {
       sessionStats.value.consecutiveWins++
       sessionStats.value.maxConsecutiveWins = Math.max(
@@ -129,7 +129,7 @@ export const useBlackjackStore = defineStore('blackjack', () => {
       // Add XP based on win amount (10% of winnings)
       const xpGain = Math.floor((result.amount - result.initialBet) * 0.1)
       achievementStore.addXP(xpGain)
-    } else {
+    } else if (!result.isPush) { // Only reset consecutive wins on a loss, not a push
       sessionStats.value.consecutiveWins = 0
     }
 

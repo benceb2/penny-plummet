@@ -69,6 +69,7 @@ const isNavOpen = ref(false)
               aria-expanded="false">
               <i class="bi bi-wallet2 me-1"></i>
               {{ userStore.formattedChips }}
+              <i class="bi bi-chevron-down ms-2 opacity-75"></i>
             </span>
             <ul class="dropdown-menu dropdown-menu-end min-w-200">
               <li>

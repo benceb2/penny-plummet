@@ -1,5 +1,9 @@
 <template>
-  <div class="container py-4">
+  <BaseLayout
+    title="Profile"
+    icon="person-circle"
+    :showBalance="false">
+
     <!-- Level Progress Section -->
     <div class="card mb-4">
       <div class="card-body">
@@ -106,7 +110,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </BaseLayout>
 </template>
 
 <script setup lang="ts">
@@ -114,6 +118,7 @@ import { ref, computed } from 'vue';
 import { useUserStore } from '@/stores/user';
 import { useAchievementStore } from '@/stores/achievement';
 import { formatIntAsCurrency } from '@/utils/currency';
+import BaseLayout from '@/components/layout/BaseLayout.vue';
 
 const userStore = useUserStore();
 const achievementStore = useAchievementStore();

@@ -8,19 +8,12 @@ import Navbar from './components/Navbar.vue'
 const userStore = useUserStore()
 const isNavOpen = ref(false)
 
-function handleAccountSettings() {
-  // Your account settings logic
-}
-
-function handleEarnMoney() {
-  // navigate to Earn
-}
 </script>
 
 <template>
   <UsernameModal />
   <header>
-    <Navbar :onAccountSettings="handleAccountSettings" />
+    <Navbar />
   </header>
   <RouterView />
 </template>

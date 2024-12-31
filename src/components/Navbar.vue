@@ -4,10 +4,6 @@ import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useUserStore } from '../stores/user'
 
-const props = defineProps<{
-  onAccountSettings: () => void
-}>()
-
 const userStore = useUserStore()
 const isNavOpen = ref(false)
 </script>
@@ -98,7 +94,7 @@ const isNavOpen = ref(false)
                 </span>
                 <ul class="dropdown-menu dropdown-menu-end min-w-200">
                   <li>
-                    <a class="dropdown-item py-2" href="#" @click="props.onAccountSettings">
+                    <a class="dropdown-item py-2" href="#">
                       <i class="bi bi-gear me-2 opacity-75"></i>
                       Account Settings
                     </a>

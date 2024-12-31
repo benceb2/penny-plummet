@@ -23,12 +23,6 @@ const acceptConsent = () => {
       No personal data is collected or shared with third parties.
       By clicking "Accept", you agree to the use of local storage.
     </p>
-    <p>
-      <small class="text-muted">
-        You can learn more about how we use local storage in our
-        <router-link to="/privacy">privacy policy</router-link>.
-      </small>
-    </p>
 
     <template #footer>
       <button type="button" class="btn btn-primary" @click="acceptConsent">

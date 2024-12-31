@@ -112,6 +112,7 @@ export const useAchievementStore = defineStore('achievements', () => {
     key: calculateStorageKey("achievements-store"),
     serializer: createGameSerializer()
   }
-});
+} as any) // treating this as any because the TS support for the persistence
+// plugin doesn't seem to be working and we cannot compile otherwise.)
 
 export type AchievementStore = ReturnType<typeof useAchievementStore>;

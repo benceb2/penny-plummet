@@ -15,7 +15,7 @@ import { BlackjackState } from '@/types/BlackjackGameState';
 import type { Card } from '@/types/Card';
 import type { BlackjackResult } from '@/types/BlackjackResult';
 import { generateDeck, shuffleDeck, calculateHandValue } from '@/utils/cards';
-import { calculateStorageKey, createGameSerializer } from './serializer';
+import { calculateStorageKey, createGameSerializer } from '../utils/serializer';
 
 export const useBlackjackStore = defineStore('blackjack', () => {
   // Game state references

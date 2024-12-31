@@ -6,17 +6,17 @@ export function generateDeck(): Card[] {
 
   suits.forEach(suit => {
     // Ace
-    deck.push({ suit, value: 1, faceUp: true })
+    deck.push({ suit, value: 1, display: 'A', faceUp: true })
 
     // Number cards (2-10)
     for (let value = 2; value <= 10; value++) {
-      deck.push({ suit, value, faceUp: true })
+      deck.push({ suit, value, display: value.toString(), faceUp: true })
     }
 
     // Face cards (Jack, Queen, King)
-    for (let i = 0; i < 3; i++) {
-      deck.push({ suit, value: 10, faceUp: true })
-    }
+    deck.push({ suit, value: 10, display: 'J', faceUp: true })
+    deck.push({ suit, value: 10, display: 'Q', faceUp: true })
+    deck.push({ suit, value: 10, display: 'K', faceUp: true })
   })
 
   return shuffleDeck(deck)

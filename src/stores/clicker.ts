@@ -2,7 +2,8 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
 import { formatIntAsCurrency } from '@/utils/currency'
-import { calculateStorageKey, createGameSerializer } from './serializer'
+import { calculateStorageKey, createGameSerializer } from '../utils/serializer'
+import type { UserStore } from './user'
 
 export const useClickerStore = defineStore('clicker', () => {
   // State
@@ -25,14 +26,14 @@ export const useClickerStore = defineStore('clicker', () => {
     clicks.value += clickValue.value
   }
 
-  function collectChips(userStore: any) {
+  function collectChips(userStore: UserStore) {
     if (clicks.value >= 10) {
       userStore.updateChips(clicks.value)
       clicks.value = 0
     }
   }
 
-  function buyAutoClicker(userStore: any) {
+  function buyAutoClicker(userStore: UserStore) {
     if (userStore.chips >= autoClickerCost.value) {
       userStore.updateChips(-autoClickerCost.value)
       autoClickersCount.value++
@@ -40,7 +41,7 @@ export const useClickerStore = defineStore('clicker', () => {
     }
   }
 
-  function buyMultiplier(userStore: any) {
+  function buyMultiplier(userStore: UserStore) {
     if (userStore.chips >= multiplierCost.value) {
       userStore.updateChips(-multiplierCost.value)
       multiplierLevel.value++

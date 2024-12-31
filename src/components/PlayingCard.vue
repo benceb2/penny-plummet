@@ -1,37 +1,38 @@
 <script setup lang="ts">
 import type { Card } from '@/types/Card'
-
 defineProps<{
   card: Card
 }>()
 </script>
 
 <template>
-  <div class="playing-card" :class="{ 'text-danger': card.suit === 'hearts' || card.suit === 'diamonds' }">
-    <div v-if="card.faceUp" class="card-front">
+  <div class="playing-card shadow-sm rounded position-relative bg-white border"
+    :class="{ 'text-danger': card.suit === 'hearts' || card.suit === 'diamonds' }">
+    <div v-if="card.faceUp" class="h-100 p-2">
       <!-- Top left corner -->
-      <div class="card-corner top-left">
-        <div class="value">{{ card.display }}</div>
-        <div class="suit">{{ getSuitSymbol(card.suit) }}</div>
+      <div class="position-absolute top-0 start-0 p-1 d-flex flex-column align-items-center">
+        <span class="fw-bold card-value">{{ card.display }}</span>
+        <span class="card-suit">{{ getSuitSymbol(card.suit) }}</span>
       </div>
 
       <!-- Center suit -->
-      <div class="card-center">
-        <div class="suit-large">{{ getSuitSymbol(card.suit) }}</div>
+      <div class="position-absolute top-50 start-50 translate-middle">
+        <span class="suit-large">{{ getSuitSymbol(card.suit) }}</span>
       </div>
 
-      <!-- Bottom right corner (rotated) -->
-      <div class="card-corner bottom-right">
-        <div class="value">{{ card.display }}</div>
-        <div class="suit">{{ getSuitSymbol(card.suit) }}</div>
+      <!-- Bottom right corner -->
+      <div class="position-absolute bottom-0 end-0 p-1 d-flex flex-column align-items-center rotate-180">
+        <span class="fw-bold card-value">{{ card.display }}</span>
+        <span class="card-suit">{{ getSuitSymbol(card.suit) }}</span>
       </div>
     </div>
-    <div v-else class="card-back">
+
+    <!-- Card back -->
+    <div v-else class="card-back h-100 d-flex align-items-center justify-content-center">
       <div class="back-pattern"></div>
     </div>
   </div>
 </template>
-
 
 <script lang="ts">
 function getSuitSymbol(suit: string): string {
@@ -46,75 +47,38 @@ function getSuitSymbol(suit: string): string {
 </script>
 
 <style scoped>
+/* Only keep styles that can't be handled by Bootstrap */
 .playing-card {
   width: 100px;
   height: 140px;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  position: relative;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease;
   cursor: default;
-  overflow: hidden;
 }
 
 .playing-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.card-front {
-  height: 100%;
-  padding: 5px;
-  background: white;
-}
-
-.card-corner {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  line-height: 1;
-}
-
-.top-left {
-  top: 5px;
-  left: 5px;
-}
-
-.bottom-right {
-  bottom: 5px;
-  right: 5px;
-  transform: rotate(180deg);
-}
-
-.value {
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
-.suit {
-  font-size: 1rem;
-}
-
-.card-center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 .suit-large {
   font-size: 2.5rem;
 }
 
+.card-value {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.card-suit {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
 .card-back {
-  height: 100%;
   background: #2962ff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .back-pattern {
@@ -129,30 +93,17 @@ function getSuitSymbol(suit: string): string {
       #2962ff 10px);
 }
 
-/* Optional: Add a subtle inner border */
-.card-front::after {
-  content: '';
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  right: 3px;
-  bottom: 3px;
-  border: 1px solid #eee;
-  border-radius: 6px;
-  pointer-events: none;
-}
-
 @media (max-width: 768px) {
   .playing-card {
     width: 80px;
     height: 112px;
   }
 
-  .value {
+  .card-value {
     font-size: 1rem;
   }
 
-  .suit {
+  .card-suit {
     font-size: 0.9rem;
   }
 

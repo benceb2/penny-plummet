@@ -4,6 +4,7 @@ import { useBlackjackStore } from '@/stores/blackjack'
 import { useUserStore } from '@/stores/user'
 import PlayingCard from '@/components/PlayingCard.vue'
 import { BlackjackState } from '@/types/BlackjackGameState'
+import BaseLayout from '@/components/layout/BaseLayout.vue'
 
 const gameStore = useBlackjackStore()
 const userStore = useUserStore()
@@ -73,31 +74,22 @@ function setPresetBet(amount: number) {
 </script>
 
 <template>
-  <main class="container py-4">
-    <!-- Header with Balance and Stats -->
-    <div class="row mb-4">
-      <div class="col-12">
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-          <h2 class="text-primary mb-0">
-            <i class="bi bi-suit-spade-fill me-2"></i>Blackjack
-          </h2>
-          <div class="d-flex gap-3 align-items-center">
-            <div class="bg-light text-white px-4 py-2 rounded-3">
-              <i class="bi bi-wallet2 me-1"></i>
-              <span class="text-muted me-2">Chips:</span>
-              <span class="text-primary fw-bold">{{ userStore.formattedChips }}</span>
-            </div>
-            <button
-              class="btn btn-outline-primary"
-              type="button"
-              @click="showStats = !showStats">
-              <i class="bi" :class="showStats ? 'bi-eye-slash' : 'bi-eye'"></i>
-              {{ showStats ? 'Hide Stats' : 'View Stats' }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+  <BaseLayout
+    title="Blackjack"
+    icon="suit-spade-fill"
+    :showBalance="true">
+    <!-- Header Actions Slot -->
+    <template #header-actions>
+      <button
+        class="btn btn-outline-primary"
+        type="button"
+        @click="showStats = !showStats">
+        <i class="bi" :class="showStats ? 'bi-eye-slash' : 'bi-eye'"></i>
+        {{ showStats ? 'Hide Stats' : 'View Stats' }}
+      </button>
+    </template>
+
+    <!-- Main Content -->
 
     <!-- Stats Section -->
     <div v-if="showStats" class="row mb-4">
@@ -150,14 +142,11 @@ function setPresetBet(amount: number) {
     </div>
 
     <!-- Game Status Alert -->
-    <div v-if="gameStore.gameState === BlackjackState.gameOver"
-      class="alert mb-4"
-      :class="{
-        'alert-success': gameStatus.includes('You win'),
-        'alert-danger': gameStatus.includes('Dealer wins'),
-        'alert-warning': gameStatus.includes('Push')
-      }"
-      role="alert">
+    <div v-if="gameStore.gameState === BlackjackState.gameOver" class="alert mb-4" :class="{
+      'alert-success': gameStatus.includes('You win'),
+      'alert-danger': gameStatus.includes('Dealer wins'),
+      'alert-warning': gameStatus.includes('Push')
+    }" role="alert">
       <div class="d-flex justify-content-between align-items-center">
         <span class="h5 mb-0">
           <i class="bi" :class="{
@@ -187,10 +176,7 @@ function setPresetBet(amount: number) {
           <div class="card-body">
             <div class="d-flex justify-content-center">
               <div class="hand-display">
-                <PlayingCard
-                  v-for="(card, index) in gameStore.dealerHand"
-                  :key="index"
-                  :card="card" />
+                <PlayingCard v-for="(card, index) in gameStore.dealerHand" :key="index" :card="card" />
               </div>
             </div>
           </div>
@@ -215,10 +201,7 @@ function setPresetBet(amount: number) {
           <div class="card-body">
             <div class="d-flex justify-content-center">
               <div class="hand-display">
-                <PlayingCard
-                  v-for="(card, index) in gameStore.playerHand"
-                  :key="index"
-                  :card="card" />
+                <PlayingCard v-for="(card, index) in gameStore.playerHand" :key="index" :card="card" />
               </div>
             </div>
           </div>
@@ -245,12 +228,8 @@ function setPresetBet(amount: number) {
                       <i class="bi bi-lightning-fill me-1"></i>Quick Bet
                     </h6>
                     <div class="d-flex flex-wrap gap-2">
-                      <button
-                        v-for="amount in quickBetAmounts"
-                        :key="amount"
-                        class="btn btn-outline-primary"
-                        :class="{ 'active': betAmount === amount }"
-                        :disabled="amount > userStore.chips"
+                      <button v-for="amount in quickBetAmounts" :key="amount" class="btn btn-outline-primary"
+                        :class="{ 'active': betAmount === amount }" :disabled="amount > userStore.chips"
                         @click="setPresetBet(amount)">
                         {{ new Intl.NumberFormat('en-US', {
                           style: 'currency',
@@ -263,11 +242,7 @@ function setPresetBet(amount: number) {
                     </div>
                     <div class="mt-3">
                       <div class="form-floating">
-                        <input
-                          type="number"
-                          class="form-control"
-                          id="betAmount"
-                          v-model="betAmount"
+                        <input type="number" class="form-control" id="betAmount" v-model="betAmount"
                           :max="userStore.chips"
                           min="1">
                         <label for="betAmount">
@@ -291,9 +266,7 @@ function setPresetBet(amount: number) {
                     <!-- Betting State -->
                     <div v-if="gameStore.gameState === BlackjackState.betting"
                       class="d-flex justify-content-center align-items-center mt-5">
-                      <button
-                        class="btn btn-primary btn-lg"
-                        @click="handleDeal"
+                      <button class="btn btn-primary btn-lg" @click="handleDeal"
                         :disabled="betAmount <= 0 || betAmount > userStore.chips">
                         <i class="bi bi-play-circle-fill me-2"></i>
                         Deal Cards
@@ -303,26 +276,19 @@ function setPresetBet(amount: number) {
                     <!-- Player Turn State -->
                     <div v-if="gameStore.gameState === BlackjackState.playerTurn"
                       class="d-flex gap-3 justify-content-center">
-                      <button
-                        class="btn btn-success btn-lg"
-                        @click="handleHit">
+                      <button class="btn btn-success btn-lg" @click="handleHit">
                         <i class="bi bi-plus-circle-fill me-2"></i>
                         Hit
                       </button>
-                      <button
-                        class="btn btn-warning btn-lg text-white"
-                        @click="handleStand">
+                      <button class="btn btn-warning btn-lg text-white" @click="handleStand">
                         <i class="bi bi-hand-thumbs-up-fill me-2"></i>
                         Stand
                       </button>
                     </div>
 
                     <!-- Game Over State -->
-                    <div v-if="gameStore.gameState === BlackjackState.gameOver"
-                      class="d-flex justify-content-center">
-                      <button
-                        class="btn btn-primary btn-lg"
-                        @click="handleNewGame">
+                    <div v-if="gameStore.gameState === BlackjackState.gameOver" class="d-flex justify-content-center">
+                      <button class="btn btn-primary btn-lg" @click="handleNewGame">
                         <i class="bi bi-arrow-clockwise me-2"></i>
                         New Game
                       </button>
@@ -335,7 +301,7 @@ function setPresetBet(amount: number) {
         </div>
       </div>
     </div>
-  </main>
+  </BaseLayout>
 </template>
 <style scoped>
 .hand-display {

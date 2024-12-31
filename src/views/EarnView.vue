@@ -1,72 +1,18 @@
+<!-- EarnView.vue -->
 <script setup lang="ts">
-import { ref, computed } from 'vue'
 import { useUserStore } from '@/stores/user'
-import { formatIntAsCurrency } from '@/utils/currency'
+import { useClickerStore } from '@/stores/clicker'
+import BaseLayout from '@/components/layout/BaseLayout.vue'
 
 const userStore = useUserStore()
-
-// Base game state
-const clicks = ref(0)
-const baseClickValue = ref(1)
-const autoClickersCount = ref(0)
-const autoClickerCost = ref(50)
-const multiplierLevel = ref(1)
-const multiplierCost = ref(100)
-
-// Computed values
-const clickValue = computed(() => baseClickValue.value * multiplierLevel.value)
-const formattedClickValue = computed(() => formatIntAsCurrency(clickValue.value))
-const formattedAutoClickerCost = computed(() => formatIntAsCurrency(autoClickerCost.value))
-const formattedMultiplierCost = computed(() => formatIntAsCurrency(multiplierCost.value))
-const formattedClicks = computed(() => formatIntAsCurrency(clicks.value))
-
-// Click handling
-function handleClick() {
-  clicks.value += clickValue.value
-}
-
-function collectChips() {
-  if (clicks.value >= 10) {
-    userStore.updateChips(clicks.value)
-    clicks.value = 0
-  }
-}
-
-// Upgrades
-function buyAutoClicker() {
-  if (clicks.value >= autoClickerCost.value) {
-    clicks.value -= autoClickerCost.value
-    autoClickersCount.value++
-    autoClickerCost.value = Math.floor(autoClickerCost.value * 1.5)
-  }
-}
-
-function buyMultiplier() {
-  if (clicks.value >= multiplierCost.value) {
-    clicks.value -= multiplierCost.value
-    multiplierLevel.value++
-    multiplierCost.value = Math.floor(multiplierCost.value * 2)
-  }
-}
-
-// Auto-clickers
-setInterval(() => {
-  clicks.value += autoClickersCount.value * clickValue.value
-}, 1000)
+const clickerStore = useClickerStore()
 </script>
 
 <template>
-  <main class="container-fluid py-4">
-    <!-- Header Section -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h5 class="mb-0">
-        <i class="bi bi-coin me-2"></i>Earn Chips
-      </h5>
-      <div class="text-muted">
-        <i class="bi bi-wallet2 me-1"></i>Balance: {{ userStore.formattedChips }}
-      </div>
-    </div>
-
+  <BaseLayout
+    title="Earn Chips"
+    icon="coin"
+    :showBalance="true">
     <div class="row g-4">
       <!-- Main Clicker Area -->
       <div class="col-lg-8">
@@ -75,7 +21,7 @@ setInterval(() => {
             <div class="mb-4">
               <h3 class="text-primary mb-1">
                 <i class="bi bi-piggy-bank me-2"></i>
-                {{ formattedClicks }}
+                {{ clickerStore.formattedClicks }}
               </h3>
               <div class="text-muted small">Current Earnings</div>
             </div>
@@ -84,19 +30,19 @@ setInterval(() => {
               <button
                 class="btn btn-primary rounded-circle mb-4 p-0 d-flex align-items-center justify-content-center"
                 style="width: 160px; height: 160px"
-                @click="handleClick">
+                @click="clickerStore.handleClick">
                 <div>
                   <i class="bi bi-coin display-3"></i>
                   <div class="small mt-2">
-                    +{{ formattedClickValue }}
+                    +{{ clickerStore.formattedClickValue }}
                   </div>
                 </div>
               </button>
 
               <button
                 class="btn btn-success px-4 py-2"
-                @click="collectChips"
-                :disabled="clicks < 10">
+                @click="clickerStore.collectChips(userStore)"
+                :disabled="clickerStore.clicks < 10">
                 <i class="bi bi-check-circle me-2"></i>
                 Collect Chips
                 <small class="ms-1 opacity-75">(Min. 10 required)</small>
@@ -123,18 +69,18 @@ setInterval(() => {
                     <i class="bi bi-lightning me-1"></i>Auto-Clickers
                   </div>
                   <div class="small text-muted">
-                    Owned: {{ autoClickersCount }}
+                    Owned: {{ clickerStore.autoClickersCount }}
                   </div>
                 </div>
                 <small class="text-success">
-                  +{{ formattedClickValue }}/sec each
+                  +{{ clickerStore.formattedClickValue }}/sec each
                 </small>
               </div>
               <button
                 class="btn btn-outline-primary w-100"
-                @click="buyAutoClicker"
-                :disabled="clicks < autoClickerCost">
-                Buy Auto-Clicker ({{ formattedAutoClickerCost }})
+                @click="clickerStore.buyAutoClicker(userStore)"
+                :disabled="userStore.chips < clickerStore.autoClickerCost">
+                Buy Auto-Clicker ({{ clickerStore.formattedAutoClickerCost }})
               </button>
             </div>
 
@@ -146,22 +92,22 @@ setInterval(() => {
                     <i class="bi bi-stars me-1"></i>Click Multiplier
                   </div>
                   <div class="small text-muted">
-                    Current: {{ multiplierLevel }}x
+                    Current: {{ clickerStore.multiplierLevel }}x
                   </div>
                 </div>
               </div>
               <button
                 class="btn btn-outline-warning w-100"
-                @click="buyMultiplier"
-                :disabled="clicks < multiplierCost">
-                Upgrade Multiplier ({{ formattedMultiplierCost }})
+                @click="clickerStore.buyMultiplier(userStore)"
+                :disabled="userStore.chips < clickerStore.multiplierCost">
+                Upgrade Multiplier ({{ clickerStore.formattedMultiplierCost }})
               </button>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </main>
+  </BaseLayout>
 </template>
 
 <style scoped>

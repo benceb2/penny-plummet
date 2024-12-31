@@ -8,13 +8,14 @@
  *
  * @module useGameStore
  */
+import { defineStore } from 'pinia'
+import { ref, computed } from 'vue';
 
 import { BlackjackState } from '@/types/BlackjackGameState';
 import type { Card } from '@/types/Card';
 import type { BlackjackResult } from '@/types/BlackjackResult';
 import { generateDeck, shuffleDeck, calculateHandValue } from '@/utils/cards';
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue';
+import { calculateStorageKey, createGameSerializer } from './serializer';
 
 export const useBlackjackStore = defineStore('blackjack', () => {
   // Game state references
@@ -153,5 +154,8 @@ export const useBlackjackStore = defineStore('blackjack', () => {
     endGame
   }
 }, {
-  persist: true
+  persist: {
+    key: calculateStorageKey("blackjack-store"),
+    serializer: createGameSerializer()
+  }
 })

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
 import { useUserStore } from '@/stores/user'
@@ -9,16 +9,6 @@ import ToastContainer from './ToastContainer.vue'
 const userStore = useUserStore()
 const achievementStore = useAchievementStore()
 const isNavOpen = ref(false)
-
-// Level progress computations
-const levelProgress = computed(() => {
-  const level = achievementStore.currentLevel
-  return Math.floor((level.currentXP / level.requiredXP) * 100)
-})
-
-const levelProgressStyle = computed(() => {
-  return { width: `${levelProgress.value}%` }
-})
 </script>
 
 <template>
@@ -111,16 +101,6 @@ const levelProgressStyle = computed(() => {
                   <i class="bi bi-stars me-1"></i>
                   {{ achievementStore.currentLevel.level }}
                 </span>
-                <div class="progress level-progress d-none d-lg-block">
-                  <div
-                    class="progress-bar bg-info"
-                    role="progressbar"
-                    :style="levelProgressStyle"
-                    :aria-valuenow="levelProgress"
-                    aria-valuemin="0"
-                    aria-valuemax="100">
-                  </div>
-                </div>
               </div>
 
               <!-- Username Badge -->
@@ -155,21 +135,6 @@ const levelProgressStyle = computed(() => {
               </li>
             </ul>
           </div>
-
-          <!-- Mobile-only Level Progress -->
-          <div class="d-block d-lg-none w-100">
-            <div class="progress level-progress-mobile">
-              <div
-                class="progress-bar bg-info"
-                role="progressbar"
-                :style="levelProgressStyle"
-                :aria-valuenow="levelProgress"
-                aria-valuemin="0"
-                aria-valuemax="100">
-                {{ levelProgress }}%
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -178,22 +143,6 @@ const levelProgressStyle = computed(() => {
 </template>
 
 <style scoped>
-.level-progress {
-  width: 80px;
-  height: 8px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.level-progress-mobile {
-  height: 6px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  overflow: hidden;
-  margin-top: 0.5rem;
-}
-
 .progress-bar {
   transition: width 0.3s ease;
 }

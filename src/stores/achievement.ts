@@ -4,9 +4,11 @@ import { calculateStorageKey, createGameSerializer } from '../utils/serializer';
 import type { Achievement } from '@/types/Achievement';
 import type { Level } from '@/types/Level';
 import { useUserStore } from './user';
+import { useToastStore } from './toast';
 
 export const useAchievementStore = defineStore('achievements', () => {
   const userStore = useUserStore();
+  const toastStore = useToastStore();
 
   // Level System
   const currentLevel = ref<Level>({
@@ -100,7 +102,20 @@ export const useAchievementStore = defineStore('achievements', () => {
 
   function checkLevelUp() {
     while (currentLevel.value.currentXP >= currentLevel.value.requiredXP) {
+      // Store old level for comparison
+      const oldLevel = currentLevel.value.level;
       levelUp();
+
+      // Only show toast if level actually increased
+      if (currentLevel.value.level > oldLevel) {
+        const toastStore = useToastStore();
+        const rewards = {
+          chips: Math.floor(100 * Math.pow(1.2, currentLevel.value.level - 1)),
+          multiplier: 1 + (currentLevel.value.level - 1) * 0.1
+        };
+
+        toastStore.levelUp(currentLevel.value.level, rewards);
+      }
     }
   }
 
@@ -144,6 +159,7 @@ export const useAchievementStore = defineStore('achievements', () => {
       achievement.completed = true;
       userStore.updateChips(achievement.reward);
       addXP(achievement.reward); // Also grant XP equal to chip reward
+      toastStore.achievementUnlocked(achievement.title, achievement.description);
     }
   }
 

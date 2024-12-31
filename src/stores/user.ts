@@ -5,6 +5,7 @@ import { type BlackjackResult } from '@/types/BlackjackResult';
 import { calculateStorageKey, createGameSerializer } from './serializer';
 
 export const useUserStore = defineStore('user', () => {
+  const consented = ref(false)
   const chips = ref(1000)
   const username = ref<string | null>(null)
   const stats = ref({
@@ -39,18 +40,24 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+  function updateConsent(newConsent: boolean) {
+    consented.value = newConsent;
+  }
+
   function updateUsername(newUsername: string) {
     username.value = newUsername
   }
 
   return {
+    consented,
     chips,
     username,
     stats,
     formattedChips,
     updateChips,
     updateStats,
-    updateUsername
+    updateUsername,
+    updateConsent
   }
 }, {
   persist: {

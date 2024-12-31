@@ -2,7 +2,7 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user'
 import { useClickerStore } from '@/stores/clicker'
-import BaseLayout from '@/components/BaseLayout.vue'
+import BaseLayout from '@/components/layout/BaseLayout.vue'
 
 const userStore = useUserStore()
 const clickerStore = useClickerStore()

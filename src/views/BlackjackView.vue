@@ -4,7 +4,7 @@ import { useBlackjackStore } from '@/stores/blackjack'
 import { useUserStore } from '@/stores/user'
 import PlayingCard from '@/components/PlayingCard.vue'
 import { BlackjackState } from '@/types/BlackjackGameState'
-import BaseLayout from '@/components/BaseLayout.vue'
+import BaseLayout from '@/components/layout/BaseLayout.vue'
 
 const gameStore = useBlackjackStore()
 const userStore = useUserStore()

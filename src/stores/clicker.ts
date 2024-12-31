@@ -1,4 +1,3 @@
-// stores/clicker.ts
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { formatIntAsCurrency } from '@/utils/currency'

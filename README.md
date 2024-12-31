@@ -1,18 +1,19 @@
-# penny-plummet
+# <img src="./public/favicon.svg" width="25" height="25" style="margin-right: 10px;" /> Penny Plummet
 
-This template should help get you started developing with Vue 3 in Vite.
+Penny Plummet is an browser-based casino game built with:
 
-## Recommended IDE Setup
+- TypeScript
+- Vue 3
+- Vite
+- Pinia
+- Bootstrap
+- Bootstrap Icons
+- Local Storage
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+Current features include:
 
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
+- Blackjack
+- Clicker game
 
 ## Project Setup
 

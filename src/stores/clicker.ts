@@ -2,10 +2,14 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
 import { formatIntAsCurrency } from '@/utils/currency'
-import { calculateStorageKey, createGameSerializer } from '../utils/serializer'
+import { calculateStorageKey, createGameSerializer } from '@/utils/serializer'
+import { useAchievementStore } from './achievement'
 import type { UserStore } from './user'
 
 export const useClickerStore = defineStore('clicker', () => {
+
+  const achievementStore = useAchievementStore()
+
   // State
   const clicks = ref(0)
   const baseClickValue = ref(1)
@@ -24,6 +28,8 @@ export const useClickerStore = defineStore('clicker', () => {
   // Actions
   function handleClick() {
     clicks.value += clickValue.value
+    achievementStore.updateAchievementProgress('click_novice', clicks.value)
+    achievementStore.updateAchievementProgress('click_master', clicks.value)
   }
 
   function collectChips(userStore: UserStore) {
@@ -38,6 +44,8 @@ export const useClickerStore = defineStore('clicker', () => {
       userStore.updateChips(-autoClickerCost.value)
       autoClickersCount.value++
       autoClickerCost.value = Math.floor(autoClickerCost.value * 1.5)
+      achievementStore.updateAchievementProgress('auto_collector', autoClickersCount.value)
+      achievementStore.updateAchievementProgress('auto_empire', autoClickersCount.value)
     }
   }
 
@@ -46,6 +54,7 @@ export const useClickerStore = defineStore('clicker', () => {
       userStore.updateChips(-multiplierCost.value)
       multiplierLevel.value++
       multiplierCost.value = Math.floor(multiplierCost.value * 2)
+      achievementStore.updateAchievementProgress('multiplier_enthusiast', multiplierLevel.value)
     }
   }
 

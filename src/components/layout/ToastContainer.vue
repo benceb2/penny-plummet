@@ -4,28 +4,32 @@ const toastStore = useToastStore();
 </script>
 
 <template>
-  <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1050">
+  <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1050">
     <TransitionGroup name="toast">
       <div
         v-for="toast in toastStore.toasts"
         :key="toast.id"
-        class="toast show"
+        class="toast show shadow-lg mb-3"
         :class="{
-          'bg-achievement': toast.type === 'achievement',
-          'bg-level-up': toast.type === 'level-up'
+          'bg-dark text-white': toast.type === 'achievement',
+          'bg-primary text-white': toast.type === 'level-up'
         }"
-        role="alert">
-        <div class="toast-header">
+        role="alert"
+        style="min-width: 350px">
+        <div class="toast-header p-2">
           <i
-            :class="['bi', toast.icon, 'me-2', {
+            :class="['bi', toast.icon, 'me-2 fs-5', {
               'text-warning': toast.type === 'achievement',
               'text-info': toast.type === 'level-up'
-            }]"></i>
+            }]">
+          </i>
           <strong class="me-auto">{{ toast.title }}</strong>
           <button
             type="button"
             class="btn-close"
-            @click="toastStore.removeToast(toast.id)"></button>
+            :class="{ 'btn-close-white': toast.type === 'achievement' || toast.type === 'level-up' }"
+            @click="toastStore.removeToast(toast.id)">
+          </button>
         </div>
         <div class="toast-body">
           {{ toast.message }}
@@ -51,18 +55,8 @@ const toastStore = useToastStore();
   opacity: 0;
 }
 
-.bg-achievement {
-  background-color: #2c3e50;
-  color: white;
-}
-
-.bg-level-up {
-  background-color: #2980b9;
-  color: white;
-}
-
 .toast {
-  min-width: 300px;
+  min-width: 350px;
   margin-bottom: 1rem;
 }
 </style>

@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { calculateStorageKey, createGameSerializer } from '../utils/serializer';
+
+import { calculateStorageKey, createGameSerializer } from '@/utils/serializer';
+import { achievements } from '@/utils/achievements';
 import type { Achievement } from '@/types/Achievement';
 import type { Level } from '@/types/Level';
 import { useUserStore } from './user';
@@ -20,70 +22,6 @@ export const useAchievementStore = defineStore('achievements', () => {
       multiplier: 1.0
     }
   });
-
-  // Achievement List
-  const achievements = ref<Achievement[]>([
-    {
-      id: 'first_hand',
-      title: 'Getting Started',
-      description: 'Play your first hand of Blackjack',
-      requirement: 1,
-      progress: 0,
-      completed: false,
-      reward: 10,
-      category: 'blackjack'
-    },
-    {
-      id: 'blackjack_veteran',
-      title: 'Blackjack Veteran',
-      description: 'Play 100 hands of Blackjack',
-      requirement: 100,
-      progress: 0,
-      completed: false,
-      reward: 500,
-      category: 'blackjack'
-    },
-    {
-      id: 'winning_streak',
-      title: 'Hot Streak',
-      description: 'Win 5 hands in a row',
-      requirement: 5,
-      progress: 0,
-      completed: false,
-      reward: 250,
-      category: 'blackjack'
-    },
-    {
-      id: 'high_roller',
-      title: 'High Roller',
-      description: 'Win $1,000 or more in a single hand',
-      requirement: 1000,
-      progress: 0,
-      completed: false,
-      reward: 1000,
-      category: 'blackjack'
-    },
-    {
-      id: 'blackjack_master',
-      title: 'Natural Talent',
-      description: 'Get Blackjack 10 times',
-      requirement: 10,
-      progress: 0,
-      completed: false,
-      reward: 500,
-      category: 'blackjack'
-    },
-    {
-      id: 'high_stakes',
-      title: 'High Stakes Player',
-      description: 'Place a bet of $500 or more',
-      requirement: 500,
-      progress: 0,
-      completed: false,
-      reward: 300,
-      category: 'blackjack'
-    }
-  ])
 
   // Computed Properties
   const levelProgress = computed(() => {

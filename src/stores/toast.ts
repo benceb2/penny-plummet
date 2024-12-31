@@ -14,6 +14,7 @@ export const useToastStore = defineStore('toast', () => {
   let nextId = 0;
 
   function addToast(toast: Omit<Toast, 'id'>) {
+    console.log('toastStore.addToast()', toast)
     const id = nextId++;
     toasts.value.push({ ...toast, id });
 

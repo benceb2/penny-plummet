@@ -4,6 +4,7 @@ import { RouterLink } from 'vue-router'
 
 import { useUserStore } from '@/stores/user'
 import { useAchievementStore } from '@/stores/achievement'
+import ToastContainer from './ToastContainer.vue'
 
 const userStore = useUserStore()
 const achievementStore = useAchievementStore()

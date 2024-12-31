@@ -23,7 +23,6 @@
           <h5>Level Rewards:</h5>
           <ul class="list-unstyled">
             <li>Chips: {{ formatIntAsCurrency(currentLevel.rewards.chips) }}</li>
-            <li>Multiplier: {{ currentLevel.rewards.multiplier?.toFixed(2) }}x</li>
           </ul>
         </div>
       </div>
@@ -97,8 +96,9 @@
                     {{ achievement.progress }}/{{ achievement.requirement }}
                   </div>
                 </div>
-                <div class="mt-auto text-muted">
-                  <small>Reward: {{ formatIntAsCurrency(achievement.reward) }}</small>
+                <div class="mt-auto text-muted d-flex justify-content-between">
+                  <small>Reward: {{ formatIntAsCurrency(achievement.reward.chips) }}</small>
+                  <small>XP: {{ achievement.reward.xp }}</small>
                 </div>
               </div>
             </div>

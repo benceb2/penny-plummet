@@ -20,33 +20,14 @@ export const useUserStore = defineStore('user', () => {
   })
 
   function updateChips(amount: number) {
-    const oldChips = chips.value
     chips.value += amount
-
-    // Check negative balance achievements
-    if (chips.value < 0) {
-      if (oldChips >= -100 && chips.value <= -100) {
-        achievementStore.updateAchievementProgress('small_debt', 100)
-      }
-      if (oldChips >= -1000 && chips.value <= -1000) {
-        achievementStore.updateAchievementProgress('big_debt', 1000)
-      }
-      if (oldChips >= -100000 && chips.value <= -100000) {
-        achievementStore.updateAchievementProgress('massive_debt', 100000)
-      }
-    }
 
     // Check positive balance achievements
     if (chips.value > 0) {
-      if (oldChips < 1000 && chips.value >= 1000) {
-        achievementStore.updateAchievementProgress('small_fortune', 1000)
-      }
-      if (oldChips < 10000 && chips.value >= 10000) {
-        achievementStore.updateAchievementProgress('medium_fortune', 10000)
-      }
-      if (oldChips < 100000 && chips.value >= 100000) {
-        achievementStore.updateAchievementProgress('large_fortune', 100000)
-      }
+      // Update progress with highest balance reached
+      achievementStore.updateAchievementProgress('small_fortune', chips.value)
+      achievementStore.updateAchievementProgress('medium_fortune', chips.value)
+      achievementStore.updateAchievementProgress('large_fortune', chips.value)
     }
   }
 

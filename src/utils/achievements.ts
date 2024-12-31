@@ -3,7 +3,6 @@ import { ref } from "vue";
 
 export const achievements = ref<Achievement[]>([
   // Blackjack achievements
-
   {
     id: 'first_hand',
     title: 'Getting Started',
@@ -11,7 +10,10 @@ export const achievements = ref<Achievement[]>([
     requirement: 1,
     progress: 0,
     completed: false,
-    reward: 10,
+    reward: {
+      chips: 10,
+      xp: 10
+    },
     category: 'blackjack'
   },
   {
@@ -21,7 +23,10 @@ export const achievements = ref<Achievement[]>([
     requirement: 100,
     progress: 0,
     completed: false,
-    reward: 500,
+    reward: {
+      chips: 500,
+      xp: 250
+    },
     category: 'blackjack'
   },
   {
@@ -31,7 +36,10 @@ export const achievements = ref<Achievement[]>([
     requirement: 5,
     progress: 0,
     completed: false,
-    reward: 250,
+    reward: {
+      chips: 250,
+      xp: 100
+    },
     category: 'blackjack'
   },
   {
@@ -41,7 +49,10 @@ export const achievements = ref<Achievement[]>([
     requirement: 1000,
     progress: 0,
     completed: false,
-    reward: 1000,
+    reward: {
+      chips: 1000,
+      xp: 500
+    },
     category: 'blackjack'
   },
   {
@@ -51,7 +62,10 @@ export const achievements = ref<Achievement[]>([
     requirement: 10,
     progress: 0,
     completed: false,
-    reward: 500,
+    reward: {
+      chips: 500,
+      xp: 200
+    },
     category: 'blackjack'
   },
   {
@@ -61,10 +75,12 @@ export const achievements = ref<Achievement[]>([
     requirement: 500,
     progress: 0,
     completed: false,
-    reward: 300,
+    reward: {
+      chips: 300,
+      xp: 150
+    },
     category: 'blackjack'
   },
-
   // Clicker Achievements
   {
     id: 'click_novice',
@@ -73,7 +89,10 @@ export const achievements = ref<Achievement[]>([
     requirement: 100,
     progress: 0,
     completed: false,
-    reward: 50,
+    reward: {
+      chips: 50,
+      xp: 25
+    },
     category: 'clicker'
   },
   {
@@ -83,7 +102,10 @@ export const achievements = ref<Achievement[]>([
     requirement: 1000,
     progress: 0,
     completed: false,
-    reward: 200,
+    reward: {
+      chips: 200,
+      xp: 100
+    },
     category: 'clicker'
   },
   {
@@ -93,7 +115,10 @@ export const achievements = ref<Achievement[]>([
     requirement: 1,
     progress: 0,
     completed: false,
-    reward: 100,
+    reward: {
+      chips: 100,
+      xp: 50
+    },
     category: 'clicker'
   },
   {
@@ -103,7 +128,10 @@ export const achievements = ref<Achievement[]>([
     requirement: 10,
     progress: 0,
     completed: false,
-    reward: 500,
+    reward: {
+      chips: 500,
+      xp: 250
+    },
     category: 'clicker'
   },
   {
@@ -113,40 +141,11 @@ export const achievements = ref<Achievement[]>([
     requirement: 5,
     progress: 0,
     completed: false,
-    reward: 300,
+    reward: {
+      chips: 300,
+      xp: 150
+    },
     category: 'clicker'
-  },
-
-  // General Achievements
-  {
-    id: 'small_debt',
-    title: 'In the Red',
-    description: 'Hit a balance of -$100',
-    requirement: 100,
-    progress: 0,
-    completed: false,
-    reward: 200,
-    category: 'general'
-  },
-  {
-    id: 'big_debt',
-    title: 'Deep in Debt',
-    description: 'Hit a balance of -$1,000',
-    requirement: 1000,
-    progress: 0,
-    completed: false,
-    reward: 2000,
-    category: 'general'
-  },
-  {
-    id: 'massive_debt',
-    title: 'Rock Bottom',
-    description: 'Hit a balance of -$100,000',
-    requirement: 100000,
-    progress: 0,
-    completed: false,
-    reward: 150000,
-    category: 'general'
   },
   {
     id: 'small_fortune',
@@ -155,7 +154,10 @@ export const achievements = ref<Achievement[]>([
     requirement: 1000,
     progress: 0,
     completed: false,
-    reward: 100,
+    reward: {
+      chips: 100,
+      xp: 50
+    },
     category: 'general'
   },
   {
@@ -165,7 +167,10 @@ export const achievements = ref<Achievement[]>([
     requirement: 10000,
     progress: 0,
     completed: false,
-    reward: 1000,
+    reward: {
+      chips: 1000,
+      xp: 250
+    },
     category: 'general'
   },
   {
@@ -175,7 +180,10 @@ export const achievements = ref<Achievement[]>([
     requirement: 100000,
     progress: 0,
     completed: false,
-    reward: 10000,
+    reward: {
+      chips: 10000,
+      xp: 1000
+    },
     category: 'general'
   }
-])
+]);

@@ -45,7 +45,7 @@ export const useToastStore = defineStore('toast', () => {
     addToast({
       type: 'level-up',
       title: 'Level Up!',
-      message: `You've reached level ${newLevel}! Rewards: $${rewards.chips} chips, ${rewards.multiplier}x multiplier`,
+      message: `You've reached level ${newLevel}! Rewards: $${rewards.chips} chips`,
       icon: 'bi-stars'
     });
   }

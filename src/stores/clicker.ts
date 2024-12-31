@@ -35,6 +35,8 @@ export const useClickerStore = defineStore('clicker', () => {
   function collectChips(userStore: UserStore) {
     if (clicks.value >= 10) {
       userStore.updateChips(clicks.value)
+      const calculatedXP = Math.floor(clicks.value * 0.2)
+      achievementStore.addXP(calculatedXP)
       clicks.value = 0
     }
   }

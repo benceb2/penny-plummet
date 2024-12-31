@@ -5,6 +5,9 @@ export interface Achievement {
   requirement: number;
   progress: number;
   completed: boolean;
-  reward: number; // Chips or XP reward
+  reward: {
+    chips: number;
+    xp: number;
+  }; // Chips or XP reward
   category: 'blackjack' | 'clicker' | 'general';
 }

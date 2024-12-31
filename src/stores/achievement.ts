@@ -16,10 +16,9 @@ export const useAchievementStore = defineStore('achievements', () => {
   const currentLevel = ref<Level>({
     level: 1,
     currentXP: 0,
-    requiredXP: 100,
+    requiredXP: 600,
     rewards: {
       chips: 100,
-      multiplier: 1.0
     }
   });
 
@@ -70,7 +69,6 @@ export const useAchievementStore = defineStore('achievements', () => {
     // Update rewards for next level
     currentLevel.value.rewards = {
       chips: Math.floor(currentLevel.value.rewards.chips * 1.2),
-      multiplier: currentLevel.value.rewards.multiplier! + 0.1
     };
   }
 
@@ -95,8 +93,8 @@ export const useAchievementStore = defineStore('achievements', () => {
   function completeAchievement(achievement: Achievement) {
     if (!achievement.completed) {
       achievement.completed = true;
-      userStore.updateChips(achievement.reward);
-      addXP(achievement.reward); // Also grant XP equal to chip reward
+      userStore.updateChips(achievement.reward.chips);
+      addXP(achievement.reward.xp); // Also grant XP equal to chip reward
       toastStore.achievementUnlocked(achievement.title, achievement.description);
     }
   }

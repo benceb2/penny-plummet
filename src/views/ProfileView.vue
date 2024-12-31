@@ -79,9 +79,9 @@
             :key="achievement.id"
             class="col-md-6 mb-3">
             <div
-              class="card"
+              class="card h-100"
               :class="{ 'border-success': achievement.completed }">
-              <div class="card-body">
+              <div class="card-body d-flex flex-column">
                 <h5 class="card-title">
                   {{ achievement.title }}
                   <span v-if="achievement.completed" class="text-success">
@@ -97,7 +97,7 @@
                     {{ achievement.progress }}/{{ achievement.requirement }}
                   </div>
                 </div>
-                <div class="mt-2 text-muted">
+                <div class="mt-auto text-muted">
                   <small>Reward: {{ formatIntAsCurrency(achievement.reward) }}</small>
                 </div>
               </div>

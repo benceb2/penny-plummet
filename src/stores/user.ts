@@ -2,7 +2,7 @@ import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 
 import { type BlackjackResult } from '@/types/BlackjackResult';
-import { createGameSerializer } from './serializer';
+import { calculateStorageKey, createGameSerializer } from './serializer';
 
 export const useUserStore = defineStore('user', () => {
   const chips = ref(1000)
@@ -54,7 +54,7 @@ export const useUserStore = defineStore('user', () => {
   }
 }, {
   persist: {
-    key: 'user',
+    key: calculateStorageKey("user-store"),
     serializer: createGameSerializer()
   }
 })

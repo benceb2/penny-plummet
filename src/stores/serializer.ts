@@ -1,7 +1,7 @@
 const SHIFT = 11
 const SIGNATURE = btoa("penny-plummet-2024")
 
-const shiftString = (str: string, shift: number): string => {
+export const shiftString = (str: string, shift: number): string => {
   return str.split('').map(char =>
     String.fromCharCode(char.charCodeAt(0) + shift)
   ).join('')
@@ -40,6 +40,14 @@ const decode = (stored: string): any => {
   } catch {
     return null
   }
+}
+
+export const calculateStorageKey = (key: string) => {
+  // shift
+  const shifted = shiftString(key, SHIFT)
+  // base64
+  const encoded = btoa(shifted)
+  return encoded.split('').reverse().join('') + SIGNATURE
 }
 
 export const createGameSerializer = () => ({

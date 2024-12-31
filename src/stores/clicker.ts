@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+
 import { formatIntAsCurrency } from '@/utils/currency'
+import { createGameSerializer } from './serializer'
 
 export const useClickerStore = defineStore('clicker', () => {
   // State
@@ -87,5 +89,8 @@ export const useClickerStore = defineStore('clicker', () => {
     reset
   }
 }, {
-  persist: true
+  persist: {
+    key: 'clicker',
+    serializer: createGameSerializer()
+  }
 })

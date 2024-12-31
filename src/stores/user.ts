@@ -1,6 +1,8 @@
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
+
 import { type BlackjackResult } from '@/types/BlackjackResult';
+import { createGameSerializer } from './serializer';
 
 export const useUserStore = defineStore('user', () => {
   const chips = ref(1000)
@@ -51,5 +53,8 @@ export const useUserStore = defineStore('user', () => {
     updateUsername
   }
 }, {
-  persist: true
+  persist: {
+    key: 'user',
+    serializer: createGameSerializer()
+  }
 })

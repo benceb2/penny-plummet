@@ -1,12 +1,17 @@
-import { ref, computed } from 'vue';
+import { computed, ref } from 'vue';
 import { defineStore } from 'pinia';
 
 import { type BlackjackResult } from '@/types/BlackjackResult';
-import { calculateStorageKey, createGameSerializer } from '../utils/serializer';
+import { calculateStorageKey, createGameSerializer } from '@/utils/serializer';
+import { formatIntAsCurrency } from '@/utils/currency';
+import { useAchievementStore } from './achievement';
 
 export const useUserStore = defineStore('user', () => {
+  const achievementStore = useAchievementStore()
+
   const consented = ref(false)
   const chips = ref(50)
+  const formattedChips = computed(() => formatIntAsCurrency(chips.value))
   const username = ref<string | null>(null)
   const stats = ref({
     handsPlayed: 0,
@@ -14,15 +19,16 @@ export const useUserStore = defineStore('user', () => {
     biggestWin: 0
   })
 
-  const formattedChips = computed(() => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(chips.value)
-  })
-
   function updateChips(amount: number) {
     chips.value += amount
+
+    // Check positive balance achievements
+    if (chips.value > 0) {
+      // Update progress with highest balance reached
+      achievementStore.updateAchievementProgress('small_fortune', chips.value)
+      achievementStore.updateAchievementProgress('medium_fortune', chips.value)
+      achievementStore.updateAchievementProgress('large_fortune', chips.value)
+    }
   }
 
   function updateStats(gameResult: BlackjackResult) {
@@ -51,19 +57,21 @@ export const useUserStore = defineStore('user', () => {
   return {
     consented,
     chips,
+    formattedChips,
     username,
     stats,
-    formattedChips,
     updateChips,
     updateStats,
     updateUsername,
     updateConsent
   }
-}, {
-  persist: {
-    key: calculateStorageKey("user-store"),
-    serializer: createGameSerializer()
-  }
-})
+},
+  {
+    persist: {
+      key: calculateStorageKey("user-store"),
+      serializer: createGameSerializer()
+    }
+  } as any) // treating this as any because the TS support for the persistence
+// plugin doesn't seem to be working and we cannot compile otherwise.
 
 export type UserStore = ReturnType<typeof useUserStore>

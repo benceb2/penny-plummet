@@ -5,6 +5,7 @@ import { useUserStore } from '@/stores/user'
 import PlayingCard from '@/components/PlayingCard.vue'
 import { BlackjackState } from '@/types/BlackjackGameState'
 import BaseLayout from '@/components/layout/BaseLayout.vue'
+import { formatIntAsCurrency } from '@/utils/currency'
 
 const gameStore = useBlackjackStore()
 const userStore = useUserStore()
@@ -117,9 +118,7 @@ function setPresetBet(amount: number) {
                   </h6>
                   <span class="h4"
                     :class="{ 'text-success': userStore.stats.totalWinnings > 0, 'text-danger': userStore.stats.totalWinnings < 0 }">
-                    {{ new Intl.NumberFormat('en-US', {
-                      style: 'currency', currency: 'USD'
-                    }).format(userStore.stats.totalWinnings) }}
+                    {{ formatIntAsCurrency(userStore.stats.totalWinnings) }}
                   </span>
                 </div>
               </div>
@@ -129,9 +128,7 @@ function setPresetBet(amount: number) {
                     <i class="bi bi-trophy me-1"></i>Biggest Win
                   </h6>
                   <span class="h4 text-success">
-                    {{ new Intl.NumberFormat('en-US', {
-                      style: 'currency', currency: 'USD'
-                    }).format(userStore.stats.biggestWin) }}
+                    {{ formatIntAsCurrency(userStore.stats.biggestWin) }}
                   </span>
                 </div>
               </div>
@@ -231,10 +228,7 @@ function setPresetBet(amount: number) {
                       <button v-for="amount in quickBetAmounts" :key="amount" class="btn btn-outline-primary"
                         :class="{ 'active': betAmount === amount }" :disabled="amount > userStore.chips"
                         @click="setPresetBet(amount)">
-                        {{ new Intl.NumberFormat('en-US', {
-                          style: 'currency',
-                          currency: 'USD'
-                        }).format(amount) }}
+                        {{ formatIntAsCurrency(amount) }}
                         <small class="text-muted ms-1">
                           ({{ Math.round((amount / userStore.chips) * 100) }}%)
                         </small>

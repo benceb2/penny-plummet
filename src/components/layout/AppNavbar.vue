@@ -109,7 +109,7 @@ const isNavOpen = ref(false)
                     <hr class="dropdown-divider">
                   </li>
                   <li>
-                    <a class="dropdown-item py-2 text-danger" href="#" @click="">
+                    <a class="dropdown-item py-2 text-danger" href="#">
                       <i class="bi bi-box-arrow-right me-2 opacity-75"></i>
                       Logout
                     </a>

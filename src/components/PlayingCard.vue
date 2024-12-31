@@ -11,7 +11,7 @@ defineProps<{
     <div v-if="card.faceUp" class="card-front">
       <!-- Top left corner -->
       <div class="card-corner top-left">
-        <div class="value">{{ getCardDisplay(card.value) }}</div>
+        <div class="value">{{ card.display }}</div>
         <div class="suit">{{ getSuitSymbol(card.suit) }}</div>
       </div>
 
@@ -22,7 +22,7 @@ defineProps<{
 
       <!-- Bottom right corner (rotated) -->
       <div class="card-corner bottom-right">
-        <div class="value">{{ getCardDisplay(card.value) }}</div>
+        <div class="value">{{ card.display }}</div>
         <div class="suit">{{ getSuitSymbol(card.suit) }}</div>
       </div>
     </div>
@@ -34,16 +34,6 @@ defineProps<{
 
 
 <script lang="ts">
-function getCardDisplay(value: number): string {
-  switch (value) {
-    case 1: return 'A'
-    case 11: return 'J'
-    case 12: return 'Q'
-    case 13: return 'K'
-    default: return value.toString()
-  }
-}
-
 function getSuitSymbol(suit: string): string {
   switch (suit) {
     case 'hearts': return '♥'

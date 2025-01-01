@@ -13,6 +13,9 @@ export const useClickerStore = defineStore('clicker', () => {
 
 
   const achievementStore = useAchievementStore()
+  let autoClickerInterval: number | null = null;
+
+  startAutoClicker();
 
   // State
   const clicks = ref(0)
@@ -70,11 +73,31 @@ export const useClickerStore = defineStore('clicker', () => {
     }
   }
 
-  // Auto-clicker interval
-  if (typeof window !== 'undefined') {
-    setInterval(() => {
-      clicks.value += autoClickersCount.value * clickValue.value
-    }, 1000)
+  // Function to start auto-clicking
+  function startAutoClicker() {
+    if (typeof window !== 'undefined') {
+      // Clear any existing interval first
+      if (autoClickerInterval) {
+        clearInterval(autoClickerInterval)
+      }
+      autoClickerInterval = setInterval(() => {
+        clicks.value += autoClickersCount.value * clickValue.value
+      }, 1000)
+    }
+  }
+
+  function stopAutoClicker(clearStorage: boolean = true) {
+    if (autoClickerInterval) {
+      clearInterval(autoClickerInterval)
+      autoClickerInterval = null
+    }
+
+    if (clearStorage) {
+      const clickerStore = localStorage.getItem(calculateStorageKey("clicker-store"))
+      if (clickerStore) {
+        localStorage.removeItem(calculateStorageKey("clicker-store"))
+      }
+    }
   }
 
   function initializeOfflineTracking() {
@@ -161,7 +184,9 @@ export const useClickerStore = defineStore('clicker', () => {
     reset,
     initializeOfflineTracking,
     checkOfflineProgress,
-    closeOfflineEarningsModal
+    closeOfflineEarningsModal,
+    startAutoClicker,
+    stopAutoClicker
   }
 }, {
   persist: {

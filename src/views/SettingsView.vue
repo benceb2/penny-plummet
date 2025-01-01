@@ -154,9 +154,12 @@ const deleteSave = () => {
 };
 
 const confirmDelete = () => {
-  localStorage.clear();
-  window.location.reload();
-};
+  const clickerStore = useClickerStore()
+  clickerStore.reset()  // Reset the clicks
+  clickerStore.stopAutoClicker()  // Stop the interval
+  localStorage.clear()
+  window.location.reload()
+}
 
 const cancelDelete = () => {
   showDeleteConfirm.value = false;

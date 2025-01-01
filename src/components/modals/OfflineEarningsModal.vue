@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, watchEffect } from 'vue'
+import { computed } from 'vue'
 import BaseModal from './BaseModal.vue'
 import { formatIntAsCurrency } from '@/utils/currency'
 
@@ -22,26 +22,6 @@ const formattedTime = computed(() => {
     ? `${hours}h ${minutes}m`
     : `${minutes}m`
 })
-
-// Auto-close after 10 seconds
-let autoCloseTimer: number | null = null
-
-watchEffect(() => {
-  if (props.show) {
-    if (autoCloseTimer) {
-      clearTimeout(autoCloseTimer)
-    }
-    autoCloseTimer = setTimeout(() => {
-      emit('close')
-    }, 10000)
-  }
-})
-
-onBeforeUnmount(() => {
-  if (autoCloseTimer) {
-    clearTimeout(autoCloseTimer)
-  }
-})
 </script>
 
 <template>
@@ -55,6 +35,9 @@ onBeforeUnmount(() => {
       <p class="text-success font-bold mt-3 text-xl">
         +{{ formatIntAsCurrency(earnings) }} clicks earned
       </p>
+      <p class="text-muted">
+        You can collect your earnings from the Clicker mini-game.
+      </p>
     </div>
 
     <template #footer>
@@ -63,6 +46,10 @@ onBeforeUnmount(() => {
         class="btn btn-primary w-100">
         Awesome!
       </button>
+      <RouterLink @click.prevent="emit('close')" to="/earn" class="btn btn-outline-secondary w-100">
+        Collect earnings
+        <i class="bi bi-arrow-right ms-2"></i>
+      </RouterLink>
     </template>
   </BaseModal>
 </template>

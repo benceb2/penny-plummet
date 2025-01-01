@@ -4,21 +4,40 @@ import { useUserStore } from '@/stores/user';
 import { useAchievementStore } from '@/stores/achievement';
 import { formatIntAsCurrency } from '@/utils/currency';
 import BaseLayout from '@/components/layout/BaseLayout.vue';
+import AchievementCard from '@/components/AchievementCard.vue';
 import { useRoute } from 'vue-router';
 
 const userStore = useUserStore();
 const achievementStore = useAchievementStore();
 
 const selectedCategory = ref('all');
+const hideCompleted = ref(false);
 
 const { currentLevel, levelProgress, achievements } = achievementStore;
 const userStats = userStore.stats;
 
 const filteredAchievements = computed(() => {
-  if (selectedCategory.value === 'all') {
-    return achievements;
+  let filtered = achievements;
+
+  if (selectedCategory.value !== 'all') {
+    filtered = filtered.filter(a => a.category === selectedCategory.value);
   }
-  return achievements.filter(a => a.category === selectedCategory.value);
+
+  if (hideCompleted.value) {
+    filtered = filtered.filter(a => !a.completed);
+  }
+
+  return filtered;
+});
+
+const achievementProgress = computed(() => {
+  const totalAchievements = achievements.length;
+  const completedAchievements = achievements.filter(a => a.completed).length;
+  return {
+    completed: completedAchievements,
+    total: totalAchievements,
+    percentage: Math.round((completedAchievements / totalAchievements) * 100)
+  };
 });
 
 const route = useRoute()
@@ -77,22 +96,40 @@ onMounted(() => {
       <div class="card-body">
         <h3 class="card-title">Statistics</h3>
         <div class="row">
-          <div class="col-md-4">
-            <div class="stat-item">
-              <h5>Hands Played</h5>
-              <p>{{ userStats.handsPlayed }}</p>
+          <div class="col-md-3">
+            <div class="text-center p-4 rounded-3 hover-lift">
+              <div class="mb-3">
+                <i class="bi bi-joystick text-primary fs-1"></i>
+              </div>
+              <h5 class="text-muted">Hands Played</h5>
+              <p class="fs-4 fw-bold mb-0">{{ userStats.handsPlayed }}</p>
             </div>
           </div>
-          <div class="col-md-4">
-            <div class="stat-item">
-              <h5>Total Winnings</h5>
-              <p>{{ formatIntAsCurrency(userStats.totalWinnings) }}</p>
+          <div class="col-md-3">
+            <div class="text-center p-4 rounded-3 hover-lift">
+              <div class="mb-3">
+                <i class="bi bi-coin text-success fs-1"></i>
+              </div>
+              <h5 class="text-muted">Total Winnings</h5>
+              <p class="fs-4 fw-bold mb-0">{{ formatIntAsCurrency(userStats.totalWinnings) }}</p>
             </div>
           </div>
-          <div class="col-md-4">
-            <div class="stat-item">
-              <h5>Biggest Win</h5>
-              <p>{{ formatIntAsCurrency(userStats.biggestWin) }}</p>
+          <div class="col-md-3">
+            <div class="text-center p-4 rounded-3 hover-lift">
+              <div class="mb-3">
+                <i class="bi bi-trophy text-warning fs-1"></i>
+              </div>
+              <h5 class="text-muted">Biggest Win</h5>
+              <p class="fs-4 fw-bold mb-0">{{ formatIntAsCurrency(userStats.biggestWin) }}</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-center p-4 rounded-3 hover-lift">
+              <div class="mb-3">
+                <i class="bi bi-award text-info fs-1"></i>
+              </div>
+              <h5 class="text-muted">Achievements</h5>
+              <p class="fs-4 fw-bold mb-0">{{ achievementProgress.percentage }}%</p>
             </div>
           </div>
         </div>
@@ -102,8 +139,18 @@ onMounted(() => {
     <!-- Achievements Section -->
     <div class="card" id="achievements">
       <div class="card-body">
-        <h3 class="card-title">Achievements</h3>
-        <div class="achievement-filters mb-3">
+        <h3 class="card-title d-flex justify-content-between align-items-center mb-4">
+          <div class="d-flex align-items-center">
+            <i class="bi bi-award text-primary me-2"></i>
+            Achievements
+          </div>
+          <span class="text-muted fs-6">
+            {{ achievementProgress.completed }}/{{ achievementProgress.total }} completed
+          </span>
+        </h3>
+
+        <!-- Filters -->
+        <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
           <div class="btn-group">
             <button
               v-for="category in ['all', 'blackjack', 'clicker', 'general']"
@@ -114,38 +161,26 @@ onMounted(() => {
               {{ category.charAt(0).toUpperCase() + category.slice(1) }}
             </button>
           </div>
+
+          <div class="form-check">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="hideCompleted"
+              v-model="hideCompleted">
+            <label class="form-check-label" for="hideCompleted">
+              Hide completed
+            </label>
+          </div>
         </div>
 
-        <div class="row">
+        <!-- Achievement Grid -->
+        <div class="row g-3">
           <div
             v-for="achievement in filteredAchievements"
             :key="achievement.id"
-            class="col-md-6 mb-3">
-            <div
-              class="card h-100"
-              :class="{ 'border-success': achievement.completed }">
-              <div class="card-body d-flex flex-column">
-                <h5 class="card-title">
-                  {{ achievement.title }}
-                  <span v-if="achievement.completed" class="text-success">
-                    <i class="bi bi-check-circle-fill"></i>
-                  </span>
-                </h5>
-                <p class="card-text">{{ achievement.description }}</p>
-                <div class="progress" v-if="!achievement.completed">
-                  <div
-                    class="progress-bar"
-                    role="progressbar"
-                    :style="{ width: `${(achievement.progress / achievement.requirement) * 100}%` }">
-                    {{ achievement.progress }}/{{ achievement.requirement }}
-                  </div>
-                </div>
-                <div class="mt-auto text-muted d-flex justify-content-between">
-                  <small>Reward: {{ formatIntAsCurrency(achievement.reward.chips) }}</small>
-                  <small>XP: {{ achievement.reward.xp }}</small>
-                </div>
-              </div>
-            </div>
+            class="col-md-6">
+            <AchievementCard :achievement="achievement" />
           </div>
         </div>
       </div>
@@ -170,5 +205,10 @@ onMounted(() => {
 
 .progress-bar {
   transition: width 0.3s ease-in-out;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  transition: transform 0.2s;
 }
 </style>

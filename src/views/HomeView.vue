@@ -1,4 +1,23 @@
-# Template
+<script setup lang="ts">
+import { computed } from 'vue';
+import BaseLayout from '@/components/layout/BaseLayout.vue';
+import AchievementCard from '@/components/AchievementCard.vue';
+import { useUserStore } from '@/stores/user';
+import { useAchievementStore } from '@/stores/achievement';
+import { formatIntAsCurrency } from '@/utils/currency';
+
+const userStore = useUserStore();
+const achievementStore = useAchievementStore();
+
+// Get the 3 closest achievements to completion that aren't already completed
+const nearestAchievements = computed(() => {
+  return achievementStore.achievements
+    .filter(a => !a.completed)
+    .sort((a, b) => (b.progress / b.requirement) - (a.progress / a.requirement))
+    .slice(0, 3);
+});
+</script>
+
 <template>
   <BaseLayout
     :title="userStore.username ? `Welcome back, ${userStore.username}!` : 'Welcome to Penny Plummet!'"
@@ -73,45 +92,11 @@
           Achievements In Progress
         </h5>
         <div class="achievements-list">
-          <div
+          <AchievementCard
             v-for="achievement in nearestAchievements"
             :key="achievement.id"
-            class="achievement-item mb-3">
-
-            <h6 class="mb-0">{{ achievement.title }}</h6>
-
-            <!-- Progress Bar Row -->
-            <div class="d-flex align-items-center">
-              <div class="progress flex-grow-1" style="height: 8px;">
-                <div
-                  class="progress-bar bg-primary"
-                  role="progressbar"
-                  :style="{ width: `${(achievement.progress / achievement.requirement) * 100}%` }">
-                </div>
-              </div>
-              <small class="ms-2 text-muted" style="min-width: 45px;">
-                {{ achievement.progress }}/{{ achievement.requirement }}
-              </small>
-            </div>
-
-            <div class="row align-items-center mt-2">
-              <div class="col">
-                <small class="text-muted">{{ achievement.description }}</small>
-              </div>
-              <div class="col-auto text-end">
-                <div class="d-flex align-items-center gap-3 me-5">
-                  <small class="text-success d-flex align-items-center">
-                    <i class="fa-solid fa-coins me-1"></i>
-                    {{ formatIntAsCurrency(achievement.reward.chips) }}
-                  </small>
-                  <small class="text-info d-flex align-items-center">
-                    <i class="fa-solid fa-star me-1"></i>
-                    {{ achievement.reward.xp }} XP
-                  </small>
-                </div>
-              </div>
-            </div>
-          </div>
+            :achievement="achievement"
+            class="mb-3" />
           <!-- View All Achievements -->
           <div class="d-flex justify-content-end">
             <RouterLink
@@ -127,36 +112,3 @@
 
   </BaseLayout>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue';
-import BaseLayout from '@/components/layout/BaseLayout.vue';
-import { useUserStore } from '@/stores/user';
-import { useAchievementStore } from '@/stores/achievement';
-import { formatIntAsCurrency } from '@/utils/currency';
-
-const userStore = useUserStore();
-const achievementStore = useAchievementStore();
-
-// Get the 3 closest achievements to completion that aren't already completed
-const nearestAchievements = computed(() => {
-  return achievementStore.achievements
-    .filter(a => !a.completed)
-    .sort((a, b) => (b.progress / b.requirement) - (a.progress / a.requirement))
-    .slice(0, 3);
-});
-</script>
-
-<style scoped>
-.achievement-item {
-  padding: 1rem;
-  border: 1px solid #eee;
-  border-radius: 8px;
-  background-color: #f8f9fa;
-}
-
-.achievement-item:hover {
-  background-color: #f0f0f0;
-  transition: background-color 0.2s ease;
-}
-</style>

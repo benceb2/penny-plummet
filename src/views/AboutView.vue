@@ -1,9 +1,51 @@
+<script setup lang="ts">
+import BaseLayout from '@/components/layout/BaseLayout.vue'
+
+const technologies = [
+  {
+    name: 'TypeScript',
+    description: 'Type-safe JavaScript',
+    icon: 'bi bi-code-slash',
+    color: 'primary'
+  },
+  {
+    name: 'Vue 3',
+    description: 'Progressive framework',
+    icon: 'fa-brands fa-vuejs',
+    color: 'success'
+  },
+  {
+    name: 'Vite',
+    description: 'Next-gen frontend tooling',
+    icon: 'bi bi-lightning-charge-fill',
+    color: 'warning'
+  },
+  {
+    name: 'Pinia',
+    description: 'State management',
+    icon: 'fa-solid fa-database',
+    color: 'info'
+  },
+  {
+    name: 'Bootstrap 5',
+    description: 'UI framework',
+    icon: 'fa-brands fa-bootstrap',
+    color: 'purple'
+  },
+  {
+    name: 'Local Storage',
+    description: 'Data persistence',
+    icon: 'fa-solid fa-hard-drive',
+    color: 'secondary'
+  }
+]
+</script>
+
 <template>
   <BaseLayout
     title="About"
     icon="info-circle-fill"
     :show-balance="false">
-    <!-- Project Description -->
     <div class="card mb-4">
       <div class="card-body">
         <h5 class="card-title d-flex align-items-center">
@@ -72,95 +114,8 @@
         </div>
       </div>
     </div>
-
-    <!-- Developer Info -->
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title d-flex align-items-center">
-          <i class="bi bi-person-badge me-2 text-info" />
-          Connect with me
-        </h5>
-        <div class="d-flex justify-content-center gap-3 mt-3">
-          <a
-            href="https://bence.im/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn btn-outline-primary">
-            <i class="bi bi-globe me-2" />
-            Portfolio
-          </a>
-          <a
-            href="https://www.linkedin.com/in/bence-b-b787751a2/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn btn-outline-primary">
-            <i class="bi bi-linkedin me-2" />
-            LinkedIn
-          </a>
-          <a
-            href="https://www.linkedin.com/in/bence-b-b787751a2/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn btn-outline-primary">
-            <i class="bi bi-envelope me-2" />
-            E-Mail
-          </a>
-          <a
-            href="https://github.com/benceb2"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn btn-outline-primary me-2">
-            <i class="bi bi-github me-2" />
-            GitHub
-          </a>
-        </div>
-      </div>
-    </div>
   </BaseLayout>
 </template>
-
-<script setup lang="ts">
-import BaseLayout from '@/components/layout/BaseLayout.vue'
-
-const technologies = [
-  {
-    name: 'TypeScript',
-    description: 'Type-safe JavaScript',
-    icon: 'bi bi-code-slash',
-    color: 'primary'
-  },
-  {
-    name: 'Vue 3',
-    description: 'Progressive framework',
-    icon: 'fa-brands fa-vuejs',
-    color: 'success'
-  },
-  {
-    name: 'Vite',
-    description: 'Next-gen frontend tooling',
-    icon: 'bi bi-lightning-charge-fill',
-    color: 'warning'
-  },
-  {
-    name: 'Pinia',
-    description: 'State management',
-    icon: 'fa-solid fa-database',
-    color: 'info'
-  },
-  {
-    name: 'Bootstrap 5',
-    description: 'UI framework',
-    icon: 'fa-brands fa-bootstrap',
-    color: 'purple'
-  },
-  {
-    name: 'Local Storage',
-    description: 'Data persistence',
-    icon: 'fa-solid fa-hard-drive',
-    color: 'secondary'
-  }
-]
-</script>
 
 <style scoped>
 .tech-item {

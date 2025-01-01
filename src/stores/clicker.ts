@@ -7,8 +7,15 @@ import { useAchievementStore } from './achievement'
 import type { UserStore } from './user'
 
 export const useClickerStore = defineStore('clicker', () => {
+  const OFFLINE_RATE_MULTIPLIER = 0.5 // Half rate when offline
+  const MAX_OFFLINE_DAYS = 3
+  const MAX_OFFLINE_MS = MAX_OFFLINE_DAYS * 24 * 60 * 60 * 1000
+
 
   const achievementStore = useAchievementStore()
+  let autoClickerInterval: number | null = null;
+
+  startAutoClicker();
 
   // State
   const clicks = ref(0)
@@ -17,6 +24,12 @@ export const useClickerStore = defineStore('clicker', () => {
   const autoClickerCost = ref(50)
   const multiplierLevel = ref(1)
   const multiplierCost = ref(100)
+
+  // Offline tracking
+  const lastOnlineTimestamp = ref(Date.now())
+  const showOfflineEarnings = ref(false)
+  const offlineEarnings = ref(0)
+  const offlineSeconds = ref(0)
 
   // Computed
   const clickValue = computed(() => baseClickValue.value * multiplierLevel.value)
@@ -60,12 +73,77 @@ export const useClickerStore = defineStore('clicker', () => {
     }
   }
 
-  // Auto-clicker interval
-  if (typeof window !== 'undefined') {
-    setInterval(() => {
-      clicks.value += autoClickersCount.value * clickValue.value
-    }, 1000)
+  // Function to start auto-clicking
+  function startAutoClicker() {
+    if (typeof window !== 'undefined') {
+      // Clear any existing interval first
+      if (autoClickerInterval) {
+        clearInterval(autoClickerInterval)
+      }
+      autoClickerInterval = setInterval(() => {
+        clicks.value += autoClickersCount.value * clickValue.value
+      }, 1000)
+    }
   }
+
+  function stopAutoClicker(clearStorage: boolean = true) {
+    if (autoClickerInterval) {
+      clearInterval(autoClickerInterval)
+      autoClickerInterval = null
+    }
+
+    if (clearStorage) {
+      const clickerStore = localStorage.getItem(calculateStorageKey("clicker-store"))
+      if (clickerStore) {
+        localStorage.removeItem(calculateStorageKey("clicker-store"))
+      }
+    }
+  }
+
+  function initializeOfflineTracking() {
+    if (typeof window !== 'undefined') {
+      // Update timestamp when user leaves
+      window.addEventListener('beforeunload', () => {
+        lastOnlineTimestamp.value = Date.now()
+      })
+
+      // Check for offline progress when user returns
+      checkOfflineProgress()
+    }
+  }
+
+  function checkOfflineProgress() {
+    const currentTime = Date.now()
+    const offlineTime = currentTime - lastOnlineTimestamp.value
+
+    // Cap offline time at MAX_OFFLINE_DAYS
+    const cappedOfflineTime = Math.min(offlineTime, MAX_OFFLINE_MS)
+
+    if (cappedOfflineTime > 0) {
+      // Calculate earnings: (offline seconds) * (clicks per second) * (offline rate multiplier)
+      offlineSeconds.value = Math.floor(cappedOfflineTime / 1000)
+      const clicksPerSecond = autoClickersCount.value * clickValue.value
+      offlineEarnings.value = Math.floor(offlineSeconds.value * clicksPerSecond * OFFLINE_RATE_MULTIPLIER)
+
+      if (offlineEarnings.value > 0) {
+        // Show modal
+        showOfflineEarnings.value = true
+
+        // Add earnings
+        clicks.value += offlineEarnings.value
+      }
+    }
+
+    // Reset timestamp
+    lastOnlineTimestamp.value = currentTime
+  }
+
+  function closeOfflineEarningsModal() {
+    showOfflineEarnings.value = false
+    offlineEarnings.value = 0
+    offlineSeconds.value = 0
+  }
+
 
   // Reset state
   function reset() {
@@ -85,6 +163,11 @@ export const useClickerStore = defineStore('clicker', () => {
     autoClickerCost,
     multiplierLevel,
     multiplierCost,
+    lastOnlineTimestamp,
+    showOfflineEarnings,
+    offlineEarnings,
+    offlineSeconds,
+
 
     // Computed
     clickValue,
@@ -98,7 +181,12 @@ export const useClickerStore = defineStore('clicker', () => {
     collectChips,
     buyAutoClicker,
     buyMultiplier,
-    reset
+    reset,
+    initializeOfflineTracking,
+    checkOfflineProgress,
+    closeOfflineEarningsModal,
+    startAutoClicker,
+    stopAutoClicker
   }
 }, {
   persist: {

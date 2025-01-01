@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+
 import { useBlackjackStore } from '@/stores/blackjack'
 import { useUserStore } from '@/stores/user'
 import PlayingCard from '@/components/PlayingCard.vue'
@@ -72,6 +73,26 @@ function setPresetBet(amount: number) {
     betAmount.value = amount
   }
 }
+
+function adjustBet(multiplierStr: string) {
+  betAmount.value = Math.floor(betAmount.value * getMultiplier(multiplierStr))
+}
+
+function getMultiplier(multiplierStr: string) {
+  switch (multiplierStr) {
+    case '1/4x': return 0.25
+    case '1/2x': return 0.5
+    case '2x': return 2
+    case '4x': return 4
+    default: return 1
+  }
+}
+
+function canAdjustBet(multiplierStr: string) {
+  if (betAmount.value <= 0) return false
+  return betAmount.value * getMultiplier(multiplierStr) <= userStore.chips
+}
+
 </script>
 
 <template>
@@ -210,38 +231,43 @@ function setPresetBet(amount: number) {
     <div class="row">
       <div class="col-12">
         <div class="card shadow-sm">
-          <div class="card-header bg-light">
+          <div class="card-header bg-light py-3">
             <h5 class="mb-0">
               <i class="bi bi-joystick me-2"></i>Game Controls
             </h5>
           </div>
           <div class="card-body">
             <div class="row g-4">
-              <!-- Betting Controls -->
+              <!-- Betting Section -->
               <div class="col-md-6" v-if="gameStore.gameState === BlackjackState.betting">
-                <div class="h-100 d-flex flex-column justify-content-center">
-                  <div class="bg-light p-3 rounded h-100">
-                    <h6 class="mb-3">
-                      <i class="bi bi-lightning-fill me-1"></i>Quick Bet
+                <div class="h-100">
+                  <div class="bg-light p-4 rounded h-100">
+                    <h6 class="d-flex align-items-center mb-4">
+                      <i class="bi bi-lightning-fill me-2"></i>Place Your Bet
                     </h6>
-                    <div class="d-flex flex-wrap gap-2">
-                      <button v-for="amount in quickBetAmounts" :key="amount" class="btn btn-outline-primary"
-                        :class="{ 'active': betAmount === amount }" :disabled="amount > userStore.chips"
-                        @click="setPresetBet(amount)">
-                        {{ formatIntAsCurrency(amount) }}
-                        <small class="text-muted ms-1">
-                          ({{ Math.round((amount / userStore.chips) * 100) }}%)
-                        </small>
-                      </button>
-                    </div>
-                    <div class="mt-3">
+
+                    <!-- Custom Bet Input -->
+                    <div class="mb-4">
                       <div class="form-floating">
-                        <input type="number" class="form-control" id="betAmount" v-model="betAmount"
-                          :max="userStore.chips"
-                          min="1">
-                        <label for="betAmount">
-                          <i class="bi bi-cash me-1"></i>Custom Bet Amount
+                        <input type="number" class="form-control form-control-lg" id="betAmount" v-model="betAmount"
+                          :max="userStore.chips" min="1">
+                        <label for="betAmount" class="d-flex align-items-center">
+                          <i class="bi bi-cash me-2"></i>Bet Amount
                         </label>
+                      </div>
+                    </div>
+
+                    <!-- Adjust Bet Controls -->
+                    <div>
+                      <div class="d-flex align-items-center gap-2 mb-2">
+                        <h6 class="mb-0">Adjust Bet</h6>
+                      </div>
+                      <div class="btn-group w-100">
+                        <button v-for="multiplier in ['1/4x', '1/2x', '2x', '4x']" :key="multiplier"
+                          class="btn btn-outline-secondary" @click="adjustBet(multiplier)"
+                          :disabled="!canAdjustBet(multiplier)">
+                          {{ multiplier }}
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -251,19 +277,34 @@ function setPresetBet(amount: number) {
               <!-- Action Controls -->
               <div
                 :class="`col-md-${[BlackjackState.playerTurn, BlackjackState.gameOver].includes(gameStore.gameState) ? '12' : '6'}`">
-                <div class="h-100 d-flex flex-column justify-content-center">
-                  <div class="bg-light p-3 rounded h-100">
-                    <h6>
-                      <i class="bi bi-gear-fill me-1"></i>Actions
+                <div class="h-100">
+                  <div class="bg-light p-4 rounded h-100">
+                    <h6 class="d-flex align-items-center mb-4">
+                      <i class="bi bi-gear-fill me-2"></i>Actions
                     </h6>
 
                     <!-- Betting State -->
-                    <div v-if="gameStore.gameState === BlackjackState.betting"
-                      class="d-flex justify-content-center align-items-center mt-5">
-                      <button class="btn btn-primary btn-lg" @click="handleDeal"
+                    <div v-if="gameStore.gameState === BlackjackState.betting">
+                      <!-- Quick Bet -->
+                      <div class="mb-4">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                          <h6 class="mb-0">Quick Bet</h6>
+                        </div>
+                        <div class="d-grid gap-2">
+                          <button v-for="amount in quickBetAmounts" :key="amount"
+                            class="btn btn-outline-primary text-start p-3" :class="{ 'active': betAmount === amount }"
+                            :disabled="amount > userStore.chips" @click="setPresetBet(amount)">
+                            <div class="d-flex justify-content-between align-items-center">
+                              <span>{{ formatIntAsCurrency(amount) }}</span>
+                              <small class="text-muted">{{ Math.round((amount / userStore.chips) * 100) }}%</small>
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+
+                      <button class="btn btn-primary btn-lg w-100 mt-3" @click="handleDeal"
                         :disabled="betAmount <= 0 || betAmount > userStore.chips">
-                        <i class="bi bi-play-circle-fill me-2"></i>
-                        Deal Cards
+                        <i class="bi bi-play-circle-fill me-2"></i>Deal Cards
                       </button>
                     </div>
 
@@ -271,20 +312,17 @@ function setPresetBet(amount: number) {
                     <div v-if="gameStore.gameState === BlackjackState.playerTurn"
                       class="d-flex gap-3 justify-content-center">
                       <button class="btn btn-success btn-lg" @click="handleHit">
-                        <i class="bi bi-plus-circle-fill me-2"></i>
-                        Hit
+                        <i class="bi bi-plus-circle-fill me-2"></i>Hit
                       </button>
                       <button class="btn btn-warning btn-lg text-white" @click="handleStand">
-                        <i class="bi bi-hand-thumbs-up-fill me-2"></i>
-                        Stand
+                        <i class="bi bi-hand-thumbs-up-fill me-2"></i>Stand
                       </button>
                     </div>
 
                     <!-- Game Over State -->
                     <div v-if="gameStore.gameState === BlackjackState.gameOver" class="d-flex justify-content-center">
                       <button class="btn btn-primary btn-lg" @click="handleNewGame">
-                        <i class="bi bi-arrow-clockwise me-2"></i>
-                        New Game
+                        <i class="bi bi-arrow-clockwise me-2"></i>New Game
                       </button>
                     </div>
                   </div>

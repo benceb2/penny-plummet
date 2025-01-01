@@ -26,16 +26,18 @@ export function shuffleDeck(deck: Card[]): Card[] {
   return [...deck].sort(() => Math.random() - 0.5)
 }
 
-export function calculateHandValue(cards: Card[]): number {
+export function calculateHandValue(cards: Card[], faceUpOnly: boolean = false): number {
+  const relevantCards = faceUpOnly ? cards.filter(card => card.faceUp) : cards;
+
   let value = 0;
   let aces = 0;
 
   // First pass: calculate non-ace values and count aces
-  for (const card of cards) {
+  for (const card of relevantCards) {
     if (card.value === 1) {
       aces++;
     } else if (card.value > 10) {
-      value += 10;  // Face cards are worth 10
+      value += 10; // Face cards are worth 10
     } else {
       value += card.value;
     }

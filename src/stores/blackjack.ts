@@ -40,13 +40,13 @@ export const useBlackjackStore = defineStore('blackjack', () => {
    * Computed property for player's current hand value
    * Always calculated from all cards as player's cards are always face up
    */
-  const playerScore = computed(() => calculateHandValue(playerHand.value));
+  const playerScore = computed(() => calculateHandValue(playerHand.value, true));
 
   /**
    * Computed property for dealer's visible hand value
    * Includes all cards as they become face up during gameplay
    */
-  const dealerScore = computed(() => calculateHandValue(dealerHand.value));
+  const dealerScore = computed(() => calculateHandValue(dealerHand.value, true));
 
   const isBlackjack = computed(() => {
     return playerHand.value.length === 2 && playerScore.value === 21

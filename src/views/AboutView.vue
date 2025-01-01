@@ -1,6 +1,6 @@
 <template>
   <BaseLayout
-    title="About Penny Plummet"
+    title="About"
     icon="info-circle-fill"
     :show-balance="false">
     <!-- Project Description -->
@@ -96,6 +96,22 @@
             class="btn btn-outline-primary">
             <i class="bi bi-linkedin me-2" />
             LinkedIn
+          </a>
+          <a
+            href="https://www.linkedin.com/in/bence-b-b787751a2/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-outline-primary">
+            <i class="bi bi-envelope me-2" />
+            E-Mail
+          </a>
+          <a
+            href="https://github.com/benceb2"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-outline-primary me-2">
+            <i class="bi bi-github me-2" />
+            GitHub
           </a>
         </div>
       </div>

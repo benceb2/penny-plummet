@@ -26,7 +26,7 @@
       </div>
       <div class="text-muted">
         <small>
-          <i class="bi bi-c-circle" /> {{ currentYear }} Bence Barkanyi. All rights reserved.
+          <i class="bi bi-c-circle" /> {{ currentYear }} Bence Barkanyi
         </small>
       </div>
     </div>

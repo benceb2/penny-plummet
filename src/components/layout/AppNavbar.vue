@@ -94,16 +94,13 @@ const isNavOpen = ref(false)
           </div>
 
           <div class="d-flex align-items-center">
-            <span class="badge bg-info p-2 position-relative"
-              data-bs-toggle="tooltip"
-              :title="`Level Progress: ${achievementStore.levelProgress}%`">
+            <span class="badge bg-info p-2 position-relative d-flex align-items-center">
               <i class="bi bi-stars me-1"></i>
               {{ achievementStore.currentLevel.level }}
-              <!-- Progress bar with improved styling -->
-              <div class="progress position-absolute bottom-0 start-0 m-0 rounded-bottom"
-                style="height: 3px; width: 100%; background: rgba(0,0,0,0.2);">
+              <!-- Progress bar inside the badge but next to the level -->
+              <div class="progress ms-2" style="width: 40px; height: 4px; background: rgba(0,0,0,0.2);">
                 <div
-                  class="progress-bar bg-warning"
+                  class="progress-bar bg-white"
                   role="progressbar"
                   :style="{
                     width: achievementStore.levelProgress + '%',

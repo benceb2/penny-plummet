@@ -24,6 +24,59 @@ const nearestAchievements = computed(() => {
     icon="emoji-smile-fill"
     :showBalance="false">
 
+    <!-- Game Selection Cards -->
+    <div class="row g-4 mb-4">
+      <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body d-flex flex-column">
+            <div class="d-flex align-items-center mb-3">
+              <i class="bi bi-suit-spade-fill fs-2 text-primary me-3"></i>
+              <div>
+                <h4 class="mb-1">Blackjack</h4>
+                <p class="text-muted mb-0">Test your luck against the dealer!</p>
+              </div>
+            </div>
+            <p class="text-muted">Place your bets and aim for 21 in this classic card game.</p>
+            <RouterLink to="/blackjack" class="btn btn-primary mt-auto">
+              <i class="bi bi-play-circle-fill me-2"></i>Play Blackjack
+            </RouterLink>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body d-flex flex-column">
+            <div class="d-flex align-items-center mb-3">
+              <i class="bi bi-mouse fs-2 text-success me-3"></i>
+              <div>
+                <h4 class="mb-1">Clicker Game</h4>
+                <p class="text-muted mb-0">Click your way to riches!</p>
+              </div>
+            </div>
+            <p class="text-muted">Earn chips with every click and unlock powerful upgrades.</p>
+            <RouterLink to="/earn" class="btn btn-success mt-auto">
+              <i class="bi bi-play-circle-fill me-2"></i>Start Clicking
+            </RouterLink>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="d-flex gap-3">
+          <RouterLink to="/settings" class="btn btn-outline-secondary">
+            <i class="bi bi-gear-fill me-2"></i>Settings
+          </RouterLink>
+          <RouterLink to="/profile" class="btn btn-outline-secondary">
+            <i class="bi bi-person-fill me-2"></i>Profile
+          </RouterLink>
+        </div>
+      </div>
+    </div>
+
     <!-- Quick Stats Overview -->
     <div class="card mb-4">
       <div class="card-body">

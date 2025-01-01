@@ -66,7 +66,10 @@ onMounted(() => {
     <!-- Level Progress Section -->
     <div class="card mb-4">
       <div class="card-body">
-        <h3 class="card-title">Level {{ currentLevel.level }}</h3>
+        <h3 class="card-title">
+          <i class="bi bi-stars text-info me-2"></i>
+          Level {{ currentLevel.level }}
+        </h3>
         <div class="progress mb-3">
           <div
             class="progress-bar"
@@ -94,7 +97,10 @@ onMounted(() => {
     <!-- Stats Section -->
     <div class="card mb-4">
       <div class="card-body">
-        <h3 class="card-title">Statistics</h3>
+        <h3 class="card-title">
+          <i class="bi bi-graph-up-arrow text-primary me-2"></i>
+          Statistics
+        </h3>
         <div class="row">
           <div class="col-md-3">
             <div class="text-center p-4 rounded-3 hover-lift">

@@ -1,6 +1,6 @@
 # <img src="./public/favicon.svg" width="25" height="25" style="margin-right: 10px;" /> Penny Plummet
 
-Penny Plummet is an browser-based casino game built with:
+Penny Plummet is a browser-based casino game built with:
 
 - TypeScript
 - Vue 3

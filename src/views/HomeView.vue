@@ -65,7 +65,7 @@
       </div>
     </div>
 
-    <!-- Next Achievements -->
+    <!-- Achievements In Progress -->
     <div class="card">
       <div class="card-body">
         <h5 class="card-title d-flex align-items-center mb-3">
@@ -77,18 +77,49 @@
             v-for="achievement in nearestAchievements"
             :key="achievement.id"
             class="achievement-item mb-3">
-            <div class="d-flex justify-content-between align-items-center mb-1">
-              <h6 class="mb-0">{{ achievement.title }}</h6>
-              <small>{{ achievement.progress }}/{{ achievement.requirement }}</small>
+
+            <h6 class="mb-0">{{ achievement.title }}</h6>
+
+            <!-- Progress Bar Row -->
+            <div class="d-flex align-items-center">
+              <div class="progress flex-grow-1" style="height: 8px;">
+                <div
+                  class="progress-bar bg-primary"
+                  role="progressbar"
+                  :style="{ width: `${(achievement.progress / achievement.requirement) * 100}%` }">
+                </div>
+              </div>
+              <small class="ms-2 text-muted" style="min-width: 45px;">
+                {{ achievement.progress }}/{{ achievement.requirement }}
+              </small>
             </div>
-            <div class="progress" style="height: 8px;">
-              <div
-                class="progress-bar bg-primary"
-                role="progressbar"
-                :style="{ width: `${(achievement.progress / achievement.requirement) * 100}%` }">
+
+            <div class="row align-items-center mt-2">
+              <div class="col">
+                <small class="text-muted">{{ achievement.description }}</small>
+              </div>
+              <div class="col-auto text-end">
+                <div class="d-flex align-items-center gap-3 me-5">
+                  <small class="text-success d-flex align-items-center">
+                    <i class="fa-solid fa-coins me-1"></i>
+                    {{ formatIntAsCurrency(achievement.reward.chips) }}
+                  </small>
+                  <small class="text-info d-flex align-items-center">
+                    <i class="fa-solid fa-star me-1"></i>
+                    {{ achievement.reward.xp }} XP
+                  </small>
+                </div>
               </div>
             </div>
-            <small class="text-muted">{{ achievement.description }}</small>
+          </div>
+          <!-- View All Achievements -->
+          <div class="d-flex justify-content-end">
+            <RouterLink
+              to="/profile#achievements"
+              class="btn btn-outline-primary">
+              <i class="bi bi-arrow-right me-2"></i>
+              View All Achievements
+            </RouterLink>
           </div>
         </div>
       </div>

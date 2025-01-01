@@ -1,3 +1,43 @@
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue';
+import { useUserStore } from '@/stores/user';
+import { useAchievementStore } from '@/stores/achievement';
+import { formatIntAsCurrency } from '@/utils/currency';
+import BaseLayout from '@/components/layout/BaseLayout.vue';
+import { useRoute } from 'vue-router';
+
+const userStore = useUserStore();
+const achievementStore = useAchievementStore();
+
+const selectedCategory = ref('all');
+
+const { currentLevel, levelProgress, achievements } = achievementStore;
+const userStats = userStore.stats;
+
+const filteredAchievements = computed(() => {
+  if (selectedCategory.value === 'all') {
+    return achievements;
+  }
+  return achievements.filter(a => a.category === selectedCategory.value);
+});
+
+const route = useRoute()
+
+onMounted(() => {
+  // Scroll to achievements section if hash is present
+  if (route.hash === '#achievements') {
+    // Add a small delay to ensure the DOM is fully rendered
+    setTimeout(() => {
+      document.getElementById('achievements')?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      })
+    }, 100)
+  }
+})
+
+</script>
+
 <template>
   <BaseLayout
     title="Profile"
@@ -60,7 +100,7 @@
     </div>
 
     <!-- Achievements Section -->
-    <div class="card">
+    <div class="card" id="achievements">
       <div class="card-body">
         <h3 class="card-title">Achievements</h3>
         <div class="achievement-filters mb-3">
@@ -112,30 +152,6 @@
     </div>
   </BaseLayout>
 </template>
-
-<script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useUserStore } from '@/stores/user';
-import { useAchievementStore } from '@/stores/achievement';
-import { formatIntAsCurrency } from '@/utils/currency';
-import BaseLayout from '@/components/layout/BaseLayout.vue';
-
-const userStore = useUserStore();
-const achievementStore = useAchievementStore();
-
-const selectedCategory = ref('all');
-
-const { currentLevel, levelProgress, achievements } = achievementStore;
-const userStats = userStore.stats;
-
-const filteredAchievements = computed(() => {
-  if (selectedCategory.value === 'all') {
-    return achievements;
-  }
-  return achievements.filter(a => a.category === selectedCategory.value);
-});
-
-</script>
 
 <style scoped>
 .stat-item {

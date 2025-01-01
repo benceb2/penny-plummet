@@ -93,17 +93,34 @@ const isNavOpen = ref(false)
             </ul>
           </div>
 
+          <div class="d-flex align-items-center">
+            <span class="badge bg-info p-2 position-relative"
+              data-bs-toggle="tooltip"
+              :title="`Level Progress: ${achievementStore.levelProgress}%`">
+              <i class="bi bi-stars me-1"></i>
+              {{ achievementStore.currentLevel.level }}
+              <!-- Progress bar with improved styling -->
+              <div class="progress position-absolute bottom-0 start-0 m-0 rounded-bottom"
+                style="height: 3px; width: 100%; background: rgba(0,0,0,0.2);">
+                <div
+                  class="progress-bar bg-warning"
+                  role="progressbar"
+                  :style="{
+                    width: achievementStore.levelProgress + '%',
+                    transition: 'width 0.3s ease'
+                  }"
+                  :aria-valuenow="achievementStore.levelProgress"
+                  aria-valuemin="0"
+                  aria-valuemax="100">
+                </div>
+              </div>
+            </span>
+          </div>
+
           <!-- User Profile Group -->
           <div class="dropdown">
             <div class="d-flex align-items-center gap-2 cursor-pointer" data-bs-toggle="dropdown">
               <!-- Level Badge & Progress -->
-              <div class="d-flex align-items-center">
-                <span class="badge bg-info p-2 me-2">
-                  <i class="bi bi-stars me-1"></i>
-                  {{ achievementStore.currentLevel.level }}
-                </span>
-              </div>
-
               <!-- Username Badge -->
               <span class="badge bg-primary p-2 px-3 d-flex align-items-center">
                 <i class="bi bi-person-circle me-1"></i>
@@ -114,10 +131,10 @@ const isNavOpen = ref(false)
 
             <ul class="dropdown-menu dropdown-menu-end min-w-200">
               <li>
-                <a class="dropdown-item py-2" href="#">
+                <RouterLink to="/settings" class="dropdown-item py-2" href="#">
                   <i class="bi bi-gear me-2 opacity-75"></i>
                   Account Settings
-                </a>
+                </RouterLink>
               </li>
               <li>
                 <RouterLink class="dropdown-item py-2" to="/profile">

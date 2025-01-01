@@ -30,9 +30,9 @@ const router = createRouter({
       }
     },
     {
-      path: '/earn',
-      name: 'earn',
-      component: () => import('../views/EarnView.vue'),
+      path: '/clicker',
+      name: 'clicker',
+      component: () => import('../views/ClickerView.vue'),
       meta: {
         title: 'Earn'
       }

@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+
+import UsernameSettings from '@/components/UsernameSettings.vue';
 import BaseLayout from '@/components/layout/BaseLayout.vue';
 import { useUserStore } from '@/stores/user';
 import { useAchievementStore } from '@/stores/achievement';
@@ -163,11 +165,12 @@ const cancelDelete = () => {
 
 <template>
   <BaseLayout title="Settings" icon="gear-fill" :show-balance="false">
+    <UsernameSettings />
     <div class="card">
       <div class="card-body">
         <h5 class="card-title d-flex align-items-center mb-4">
           <i class="bi bi-save me-2"></i>
-          Save Game Management
+          Game Save Management
         </h5>
 
         <!-- Export Section -->

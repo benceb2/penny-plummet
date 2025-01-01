@@ -28,7 +28,7 @@
         <div class="row g-3">
           <div class="col-md-4 col-sm-6" v-for="tech in technologies" :key="tech.name">
             <div class="tech-item d-flex align-items-center">
-              <i :class="`bi ${tech.icon} me-2 fs-4 text-${tech.color}`" />
+              <i :class="`${tech.icon} me-2 fs-4 text-${tech.color}`" />
               <div>
                 <h6 class="mb-0">{{ tech.name }}</h6>
                 <small class="text-muted">{{ tech.description }}</small>
@@ -126,37 +126,37 @@ const technologies = [
   {
     name: 'TypeScript',
     description: 'Type-safe JavaScript',
-    icon: 'bi-code-slash',
+    icon: 'bi bi-code-slash',
     color: 'primary'
   },
   {
     name: 'Vue 3',
     description: 'Progressive framework',
-    icon: 'bi-box',
+    icon: 'fa-brands fa-vuejs',
     color: 'success'
   },
   {
     name: 'Vite',
     description: 'Next-gen frontend tooling',
-    icon: 'bi-lightning-charge',
+    icon: 'bi bi-lightning-charge-fill',
     color: 'warning'
   },
   {
     name: 'Pinia',
     description: 'State management',
-    icon: 'bi-database',
+    icon: 'fa-solid fa-database',
     color: 'info'
   },
   {
     name: 'Bootstrap 5',
     description: 'UI framework',
-    icon: 'bi-bootstrap',
+    icon: 'fa-brands fa-bootstrap',
     color: 'purple'
   },
   {
     name: 'Local Storage',
     description: 'Data persistence',
-    icon: 'bi-save',
+    icon: 'fa-solid fa-hard-drive',
     color: 'secondary'
   }
 ]

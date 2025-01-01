@@ -130,7 +130,7 @@ const isNavOpen = ref(false)
               <li>
                 <RouterLink to="/settings" class="dropdown-item py-2" href="#">
                   <i class="bi bi-gear me-2 opacity-75"></i>
-                  Account Settings
+                  Settings
                 </RouterLink>
               </li>
               <li>
@@ -139,15 +139,15 @@ const isNavOpen = ref(false)
                   View Profile
                 </RouterLink>
               </li>
-              <li>
+              <!--<li>
                 <hr class="dropdown-divider">
               </li>
-              <li>
+               <li>
                 <a class="dropdown-item py-2 text-danger" href="#">
                   <i class="bi bi-box-arrow-right me-2 opacity-75"></i>
                   Logout
                 </a>
-              </li>
+              </li> -->
             </ul>
           </div>
         </div>

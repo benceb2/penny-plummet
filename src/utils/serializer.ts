@@ -1,7 +1,7 @@
 import type { StateTree } from "pinia"
 
 const SHIFT = 11
-const SIGNATURE = btoa("penny-plummet-2024")
+export const SIGNATURE = btoa("penny-plummet-2024")
 
 export const shiftString = (str: string, shift: number): string => {
   return str.split('').map(char =>

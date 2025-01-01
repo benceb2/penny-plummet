@@ -46,7 +46,7 @@ const exportSave = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `penny-plummet-${userStore.username}-${new Date().toISOString().split('T')[0]}.save`;
+    a.download = `penny-plummet-${userStore.username}-${new Date().getTime()}.save`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

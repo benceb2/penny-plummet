@@ -81,26 +81,119 @@ body {
 }
 
 /* Button */
+/* Button Base Styles */
 .btn {
   font-weight: 500;
   padding: 0.625rem 1.25rem;
   border-radius: 0.5rem;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  border: none;
 }
 
+/* Primary Button */
 .btn-primary {
-  background: var(--gradient-primary);
-  border: none;
+  background-image:
+    var(--gradient-primary),
+    linear-gradient(to right, var(--primary-hover), var(--primary-hover));
+  background-position: 0% 0%;
 }
 
 .btn-primary:hover {
-  background: var(--primary-hover);
-  /* transform: translateY(-1px); */
+  background-position: 100% 0%;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
+
+/* Success Button */
+/* Success Button */
 .btn-success {
+  background-image:
+    var(--gradient-success),
+    linear-gradient(to right, var(--success-color), var(--success-color));
+  background-position: 0% 0%;
+}
+
+.btn-success:hover {
+  background-position: 100% 0%;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Warning Button */
+.btn-warning {
+  background: linear-gradient(135deg, var(--warning-color), #f97316);
+}
+
+.btn-warning:hover,
+.btn-warning:active,
+.btn-warning:focus {
+  background: var(--warning-color);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Danger Button */
+.btn-danger {
+  background: linear-gradient(135deg, var(--danger-color), #dc2626);
+}
+
+.btn-danger:hover,
+.btn-danger:active,
+.btn-danger:focus {
+  background: var(--danger-color);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Outline Buttons */
+.btn-outline-primary,
+.btn-outline-success,
+.btn-outline-warning,
+.btn-outline-danger {
+  background: transparent;
+  border: 2px solid currentColor;
+  transition: all 0.2s ease;
+}
+
+/* Outline Primary */
+.btn-outline-primary:hover,
+.btn-outline-primary:active,
+.btn-outline-primary:focus {
+  background: var(--gradient-primary);
+  border-color: transparent;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Outline Success */
+.btn-outline-success:hover,
+.btn-outline-success:active,
+.btn-outline-success:focus {
   background: var(--gradient-success);
-  border: none;
+  border-color: transparent;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Outline Warning */
+.btn-outline-warning:hover,
+.btn-outline-warning:active,
+.btn-outline-warning:focus {
+  background: linear-gradient(135deg, var(--warning-color), #f97316);
+  border-color: transparent;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Outline Danger */
+.btn-outline-danger:hover,
+.btn-outline-danger:active,
+.btn-outline-danger:focus {
+  background: linear-gradient(135deg, var(--danger-color), #dc2626);
+  border-color: transparent;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Game Controls */

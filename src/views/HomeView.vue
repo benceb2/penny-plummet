@@ -55,7 +55,7 @@ const nearestAchievements = computed(() => {
               </div>
             </div>
             <p class="text-muted">Earn chips with every click and unlock powerful upgrades.</p>
-            <RouterLink to="/earn" class="btn btn-success mt-auto">
+            <RouterLink to="/clicker" class="btn btn-success mt-auto">
               <i class="bi bi-play-circle-fill me-2"></i>Start Clicking
             </RouterLink>
           </div>

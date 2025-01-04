@@ -1,4 +1,5 @@
 import type { StateTree } from "pinia"
+import pkg from '../../package.json'
 
 const SHIFT = 11
 export const SIGNATURE = btoa("penny-plummet-2024")
@@ -18,7 +19,8 @@ const unshiftString = (str: string, shift: number): string => {
 const encode = (state: StateTree): string => {
   const saveData = {
     state: state,
-    timestamp: Date.now()
+    timestamp: Date.now(),
+    version: pkg.version
   }
   const stateStr = JSON.stringify(saveData)
   // Add the character shift before base64

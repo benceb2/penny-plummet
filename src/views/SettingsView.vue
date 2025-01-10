@@ -1,48 +1,48 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-
+import type { SavePreview } from '@/types/SavePreview';
+import { SaveManager } from '@/utils/saveManager';
 import UsernameSettings from '@/components/UsernameSettings.vue';
 import BaseLayout from '@/components/layout/BaseLayout.vue';
 import { useUserStore } from '@/stores/user';
 import { useAchievementStore } from '@/stores/achievement';
 import { useBlackjackStore } from '@/stores/blackjack';
 import { useClickerStore } from '@/stores/clicker';
-import { createGameSerializer, SIGNATURE } from '@/utils/serializer';
 import { formatIntAsCurrency } from '@/utils/currency';
+import type { GameSaveData } from '@/types/GameSaveData';
 
-interface SavePreview {
-  username: string | null;
-  balance: number;
-  level: number;
-  timestamp: number;
-}
-
-const serializer = createGameSerializer();
+// Initialize stores and manager
+const saveManager = new SaveManager();
 const userStore = useUserStore();
 const achievementStore = useAchievementStore();
 const blackjackStore = useBlackjackStore();
 const clickerStore = useClickerStore();
+
+// UI state
 const importError = ref('');
 const importSuccess = ref(false);
 const fileInput = ref<HTMLInputElement | null>(null);
 const savePreview = ref<SavePreview | null>(null);
-
-// Confirmation dialog states
 const showImportConfirm = ref(false);
 const showDeleteConfirm = ref(false);
 const pendingImportData = ref<string | null>(null);
 
-const exportSave = () => {
-  try {
-    const saveData = {
-      user: userStore.$state,
-      achievements: achievementStore.$state,
-      blackjack: blackjackStore.$state,
-      clicker: clickerStore.$state
-    };
+// Collect current game state
+const getCurrentGameState = () => ({
+  user: userStore.$state,
+  achievements: achievementStore.$state,
+  blackjack: blackjackStore.$state,
+  clicker: clickerStore.$state,
+  timestamp: Date.now()
+});
 
-    const serialized = serializer.serialize(saveData);
-    const blob = new Blob([serialized], { type: 'text/plain' });
+const exportSave = async () => {
+  try {
+    const saveData = getCurrentGameState();
+    const serialized = await saveManager.exportSave(saveData as GameSaveData);
+    const blob = await saveManager.createDownloadBlob(serialized);
+
+    // Handle file download
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -67,80 +67,49 @@ const handleFileSelect = async (event: Event) => {
 
   try {
     const text = await file.text();
-
-    if (!text.endsWith(SIGNATURE)) {
-      importError.value = 'Invalid save file';
-      return;
-    }
-
-    // Parse the save data to show preview
-    const saveData = serializer.deserialize(text);
-
-    if (!saveData || typeof saveData !== 'object') {
-      importError.value = 'Corrupted save data';
-      return;
-    }
-
-    // Extract preview data
-    savePreview.value = {
-      username: saveData.user?.username || null,
-      balance: saveData.user?.chips || 0,
-      level: saveData.achievements?.currentLevel?.level || 1,
-      timestamp: saveData.timestamp || Date.now()
-    };
-
-    // Store the data for confirmation
+    const saveData = await saveManager.importSave(text);
+    savePreview.value = saveManager.extractSavePreview(saveData);
     pendingImportData.value = text;
     showImportConfirm.value = true;
   } catch (error) {
     console.error('Failed to read save file:', error);
-    importError.value = 'Failed to read save file';
-  }
-
-  // Reset file input
-  if (fileInput.value) {
-    fileInput.value.value = '';
+    importError.value = error instanceof Error ? error.message : 'Failed to read save file';
+  } finally {
+    if (fileInput.value) {
+      fileInput.value.value = '';
+    }
   }
 };
 
-const confirmImport = () => {
+const confirmImport = async () => {
   savePreview.value = null;
   try {
     if (!pendingImportData.value) return;
 
-    const saveData = serializer.deserialize(pendingImportData.value);
+    const saveData = await saveManager.importSave(pendingImportData.value);
 
-    if (!saveData || typeof saveData !== 'object') {
-      importError.value = 'Corrupted save data';
-      return;
-    }
+    // Apply the saved states to all stores
+    userStore.$patch(saveData.user);
+    achievementStore.$patch(saveData.achievements);
+    blackjackStore.$patch(saveData.blackjack);
+    clickerStore.$patch(saveData.clicker);
 
-    // Apply the saved states
-    if (saveData.user) {
-      userStore.$patch(saveData.user);
-    }
-    if (saveData.achievements) {
-      achievementStore.$patch(saveData.achievements);
-    }
-    if (saveData.blackjack) {
-      blackjackStore.$patch(saveData.blackjack);
-    }
-    if (saveData.clicker) {
-      clickerStore.$patch(saveData.clicker);
-    }
-
-    importSuccess.value = true;
-    importError.value = '';
-    setTimeout(() => {
-      importSuccess.value = false;
-    }, 3000);
+    showSuccess();
   } catch (error) {
     console.error('Failed to import save:', error);
-    importError.value = 'Failed to import save file';
+    importError.value = error instanceof Error ? error.message : 'Failed to import save file';
   } finally {
     showImportConfirm.value = false;
     pendingImportData.value = null;
   }
+};
+
+const showSuccess = () => {
+  importSuccess.value = true;
+  importError.value = '';
+  setTimeout(() => {
+    importSuccess.value = false;
+  }, 3000);
 };
 
 const cancelImport = () => {
@@ -154,12 +123,11 @@ const deleteSave = () => {
 };
 
 const confirmDelete = () => {
-  const clickerStore = useClickerStore()
-  clickerStore.reset()  // Reset the clicks
-  clickerStore.stopAutoClicker()  // Stop the interval
-  localStorage.clear()
-  window.location.reload()
-}
+  clickerStore.reset();
+  clickerStore.stopAutoClicker();
+  localStorage.clear();
+  window.location.reload();
+};
 
 const cancelDelete = () => {
   showDeleteConfirm.value = false;
@@ -199,18 +167,29 @@ const cancelDelete = () => {
           </p>
 
           <div class="mb-3">
-            <input type="file" class="form-control" accept=".save" @change="handleFileSelect" ref="fileInput">
+            <input
+              type="file"
+              class="form-control"
+              accept=".save"
+              @change="handleFileSelect"
+              ref="fileInput">
           </div>
 
           <!-- Import Preview & Confirmation Modal -->
-          <div v-if="showImportConfirm" class="modal d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+          <div
+            v-if="showImportConfirm"
+            class="modal d-block"
+            tabindex="-1"
+            style="background-color: rgba(0,0,0,0.5);">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title">Confirm Import</h5>
                 </div>
                 <div class="modal-body">
-                  <div class="save-preview bg-light p-3 rounded mb-3" v-if="savePreview">
+                  <div
+                    class="save-preview bg-light p-3 rounded mb-3"
+                    v-if="savePreview">
                     <h6 class="mb-3">Save File Preview</h6>
                     <div class="row g-3">
                       <div class="col-sm-6">
@@ -277,7 +256,11 @@ const cancelDelete = () => {
           </button>
 
           <!-- Delete Confirmation Modal -->
-          <div v-if="showDeleteConfirm" class="modal d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+          <div
+            v-if="showDeleteConfirm"
+            class="modal d-block"
+            tabindex="-1"
+            style="background-color: rgba(0,0,0,0.5);">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import pkg from '../../../package.json'
-const currentYear = new Date().getFullYear()
 </script>
 <template>
   <footer class="mt-auto py-3 bg-light border-top">
@@ -40,7 +39,7 @@ const currentYear = new Date().getFullYear()
       <div class="d-flex flex-column gap-1">
         <small class="text-muted">Penny Plummet v{{ pkg.version }}</small>
         <small class="text-muted">
-          <i class="bi bi-c-circle me-1" />{{ currentYear }} Bence Barkanyi
+          <i class="bi bi-c-circle me-1" />2024 Bence Barkanyi
         </small>
       </div>
     </div>

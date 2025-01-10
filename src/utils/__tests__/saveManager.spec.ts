@@ -3,9 +3,9 @@ import { SaveManager } from '@/utils/saveManager';
 import type { GameSaveData } from '@/types/GameSaveData';
 import { SIGNATURE } from '../gameSaveSerializer';
 import type { AchievementStore } from '@/stores/achievementStore';
-import type { UserStore } from '@/stores/user';
-import type { BlackjackStore } from '@/stores/blackjack';
-import type { ClickerStore } from '@/stores/clicker';
+import type { UserStore } from '@/stores/userStore';
+import type { BlackjackStore } from '@/stores/blackjackStore';
+import type { ClickerStore } from '@/stores/clickerStore';
 
 describe('SaveManager', () => {
   let saveManager: SaveManager;

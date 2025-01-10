@@ -2,9 +2,9 @@
 import { computed } from 'vue';
 import BaseLayout from '@/components/layout/BaseLayout.vue';
 import AchievementCard from '@/components/AchievementCard.vue';
-import { useUserStore } from '@/stores/user';
-import { useAchievementStore } from '@/stores/achievement';
-import { formatIntAsCurrency } from '@/utils/currency';
+import { useUserStore } from '@/stores/userStore';
+import { useAchievementStore } from '@/stores/achievementStore';
+import { formatIntAsCurrency } from '@/utils/currencyUtil';
 
 const userStore = useUserStore();
 const achievementStore = useAchievementStore();

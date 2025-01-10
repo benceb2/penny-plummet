@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
-import { useBlackjackStore } from '@/stores/blackjack'
-import { useUserStore } from '@/stores/user'
+import { useBlackjackStore } from '@/stores/blackjackStore'
+import { useUserStore } from '@/stores/userStore'
 import PlayingCard from '@/components/PlayingCard.vue'
 import { BlackjackState } from '@/types/BlackjackGameState'
 import BaseLayout from '@/components/layout/BaseLayout.vue'
-import { formatIntAsCurrency } from '@/utils/currency'
+import { formatIntAsCurrency } from '@/utils/currencyUtil'
 
 const gameStore = useBlackjackStore()
 const userStore = useUserStore()

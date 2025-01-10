@@ -1,6 +1,6 @@
 import { setActivePinia, createPinia } from 'pinia'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { useBlackjackStore } from '../blackjack'
+import { useBlackjackStore } from '../blackjackStore'
 import { BlackjackState } from '@/types/BlackjackGameState'
 
 describe('Blackjack Store', () => {

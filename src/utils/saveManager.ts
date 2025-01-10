@@ -1,6 +1,6 @@
 
 import type { GameSaveData } from '@/types/GameSaveData';
-import { createGameSerializer, SIGNATURE } from './serializer';
+import { createGameSerializer, SIGNATURE } from './gameSaveSerializer';
 import type { SavePreview } from '@/types/SavePreview';
 
 export class SaveManager {

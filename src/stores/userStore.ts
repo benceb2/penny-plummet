@@ -2,9 +2,9 @@ import { computed, ref } from 'vue';
 import { defineStore } from 'pinia';
 
 import { type BlackjackResult } from '@/types/BlackjackResult';
-import { calculateStorageKey, createGameSerializer } from '@/utils/serializer';
-import { formatIntAsCurrency } from '@/utils/currency';
-import { useAchievementStore } from './achievement';
+import { calculateStorageKey, createGameSerializer } from '@/utils/gameSaveSerializer';
+import { formatIntAsCurrency } from '@/utils/currencyUtil';
+import { useAchievementStore } from './achievementStore';
 
 export const useUserStore = defineStore('user', () => {
   const achievementStore = useAchievementStore()

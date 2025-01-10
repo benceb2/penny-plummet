@@ -1,7 +1,7 @@
-import type { AchievementStore } from "@/stores/achievement";
-import type { BlackjackStore } from "@/stores/blackjack";
-import type { ClickerStore } from "@/stores/clicker";
-import type { UserStore } from "@/stores/user";
+import type { AchievementStore } from "@/stores/achievementStore";
+import type { BlackjackStore } from "@/stores/blackjackStore";
+import type { ClickerStore } from "@/stores/clickerStore";
+import type { UserStore } from "@/stores/userStore";
 
 export interface GameSaveData {
   user: UserStore;

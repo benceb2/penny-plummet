@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 
-import { calculateStorageKey, createGameSerializer } from '@/utils/serializer';
-import { achievements } from '@/utils/achievements';
+import { calculateStorageKey, createGameSerializer } from '@/utils/gameSaveSerializer';
+import { achievements } from '@/utils/achievementUitl';
 import type { Achievement } from '@/types/Achievement';
 import type { Level } from '@/types/Level';
-import { useUserStore } from './user';
-import { useToastStore } from './toast';
+import { useUserStore } from './userStore';
+import { useToastStore } from './toastStore';
 
 export const useAchievementStore = defineStore('achievements', () => {
   const userStore = useUserStore();

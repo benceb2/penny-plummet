@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
-import { formatIntAsCurrency } from '@/utils/currency'
-import { calculateStorageKey, createGameSerializer } from '@/utils/serializer'
-import { useAchievementStore } from './achievement'
-import type { UserStore } from './user'
+import { formatIntAsCurrency } from '@/utils/currencyUtil'
+import { calculateStorageKey, createGameSerializer } from '@/utils/gameSaveSerializer'
+import { useAchievementStore } from './achievementStore'
+import type { UserStore } from './userStore'
 
 export const useClickerStore = defineStore('clicker', () => {
   const OFFLINE_RATE_MULTIPLIER = 0.5 // Half rate when offline

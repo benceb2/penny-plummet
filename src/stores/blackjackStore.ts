@@ -14,10 +14,10 @@ import { ref, computed } from 'vue';
 import { BlackjackState } from '@/types/BlackjackGameState';
 import type { Card } from '@/types/Card';
 import type { BlackjackResult } from '@/types/BlackjackResult';
-import { generateDeck, shuffleDeck, calculateHandValue } from '@/utils/cards';
-import { calculateStorageKey, createGameSerializer } from '../utils/serializer';
-import { useAchievementStore } from './achievement';
-import { useUserStore } from './user';
+import { generateDeck, shuffleDeck, calculateHandValue } from '@/utils/blackjackUtil';
+import { calculateStorageKey, createGameSerializer } from '../utils/gameSaveSerializer';
+import { useAchievementStore } from './achievementStore';
+import { useUserStore } from './userStore';
 
 export const useBlackjackStore = defineStore('blackjack', () => {
   // Game state references

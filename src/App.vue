@@ -5,7 +5,7 @@ import ConsentModal from './components/modals/ConsentModal.vue'
 import OfflineEarningsModal from './components/modals/OfflineEarningsModal.vue'
 import AppNavbar from './components/layout/AppNavbar.vue'
 import AppFooter from './components/layout/AppFooter.vue'
-import { useClickerStore } from './stores/clicker'
+import { useClickerStore } from './stores/clickerStore'
 
 const store = useClickerStore()
 

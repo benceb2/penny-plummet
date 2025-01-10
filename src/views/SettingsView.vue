@@ -4,11 +4,11 @@ import type { SavePreview } from '@/types/SavePreview';
 import { SaveManager } from '@/utils/saveManager';
 import UsernameSettings from '@/components/UsernameSettings.vue';
 import BaseLayout from '@/components/layout/BaseLayout.vue';
-import { useUserStore } from '@/stores/user';
-import { useAchievementStore } from '@/stores/achievement';
-import { useBlackjackStore } from '@/stores/blackjack';
-import { useClickerStore } from '@/stores/clicker';
-import { formatIntAsCurrency } from '@/utils/currency';
+import { useUserStore } from '@/stores/userStore';
+import { useAchievementStore } from '@/stores/achievementStore';
+import { useBlackjackStore } from '@/stores/blackjackStore';
+import { useClickerStore } from '@/stores/clickerStore';
+import { formatIntAsCurrency } from '@/utils/currencyUtil';
 import type { GameSaveData } from '@/types/GameSaveData';
 
 // Initialize stores and manager

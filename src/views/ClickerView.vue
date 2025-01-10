@@ -1,7 +1,7 @@
 <!-- EarnView.vue -->
 <script setup lang="ts">
-import { useUserStore } from '@/stores/user'
-import { useClickerStore } from '@/stores/clicker'
+import { useUserStore } from '@/stores/userStore'
+import { useClickerStore } from '@/stores/clickerStore'
 import BaseLayout from '@/components/layout/BaseLayout.vue'
 
 const userStore = useUserStore()

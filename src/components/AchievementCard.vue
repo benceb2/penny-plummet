@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
-import { formatIntAsCurrency } from '@/utils/currency';
+import { formatIntAsCurrency } from '@/utils/currencyUtil';
 
 defineProps({
   achievement: {

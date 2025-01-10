@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { useUserStore } from '@/stores/user';
-import { useAchievementStore } from '@/stores/achievement';
-import { formatIntAsCurrency } from '@/utils/currency';
+import { useUserStore } from '@/stores/userStore';
+import { useAchievementStore } from '@/stores/achievementStore';
+import { formatIntAsCurrency } from '@/utils/currencyUtil';
 import BaseLayout from '@/components/layout/BaseLayout.vue';
 import AchievementCard from '@/components/AchievementCard.vue';
 import { useRoute } from 'vue-router';

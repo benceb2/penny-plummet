@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { SaveManager } from '@/utils/saveManager';
 import type { GameSaveData } from '@/types/GameSaveData';
-import { SIGNATURE } from '../serializer';
-import type { AchievementStore } from '@/stores/achievement';
+import { SIGNATURE } from '../gameSaveSerializer';
+import type { AchievementStore } from '@/stores/achievementStore';
 import type { UserStore } from '@/stores/user';
 import type { BlackjackStore } from '@/stores/blackjack';
 import type { ClickerStore } from '@/stores/clicker';

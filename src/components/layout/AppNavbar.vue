@@ -2,8 +2,8 @@
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
-import { useUserStore } from '@/stores/user'
-import { useAchievementStore } from '@/stores/achievement'
+import { useUserStore } from '@/stores/userStore'
+import { useAchievementStore } from '@/stores/achievementStore'
 import ToastContainer from './ToastContainer.vue'
 
 const userStore = useUserStore()

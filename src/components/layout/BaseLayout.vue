@@ -1,6 +1,6 @@
 <!-- BaseLayout.vue -->
 <script setup lang="ts">
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/userStore'
 
 defineProps<{
   title: string

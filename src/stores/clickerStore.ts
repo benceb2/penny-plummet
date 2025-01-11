@@ -13,7 +13,7 @@ export const useClickerStore = defineStore('clicker', () => {
 
 
   const achievementStore = useAchievementStore()
-  let autoClickerInterval: number | null = null;
+  const autoClickerInterval = ref<ReturnType<typeof setInterval> | null>(null)
 
   startAutoClicker();
 
@@ -77,19 +77,19 @@ export const useClickerStore = defineStore('clicker', () => {
   function startAutoClicker() {
     if (typeof window !== 'undefined') {
       // Clear any existing interval first
-      if (autoClickerInterval) {
-        clearInterval(autoClickerInterval)
+      if (autoClickerInterval.value) {
+        clearInterval(autoClickerInterval.value)
       }
-      autoClickerInterval = setInterval(() => {
+      autoClickerInterval.value = setInterval(() => {
         clicks.value += autoClickersCount.value * clickValue.value
       }, 1000)
     }
   }
 
   function stopAutoClicker(clearStorage: boolean = true) {
-    if (autoClickerInterval) {
-      clearInterval(autoClickerInterval)
-      autoClickerInterval = null
+    if (autoClickerInterval.value) {
+      clearInterval(autoClickerInterval.value)
+      autoClickerInterval.value = null
     }
 
     if (clearStorage) {

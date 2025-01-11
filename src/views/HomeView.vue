@@ -26,7 +26,7 @@ const nearestAchievements = computed(() => {
 
     <!-- Game Selection Cards -->
     <div class="row g-4 mb-4">
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div class="card h-100 shadow-sm">
           <div class="card-body d-flex flex-column">
             <div class="d-flex align-items-center mb-3">
@@ -44,7 +44,7 @@ const nearestAchievements = computed(() => {
         </div>
       </div>
 
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div class="card h-100 shadow-sm">
           <div class="card-body d-flex flex-column">
             <div class="d-flex align-items-center mb-3">
@@ -57,6 +57,24 @@ const nearestAchievements = computed(() => {
             <p class="text-muted">Earn chips with every click and unlock powerful upgrades.</p>
             <RouterLink to="/clicker" class="btn btn-success mt-auto">
               <i class="bi bi-play-circle-fill me-2"></i>Start Clicking
+            </RouterLink>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body d-flex flex-column">
+            <div class="d-flex align-items-center mb-3">
+              <i class="bi bi-bullseye fs-2 text-danger me-3"></i>
+              <div>
+                <h4 class="mb-1">Roulette</h4>
+                <p class="text-muted mb-0">Place your bets and spin to win!</p>
+              </div>
+            </div>
+            <p class="text-muted">Try your luck at the roulette wheel with various betting options.</p>
+            <RouterLink to="/roulette" class="btn btn-danger mt-auto">
+              <i class="bi bi-play-circle-fill me-2"></i>Play Roulette
             </RouterLink>
           </div>
         </div>

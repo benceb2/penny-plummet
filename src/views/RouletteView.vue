@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useRouletteStore, RouletteState, type RouletteResult, type BetType } from '@/stores/rouletteStore'
 import { useUserStore } from '@/stores/userStore'
 import { formatIntAsCurrency } from '@/utils/currencyUtil'
@@ -17,35 +16,35 @@ const currentBetAmount = ref(100)
 const quickBetAmounts = [100, 500, 1000, 5000]
 
 // // Utility functions for table display
-// function getNumberButtonClass(num: number): Record<string, boolean> {
-//   const redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
-//   return {
-//     'btn-danger': redNumbers.includes(num),
-//     'btn-dark': !redNumbers.includes(num),
-//     'active': hasActiveBet(num)
-//   }
-// }
+function getNumberButtonClass(num: number): Record<string, boolean> {
+  const redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
+  return {
+    'btn-danger': redNumbers.includes(num),
+    'btn-dark': !redNumbers.includes(num),
+    'active': hasActiveBet(num)
+  }
+}
 
-// function getBetAmount(num: number): number {
-//   return gameStore.currentBets
-//     .filter(bet => bet.numbers.includes(num))
-//     .reduce((total, bet) => total + bet.amount, 0)
-// }
+function getBetAmount(num: number): number {
+  return gameStore.currentBets
+    .filter(bet => bet.numbers.includes(num))
+    .reduce((total, bet) => total + bet.amount, 0)
+}
 
-// function hasActiveBet(num: number): boolean {
-//   return gameStore.currentBets.some(bet => bet.numbers.includes(num))
-// }
+function hasActiveBet(num: number): boolean {
+  return gameStore.currentBets.some(bet => bet.numbers.includes(num))
+}
 
 // Game message formatting
-// function getGameResultMessage(result: RouletteResult): string {
-//   if (result.totalWin > result.totalBet) {
-//     return `You win ${formatIntAsCurrency(result.totalWin - result.totalBet)}!`
-//   } else if (result.totalWin === result.totalBet) {
-//     return 'Push - Bets returned'
-//   } else {
-//     return `You lose ${formatIntAsCurrency(result.totalBet)}`
-//   }
-// }
+function getGameResultMessage(result: RouletteResult): string {
+  if (result.totalWin > result.totalBet) {
+    return `You win ${formatIntAsCurrency(result.totalWin - result.totalBet)}!`
+  } else if (result.totalWin === result.totalBet) {
+    return 'Push - Bets returned'
+  } else {
+    return `You lose ${formatIntAsCurrency(result.totalBet)}`
+  }
+}
 
 // Game action handlers
 function placeBet(betType: BetType, numbers: number[], amount: number) {

@@ -21,7 +21,7 @@ const nearestAchievements = computed(() => {
 <template>
   <BaseLayout
     :title="userStore.username ? `Welcome back, ${userStore.username}!` : 'Welcome to Penny Plummet!'"
-    icon="emoji-smile-fill"
+    :fontawesome-icon="'fa fa-home'"
     :showBalance="false">
 
     <!-- Game Selection Cards -->

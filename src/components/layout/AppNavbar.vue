@@ -48,6 +48,15 @@ const isNavOpen = ref(false)
               Blackjack
             </RouterLink>
           </li>
+          <li class="nav-item me-3">
+            <RouterLink
+              class="nav-link px-3"
+              @click="isNavOpen = false"
+              to="/roulette">
+              <i class="bi bi-dice-5-fill me-1 transition-transform"></i>
+              Roulette
+            </RouterLink>
+          </li>
           <li class="nav-item">
             <RouterLink
               class="nav-link px-3"

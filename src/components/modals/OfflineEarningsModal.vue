@@ -46,7 +46,7 @@ const formattedTime = computed(() => {
         class="btn btn-primary w-100">
         Awesome!
       </button>
-      <RouterLink @click.prevent="emit('close')" to="/earn" class="btn btn-outline-secondary w-100">
+      <RouterLink @click.prevent="emit('close')" to="/clicker" class="btn btn-outline-secondary w-100">
         Collect earnings
         <i class="bi bi-arrow-right ms-2"></i>
       </RouterLink>

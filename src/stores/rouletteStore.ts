@@ -125,30 +125,40 @@ export const useRouletteStore = defineStore('roulette', () => {
   }
 
   /**
-   * Spins the roulette wheel and determines the outcome
-   * @returns {RouletteResult} Object containing spin results and payout information
+   * Resets the game state for a new round
    */
+  function reset() {
+    gameState.value = RouletteState.betting
+    currentBets.value = []
+    winningNumber.value = null
+  }
+
+  function completeGame() {
+    gameState.value = RouletteState.complete
+  }
+
   async function spin(): Promise<RouletteResult> {
     if (!isSpinAllowed.value) return {} as RouletteResult;
 
     gameState.value = RouletteState.spinning
 
     // Generate winning number (0-36)
-    winningNumber.value = Math.floor(Math.random() * 37)
+    const result: RouletteResult = {
+      winningNumber: Math.floor(Math.random() * 37),
+      totalWin: 0,
+      totalBet: totalBet.value,
+      winningBets: [],
+      losingBets: []
+    }
 
     // Calculate results
-    const winningBets: RouletteBet[] = []
-    const losingBets: RouletteBet[] = []
-    let totalWin = 0
-
     currentBets.value.forEach(bet => {
-      if (winningNumber.value == null) return;
-      if (bet.numbers.includes(winningNumber.value)) {
+      if (bet.numbers.includes(result.winningNumber)) {
         const payout = bet.amount * (PAYOUT_MULTIPLIERS[bet.type] + 1)
-        totalWin += payout
-        winningBets.push(bet)
+        result.totalWin += payout
+        result.winningBets.push(bet)
       } else {
-        losingBets.push(bet)
+        result.losingBets.push(bet)
       }
     })
 
@@ -156,63 +166,10 @@ export const useRouletteStore = defineStore('roulette', () => {
     sessionStats.value.spins++
     sessionStats.value.totalWagered += totalBet.value
 
-    if (totalWin > 0) {
-      sessionStats.value.consecutiveWins++
-      sessionStats.value.maxConsecutiveWins = Math.max(
-        sessionStats.value.consecutiveWins,
-        sessionStats.value.maxConsecutiveWins
-      )
-      sessionStats.value.biggestWin = Math.max(
-        sessionStats.value.biggestWin,
-        totalWin
-      )
-
-      // Track achievements
-      achievementStore.updateAchievementProgress('winning_streak',
-        sessionStats.value.consecutiveWins)
-
-      if (totalWin >= 1000) {
-        achievementStore.updateAchievementProgress('high_roller', totalWin)
-      }
-
-      // Add XP based on win amount (10% of winnings)
-      const xpGain = Math.floor((totalWin - totalBet.value) * 0.1)
-      achievementStore.addXP(xpGain)
-    } else {
-      sessionStats.value.consecutiveWins = 0
-    }
-
-    // Create result object
-    const result: RouletteResult = {
-      winningNumber: winningNumber.value,
-      totalWin,
-      totalBet: totalBet.value,
-      winningBets,
-      losingBets
-    }
-
-    // Update last result and game state
+    // Update last result - but don't change game state yet
     lastResult.value = result
-    gameState.value = RouletteState.complete
-
-    // Update user stats
-    // userStore.updateStats({
-    //   isWin: totalWin > totalBet.value,
-    //   isPush: totalWin === totalBet.value,
-    //   amount: totalWin,
-    //   initialBet: totalBet.value
-    // })
 
     return result
-  }
-
-  /**
-   * Resets the game state for a new round
-   */
-  function reset() {
-    gameState.value = RouletteState.betting
-    currentBets.value = []
-    winningNumber.value = null
   }
 
   return {
@@ -231,7 +188,8 @@ export const useRouletteStore = defineStore('roulette', () => {
     placeBet,
     clearBets,
     spin,
-    reset
+    reset,
+    completeGame
   }
 }, {
   persist: {

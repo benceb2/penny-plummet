@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useRouletteStore, RouletteState, type RouletteResult, type BetType } from '@/stores/rouletteStore'
 import { useUserStore } from '@/stores/userStore'
 import { formatIntAsCurrency } from '@/utils/currencyUtil'
+import RouletteSpinner from '@/components/RouletteSpinner.vue'
 
 const gameStore = useRouletteStore()
 const userStore = useUserStore()
@@ -33,15 +35,15 @@ function hasActiveBet(num: number): boolean {
 }
 
 // Game message formatting
-function getGameResultMessage(result: RouletteResult): string {
-  if (result.totalWin > result.totalBet) {
-    return `You win ${formatIntAsCurrency(result.totalWin - result.totalBet)}!`
-  } else if (result.totalWin === result.totalBet) {
-    return 'Push - Bets returned'
-  } else {
-    return `You lose ${formatIntAsCurrency(result.totalBet)}`
-  }
-}
+// function getGameResultMessage(result: RouletteResult): string {
+//   if (result.totalWin > result.totalBet) {
+//     return `You win ${formatIntAsCurrency(result.totalWin - result.totalBet)}!`
+//   } else if (result.totalWin === result.totalBet) {
+//     return 'Push - Bets returned'
+//   } else {
+//     return `You lose ${formatIntAsCurrency(result.totalBet)}`
+//   }
+// }
 
 // Game action handlers
 function placeBet(betType: BetType, numbers: number[], amount: number) {
@@ -164,24 +166,9 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
       </div>
     </div>
 
-    <!-- Game Result Alert -->
-    <div v-if="gameStore.lastResult" class="alert mb-4" :class="{
-      'alert-success': gameStore.lastResult.totalWin > gameStore.lastResult.totalBet,
-      'alert-danger': gameStore.lastResult.totalWin === 0,
-      'alert-warning': gameStore.lastResult.totalWin === gameStore.lastResult.totalBet
-    }" role="alert">
-      <div class="d-flex justify-content-between align-items-center">
-        <span class="h5 mb-0">
-          <i class="bi" :class="{
-            'bi-trophy-fill': gameStore.lastResult.totalWin > gameStore.lastResult.totalBet,
-            'bi-x-circle-fill': gameStore.lastResult.totalWin === 0,
-            'bi-dash-circle-fill': gameStore.lastResult.totalWin === gameStore.lastResult.totalBet
-          }"></i>
-          Number {{ gameStore.lastResult.winningNumber }} -
-          {{ getGameResultMessage(gameStore.lastResult) }}
-        </span>
-      </div>
-    </div>
+    <!-- Game Result Spinner -->
+    <RouletteSpinner :is-spinning="gameStore.gameState === RouletteState.spinning"
+      :winning-number="gameStore.lastResult?.winningNumber ?? null" @spin-complete="gameStore.completeGame()" />
 
     <!-- Roulette Wheel and Table -->
     <div class="row mb-4">

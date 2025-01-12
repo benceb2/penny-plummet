@@ -76,6 +76,7 @@ export const useRouletteStore = defineStore('roulette', () => {
   const currentBets = ref<RouletteBet[]>([])
   const lastResult = ref<RouletteResult | null>(null)
   const winningNumber = ref<number | null>(null)
+  const pendingResult = ref<RouletteResult | null>(null)
 
   // Session statistics
   const sessionStats = ref({
@@ -131,9 +132,14 @@ export const useRouletteStore = defineStore('roulette', () => {
     gameState.value = RouletteState.betting
     currentBets.value = []
     winningNumber.value = null
+    lastResult.value = null
   }
 
   function completeGame() {
+    if (pendingResult.value) {
+      lastResult.value = pendingResult.value
+      pendingResult.value = null
+    }
     gameState.value = RouletteState.complete
   }
 
@@ -142,7 +148,6 @@ export const useRouletteStore = defineStore('roulette', () => {
 
     gameState.value = RouletteState.spinning
 
-    // Generate winning number (0-36)
     const result: RouletteResult = {
       winningNumber: Math.floor(Math.random() * 37),
       totalWin: 0,
@@ -166,11 +171,13 @@ export const useRouletteStore = defineStore('roulette', () => {
     sessionStats.value.spins++
     sessionStats.value.totalWagered += totalBet.value
 
-    // Update last result - but don't change game state yet
-    lastResult.value = result
+    // Store the result for later use
+    pendingResult.value = result
+    winningNumber.value = result.winningNumber
 
     return result
   }
+
 
   return {
     // State
@@ -179,6 +186,7 @@ export const useRouletteStore = defineStore('roulette', () => {
     lastResult,
     winningNumber,
     sessionStats,
+    pendingResult,
 
     // Computed
     totalBet,

@@ -15,32 +15,12 @@ const currentBetAmount = ref(100)
 // Quick bet amount presets
 const quickBetAmounts = [100, 500, 1000, 5000]
 
-// // Utility functions for table display
-function getNumberButtonClass(num: number): Record<string, boolean> {
-  const redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
-  return {
-    'btn-danger': redNumbers.includes(num),
-    'btn-dark': !redNumbers.includes(num),
-    'active': hasActiveBet(num)
-  }
-}
-
-function getBetAmount(num: number): number {
-  return gameStore.currentBets
-    .filter(bet => bet.numbers.includes(num))
-    .reduce((total, bet) => total + bet.amount, 0)
-}
-
-function hasActiveBet(num: number): boolean {
-  return gameStore.currentBets.some(bet => bet.numbers.includes(num))
-}
-
 // Game message formatting
 function getGameResultMessage(result: RouletteResult): string {
   if (result.totalWin > result.totalBet) {
     return `You win ${formatIntAsCurrency(result.totalWin - result.totalBet)}!`
   } else if (result.totalWin === result.totalBet) {
-    return 'Push - Bets returned'
+    return `You broke even and ${formatIntAsCurrency(result.totalBet)} was returned!`
   } else {
     return `You lose ${formatIntAsCurrency(result.totalBet)}`
   }
@@ -101,6 +81,26 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
     title="Roulette"
     icon="dice-5"
     :showBalance="true">
+
+    <!-- Result Alert -->
+    <div v-if="gameStore.lastResult && gameStore.gameState === RouletteState.complete" class="alert mb-4" :class="{
+      'alert-success': gameStore.lastResult.totalWin > gameStore.lastResult.totalBet,
+      'alert-danger': gameStore.lastResult.totalWin === 0,
+      'alert-warning': gameStore.lastResult.totalWin === gameStore.lastResult.totalBet
+    }" role="alert">
+      <div class="d-flex justify-content-between align-items-center">
+        <span class="h5 mb-0">
+          <i class="bi" :class="{
+            'bi-trophy-fill': gameStore.lastResult.totalWin > gameStore.lastResult.totalBet,
+            'bi-x-circle-fill': gameStore.lastResult.totalWin === 0,
+            'bi-dash-circle-fill': gameStore.lastResult.totalWin === gameStore.lastResult.totalBet
+          }"></i>
+          Number {{ gameStore.lastResult.winningNumber }} -
+          {{ getGameResultMessage(gameStore.lastResult) }}
+        </span>
+      </div>
+    </div>
+
     <!-- Header Actions Slot -->
     <template #header-actions>
       <button
@@ -168,8 +168,11 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
     </div>
 
     <!-- Game Result Spinner -->
+    <!-- Game Result Spinner -->
     <RouletteSpinner :is-spinning="gameStore.gameState === RouletteState.spinning"
-      :winning-number="gameStore.lastResult?.winningNumber ?? null" @spin-complete="gameStore.completeGame()" />
+      :winning-number="gameStore.winningNumber"
+      @spin-complete="gameStore.completeGame" />
+
 
     <!-- Roulette Wheel and Table -->
     <div class="row mb-4">

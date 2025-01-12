@@ -39,13 +39,26 @@ const getBetAmount = (num: number): number => {
 // Generate number grid
 const numberGrid = computed(() => {
   return [
-    [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36],
+    [1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34],
     [2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35],
-    [1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34]
+    [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36],
   ]
 })
 
-// Outside bets configuration
+const mobileNumberGrid = computed(() => [
+  [1, 10, 19, 28],
+  [2, 11, 20, 29],
+  [3, 12, 21, 30],
+
+  [4, 13, 22, 31],
+  [5, 14, 23, 32],
+  [6, 15, 24, 33],
+
+  [7, 16, 25, 34],
+  [8, 17, 26, 35],
+  [9, 18, 27, 36]
+])
+
 const outsideBets = [
   {
     type: 'dozen' as BetType,
@@ -108,44 +121,101 @@ const bottomBets = [
 </script>
 
 <template>
-  <div class="roulette-table bg-success p-4 rounded">
-    <!-- Dozen Bets -->
-    <div class="row g-2 mb-3">
-      <div v-for="bet in outsideBets" :key="bet.label" class="col-4">
-        <button
-          :class="['btn border w-100', bet.class]"
-          @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
-          {{ bet.label }}
-        </button>
+  <div class="bg-success p-2 p-md-3 rounded">
+    <!-- Desktop Layout -->
+    <div class="d-none d-md-block">
+      <!-- Dozen Bets -->
+      <div class="row g-2 mb-2">
+        <div v-for="bet in outsideBets" :key="bet.label" class="col-4">
+          <button
+            :class="['btn border w-100', bet.class]"
+            style="height: 3.5rem"
+            @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
+            {{ bet.label }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Numbers Grid -->
+      <div class="row g-2 mb-2">
+        <template v-for="(row, rowIndex) in numberGrid" :key="rowIndex">
+          <template v-for="num in row" :key="num">
+            <div class="col-1">
+              <div class="position-relative">
+                <button
+                  :class="['btn w-100 aspect-square', getNumberButtonClass(num)]"
+                  @click="onPlaceBet('straight', [num], currentBetAmount)">
+                  {{ num }}
+                  <span
+                    v-if="getBetAmount(num)"
+                    class="bet-amount-badge">
+                    {{ formatCurrency(getBetAmount(num)) }}
+                  </span>
+                </button>
+              </div>
+            </div>
+          </template>
+        </template>
+      </div>
+
+      <!-- Bottom Bets -->
+      <div class="row g-2">
+        <div v-for="bet in bottomBets" :key="bet.label" class="col-2">
+          <button :class="['btn border w-100', bet.class]" style="height: 3.5rem"
+            @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
+            {{ bet.label }}
+          </button>
+        </div>
       </div>
     </div>
 
-    <!-- Numbers Grid -->
-    <div class="row g-2 mb-3">
-      <template v-for="(row, rowIndex) in numberGrid" :key="rowIndex">
-        <div v-for="num in row" :key="num" class="col-1">
-          <button
-            :class="['btn w-100', getNumberButtonClass(num)]"
-            style="aspect-ratio: 1;"
-            @click="onPlaceBet('straight', [num], currentBetAmount)">
-            {{ num }}
-            <span
-              v-if="getBetAmount(num)"
-              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark"
-              style="font-size: 0.65rem; z-index: 1;">
-              {{ formatCurrency(getBetAmount(num)) }}
-            </span>
+    <!-- Mobile Layout -->
+    <div class="d-md-none">
+      <!-- Dozen Bets -->
+      <div class="row g-2 mb-2">
+        <div v-for="bet in outsideBets" :key="bet.label" class="col-4">
+          <button :class="['btn border w-100 py-2', bet.class]"
+            @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
+            {{ bet.label }}
           </button>
         </div>
-      </template>
-    </div>
+      </div>
 
-    <!-- Bottom Bets -->
-    <div class="row g-2">
-      <div v-for="bet in bottomBets" :key="bet.label" class="col-2">
-        <button :class="['btn border w-100', bet.class]" @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
-          {{ bet.label }}
-        </button>
+      <!-- Mobile Numbers Grid -->
+      <div class="row g-2 mb-2">
+        <template v-for="(row, rowIndex) in mobileNumberGrid" :key="rowIndex">
+          <div class="row g-2 mb-2">
+            <template v-for="num in row" :key="num">
+              <div class="col-3">
+                <div class="position-relative">
+                  <button
+                    :class="['btn w-100 aspect-square', getNumberButtonClass(num)]"
+                    @click="onPlaceBet('straight', [num], currentBetAmount)">
+                    {{ num }}
+                    <span
+                      v-if="getBetAmount(num)"
+                      class="bet-amount-badge">
+                      {{ formatCurrency(getBetAmount(num)) }}
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </template>
+          </div>
+        </template>
+      </div>
+
+      <!-- Bottom Bets -->
+      <div class="row g-2">
+        <template v-for="(bet, index) in bottomBets" :key="bet.label">
+          <div class="col-4">
+            <button
+              :class="['btn border w-100 py-2', bet.class]"
+              @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
+              {{ bet.label }}
+            </button>
+          </div>
+        </template>
       </div>
     </div>
   </div>
@@ -153,23 +223,44 @@ const bottomBets = [
 
 <style scoped>
 .btn {
-  font-size: 0.875rem;
-  padding: 0.375rem 0.5rem;
+  --bs-btn-padding-x: 0.25rem;
+  --bs-btn-padding-y: 0.25rem;
+  font-weight: 500;
+  position: relative;
 }
 
-@media (min-width: 768px) {
+.bet-amount-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(35%, -35%);
+  background-color: #ffc107;
+  color: #000;
+  border-radius: 9999px;
+  padding: 0.25rem 0.4rem;
+  font-weight: normal;
+  white-space: nowrap;
+  z-index: 5;
+}
+
+@media (max-width: 768px) {
   .btn {
-    font-size: 1rem;
-    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  .bet-amount-badge {
+    font-size: 0.65rem;
+    padding: 0.2rem 0.35rem;
   }
 }
 
-/* Ensure bet amount badges don't get cut off */
-.position-relative {
-  z-index: 0;
-}
+@media (min-width: 769px) {
+  .btn {
+    font-size: 1rem;
+  }
 
-.badge {
-  z-index: 1;
+  .bet-amount-badge {
+    font-size: 0.75rem;
+  }
 }
 </style>

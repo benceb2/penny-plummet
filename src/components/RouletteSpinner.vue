@@ -1,3 +1,4 @@
+// RouletteSpinner.vue
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
 
@@ -13,55 +14,63 @@ const emit = defineEmits<{
 const spinnerRef = ref<HTMLDivElement | null>(null)
 const numbersStrip = ref<HTMLDivElement | null>(null)
 const isAnimating = ref(false)
+const spinCount = ref(0) // Add this to force animation restart
 
-// European roulette wheel sequence
-const WHEEL_SEQUENCE = [
+// Real European roulette wheel sequence
+const BASE_SEQUENCE = [
   0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26
 ]
 
 const getNumberColor = (num: number): string => {
-  if (num === 0) return 'bg-success text-white' // Green for zero
+  if (num === 0) return 'bg-success text-white'
   const redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
   return redNumbers.includes(num) ? 'bg-danger text-white' : 'bg-dark text-white'
 }
 
-// Generate a sequence that shows more numbers for a longer spin animation
 const generateSpinSequence = () => {
-  // Repeat the sequence 5 times for a longer strip
-  return [...WHEEL_SEQUENCE, ...WHEEL_SEQUENCE, ...WHEEL_SEQUENCE, ...WHEEL_SEQUENCE, ...WHEEL_SEQUENCE]
+  return [...BASE_SEQUENCE, ...BASE_SEQUENCE, ...BASE_SEQUENCE]
 }
 
 const startSpin = async () => {
   if (!spinnerRef.value || !numbersStrip.value || isAnimating.value || props.winningNumber === null) return
 
   isAnimating.value = true
+  spinCount.value++ // Increment to force animation restart
+  console.log('Starting spin to', props.winningNumber)
 
   // Reset position
   numbersStrip.value.style.transition = 'none'
   numbersStrip.value.style.transform = 'translateX(0)'
-
-  // Force reflow
   void numbersStrip.value.offsetWidth
 
-  // Calculate final position
-  const numberWidth = 60 // Width of each number block
-  const numbers = generateSpinSequence()
+  const numberWidth = 64
+  const sequence = generateSpinSequence()
 
-  // Find the last occurrence of the winning number in our sequence
-  const winningIndex = numbers.lastIndexOf(props.winningNumber)
+  // Find the winning number in the middle sequence
+  const baseLength = BASE_SEQUENCE.length
+  const startSearchAt = baseLength
+  const endSearchAt = baseLength * 2
 
-  // Calculate the position to center the winning number
-  const finalPosition = -(winningIndex * numberWidth + numberWidth / 2 - spinnerRef.value.offsetWidth / 2)
+  let targetIndex = -1
+  for (let i = startSearchAt; i < endSearchAt; i++) {
+    if (sequence[i] === props.winningNumber) {
+      targetIndex = i
+      break
+    }
+  }
 
-  // Add some random extra distance for variety in spin length
-  const extraDistance = Math.random() * 100 - 50
+  if (targetIndex === -1) {
+    console.error('Could not find winning number in sequence')
+    return
+  }
 
-  // Start animation with easing
-  const SPIN_DURATION = 4000 // 4 seconds
-  numbersStrip.value.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.15, 0.85, 0.25, 1)`
-  numbersStrip.value.style.transform = `translateX(${finalPosition + extraDistance}px)`
+  const spinnerCenter = spinnerRef.value.offsetWidth / 2
+  const finalPosition = -(targetIndex * numberWidth) + (spinnerCenter - numberWidth / 2)
 
-  // Reset after animation and emit event
+  const SPIN_DURATION = 10000
+  numbersStrip.value.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.2, 0.8, 0.2, 0.99)`
+  numbersStrip.value.style.transform = `translateX(${finalPosition}px)`
+
   setTimeout(() => {
     isAnimating.value = false
     emit('spinComplete')
@@ -74,14 +83,9 @@ watch(() => props.isSpinning, (newValue) => {
   }
 })
 
-// Initialize position
 onMounted(() => {
-  if (numbersStrip.value && props.winningNumber !== null) {
-    const numbers = generateSpinSequence()
-    const winningIndex = numbers.lastIndexOf(props.winningNumber)
-    const numberWidth = 60
-    const finalPosition = -(winningIndex * numberWidth + numberWidth / 2 - (spinnerRef.value?.offsetWidth ?? 0) / 2)
-    numbersStrip.value.style.transform = `translateX(${finalPosition}px)`
+  if (numbersStrip.value) {
+    numbersStrip.value.style.transform = 'translateX(0)'
   }
 })
 </script>
@@ -89,7 +93,7 @@ onMounted(() => {
 <template>
   <div class="roulette-spinner-container mb-4">
     <div ref="spinnerRef" class="roulette-spinner">
-      <div ref="numbersStrip" class="numbers-strip">
+      <div ref="numbersStrip" class="numbers-strip" :class="{ 'spinning': isAnimating }" :data-spin-count="spinCount">
         <div v-for="(number, index) in generateSpinSequence()"
           :key="index"
           class="number-block"
@@ -98,7 +102,6 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <!-- Central indicator -->
     <div class="pointer"></div>
   </div>
 </template>
@@ -124,6 +127,8 @@ onMounted(() => {
   transform: translateX(0);
   will-change: transform;
   height: 100%;
+  filter: blur(0px);
+  transition: transform, filter;
 }
 
 .number-block {
@@ -154,12 +159,25 @@ onMounted(() => {
   z-index: 10;
 }
 
-/* Add blur effect during animation */
-.numbers-strip {
-  transition-property: transform, filter;
+.spinning {
+  animation: spinBlur 10s forwards;
 }
 
-.numbers-strip[style*="transition"] {
-  filter: blur(1px);
+@keyframes spinBlur {
+  0% {
+    filter: blur(0px);
+  }
+
+  10% {
+    filter: blur(1px);
+  }
+
+  70% {
+    filter: blur(1px);
+  }
+
+  100% {
+    filter: blur(0px);
+  }
 }
 </style>

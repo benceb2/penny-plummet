@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { useUserStore } from '@/stores/user';
-import { useAchievementStore } from '@/stores/achievement';
-import { formatIntAsCurrency } from '@/utils/currency';
+import { useUserStore } from '@/stores/userStore';
+import { useAchievementStore } from '@/stores/achievementStore';
+import { formatIntAsCurrency } from '@/utils/currencyUtil';
 import BaseLayout from '@/components/layout/BaseLayout.vue';
 import AchievementCard from '@/components/AchievementCard.vue';
 import { useRoute } from 'vue-router';
@@ -156,27 +156,30 @@ onMounted(() => {
         </h3>
 
         <!-- Filters -->
-        <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
-          <div class="btn-group">
-            <button
-              v-for="category in ['all', 'blackjack', 'clicker', 'general']"
-              :key="category"
-              class="btn"
-              :class="selectedCategory === category ? 'btn-primary' : 'btn-outline-primary'"
-              @click="selectedCategory = category">
-              {{ category.charAt(0).toUpperCase() + category.slice(1) }}
-            </button>
+        <div class="row gy-3 pb-3 mb-4 border-bottom align-items-center">
+          <div class="col-12 col-md-auto">
+            <div class="btn-group w-100 w-md-auto">
+              <button
+                v-for="category in ['all', 'blackjack', 'clicker', 'general']"
+                :key="category"
+                class="btn"
+                :class="selectedCategory === category ? 'btn-primary' : 'btn-outline-primary'"
+                @click="selectedCategory = category">
+                {{ category.charAt(0).toUpperCase() + category.slice(1) }}
+              </button>
+            </div>
           </div>
-
-          <div class="form-check">
-            <input
-              type="checkbox"
-              class="form-check-input"
-              id="hideCompleted"
-              v-model="hideCompleted">
-            <label class="form-check-label" for="hideCompleted">
-              Hide completed
-            </label>
+          <div class="col-12 col-md-auto ms-md-auto">
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="hideCompleted"
+                v-model="hideCompleted">
+              <label class="form-check-label" for="hideCompleted">
+                Hide completed
+              </label>
+            </div>
           </div>
         </div>
 

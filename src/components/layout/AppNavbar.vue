@@ -2,8 +2,8 @@
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
-import { useUserStore } from '@/stores/user'
-import { useAchievementStore } from '@/stores/achievement'
+import { useUserStore } from '@/stores/userStore'
+import { useAchievementStore } from '@/stores/achievementStore'
 import ToastContainer from './ToastContainer.vue'
 
 const userStore = useUserStore()
@@ -48,6 +48,15 @@ const isNavOpen = ref(false)
               Blackjack
             </RouterLink>
           </li>
+          <li class="nav-item me-3">
+            <RouterLink
+              class="nav-link px-3"
+              @click="isNavOpen = false"
+              to="/roulette">
+              <i class="bi bi-dice-5-fill me-1 transition-transform"></i>
+              Roulette
+            </RouterLink>
+          </li>
           <li class="nav-item">
             <RouterLink
               class="nav-link px-3"
@@ -76,9 +85,9 @@ const isNavOpen = ref(false)
                 <h6 class="dropdown-header">Need more chips?</h6>
               </li>
               <li>
-                <RouterLink class="dropdown-item py-2" to="/earn">
+                <RouterLink class="dropdown-item py-2" to="/clicker">
                   <i class="bi bi-piggy-bank me-2 opacity-75"></i>
-                  Earn More Chips
+                  Clicker Game
                 </RouterLink>
               </li>
               <!-- <li> TODO: Restore when store is implemented

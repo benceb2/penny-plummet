@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
-import { formatIntAsCurrency } from '@/utils/currency';
+import { formatIntAsCurrency } from '@/utils/currencyUtil';
 
 defineProps({
   achievement: {
@@ -18,7 +18,7 @@ defineProps({
   <div
     class="card h-100"
     :class="{ 'border-success': achievement.completed }">
-    <div class="card-body d-flex flex-column">
+    <div class="card-body d-flex flex-column bg-light">
       <!-- Header -->
       <h5 class="card-title d-flex align-items-center">
         {{ achievement.title }}

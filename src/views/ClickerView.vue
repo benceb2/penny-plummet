@@ -1,7 +1,7 @@
 <!-- EarnView.vue -->
 <script setup lang="ts">
-import { useUserStore } from '@/stores/user'
-import { useClickerStore } from '@/stores/clicker'
+import { useUserStore } from '@/stores/userStore'
+import { useClickerStore } from '@/stores/clickerStore'
 import BaseLayout from '@/components/layout/BaseLayout.vue'
 
 const userStore = useUserStore()
@@ -97,7 +97,7 @@ const clickerStore = useClickerStore()
                 </div>
               </div>
               <button
-                class="btn btn-outline-warning w-100"
+                class="btn btn-outline-danger w-100"
                 @click="clickerStore.buyMultiplier(userStore)"
                 :disabled="userStore.chips < clickerStore.multiplierCost">
                 Upgrade Multiplier ({{ clickerStore.formattedMultiplierCost }})

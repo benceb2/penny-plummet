@@ -1,10 +1,11 @@
 <!-- BaseLayout.vue -->
 <script setup lang="ts">
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/userStore'
 
 defineProps<{
   title: string
   icon?: string
+  fontawesomeIcon?: string
   showBalance?: boolean
 }>()
 
@@ -13,12 +14,15 @@ const userStore = useUserStore()
 
 <template>
   <main class="container py-4">
-    <!-- Header Section -->
     <div class="row mb-4">
       <div class="col-12">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
           <h2 class="text-dark mb-0">
-            <i v-if="icon" :class="`bi bi-${icon} me-2`"></i>{{ title }}
+            <!-- Bootstrap Icons -->
+            <i v-if="icon && !fontawesomeIcon" :class="`bi bi-${icon} me-2`"></i>
+            <!-- Font Awesome Icons -->
+            <i v-if="fontawesomeIcon" :class="`fa ${fontawesomeIcon} me-2`"></i>
+            {{ title }}
           </h2>
           <div v-if="showBalance" class="d-flex gap-3 align-items-center">
             <div class="bg-light text-white px-4 py-2 rounded-3">
@@ -31,8 +35,6 @@ const userStore = useUserStore()
         </div>
       </div>
     </div>
-
-    <!-- Main Content -->
     <slot></slot>
   </main>
 </template>

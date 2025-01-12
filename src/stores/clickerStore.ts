@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
-import { formatIntAsCurrency } from '@/utils/currency'
-import { calculateStorageKey, createGameSerializer } from '@/utils/serializer'
-import { useAchievementStore } from './achievement'
-import type { UserStore } from './user'
+import { formatIntAsCurrency } from '@/utils/currencyUtil'
+import { calculateStorageKey, createGameSerializer } from '@/utils/gameSaveSerializer'
+import { useAchievementStore } from './achievementStore'
+import type { UserStore } from './userStore'
 
 export const useClickerStore = defineStore('clicker', () => {
   const OFFLINE_RATE_MULTIPLIER = 0.5 // Half rate when offline
@@ -13,7 +13,7 @@ export const useClickerStore = defineStore('clicker', () => {
 
 
   const achievementStore = useAchievementStore()
-  let autoClickerInterval: number | null = null;
+  const autoClickerInterval = ref<ReturnType<typeof setInterval> | null>(null)
 
   startAutoClicker();
 
@@ -77,19 +77,19 @@ export const useClickerStore = defineStore('clicker', () => {
   function startAutoClicker() {
     if (typeof window !== 'undefined') {
       // Clear any existing interval first
-      if (autoClickerInterval) {
-        clearInterval(autoClickerInterval)
+      if (autoClickerInterval.value) {
+        clearInterval(autoClickerInterval.value)
       }
-      autoClickerInterval = setInterval(() => {
+      autoClickerInterval.value = setInterval(() => {
         clicks.value += autoClickersCount.value * clickValue.value
       }, 1000)
     }
   }
 
   function stopAutoClicker(clearStorage: boolean = true) {
-    if (autoClickerInterval) {
-      clearInterval(autoClickerInterval)
-      autoClickerInterval = null
+    if (autoClickerInterval.value) {
+      clearInterval(autoClickerInterval.value)
+      autoClickerInterval.value = null
     }
 
     if (clearStorage) {
@@ -195,3 +195,6 @@ export const useClickerStore = defineStore('clicker', () => {
   }
 } as any) // treating this as any because the TS support for the persistence
 // plugin doesn't seem to be working and we cannot compile otherwise.)
+
+
+export type ClickerStore = ReturnType<typeof useClickerStore>;

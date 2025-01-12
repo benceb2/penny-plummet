@@ -12,21 +12,19 @@ export default defineConfig({
     vueDevTools(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'favicon.ico'],
+      includeAssets: ['favicon.svg'],
       manifest: {
         name: 'Penny Plummet',
         short_name: 'Penny Plummet',
         theme_color: '#4361ee',
+        background_color: '#ffffff',
+        display: 'standalone',
         icons: [
           {
             src: 'favicon.svg',
-            sizes: '192x192',
-            type: 'image/svg+xml'
-          },
-          {
-            src: 'favicon.svg',
-            sizes: '512x512',
-            type: 'image/svg+xml'
+            sizes: 'any',
+            type: 'image/svg+xml',
+            purpose: 'any'
           }
         ]
       }

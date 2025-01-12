@@ -207,7 +207,7 @@ const bottomBets = [
 
       <!-- Bottom Bets -->
       <div class="row g-2">
-        <template v-for="(bet, index) in bottomBets" :key="bet.label">
+        <template v-for="(bet) in bottomBets" :key="bet.label">
           <div class="col-4">
             <button
               :class="['btn border w-100 py-2', bet.class]"

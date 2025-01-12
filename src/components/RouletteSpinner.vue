@@ -36,7 +36,6 @@ const startSpin = async () => {
 
   isAnimating.value = true
   spinCount.value++ // Increment to force animation restart
-  console.log('Starting spin to', props.winningNumber)
 
   // Reset position
   numbersStrip.value.style.transition = 'none'

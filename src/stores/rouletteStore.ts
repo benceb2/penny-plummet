@@ -13,7 +13,10 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { calculateStorageKey, createGameSerializer } from '../utils/gameSaveSerializer'
 import { useAchievementStore } from './achievementStore'
-// import { useUserStore } from './userStore'
+import { formatIntAsCurrency } from '@/utils/currencyUtil'
+import { useTransactionStore } from './transactionStore'
+import { useUserStore } from './userStore'
+
 
 export enum RouletteState {
   betting = 'betting',
@@ -69,7 +72,8 @@ const PAYOUT_MULTIPLIERS = {
 
 export const useRouletteStore = defineStore('roulette', () => {
   const achievementStore = useAchievementStore()
-  // const userStore = useUserStore()
+  const transactionStore = useTransactionStore();
+  const userStore = useUserStore();
 
   // Game state
   const gameState = ref<RouletteState>(RouletteState.betting)
@@ -143,10 +147,48 @@ export const useRouletteStore = defineStore('roulette', () => {
     gameState.value = RouletteState.complete
   }
 
+  function handleSpinResult(result: RouletteResult) {
+    // Update user's chips based on result
+    const netWinnings = result.totalWin - result.totalBet;
+    userStore.updateChips(netWinnings);
+
+    if (result.totalWin > 0) {
+      sessionStats.value.consecutiveWins++;
+      sessionStats.value.maxConsecutiveWins = Math.max(
+        sessionStats.value.maxConsecutiveWins,
+        sessionStats.value.consecutiveWins
+      );
+
+      transactionStore.addTransaction({
+        amount: netWinnings,
+        type: 'win',
+        game: 'roulette',
+        details: `Won ${formatIntAsCurrency(result.totalWin)} on number ${result.winningNumber}`
+      });
+    } else {
+      sessionStats.value.consecutiveWins = 0;
+
+      transactionStore.addTransaction({
+        amount: -result.totalBet,
+        type: 'loss',
+        game: 'roulette',
+        details: `Lost ${formatIntAsCurrency(result.totalBet)} on number ${result.winningNumber}`
+      });
+    }
+
+    // Update session stats
+    sessionStats.value.biggestWin = Math.max(sessionStats.value.biggestWin, result.totalWin);
+
+    // Track achievements if needed
+    if (result.totalWin >= 1000) {
+      achievementStore.updateAchievementProgress('high_roller', result.totalWin);
+    }
+  }
+
   async function spin(): Promise<RouletteResult> {
     if (!isSpinAllowed.value) return {} as RouletteResult;
 
-    gameState.value = RouletteState.spinning
+    gameState.value = RouletteState.spinning;
 
     const result: RouletteResult = {
       winningNumber: Math.floor(Math.random() * 37),
@@ -154,28 +196,31 @@ export const useRouletteStore = defineStore('roulette', () => {
       totalBet: totalBet.value,
       winningBets: [],
       losingBets: []
-    }
+    };
 
     // Calculate results
     currentBets.value.forEach(bet => {
       if (bet.numbers.includes(result.winningNumber)) {
-        const payout = bet.amount * (PAYOUT_MULTIPLIERS[bet.type] + 1)
-        result.totalWin += payout
-        result.winningBets.push(bet)
+        const payout = bet.amount * (PAYOUT_MULTIPLIERS[bet.type] + 1);
+        result.totalWin += payout;
+        result.winningBets.push(bet);
       } else {
-        result.losingBets.push(bet)
+        result.losingBets.push(bet);
       }
-    })
+    });
 
     // Update session stats
-    sessionStats.value.spins++
-    sessionStats.value.totalWagered += totalBet.value
+    sessionStats.value.spins++;
+    sessionStats.value.totalWagered += totalBet.value;
 
-    // Store the result for later use
-    pendingResult.value = result
-    winningNumber.value = result.winningNumber
+    // Store the result
+    pendingResult.value = result;
+    winningNumber.value = result.winningNumber;
 
-    return result
+    // Handle the result immediately
+    handleSpinResult(result);
+
+    return result;
   }
 
 

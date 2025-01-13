@@ -5,6 +5,7 @@ import { formatIntAsCurrency } from '@/utils/currencyUtil'
 import { calculateStorageKey, createGameSerializer } from '@/utils/gameSaveSerializer'
 import { useAchievementStore } from './achievementStore'
 import type { UserStore } from './userStore'
+import { useTransactionStore } from './transactionStore'
 
 export const useClickerStore = defineStore('clicker', () => {
   const OFFLINE_RATE_MULTIPLIER = 0.5 // Half rate when offline
@@ -13,6 +14,7 @@ export const useClickerStore = defineStore('clicker', () => {
 
 
   const achievementStore = useAchievementStore()
+  const transactionStore = useTransactionStore();
   const autoClickerInterval = ref<ReturnType<typeof setInterval> | null>(null)
 
   startAutoClicker();
@@ -47,29 +49,58 @@ export const useClickerStore = defineStore('clicker', () => {
 
   function collectChips(userStore: UserStore) {
     if (clicks.value >= 10) {
-      userStore.updateChips(clicks.value)
-      const calculatedXP = Math.floor(clicks.value * 0.2)
-      achievementStore.addXP(calculatedXP)
-      clicks.value = 0
+      const amount = clicks.value;
+      userStore.updateChips(amount);
+      const calculatedXP = Math.floor(amount * 0.2);
+      achievementStore.addXP(calculatedXP);
+
+      transactionStore.addTransaction({
+        amount: amount,
+        type: 'win',
+        game: 'clicker',
+        details: `Collected ${formatIntAsCurrency(amount)} chips from clicking`
+      });
+
+      clicks.value = 0;
     }
   }
 
   function buyAutoClicker(userStore: UserStore) {
     if (userStore.chips >= autoClickerCost.value) {
-      userStore.updateChips(-autoClickerCost.value)
-      autoClickersCount.value++
-      autoClickerCost.value = Math.floor(autoClickerCost.value * 1.5)
-      achievementStore.updateAchievementProgress('auto_collector', autoClickersCount.value)
-      achievementStore.updateAchievementProgress('auto_empire', autoClickersCount.value)
+      const cost = autoClickerCost.value;
+      userStore.updateChips(-cost);
+      autoClickersCount.value++;
+      autoClickerCost.value = Math.floor(cost * 1.5);
+
+      const transactionStore = useTransactionStore();
+      transactionStore.addTransaction({
+        amount: -cost,
+        type: 'loss',
+        game: 'clicker',
+        details: `Purchased Auto-Clicker (Level ${autoClickersCount.value})`
+      });
+
+      achievementStore.updateAchievementProgress('auto_collector', autoClickersCount.value);
+      achievementStore.updateAchievementProgress('auto_empire', autoClickersCount.value);
     }
   }
 
   function buyMultiplier(userStore: UserStore) {
     if (userStore.chips >= multiplierCost.value) {
-      userStore.updateChips(-multiplierCost.value)
-      multiplierLevel.value++
-      multiplierCost.value = Math.floor(multiplierCost.value * 2)
-      achievementStore.updateAchievementProgress('multiplier_enthusiast', multiplierLevel.value)
+      const cost = multiplierCost.value;
+      userStore.updateChips(-cost);
+      multiplierLevel.value++;
+      multiplierCost.value = Math.floor(cost * 2);
+
+      const transactionStore = useTransactionStore();
+      transactionStore.addTransaction({
+        amount: -cost,
+        type: 'loss',
+        game: 'clicker',
+        details: `Purchased Multiplier (Level ${multiplierLevel.value})`
+      });
+
+      achievementStore.updateAchievementProgress('multiplier_enthusiast', multiplierLevel.value);
     }
   }
 

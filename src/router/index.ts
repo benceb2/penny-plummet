@@ -58,6 +58,14 @@ const router = createRouter({
       meta: {
         title: 'Settings'
       }
+    },
+    {
+      path: '/transactions',
+      name: 'transactions',
+      component: () => import('../views/TransactionsView.vue'),
+      meta: {
+        title: 'Transaction History'
+      }
     }
   ],
 })

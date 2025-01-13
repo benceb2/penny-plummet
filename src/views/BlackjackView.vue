@@ -51,16 +51,10 @@ function handleDeal() {
 
 function handleHit() {
   gameStore.hit()
-  if (gameStore.gameState === BlackjackState.gameOver) {
-    const result = gameStore.endGame()
-    userStore.updateStats(result)
-  }
 }
 
 function handleStand() {
   gameStore.stand()
-  const result = gameStore.endGame()
-  userStore.updateStats(result)
 }
 
 function handleNewGame() {

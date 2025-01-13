@@ -100,6 +100,12 @@ const bottomBets = [
     class: 'btn-danger'
   },
   {
+    type: 'straight' as BetType,
+    label: '0',
+    numbers: [0],
+    class: 'btn-success'
+  },
+  {
     type: 'black' as BetType,
     label: 'BLACK',
     numbers: [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35],
@@ -159,9 +165,10 @@ const bottomBets = [
       </div>
 
       <!-- Bottom Bets -->
-      <div class="row g-2">
-        <div v-for="bet in bottomBets" :key="bet.label" class="col-2">
-          <button :class="['btn border w-100', bet.class]" style="height: 3.5rem"
+      <div class="bg-success p-3 rounded">
+        <div class="d-grid" style="grid-template-columns: repeat(7, 1fr); gap: 0.25rem;">
+          <button v-for="bet in bottomBets" :key="bet.label"
+            :class="['btn btn-outline-light btn-sm w-100 py-2', bet.class]"
             @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
             {{ bet.label }}
           </button>
@@ -208,7 +215,7 @@ const bottomBets = [
       <!-- Bottom Bets -->
       <div class="row g-2">
         <template v-for="(bet) in bottomBets" :key="bet.label">
-          <div class="col-4">
+          <div class="col-6">
             <button
               :class="['btn border w-100 py-2', bet.class]"
               @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">

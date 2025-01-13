@@ -90,15 +90,15 @@ const isNavOpen = ref(false)
                   Clicker Game
                 </RouterLink>
               </li>
-              <!-- <li> TODO: Restore when store is implemented
+              <li>
                 <hr class="dropdown-divider">
               </li>
               <li>
-                <RouterLink class="dropdown-item py-2" to="/blackjack">
-                  <i class="bi bi-shop me-2 opacity-75"></i>
-                  Visit Store
+                <RouterLink class="dropdown-item py-2" to="/transactions">
+                  <i class="fa fa-history me-2 opacity-75"></i>
+                  Transaction History
                 </RouterLink>
-              </li> -->
+              </li>
             </ul>
           </div>
 

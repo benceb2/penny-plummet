@@ -24,6 +24,41 @@ const nearestAchievements = computed(() => {
     :fontawesome-icon="'fa fa-home'"
     :showBalance="false">
 
+    <!-- Quick Stats Overview -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-wallet2 fs-3 text-primary me-2"></i>
+              <div>
+                <h6 class="mb-0">Current Balance</h6>
+                <h4 class="mb-0">{{ userStore.formattedChips }}</h4>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-trophy fs-3 text-warning me-2"></i>
+              <div>
+                <h6 class="mb-0">Biggest Win</h6>
+                <h4 class="mb-0">{{ formatIntAsCurrency(userStore.stats.biggestWin) }}</h4>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-stars fs-3 text-info me-2"></i>
+              <div>
+                <h6 class="mb-0">Level</h6>
+                <h4 class="mb-0">{{ achievementStore.currentLevel.level }}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Game Selection Cards -->
     <div class="row g-4 mb-4">
       <div class="col-md-4">
@@ -76,55 +111,6 @@ const nearestAchievements = computed(() => {
             <RouterLink to="/roulette" class="btn btn-danger mt-auto">
               <i class="bi bi-play-circle-fill me-2"></i>Play Roulette
             </RouterLink>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Quick Actions -->
-    <div class="card mb-4">
-      <div class="card-body">
-        <div class="d-flex gap-3">
-          <RouterLink to="/settings" class="btn btn-outline-secondary">
-            <i class="bi bi-gear-fill me-2"></i>Settings
-          </RouterLink>
-          <RouterLink to="/profile" class="btn btn-outline-secondary">
-            <i class="bi bi-person-fill me-2"></i>Profile
-          </RouterLink>
-        </div>
-      </div>
-    </div>
-
-    <!-- Quick Stats Overview -->
-    <div class="card mb-4">
-      <div class="card-body">
-        <div class="row g-3">
-          <div class="col-md-4">
-            <div class="d-flex align-items-center">
-              <i class="bi bi-wallet2 fs-3 text-primary me-2"></i>
-              <div>
-                <h6 class="mb-0">Current Balance</h6>
-                <h4 class="mb-0">{{ userStore.formattedChips }}</h4>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="d-flex align-items-center">
-              <i class="bi bi-trophy fs-3 text-warning me-2"></i>
-              <div>
-                <h6 class="mb-0">Biggest Win</h6>
-                <h4 class="mb-0">{{ formatIntAsCurrency(userStore.stats.biggestWin) }}</h4>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="d-flex align-items-center">
-              <i class="bi bi-stars fs-3 text-info me-2"></i>
-              <div>
-                <h6 class="mb-0">Level</h6>
-                <h4 class="mb-0">{{ achievementStore.currentLevel.level }}</h4>
-              </div>
-            </div>
           </div>
         </div>
       </div>

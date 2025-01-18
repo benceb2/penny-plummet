@@ -30,32 +30,43 @@ const GAME_MAP_REVERSE: Record<number, GameType> = Object.fromEntries(
   Object.entries(GAME_MAP).map(([k, v]) => [v, k as GameType])
 )
 
-// Define the compressed transaction type
 type CompressedTransaction = [
-  string,    // id without dashes
-  number,    // timestamp in seconds
-  number,    // amount in cents
-  number,    // type code
-  number     // game code
+  [string, string, string, string, string],  // id split into segments
+  [number, number],  // timestamp as [seconds, milliseconds]
+  number,           // amount in cents
+  number,           // type code
+  number            // game code
 ]
 
-const compressTransaction = (tx: Transaction): CompressedTransaction => [
-  tx.id.replace(/-/g, ''),
-  Math.floor(tx.timestamp / 1000),
-  Math.round(tx.amount * 100),
-  TX_TYPE_MAP[tx.type],
-  GAME_MAP[tx.game]
-]
+const compressTransaction = (tx: Transaction): CompressedTransaction => {
+  // Split ID into UUID segments for better compression
+  const idSegments = tx.id.split('-')
+
+  // Split timestamp into seconds and remaining milliseconds
+  const seconds = Math.floor(tx.timestamp / 1000)
+  const milliseconds = tx.timestamp % 1000
+
+  // Convert amount to cents using exact multiplication
+  const amountInCents = Math.round(tx.amount * 100)
+
+  return [
+    idSegments as [string, string, string, string, string],
+    [seconds, milliseconds],
+    amountInCents,
+    TX_TYPE_MAP[tx.type],
+    GAME_MAP[tx.game]
+  ]
+}
 
 const decompressTransaction = (arr: CompressedTransaction): Transaction => {
-  console.log('Decompressing transaction', arr)
+  const [idSegments, [seconds, milliseconds], amountInCents, typeCode, gameCode] = arr
 
   return {
-    id: arr[0],
-    timestamp: arr[1] * 1000,
-    amount: arr[2] / 100,
-    type: TX_TYPE_MAP_REVERSE[arr[3]],
-    game: GAME_MAP_REVERSE[arr[4]]
+    id: idSegments.join('-'),
+    timestamp: (seconds * 1000) + milliseconds,
+    amount: amountInCents / 100,
+    type: TX_TYPE_MAP_REVERSE[typeCode],
+    game: GAME_MAP_REVERSE[gameCode]
   }
 }
 
@@ -82,7 +93,7 @@ const compressState = (state: StateWithTransactions): StateWithTransactions => {
   return compressed
 }
 
-const decompressState = (state: StateWithTransactions): StateWithTransactions => {
+export const decompressState = (state: StateWithTransactions): StateWithTransactions => {
   const decompressed = { ...state }
 
   if (decompressed.transactions?.value?.length) {

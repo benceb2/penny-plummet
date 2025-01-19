@@ -71,13 +71,13 @@ const decompressTransaction = (arr: CompressedTransaction): Transaction => {
 }
 
 // Define interface for state that might have transactions
-interface StateWithTransactions extends StateTree {
+export interface StateWithTransactions extends StateTree {
   transactions?: {
     value: Transaction[] | CompressedTransaction[]
   }
 }
 
-const compressState = (state: StateWithTransactions): StateWithTransactions => {
+export const compressState = (state: StateWithTransactions): StateWithTransactions => {
   const compressed = { ...state }
 
   if (compressed.transactions?.value?.length) {
@@ -115,7 +115,7 @@ export const shiftString = (str: string, shift: number): string => {
   ).join('')
 }
 
-const unshiftString = (str: string, shift: number): string => {
+export const unshiftString = (str: string, shift: number): string => {
   return str.split('').map(char =>
     String.fromCharCode(char.charCodeAt(0) - shift)
   ).join('')

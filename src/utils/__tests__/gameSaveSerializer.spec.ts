@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { createGameSerializer, shiftString, calculateStorageKey } from '@/utils/gameSaveSerializer'
+import { createGameSerializer, shiftString, calculateStorageKey, compressState } from '@/utils/gameSaveSerializer'
 import type { StateTree } from 'pinia'
 
 describe('Pinia Serializer', () => {
@@ -185,4 +185,51 @@ describe('Pinia Serializer', () => {
       expect(deserialized).toEqual({})
     })
   })
+
+  describe('compression', () => {
+    it('should compress transactions for storage and recover original data', () => {
+      // Initial uncompressed state
+      const uncompressedState = {
+        transactions: {
+          value: [{
+            id: '123-456-789',
+            timestamp: 1679612700000,
+            amount: 100,
+            type: 'win' as const,
+            game: 'blackjack' as const
+          }]
+        }
+      };
+
+      // Expected compressed format
+      const expectedCompressedFormat = {
+        transactions: {
+          value: [[
+            ['123', '456', '789'],
+            [1679612700, 0],
+            10000,
+            1,
+            1
+          ]]
+        }
+      };
+
+      // Step 1: Test compression
+      const compressed = compressState(uncompressedState);
+      expect(compressed).toEqual(expectedCompressedFormat);
+
+      // Step 2: Test full serialization cycle
+      const serialized = serializer.serialize(uncompressedState);
+      const deserialized = serializer.deserialize(serialized);
+
+      // We should now have our original uncompressed state back
+      expect(deserialized.transactions?.value[0]).toMatchObject({
+        id: '123-456-789',
+        timestamp: 1679612700000,
+        amount: 100,
+        type: 'win',
+        game: 'blackjack'
+      });
+    });
+  });
 })

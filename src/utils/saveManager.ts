@@ -58,6 +58,8 @@ export class SaveManager {
       'user' in save &&
       'achievements' in save &&
       'blackjack' in save &&
+      'transactions' in save &&
+      'roulette' in save &&
       'clicker' in save &&
       'timestamp' in save &&
       typeof save.timestamp === 'number'

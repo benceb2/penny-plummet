@@ -37,6 +37,8 @@ const getCurrentGameState = () => ({
   achievements: achievementStore.$state,
   blackjack: blackjackStore.$state,
   clicker: clickerStore.$state,
+  transactions: transactionsStore.$state,
+  roulette: rouletteStore.$state,
   timestamp: Date.now()
 });
 

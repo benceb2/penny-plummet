@@ -95,7 +95,7 @@ watch(locale, (newLocale) => {
               class="badge bg-secondary p-2 px-3 d-flex align-items-center cursor-pointer dropdown-toggle"
               data-bs-toggle="dropdown"
               aria-expanded="false">
-              {{ flags[locale as Locale] }}
+              <span class="me-1" style="transform: scale(1.6)">{{ flags[locale as Locale] }}</span>
               <i class="bi bi-chevron-down ms-2 opacity-75"></i>
             </span>
             <ul class="dropdown-menu dropdown-menu-end">

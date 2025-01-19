@@ -23,7 +23,6 @@ const encode = (state: StateTree): string => {
     version: pkg.version
   }
   const stateStr = JSON.stringify(saveData)
-  // Add the character shift before base64
   const shifted = shiftString(stateStr, SHIFT)
   const encoded = btoa(shifted)
   return encoded.split('').reverse().join('') + SIGNATURE
@@ -46,9 +45,7 @@ const decode = (stored: string): StateTree => {
 }
 
 export const calculateStorageKey = (key: string) => {
-  // shift
   const shifted = shiftString(key, SHIFT)
-  // base64
   const encoded = btoa(shifted)
   return encoded.split('').reverse().join('') + SIGNATURE
 }

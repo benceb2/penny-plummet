@@ -1,13 +1,21 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import BaseLayout from '@/components/layout/BaseLayout.vue';
 import AchievementCard from '@/components/AchievementCard.vue';
 import { useUserStore } from '@/stores/userStore';
 import { useAchievementStore } from '@/stores/achievementStore';
 import { formatIntAsCurrency } from '@/utils/currencyUtil';
 
+const { t } = useI18n();
 const userStore = useUserStore();
 const achievementStore = useAchievementStore();
+
+const welcomeTitle = computed(() => {
+  return userStore.username
+    ? t('home.welcomeBack', { username: userStore.username })
+    : t('home.welcome');
+});
 
 // Get the 3 closest achievements to completion that aren't already completed
 const nearestAchievements = computed(() => {
@@ -20,7 +28,7 @@ const nearestAchievements = computed(() => {
 
 <template>
   <BaseLayout
-    :title="userStore.username ? `Welcome back, ${userStore.username}!` : 'Welcome to Penny Plummet!'"
+    :title="welcomeTitle"
     :fontawesome-icon="'fa fa-home'"
     :showBalance="false">
 
@@ -32,7 +40,7 @@ const nearestAchievements = computed(() => {
             <div class="d-flex align-items-center">
               <i class="bi bi-wallet2 fs-3 text-primary me-2"></i>
               <div>
-                <h6 class="mb-0">Current Balance</h6>
+                <h6 class="mb-0">{{ t('home.stats.currentBalance') }}</h6>
                 <h4 class="mb-0">{{ userStore.formattedChips }}</h4>
               </div>
             </div>
@@ -41,7 +49,7 @@ const nearestAchievements = computed(() => {
             <div class="d-flex align-items-center">
               <i class="bi bi-trophy fs-3 text-warning me-2"></i>
               <div>
-                <h6 class="mb-0">Biggest Win</h6>
+                <h6 class="mb-0">{{ t('home.stats.biggestWin') }}</h6>
                 <h4 class="mb-0">{{ formatIntAsCurrency(userStore.stats.biggestWin) }}</h4>
               </div>
             </div>
@@ -50,7 +58,7 @@ const nearestAchievements = computed(() => {
             <div class="d-flex align-items-center">
               <i class="bi bi-stars fs-3 text-info me-2"></i>
               <div>
-                <h6 class="mb-0">Level</h6>
+                <h6 class="mb-0">{{ t('home.stats.level') }}</h6>
                 <h4 class="mb-0">{{ achievementStore.currentLevel.level }}</h4>
               </div>
             </div>
@@ -67,13 +75,13 @@ const nearestAchievements = computed(() => {
             <div class="d-flex align-items-center mb-3">
               <i class="bi bi-suit-spade-fill fs-2 text-primary me-3"></i>
               <div>
-                <h4 class="mb-1">Blackjack</h4>
-                <p class="text-muted mb-0">Test your luck against the dealer!</p>
+                <h4 class="mb-1">{{ t('home.games.blackjack.title') }}</h4>
+                <p class="text-muted mb-0">{{ t('home.games.blackjack.shortDesc') }}</p>
               </div>
             </div>
-            <p class="text-muted">Place your bets and aim for 21 in this classic card game.</p>
+            <p class="text-muted">{{ t('home.games.blackjack.longDesc') }}</p>
             <RouterLink to="/blackjack" class="btn btn-primary mt-auto">
-              <i class="bi bi-play-circle-fill me-2"></i>Play Blackjack
+              <i class="bi bi-play-circle-fill me-2"></i>{{ t('home.games.blackjack.playButton') }}
             </RouterLink>
           </div>
         </div>
@@ -85,13 +93,13 @@ const nearestAchievements = computed(() => {
             <div class="d-flex align-items-center mb-3">
               <i class="bi bi-mouse fs-2 text-success me-3"></i>
               <div>
-                <h4 class="mb-1">Clicker Game</h4>
-                <p class="text-muted mb-0">Click your way to riches!</p>
+                <h4 class="mb-1">{{ t('home.games.clicker.title') }}</h4>
+                <p class="text-muted mb-0">{{ t('home.games.clicker.shortDesc') }}</p>
               </div>
             </div>
-            <p class="text-muted">Earn chips with every click and unlock powerful upgrades.</p>
+            <p class="text-muted">{{ t('home.games.clicker.longDesc') }}</p>
             <RouterLink to="/clicker" class="btn btn-success mt-auto">
-              <i class="bi bi-play-circle-fill me-2"></i>Start Clicking
+              <i class="bi bi-play-circle-fill me-2"></i>{{ t('home.games.clicker.playButton') }}
             </RouterLink>
           </div>
         </div>
@@ -103,13 +111,13 @@ const nearestAchievements = computed(() => {
             <div class="d-flex align-items-center mb-3">
               <i class="bi bi-bullseye fs-2 text-danger me-3"></i>
               <div>
-                <h4 class="mb-1">Roulette</h4>
-                <p class="text-muted mb-0">Place your bets and spin to win!</p>
+                <h4 class="mb-1">{{ t('home.games.roulette.title') }}</h4>
+                <p class="text-muted mb-0">{{ t('home.games.roulette.shortDesc') }}</p>
               </div>
             </div>
-            <p class="text-muted">Try your luck at the roulette wheel with various betting options.</p>
+            <p class="text-muted">{{ t('home.games.roulette.longDesc') }}</p>
             <RouterLink to="/roulette" class="btn btn-danger mt-auto">
-              <i class="bi bi-play-circle-fill me-2"></i>Play Roulette
+              <i class="bi bi-play-circle-fill me-2"></i>{{ t('home.games.roulette.playButton') }}
             </RouterLink>
           </div>
         </div>
@@ -121,7 +129,7 @@ const nearestAchievements = computed(() => {
       <div class="card-body">
         <h5 class="card-title d-flex align-items-center">
           <i class="bi bi-graph-up-arrow text-success me-2"></i>
-          Level Progress
+          {{ t('home.levelProgress.title') }}
         </h5>
         <div class="progress mb-2">
           <div
@@ -135,8 +143,10 @@ const nearestAchievements = computed(() => {
           </div>
         </div>
         <small class="text-muted">
-          {{ achievementStore.currentLevel.currentXP }} / {{ achievementStore.currentLevel.requiredXP }} XP to next
-          level
+          {{ t('home.levelProgress.xpProgress', {
+            current: achievementStore.currentLevel.currentXP,
+            required: achievementStore.currentLevel.requiredXP
+          }) }}
         </small>
       </div>
     </div>
@@ -146,7 +156,7 @@ const nearestAchievements = computed(() => {
       <div class="card-body">
         <h5 class="card-title d-flex align-items-center mb-3">
           <i class="bi bi-award text-primary me-2"></i>
-          Achievements In Progress
+          {{ t('home.achievements.title') }}
         </h5>
         <div class="achievements-list">
           <AchievementCard
@@ -160,7 +170,7 @@ const nearestAchievements = computed(() => {
               to="/profile#achievements"
               class="btn btn-outline-primary">
               <i class="bi bi-arrow-right me-2"></i>
-              View All Achievements
+              {{ t('home.achievements.viewAll') }}
             </RouterLink>
           </div>
         </div>

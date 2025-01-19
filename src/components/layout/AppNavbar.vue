@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
@@ -12,17 +12,21 @@ const userStore = useUserStore()
 const achievementStore = useAchievementStore()
 const isNavOpen = ref(false)
 
-const availableLocales = ['en-US', 'hu-HU'] as const
+const availableLocales = ['en-GB', 'hu-HU'] as const
 type Locale = typeof availableLocales[number]
 
 const flags: Record<Locale, string> = {
-  'en-US': '🇺🇸',
+  'en-GB': '🇬🇧',
   'hu-HU': '🇭🇺'
 }
 
 const switchLanguage = (newLocale: Locale) => {
   locale.value = newLocale
 }
+
+watch(locale, (newLocale) => {
+  localStorage.setItem('userLocale', newLocale)
+})
 
 </script>
 

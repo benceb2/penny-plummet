@@ -10,6 +10,8 @@ import { useBlackjackStore } from '@/stores/blackjackStore';
 import { useClickerStore } from '@/stores/clickerStore';
 import { formatIntAsCurrency } from '@/utils/currencyUtil';
 import type { GameSaveData } from '@/types/GameSaveData';
+import { useTransactionStore } from '@/stores/transactionStore';
+import { useRouletteStore } from '@/stores/rouletteStore';
 
 // Initialize stores and manager
 const saveManager = new SaveManager();
@@ -17,6 +19,8 @@ const userStore = useUserStore();
 const achievementStore = useAchievementStore();
 const blackjackStore = useBlackjackStore();
 const clickerStore = useClickerStore();
+const transactionsStore = useTransactionStore();
+const rouletteStore = useRouletteStore();
 
 // UI state
 const importError = ref('');
@@ -93,6 +97,8 @@ const confirmImport = async () => {
     achievementStore.$patch(saveData.achievements);
     blackjackStore.$patch(saveData.blackjack);
     clickerStore.$patch(saveData.clicker);
+    transactionsStore.$patch(saveData.transactions);
+    rouletteStore.$patch(saveData.roulette);
 
     showSuccess();
   } catch (error) {

@@ -35,3 +35,5 @@ export const useTransactionStore = defineStore('transactions', () => {
     serializer: createGameSerializer()
   }
 } as any);
+
+export type TransactionStore = ReturnType<typeof useTransactionStore>;

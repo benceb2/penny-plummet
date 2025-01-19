@@ -250,3 +250,6 @@ export const useRouletteStore = defineStore('roulette', () => {
     serializer: createGameSerializer()
   }
 } as any)
+
+
+export type RouletteStore = ReturnType<typeof useRouletteStore>;

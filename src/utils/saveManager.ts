@@ -8,7 +8,7 @@ export class SaveManager {
 
   public async exportSave(saveData: GameSaveData): Promise<string> {
     try {
-      const serialized = this.serializer.serialize(saveData);
+      const serialized = this.serializer.serialize(saveData as any);
       return serialized;
     } catch (error) {
       throw new Error(`Failed to export save: ${error}`);

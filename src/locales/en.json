@@ -1,0 +1,23 @@
+{
+  "languages": {
+    "en-US": "English",
+    "hu-HU": "Magyar"
+  },
+  "navbar": {
+    "brand": "Penny Plummet",
+    "games": {
+      "blackjack": "Blackjack",
+      "roulette": "Roulette"
+    },
+    "about": "About",
+    "wallet": {
+      "title": "Need more chips?",
+      "clicker": "Clicker Game",
+      "transactions": "Transaction History"
+    },
+    "profile": {
+      "settings": "Settings",
+      "viewProfile": "View Profile"
+    }
+  }
+}

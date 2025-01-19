@@ -1,0 +1,23 @@
+{
+  "languages": {
+    "en-US": "English",
+    "hu-HU": "Magyar"
+  },
+  "navbar": {
+    "brand": "Penny Plummet",
+    "games": {
+      "blackjack": "Blackjack",
+      "roulette": "Rulett"
+    },
+    "about": "Rólunk",
+    "wallet": {
+      "title": "Több zseton kell?",
+      "clicker": "Kattintós Játék",
+      "transactions": "Tranzakció Előzmények"
+    },
+    "profile": {
+      "settings": "Beállítások",
+      "viewProfile": "Profil Megtekintése"
+    }
+  }
+}

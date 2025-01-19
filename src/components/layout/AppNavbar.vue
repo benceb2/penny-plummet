@@ -1,14 +1,29 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 import { useUserStore } from '@/stores/userStore'
 import { useAchievementStore } from '@/stores/achievementStore'
 import ToastContainer from './ToastContainer.vue'
 
+const { t, locale } = useI18n()
 const userStore = useUserStore()
 const achievementStore = useAchievementStore()
 const isNavOpen = ref(false)
+
+const availableLocales = ['en-US', 'hu-HU'] as const
+type Locale = typeof availableLocales[number]
+
+const flags: Record<Locale, string> = {
+  'en-US': '🇺🇸',
+  'hu-HU': '🇭🇺'
+}
+
+const switchLanguage = (newLocale: Locale) => {
+  locale.value = newLocale
+}
+
 </script>
 
 <template>
@@ -17,7 +32,7 @@ const isNavOpen = ref(false)
       <!-- Brand -->
       <RouterLink class="navbar-brand fw-bold" to="/">
         <i class="bi bi-coin-fill me-2"></i>
-        <i class="bi bi-graph-down-arrow me-2"></i> Penny Plummet
+        <i class="bi bi-graph-down-arrow me-2"></i> {{ t('navbar.brand') }}
       </RouterLink>
 
       <!-- Mobile Toggle -->
@@ -45,7 +60,7 @@ const isNavOpen = ref(false)
               @click="isNavOpen = false"
               to="/blackjack">
               <i class="bi bi-suit-spade-fill me-1 transition-transform"></i>
-              Blackjack
+              {{ t('navbar.games.blackjack') }}
             </RouterLink>
           </li>
           <li class="nav-item me-3">
@@ -54,7 +69,7 @@ const isNavOpen = ref(false)
               @click="isNavOpen = false"
               to="/roulette">
               <i class="bi bi-dice-5-fill me-1 transition-transform"></i>
-              Roulette
+              {{ t('navbar.games.roulette') }}
             </RouterLink>
           </li>
           <li class="nav-item">
@@ -63,13 +78,36 @@ const isNavOpen = ref(false)
               @click="isNavOpen = false"
               to="/about">
               <i class="bi bi-info-circle-fill me-1 transition-transform"></i>
-              About
+              {{ t('navbar.about') }}
             </RouterLink>
           </li>
         </ul>
 
         <!-- Right Side User Stats & Controls -->
         <div class="d-flex align-items-center flex-column flex-lg-row gap-3">
+
+          <div class="dropdown">
+            <span
+              class="badge bg-secondary p-2 px-3 d-flex align-items-center cursor-pointer dropdown-toggle"
+              data-bs-toggle="dropdown"
+              aria-expanded="false">
+              {{ flags[locale as Locale] }}
+              <i class="bi bi-chevron-down ms-2 opacity-75"></i>
+            </span>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li v-for="loc in availableLocales" :key="loc">
+                <a
+                  class="dropdown-item py-2 d-flex align-items-center gap-2"
+                  href="#"
+                  @click.prevent="switchLanguage(loc)"
+                  :class="{ 'active': locale === loc }">
+                  <span class="me-2">{{ flags[loc] }}</span>
+                  {{ t(`languages.${loc}`) }}
+                </a>
+              </li>
+            </ul>
+          </div>
+
           <!-- Chips Dropdown -->
           <div class="dropdown">
             <span
@@ -82,12 +120,12 @@ const isNavOpen = ref(false)
             </span>
             <ul class="dropdown-menu dropdown-menu-end min-w-200">
               <li>
-                <h6 class="dropdown-header">Need more chips?</h6>
+                <h6 class="dropdown-header">{{ t('navbar.wallet.title') }}</h6>
               </li>
               <li>
                 <RouterLink class="dropdown-item py-2" to="/clicker">
                   <i class="bi bi-piggy-bank me-2 opacity-75"></i>
-                  Clicker Game
+                  {{ t('navbar.wallet.clicker') }}
                 </RouterLink>
               </li>
               <li>
@@ -96,7 +134,7 @@ const isNavOpen = ref(false)
               <li>
                 <RouterLink class="dropdown-item py-2" to="/transactions">
                   <i class="fa fa-history me-2 opacity-75"></i>
-                  Transaction History
+                  {{ t('navbar.wallet.transactions') }}
                 </RouterLink>
               </li>
             </ul>
@@ -123,11 +161,9 @@ const isNavOpen = ref(false)
             </span>
           </div>
 
-          <!-- User Profile Group -->
+          <!-- User Profile Dropdown -->
           <div class="dropdown">
             <div class="d-flex align-items-center gap-2 cursor-pointer" data-bs-toggle="dropdown">
-              <!-- Level Badge & Progress -->
-              <!-- Username Badge -->
               <span class="badge bg-primary p-2 px-3 d-flex align-items-center">
                 <i class="bi bi-person-circle me-1"></i>
                 {{ userStore.username }}
@@ -139,24 +175,15 @@ const isNavOpen = ref(false)
               <li>
                 <RouterLink to="/settings" class="dropdown-item py-2" href="#">
                   <i class="bi bi-gear me-2 opacity-75"></i>
-                  Settings
+                  {{ t('navbar.profile.settings') }}
                 </RouterLink>
               </li>
               <li>
                 <RouterLink class="dropdown-item py-2" to="/profile">
                   <i class="bi bi-person me-2 opacity-75"></i>
-                  View Profile
+                  {{ t('navbar.profile.viewProfile') }}
                 </RouterLink>
               </li>
-              <!--<li>
-                <hr class="dropdown-divider">
-              </li>
-               <li>
-                <a class="dropdown-item py-2 text-danger" href="#">
-                  <i class="bi bi-box-arrow-right me-2 opacity-75"></i>
-                  Logout
-                </a>
-              </li> -->
             </ul>
           </div>
         </div>

@@ -231,5 +231,57 @@ describe('Pinia Serializer', () => {
         game: 'blackjack'
       });
     });
+
+    it('should achieve meaningful compression ratio', () => {
+      // Create a larger test dataset
+      const uncompressedState = {
+        transactions: {
+          value: Array.from({ length: 100 }, (_, i) => ({
+            id: `${i}-456-789`,
+            timestamp: 1679612700000 + i * 1000,
+            amount: 100 + i,
+            type: 'win' as const,
+            game: 'blackjack' as const
+          }))
+        }
+      };
+
+      // Measure uncompressed size
+      const uncompressedSize = new TextEncoder().encode(
+        JSON.stringify(uncompressedState)
+      ).length;
+
+      // Compress and measure compressed size
+      const compressed = compressState(uncompressedState);
+      const compressedSize = new TextEncoder().encode(
+        JSON.stringify(compressed)
+      ).length;
+
+      // Calculate compression ratio
+      const compressionRatio = compressedSize / uncompressedSize;
+
+      // Log sizes for debugging
+      console.log(`Uncompressed size: ${uncompressedSize} bytes`);
+      console.log(`Compressed size: ${compressedSize} bytes`);
+      console.log(`Compression ratio: ${(compressionRatio * 100).toFixed(1)}%`);
+
+      // Assert that we achieve at least 40% reduction in size
+      expect(compressionRatio).toBeLessThan(0.6);
+
+      // Verify we can still recover the data
+      const serialized = serializer.serialize(uncompressedState);
+      const deserialized = serializer.deserialize(serialized);
+
+      // Check a few random entries
+      [0, 49, 99].forEach(index => {
+        expect(deserialized.transactions?.value[index]).toMatchObject({
+          id: `${index}-456-789`,
+          timestamp: 1679612700000 + index * 1000,
+          amount: 100 + index,
+          type: 'win',
+          game: 'blackjack'
+        });
+      });
+    });
   });
 })

@@ -6,6 +6,8 @@ import type { AchievementStore } from '@/stores/achievementStore';
 import type { UserStore } from '@/stores/userStore';
 import type { BlackjackStore } from '@/stores/blackjackStore';
 import type { ClickerStore } from '@/stores/clickerStore';
+import type { TransactionStore } from '@/stores/transactionStore';
+import type { RouletteStore } from '@/stores/rouletteStore';
 
 describe('SaveManager', () => {
   let saveManager: SaveManager;
@@ -25,6 +27,8 @@ describe('SaveManager', () => {
       } as AchievementStore,
       blackjack: {} as BlackjackStore,
       clicker: {} as ClickerStore,
+      transactions: {} as TransactionStore,
+      roulette: {} as RouletteStore,
       timestamp: Date.now()
     };
   });

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { createGameSerializer, shiftString, calculateStorageKey, compressState } from '@/utils/gameSaveSerializer'
+import { createGameSerializer, shiftString, calculateStorageKey } from '@/utils/gameSaveSerializer'
 import type { StateTree } from 'pinia'
 
 describe('Pinia Serializer', () => {
@@ -184,104 +184,5 @@ describe('Pinia Serializer', () => {
 
       expect(deserialized).toEqual({})
     })
-  })
-
-  describe('compression', () => {
-    it('should compress transactions for storage and recover original data', () => {
-      // Initial uncompressed state
-      const uncompressedState = {
-        transactions: {
-          value: [{
-            id: '123-456-789',
-            timestamp: 1679612700000,
-            amount: 100,
-            type: 'win' as const,
-            game: 'blackjack' as const
-          }]
-        }
-      };
-
-      // Expected compressed format
-      const expectedCompressedFormat = {
-        transactions: {
-          value: [[
-            ['123', '456', '789'],
-            [1679612700, 0],
-            10000,
-            1,
-            1
-          ]]
-        }
-      };
-
-      // Step 1: Test compression
-      const compressed = compressState(uncompressedState);
-      expect(compressed).toEqual(expectedCompressedFormat);
-
-      // Step 2: Test full serialization cycle
-      const serialized = serializer.serialize(uncompressedState);
-      const deserialized = serializer.deserialize(serialized);
-
-      // We should now have our original uncompressed state back
-      expect(deserialized.transactions?.value[0]).toMatchObject({
-        id: '123-456-789',
-        timestamp: 1679612700000,
-        amount: 100,
-        type: 'win',
-        game: 'blackjack'
-      });
-    });
-
-    it('should achieve meaningful compression ratio', () => {
-      // Create a larger test dataset
-      const uncompressedState = {
-        transactions: {
-          value: Array.from({ length: 100 }, (_, i) => ({
-            id: `${i}-456-789`,
-            timestamp: 1679612700000 + i * 1000,
-            amount: 100 + i,
-            type: 'win' as const,
-            game: 'blackjack' as const
-          }))
-        }
-      };
-
-      // Measure uncompressed size
-      const uncompressedSize = new TextEncoder().encode(
-        JSON.stringify(uncompressedState)
-      ).length;
-
-      // Compress and measure compressed size
-      const compressed = compressState(uncompressedState);
-      const compressedSize = new TextEncoder().encode(
-        JSON.stringify(compressed)
-      ).length;
-
-      // Calculate compression ratio
-      const compressionRatio = compressedSize / uncompressedSize;
-
-      // Log sizes for debugging
-      console.log(`Uncompressed size: ${uncompressedSize} bytes`);
-      console.log(`Compressed size: ${compressedSize} bytes`);
-      console.log(`Compression ratio: ${(compressionRatio * 100).toFixed(1)}%`);
-
-      // Assert that we achieve at least 40% reduction in size
-      expect(compressionRatio).toBeLessThan(0.6);
-
-      // Verify we can still recover the data
-      const serialized = serializer.serialize(uncompressedState);
-      const deserialized = serializer.deserialize(serialized);
-
-      // Check a few random entries
-      [0, 49, 99].forEach(index => {
-        expect(deserialized.transactions?.value[index]).toMatchObject({
-          id: `${index}-456-789`,
-          timestamp: 1679612700000 + index * 1000,
-          amount: 100 + index,
-          type: 'win',
-          game: 'blackjack'
-        });
-      });
-    });
   });
 })

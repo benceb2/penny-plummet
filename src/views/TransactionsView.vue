@@ -3,6 +3,8 @@ import { ref, computed, watch } from 'vue';
 import { useTransactionStore } from '@/stores/transactionStore';
 import { formatIntAsCurrency } from '@/utils/currencyUtil';
 import BaseLayout from '@/components/layout/BaseLayout.vue';
+import BasePagination from '@/components/layout/BasePagination.vue';
+import { usePagination } from '@/composables/usePagination';
 import { createGameSerializer } from '@/utils/gameSaveSerializer';
 
 const transactionStore = useTransactionStore();
@@ -11,9 +13,7 @@ const selectedType = ref('all');
 const isDev = import.meta.env.DEV;
 const isRunningTest = ref(false);
 const testResults = ref<any[]>([]);
-const currentPage = ref(1);
 const pageSize = ref(10);
-
 
 const filteredTransactions = computed(() => {
   let transactions = transactionStore.transactions;
@@ -29,15 +29,15 @@ const filteredTransactions = computed(() => {
   return transactions;
 });
 
-const paginatedTransactions = computed(() => {
-  const startIndex = (currentPage.value - 1) * pageSize.value;
-  const endIndex = startIndex + pageSize.value;
-  return filteredTransactions.value.slice(startIndex, endIndex);
-});
 
-const totalPages = computed(() =>
-  Math.ceil(filteredTransactions.value.length / pageSize.value)
-);
+const {
+  currentPage,
+  paginatedItems: paginatedTransactions,
+  totalPages,
+  goToPage
+} = usePagination(filteredTransactions, {
+  itemsPerPage: pageSize.value
+});
 
 
 const stats = computed(() => {
@@ -58,10 +58,6 @@ function formatDate(timestamp: number): string {
     hour: '2-digit',
     minute: '2-digit'
   });
-}
-
-function changePage(page: number) {
-  currentPage.value = page;
 }
 
 // Dev-only storage testing functionality
@@ -148,7 +144,7 @@ if (isDev) {
 }
 
 watch([selectedGame, selectedType], () => {
-  currentPage.value = 1;
+  goToPage(1);
 });
 </script>
 
@@ -285,8 +281,6 @@ watch([selectedGame, selectedType], () => {
         </div>
 
         <!-- Transaction List -->
-
-        <!-- Transaction List -->
         <div class="transaction-list">
           <div
             v-for="transaction in paginatedTransactions"
@@ -329,39 +323,11 @@ watch([selectedGame, selectedType], () => {
           </div>
 
           <!-- Pagination -->
-          <nav v-if="totalPages > 1" class="mt-4" aria-label="Transaction navigation">
-            <ul class="pagination justify-content-center">
-              <li class="page-item" :class="{ disabled: currentPage === 1 }">
-                <button
-                  class="page-link"
-                  @click="changePage(currentPage - 1)"
-                  :disabled="currentPage === 1">
-                  Previous
-                </button>
-              </li>
-
-              <li
-                v-for="page in totalPages"
-                :key="page"
-                class="page-item"
-                :class="{ active: currentPage === page }">
-                <button
-                  class="page-link"
-                  @click="changePage(page)">
-                  {{ page }}
-                </button>
-              </li>
-
-              <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-                <button
-                  class="page-link"
-                  @click="changePage(currentPage + 1)"
-                  :disabled="currentPage === totalPages">
-                  Next
-                </button>
-              </li>
-            </ul>
-          </nav>
+          <BasePagination
+            v-if="totalPages > 1"
+            :current-page="currentPage"
+            :total-pages="totalPages"
+            @page-change="goToPage" />
 
           <!-- Page Info -->
           <div class="text-center text-muted mt-2">

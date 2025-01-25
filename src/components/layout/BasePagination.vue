@@ -47,6 +47,19 @@ const pages = computed(() => {
 <template>
   <nav aria-label="Page navigation" class="mt-4">
     <ul class="pagination justify-content-center">
+      <!-- First Page -->
+      <li
+        class="page-item"
+        :class="{ disabled: currentPage === 1 }">
+        <button
+          class="page-link"
+          @click="emit('page-change', 1)"
+          :disabled="currentPage === 1">
+          <i class="bi bi-chevron-double-left"></i>
+        </button>
+      </li>
+
+      <!-- Previous -->
       <li
         class="page-item"
         :class="{ disabled: currentPage === 1 }">
@@ -54,10 +67,11 @@ const pages = computed(() => {
           class="page-link"
           @click="emit('page-change', currentPage - 1)"
           :disabled="currentPage === 1">
-          Previous
+          <i class="bi bi-chevron-left"></i>
         </button>
       </li>
 
+      <!-- Page Numbers -->
       <li
         v-for="page in pages"
         :key="page"
@@ -70,6 +84,7 @@ const pages = computed(() => {
         </button>
       </li>
 
+      <!-- Next -->
       <li
         class="page-item"
         :class="{ disabled: currentPage === totalPages }">
@@ -77,7 +92,19 @@ const pages = computed(() => {
           class="page-link"
           @click="emit('page-change', currentPage + 1)"
           :disabled="currentPage === totalPages">
-          Next
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      </li>
+
+      <!-- Last Page -->
+      <li
+        class="page-item"
+        :class="{ disabled: currentPage === totalPages }">
+        <button
+          class="page-link"
+          @click="emit('page-change', totalPages)"
+          :disabled="currentPage === totalPages">
+          <i class="bi bi-chevron-double-right"></i>
         </button>
       </li>
     </ul>

@@ -4,6 +4,7 @@ export interface Achievement {
   description: string;
   requirement: number;
   progress: number;
+  claimed: boolean;
   completed: boolean;
   reward: {
     chips: number;

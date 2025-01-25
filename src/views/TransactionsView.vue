@@ -377,7 +377,6 @@ watch([selectedGame, selectedType], () => {
 
 <style scoped>
 .transaction-list {
-  max-height: 600px;
   overflow-y: auto;
 }
 

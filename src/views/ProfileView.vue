@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useUserStore } from '@/stores/userStore';
+import { usePagination } from '@/composables/usePagination';
 import { useAchievementStore } from '@/stores/achievementStore';
 import { formatIntAsCurrency } from '@/utils/currencyUtil';
 import BaseLayout from '@/components/layout/BaseLayout.vue';
+import BasePagination from '@/components/layout/BasePagination.vue';
 import AchievementCard from '@/components/AchievementCard.vue';
 import { useRoute } from 'vue-router';
 
@@ -40,6 +42,15 @@ const achievementProgress = computed(() => {
   };
 });
 
+const {
+  goToPage,
+  currentPage,
+  paginatedItems: paginatedAchievements,
+  totalPages
+} = usePagination(filteredAchievements, {
+  itemsPerPage: 6  // Show 6 achievements per page (3x2 grid)
+})
+
 const route = useRoute()
 
 onMounted(() => {
@@ -53,6 +64,10 @@ onMounted(() => {
       })
     }, 100)
   }
+})
+
+watch([selectedCategory, hideCompleted], () => {
+  goToPage(1) // Reset to first page when filters change
 })
 
 </script>
@@ -186,12 +201,17 @@ onMounted(() => {
         <!-- Achievement Grid -->
         <div class="row g-3">
           <div
-            v-for="achievement in filteredAchievements"
+            v-for="achievement in paginatedAchievements"
             :key="achievement.id"
             class="col-md-6">
             <AchievementCard :achievement="achievement" />
           </div>
         </div>
+
+        <BasePagination
+          :current-page="currentPage"
+          :total-pages="totalPages"
+          @page-change="goToPage" />
       </div>
     </div>
   </BaseLayout>

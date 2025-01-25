@@ -1,8 +1,8 @@
 import { createI18n } from 'vue-i18n'
 import type { I18nOptions } from 'vue-i18n'
 
-import en from '@/locales/en.json' assert { type: 'json' }
-import hu from '@/locales/hu.json' assert { type: 'json' }
+import en from '@/locales/en.json'
+import hu from '@/locales/hu.json'
 
 const storedLocale = localStorage.getItem('userLocale') || 'en-GB'
 

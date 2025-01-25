@@ -6,6 +6,7 @@ import { formatIntAsCurrency } from '@/utils/currencyUtil'
 import RouletteSpinner from '@/components/RouletteSpinner.vue'
 import RouletteTable from '@/components/RouletteTable.vue'
 import BaseLayout from '@/components/layout/BaseLayout.vue'
+import GameResult from '@/components/GameResult.vue'
 
 const gameStore = useRouletteStore()
 const userStore = useUserStore()
@@ -83,23 +84,21 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
     :showBalance="true">
 
     <!-- Result Alert -->
-    <div v-if="gameStore.lastResult && gameStore.gameState === RouletteState.complete" class="alert mb-4" :class="{
-      'alert-success': gameStore.lastResult.totalWin > gameStore.lastResult.totalBet,
-      'alert-danger': gameStore.lastResult.totalWin === 0,
-      'alert-warning': gameStore.lastResult.totalWin === gameStore.lastResult.totalBet
-    }" role="alert">
-      <div class="d-flex justify-content-between align-items-center">
-        <span class="h5 mb-0">
-          <i class="bi" :class="{
-            'bi-trophy-fill': gameStore.lastResult.totalWin > gameStore.lastResult.totalBet,
-            'bi-x-circle-fill': gameStore.lastResult.totalWin === 0,
-            'bi-dash-circle-fill': gameStore.lastResult.totalWin === gameStore.lastResult.totalBet
-          }"></i>
-          Number {{ gameStore.lastResult.winningNumber }} -
-          {{ getGameResultMessage(gameStore.lastResult) }}
-        </span>
-      </div>
-    </div>
+    <GameResult
+      :show="gameStore.lastResult !== null && gameStore.gameState === RouletteState.complete"
+      :result="gameStore.lastResult ? {
+        type: gameStore.lastResult.totalWin > gameStore.lastResult.totalBet ? 'win' :
+          gameStore.lastResult.totalWin === gameStore.lastResult.totalBet ? 'push' : 'loss',
+        amount: gameStore.lastResult.totalWin > gameStore.lastResult.totalBet ?
+          gameStore.lastResult.totalWin - gameStore.lastResult.totalBet :
+          gameStore.lastResult.totalBet,
+        message: getGameResultMessage(gameStore.lastResult),
+        details: `Winning Number: ${gameStore.lastResult.winningNumber}`
+      } : {
+        type: 'loss',
+        amount: 0
+      }"
+      @close="gameStore.lastResult = null" />
 
     <!-- Header Actions Slot -->
     <template #header-actions>

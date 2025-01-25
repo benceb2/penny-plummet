@@ -11,36 +11,36 @@ const emit = defineEmits<{
 }>()
 
 const pages = computed(() => {
-  const delta = 2
-  const range: number[] = []
-  const rangeWithDots: (number | '...')[] = []
-  let l: number | undefined
+  const pageNumbers: (number | '...')[] = []
+  const windowSize = 2 // Pages to show on each side
 
-  range.push(1)
+  // Always show first page
+  pageNumbers.push(1)
 
-  for (let i = props.currentPage - delta; i <= props.currentPage + delta; i++) {
-    if (i < props.totalPages && i > 1) {
-      range.push(i)
-    }
+  const start = Math.max(2, props.currentPage - windowSize)
+  const end = Math.min(props.totalPages - 1, props.currentPage + windowSize)
+
+  // Add dots after 1 if there's a gap
+  if (start > 2) {
+    pageNumbers.push('...')
   }
 
+  // Add pages within the window
+  for (let i = start; i <= end; i++) {
+    pageNumbers.push(i)
+  }
+
+  // Add dots before last page if there's a gap
+  if (end < props.totalPages - 1) {
+    pageNumbers.push('...')
+  }
+
+  // Always show last page if we have more than one page
   if (props.totalPages > 1) {
-    range.push(props.totalPages)
+    pageNumbers.push(props.totalPages)
   }
 
-  for (const i of range) {
-    if (l) {
-      if (i - l === 2) {
-        rangeWithDots.push(l + 1)
-      } else if (i - l !== 1) {
-        rangeWithDots.push('...')
-      }
-    }
-    rangeWithDots.push(i)
-    l = i
-  }
-
-  return rangeWithDots
+  return pageNumbers
 })
 </script>
 

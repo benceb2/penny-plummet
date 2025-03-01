@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import { useBlackjackStore } from '@/stores/blackjackStore'
 import { useUserStore } from '@/stores/userStore'
@@ -7,6 +8,8 @@ import PlayingCard from '@/components/PlayingCard.vue'
 import { BlackjackState } from '@/types/BlackjackGameState'
 import BaseLayout from '@/components/layout/BaseLayout.vue'
 import { formatIntAsCurrency } from '@/utils/currencyUtil'
+
+const { t } = useI18n()
 
 const gameStore = useBlackjackStore()
 const userStore = useUserStore()
@@ -27,15 +30,15 @@ const quickBetAmounts = computed(() => {
 const gameStatus = computed(() => {
   if (gameStore.gameState === BlackjackState.gameOver) {
     if (gameStore.playerScore > 21) {
-      return 'Bust! Dealer wins!'
+      return t('blackjack.gameStatus.bust')
     } else if (gameStore.dealerScore > 21) {
-      return 'Dealer busts! You win!'
+      return t('blackjack.gameStatus.dealerBusts')
     } else if (gameStore.playerScore > gameStore.dealerScore) {
-      return 'You win!'
+      return t('blackjack.gameStatus.youWin')
     } else if (gameStore.playerScore < gameStore.dealerScore) {
-      return 'Dealer wins!'
+      return t('blackjack.gameStatus.dealerWins')
     } else {
-      return 'Push!'
+      return t('blackjack.gameStatus.push')
     }
   }
   return ''
@@ -91,7 +94,7 @@ function canAdjustBet(multiplierStr: string) {
 
 <template>
   <BaseLayout
-    title="Blackjack"
+    :title="t('blackjack.title')"
     icon="suit-spade-fill"
     :showBalance="true">
     <!-- Header Actions Slot -->
@@ -101,7 +104,7 @@ function canAdjustBet(multiplierStr: string) {
         type="button"
         @click="showStats = !showStats">
         <i class="bi" :class="showStats ? 'bi-eye-slash' : 'bi-eye'"></i>
-        {{ showStats ? 'Hide Stats' : 'View Stats' }}
+        {{ showStats ? t('blackjack.stats.hideStats') : t('blackjack.stats.viewStats') }}
       </button>
     </template>
 
@@ -113,7 +116,7 @@ function canAdjustBet(multiplierStr: string) {
         <div class="card">
           <div class="card-header bg-light">
             <h5 class="mb-0">
-              <i class="bi bi-graph-up me-2"></i>Statistics
+              <i class="bi bi-graph-up me-2"></i>{{ t('blackjack.stats.title') }}
             </h5>
           </div>
           <div class="card-body">
@@ -121,7 +124,7 @@ function canAdjustBet(multiplierStr: string) {
               <div class="col-md-4">
                 <div class="border rounded p-3 text-center">
                   <h6 class="text-muted mb-2">
-                    <i class="bi bi-collection me-1"></i>Hands Played
+                    <i class="bi bi-collection me-1"></i>{{ t('blackjack.stats.handsPlayed') }}
                   </h6>
                   <span class="h4">{{ userStore.stats.handsPlayed }}</span>
                 </div>
@@ -129,7 +132,7 @@ function canAdjustBet(multiplierStr: string) {
               <div class="col-md-4">
                 <div class="border rounded p-3 text-center">
                   <h6 class="text-muted mb-2">
-                    <i class="bi bi-cash-stack me-1"></i>Total Winnings
+                    <i class="bi bi-cash-stack me-1"></i>{{ t('blackjack.stats.totalWinnings') }}
                   </h6>
                   <span class="h4"
                     :class="{ 'text-success': userStore.stats.totalWinnings > 0, 'text-danger': userStore.stats.totalWinnings < 0 }">
@@ -140,7 +143,7 @@ function canAdjustBet(multiplierStr: string) {
               <div class="col-md-4">
                 <div class="border rounded p-3 text-center">
                   <h6 class="text-muted mb-2">
-                    <i class="bi bi-trophy me-1"></i>Biggest Win
+                    <i class="bi bi-trophy me-1"></i>{{ t('blackjack.stats.biggestWin') }}
                   </h6>
                   <span class="h4 text-success">
                     {{ formatIntAsCurrency(userStore.stats.biggestWin) }}
@@ -155,16 +158,16 @@ function canAdjustBet(multiplierStr: string) {
 
     <!-- Game Status Alert -->
     <div v-if="gameStore.gameState === BlackjackState.gameOver" class="alert mb-4" :class="{
-      'alert-success': gameStatus.includes('You win'),
-      'alert-danger': gameStatus.includes('Dealer wins'),
-      'alert-warning': gameStatus.includes('Push')
+      'alert-success': gameStatus.includes(t('blackjack.gameStatus.youWin')),
+      'alert-danger': gameStatus.includes(t('blackjack.gameStatus.dealerWins')),
+      'alert-warning': gameStatus.includes(t('blackjack.gameStatus.push'))
     }" role="alert">
       <div class="d-flex justify-content-between align-items-center">
         <span class="h5 mb-0">
           <i class="bi" :class="{
-            'bi-trophy-fill': gameStatus.includes('You win'),
-            'bi-x-circle-fill': gameStatus.includes('Dealer wins'),
-            'bi-dash-circle-fill': gameStatus.includes('Push')
+            'bi-trophy-fill': gameStatus.includes(t('blackjack.gameStatus.youWin')),
+            'bi-x-circle-fill': gameStatus.includes(t('blackjack.gameStatus.dealerWins')),
+            'bi-dash-circle-fill': gameStatus.includes(t('blackjack.gameStatus.push'))
           }"></i>
           {{ gameStatus }}
         </span>
@@ -178,7 +181,7 @@ function canAdjustBet(multiplierStr: string) {
           <div class="card-header bg-light">
             <div class="d-flex align-items-center">
               <h5 class="mb-0">
-                <i class="bi bi-person-fill me-2"></i>Dealer's Hand
+                <i class="bi bi-person-fill me-2"></i>{{ t('blackjack.dealer.hand') }}
               </h5>
               <span class="badge bg-dark ms-2">
                 {{ gameStore.dealerScore }}
@@ -203,7 +206,7 @@ function canAdjustBet(multiplierStr: string) {
           <div class="card-header bg-light">
             <div class="d-flex align-items-center">
               <h5 class="mb-0">
-                <i class="bi bi-person-circle me-2"></i>Your Hand
+                <i class="bi bi-person-circle me-2"></i>{{ t('blackjack.player.hand') }}
               </h5>
               <span class="badge bg-dark ms-2">
                 {{ gameStore.playerScore }}
@@ -227,7 +230,7 @@ function canAdjustBet(multiplierStr: string) {
         <div class="card shadow-sm">
           <div class="card-header bg-light py-3">
             <h5 class="mb-0">
-              <i class="bi bi-joystick me-2"></i>Game Controls
+              <i class="bi bi-joystick me-2"></i>{{ t('blackjack.controls.title') }}
             </h5>
           </div>
           <div class="card-body">
@@ -237,7 +240,7 @@ function canAdjustBet(multiplierStr: string) {
                 <div class="h-100">
                   <div class="bg-light p-4 rounded h-100">
                     <h6 class="d-flex align-items-center mb-4">
-                      <i class="bi bi-lightning-fill me-2"></i>Place Your Bet
+                      <i class="bi bi-lightning-fill me-2"></i>{{ t('blackjack.controls.placeBet') }}
                     </h6>
 
                     <!-- Custom Bet Input -->
@@ -246,7 +249,7 @@ function canAdjustBet(multiplierStr: string) {
                         <input type="number" class="form-control form-control-lg" id="betAmount" v-model="betAmount"
                           :max="userStore.chips" min="1">
                         <label for="betAmount" class="d-flex align-items-center">
-                          <i class="bi bi-cash me-2"></i>Bet Amount
+                          <i class="bi bi-cash me-2"></i>{{ t('blackjack.controls.betAmount') }}
                         </label>
                       </div>
                     </div>
@@ -254,7 +257,7 @@ function canAdjustBet(multiplierStr: string) {
                     <!-- Adjust Bet Controls -->
                     <div>
                       <div class="d-flex align-items-center gap-2 mb-2">
-                        <h6 class="mb-0">Adjust Bet</h6>
+                        <h6 class="mb-0">{{ t('blackjack.controls.adjustBet') }}</h6>
                       </div>
                       <div class="btn-group w-100">
                         <button v-for="multiplier in ['1/4x', '1/2x', '2x', '4x']" :key="multiplier"
@@ -274,7 +277,7 @@ function canAdjustBet(multiplierStr: string) {
                 <div class="h-100">
                   <div class="bg-light p-4 rounded h-100">
                     <h6 class="d-flex align-items-center mb-4">
-                      <i class="bi bi-gear-fill me-2"></i>Actions
+                      <i class="bi bi-gear-fill me-2"></i>{{ t('blackjack.controls.actions') }}
                     </h6>
 
                     <!-- Betting State -->
@@ -282,7 +285,7 @@ function canAdjustBet(multiplierStr: string) {
                       <!-- Quick Bet -->
                       <div class="mb-4">
                         <div class="d-flex align-items-center gap-2 mb-2">
-                          <h6 class="mb-0">Quick Bet</h6>
+                          <h6 class="mb-0">{{ t('blackjack.controls.quickBet') }}</h6>
                         </div>
                         <div class="d-grid gap-2">
                           <button v-for="amount in quickBetAmounts" :key="amount"
@@ -298,7 +301,7 @@ function canAdjustBet(multiplierStr: string) {
 
                       <button class="btn btn-primary btn-lg w-100 mt-3" @click="handleDeal"
                         :disabled="betAmount <= 0 || betAmount > userStore.chips">
-                        <i class="bi bi-play-circle-fill me-2"></i>Deal Cards
+                        <i class="bi bi-play-circle-fill me-2"></i>{{ t('blackjack.controls.dealCards') }}
                       </button>
                     </div>
 
@@ -306,17 +309,17 @@ function canAdjustBet(multiplierStr: string) {
                     <div v-if="gameStore.gameState === BlackjackState.playerTurn"
                       class="d-flex gap-3 justify-content-center">
                       <button class="btn btn-success btn-lg" @click="handleHit">
-                        <i class="bi bi-plus-circle-fill me-2"></i>Hit
+                        <i class="bi bi-plus-circle-fill me-2"></i>{{ t('blackjack.controls.hit') }}
                       </button>
                       <button class="btn btn-warning btn-lg text-white" @click="handleStand">
-                        <i class="bi bi-hand-thumbs-up-fill me-2"></i>Stand
+                        <i class="bi bi-hand-thumbs-up-fill me-2"></i>{{ t('blackjack.controls.stand') }}
                       </button>
                     </div>
 
                     <!-- Game Over State -->
                     <div v-if="gameStore.gameState === BlackjackState.gameOver" class="d-flex justify-content-center">
                       <button class="btn btn-primary btn-lg" @click="handleNewGame">
-                        <i class="bi bi-arrow-clockwise me-2"></i>New Game
+                        <i class="bi bi-arrow-clockwise me-2"></i>{{ t('blackjack.controls.newGame') }}
                       </button>
                     </div>
                   </div>

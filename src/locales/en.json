@@ -56,5 +56,183 @@
       "title": "Achievements In Progress",
       "viewAll": "View All Achievements"
     }
+  },
+  "blackjack": {
+    "title": "Blackjack",
+    "stats": {
+      "title": "Statistics",
+      "hideStats": "Hide Stats",
+      "viewStats": "View Stats",
+      "handsPlayed": "Hands Played",
+      "totalWinnings": "Total Winnings",
+      "biggestWin": "Biggest Win"
+    },
+    "gameStatus": {
+      "bust": "Bust! Dealer wins!",
+      "dealerBusts": "Dealer busts! You win!",
+      "youWin": "You win!",
+      "dealerWins": "Dealer wins!",
+      "push": "Push!"
+    },
+    "dealer": {
+      "hand": "Dealer's Hand",
+      "score": "Score"
+    },
+    "player": {
+      "hand": "Your Hand",
+      "score": "Score"
+    },
+    "controls": {
+      "title": "Game Controls",
+      "placeBet": "Place Your Bet",
+      "betAmount": "Bet Amount",
+      "adjustBet": "Adjust Bet",
+      "actions": "Actions",
+      "quickBet": "Quick Bet",
+      "dealCards": "Deal Cards",
+      "hit": "Hit",
+      "stand": "Stand",
+      "newGame": "New Game"
+    }
+  },
+  "clicker": {
+    "title": "Earn Chips",
+    "earnings": {
+      "current": "Current Earnings",
+      "clickValue": "+"
+    },
+    "collect": {
+      "button": "Collect Chips",
+      "minimum": "(Min. 10 required)"
+    },
+    "upgrades": {
+      "title": "Upgrades",
+      "autoClickers": {
+        "title": "Auto-Clickers",
+        "owned": "Owned",
+        "perSecond": "/sec each",
+        "buy": "Buy Auto-Clicker"
+      },
+      "multiplier": {
+        "title": "Click Multiplier",
+        "current": "Current",
+        "upgrade": "Upgrade Multiplier"
+      }
+    }
+  },
+  "about": {
+    "title": "About",
+    "game": {
+      "title": "About the Game",
+      "description": "Penny Plummet is a browser-based casino game that combines classic gambling games with modern web technologies. Try your luck at Blackjack or test your clicking speed in the Clicker mini-game!"
+    },
+    "technology": {
+      "title": "Technology Stack",
+      "items": {
+        "typescript": {
+          "name": "TypeScript",
+          "description": "Type-safe JavaScript"
+        },
+        "vue": {
+          "name": "Vue 3",
+          "description": "Progressive framework"
+        },
+        "vite": {
+          "name": "Vite",
+          "description": "Next-gen frontend tooling"
+        },
+        "pinia": {
+          "name": "Pinia",
+          "description": "State management"
+        },
+        "bootstrap": {
+          "name": "Bootstrap 5",
+          "description": "UI framework"
+        },
+        "localStorage": {
+          "name": "Local Storage",
+          "description": "Data persistence"
+        }
+      }
+    },
+    "features": {
+      "title": "Features",
+      "blackjack": {
+        "title": "Blackjack",
+        "description": "Classic casino card game with betting mechanics and achievements"
+      },
+      "clicker": {
+        "title": "Clicker Game",
+        "description": "Test your clicking speed and earn rewards"
+      }
+    }
+  },
+  "achievements": {
+    "blackjack": {
+      "first_hand": {
+        "title": "Getting Started",
+        "description": "Play your first hand of Blackjack"
+      },
+      "blackjack_veteran": {
+        "title": "Blackjack Veteran",
+        "description": "Play 100 hands of Blackjack"
+      },
+      "winning_streak": {
+        "title": "Hot Streak",
+        "description": "Win 5 hands in a row"
+      },
+      "high_roller": {
+        "title": "High Roller",
+        "description": "Win $1,000 or more in a single hand"
+      },
+      "blackjack_master": {
+        "title": "Natural Talent",
+        "description": "Get Blackjack 10 times"
+      },
+      "high_stakes": {
+        "title": "High Stakes Player",
+        "description": "Place a bet of $500 or more"
+      }
+    },
+    "clicker": {
+      "click_novice": {
+        "title": "Click Novice",
+        "description": "Click 100 times"
+      },
+      "click_master": {
+        "title": "Click Master",
+        "description": "Click 1,000 times"
+      },
+      "auto_collector": {
+        "title": "Automation Beginner",
+        "description": "Buy your first auto-clicker"
+      },
+      "auto_empire": {
+        "title": "Click Empire",
+        "description": "Own 10 auto-clickers"
+      },
+      "multiplier_enthusiast": {
+        "title": "Multiplier Enthusiast",
+        "description": "Reach multiplier level 5"
+      }
+    },
+    "general": {
+      "small_fortune": {
+        "title": "Small Fortune",
+        "description": "Accumulate $1,000 in chips"
+      },
+      "medium_fortune": {
+        "title": "Medium Fortune",
+        "description": "Accumulate $10,000 in chips"
+      },
+      "large_fortune": {
+        "title": "Large Fortune",
+        "description": "Accumulate $100,000 in chips"
+      }
+    },
+    "reward": {
+      "chips": "chips",
+      "xp": "XP"
+    }
   }
 }

@@ -56,5 +56,183 @@
       "title": "Folyamatban Lévő Eredmények",
       "viewAll": "Összes Eredmény Megtekintése"
     }
+  },
+  "blackjack": {
+    "title": "Blackjack",
+    "stats": {
+      "title": "Statisztikák",
+      "hideStats": "Statisztikák Elrejtése",
+      "viewStats": "Statisztikák Megtekintése",
+      "handsPlayed": "Játszott Kör",
+      "totalWinnings": "Összes Nyeremény",
+      "biggestWin": "Legnagyobb Nyeremény"
+    },
+    "gameStatus": {
+      "bust": "Bust! Az osztó nyert!",
+      "dealerBusts": "Az osztó túllépte! Ön nyert!",
+      "youWin": "Ön nyert!",
+      "dealerWins": "Az osztó nyert!",
+      "push": "Döntetlen!"
+    },
+    "dealer": {
+      "hand": "Az Osztó Keze",
+      "score": "Pontszám"
+    },
+    "player": {
+      "hand": "Az Ön Keze",
+      "score": "Pontszám"
+    },
+    "controls": {
+      "title": "Játék Vezérlés",
+      "placeBet": "Tegye Meg Tétjét",
+      "betAmount": "Tét Összege",
+      "adjustBet": "Tét Módosítása",
+      "actions": "Műveletek",
+      "quickBet": "Gyors Tét",
+      "dealCards": "Lapok Osztása",
+      "hit": "Kérek Lapot",
+      "stand": "Megállok",
+      "newGame": "Új Játék"
+    }
+  },
+  "clicker": {
+    "title": "Zseton Gyűjtés",
+    "earnings": {
+      "current": "Jelenlegi Bevétel",
+      "clickValue": "+"
+    },
+    "collect": {
+      "button": "Zsetonok Begyűjtése",
+      "minimum": "(Min. 10 szükséges)"
+    },
+    "upgrades": {
+      "title": "Fejlesztések",
+      "autoClickers": {
+        "title": "Auto-Kattintók",
+        "owned": "Tulajdonban",
+        "perSecond": "/másodperc",
+        "buy": "Auto-Kattintó Vásárlása"
+      },
+      "multiplier": {
+        "title": "Kattintás Szorzó",
+        "current": "Jelenlegi",
+        "upgrade": "Szorzó Fejlesztése"
+      }
+    }
+  },
+  "about": {
+    "title": "Rólunk",
+    "game": {
+      "title": "A Játékról",
+      "description": "A Penny Plummet egy böngésző-alapú kaszinó játék, amely ötvözi a klasszikus szerencsejátékokat a modern webtechnológiákkal. Próbálja ki szerencséjét a Blackjack-nél vagy tesztelje kattintási sebességét a Kattintós minijátékban!"
+    },
+    "technology": {
+      "title": "Technológiai Stack",
+      "items": {
+        "typescript": {
+          "name": "TypeScript",
+          "description": "Típusos JavaScript"
+        },
+        "vue": {
+          "name": "Vue 3",
+          "description": "Progresszív keretrendszer"
+        },
+        "vite": {
+          "name": "Vite",
+          "description": "Következő generációs frontend eszköz"
+        },
+        "pinia": {
+          "name": "Pinia",
+          "description": "Állapotkezelés"
+        },
+        "bootstrap": {
+          "name": "Bootstrap 5",
+          "description": "UI keretrendszer"
+        },
+        "localStorage": {
+          "name": "Local Storage",
+          "description": "Adatok tárolása"
+        }
+      }
+    },
+    "features": {
+      "title": "Funkciók",
+      "blackjack": {
+        "title": "Blackjack",
+        "description": "Klasszikus kaszinó kártyajáték fogadási mechanikával és eredményekkel"
+      },
+      "clicker": {
+        "title": "Kattintós Játék",
+        "description": "Tesztelje kattintási sebességét és nyerjen jutalmakat"
+      }
+    }
+  },
+  "achievements": {
+    "blackjack": {
+      "first_hand": {
+        "title": "Első Lépések",
+        "description": "Játssza le első Blackjack körét"
+      },
+      "blackjack_veteran": {
+        "title": "Blackjack Veterán",
+        "description": "Játsszon 100 kört Blackjackből"
+      },
+      "winning_streak": {
+        "title": "Szerencsés Széria",
+        "description": "Nyerjen 5 kört egymás után"
+      },
+      "high_roller": {
+        "title": "Nagy Játékos",
+        "description": "Nyerjen 1000$ vagy többet egy körben"
+      },
+      "blackjack_master": {
+        "title": "Természetes Tehetség",
+        "description": "Érjen el Blackjacket 10 alkalommal"
+      },
+      "high_stakes": {
+        "title": "Magas Tétek Játékosa",
+        "description": "Tegyen legalább 500$ tétet"
+      }
+    },
+    "clicker": {
+      "click_novice": {
+        "title": "Kattintás Újonc",
+        "description": "Kattintson 100-szor"
+      },
+      "click_master": {
+        "title": "Kattintás Mester",
+        "description": "Kattintson 1000-szer"
+      },
+      "auto_collector": {
+        "title": "Automatizálás Kezdő",
+        "description": "Vásárolja meg első auto-kattintóját"
+      },
+      "auto_empire": {
+        "title": "Kattintás Birodalom",
+        "description": "Birtokoljon 10 auto-kattintót"
+      },
+      "multiplier_enthusiast": {
+        "title": "Szorzó Rajongó",
+        "description": "Érje el az 5-ös szorzó szintet"
+      }
+    },
+    "general": {
+      "small_fortune": {
+        "title": "Kis Vagyon",
+        "description": "Gyűjtsön össze 1000$ zsetont"
+      },
+      "medium_fortune": {
+        "title": "Közepes Vagyon",
+        "description": "Gyűjtsön össze 10000$ zsetont"
+      },
+      "large_fortune": {
+        "title": "Nagy Vagyon",
+        "description": "Gyűjtsön össze 100000$ zsetont"
+      }
+    },
+    "reward": {
+      "chips": "zseton",
+      "xp": "XP"
+    }
   }
 }

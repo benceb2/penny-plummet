@@ -2,9 +2,35 @@
 import type { GameSaveData } from '@/types/GameSaveData';
 import { createGameSerializer, SIGNATURE } from './gameSaveSerializer';
 import type { SavePreview } from '@/types/SavePreview';
+import { useRouletteStore } from '@/stores/rouletteStore';
+import { useTransactionStore } from '@/stores/transactionStore';
+import { useBlackjackStore } from '@/stores/blackjackStore';
+import { useClickerStore } from '@/stores/clickerStore';
+import { useUserStore } from '@/stores/userStore';
+import { useAchievementStore } from '@/stores/achievementStore';
 
 export class SaveManager {
   private serializer = createGameSerializer();
+
+  public getCurrentGameState(): GameSaveData {
+    const userStore = useUserStore();
+    const achievementStore = useAchievementStore();
+    const blackjackStore = useBlackjackStore();
+    const clickerStore = useClickerStore();
+    const transactionStore = useTransactionStore();
+    const rouletteStore = useRouletteStore();
+
+    return {
+      user: userStore.$state,
+      achievements: achievementStore.$state,
+      blackjack: blackjackStore.$state,
+      clicker: clickerStore.$state,
+      transactions: transactionStore.$state,
+      roulette: rouletteStore.$state,
+      timestamp: Date.now()
+    } as GameSaveData;
+  }
+
 
   public async exportSave(saveData: GameSaveData): Promise<string> {
     try {
@@ -50,7 +76,7 @@ export class SaveManager {
     };
   }
 
-  private isValidGameSaveData(data: unknown): data is GameSaveData {
+  isValidGameSaveData(data: unknown): data is GameSaveData {
     if (!data || typeof data !== 'object') return false;
 
     const save = data as GameSaveData;

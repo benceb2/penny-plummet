@@ -9,11 +9,13 @@ import { useAchievementStore } from '@/stores/achievementStore';
 import { useBlackjackStore } from '@/stores/blackjackStore';
 import { useClickerStore } from '@/stores/clickerStore';
 import { formatIntAsCurrency } from '@/utils/currencyUtil';
-import type { GameSaveData } from '@/types/GameSaveData';
 import { useTransactionStore } from '@/stores/transactionStore';
 import { useRouletteStore } from '@/stores/rouletteStore';
+import { useAuthStore } from '@/stores/authStore';
+import { cloudSaveService } from '@/services/cloudSaveService';
+import CloudSaveModal from '@/components/modals/CloudSaveModal.vue';
 
-// Initialize stores and manager
+// Initialise stores and manager
 const saveManager = new SaveManager();
 const userStore = useUserStore();
 const achievementStore = useAchievementStore();
@@ -21,6 +23,7 @@ const blackjackStore = useBlackjackStore();
 const clickerStore = useClickerStore();
 const transactionsStore = useTransactionStore();
 const rouletteStore = useRouletteStore();
+const authStore = useAuthStore();
 
 // UI state
 const importError = ref('');
@@ -29,23 +32,15 @@ const fileInput = ref<HTMLInputElement | null>(null);
 const savePreview = ref<SavePreview | null>(null);
 const showImportConfirm = ref(false);
 const showDeleteConfirm = ref(false);
+const showCloudSaveModal = ref(false);
 const pendingImportData = ref<string | null>(null);
-
-// Collect current game state
-const getCurrentGameState = () => ({
-  user: userStore.$state,
-  achievements: achievementStore.$state,
-  blackjack: blackjackStore.$state,
-  clicker: clickerStore.$state,
-  transactions: transactionsStore.$state,
-  roulette: rouletteStore.$state,
-  timestamp: Date.now()
-});
+const cloudSaveMessage = ref('');
+const isCloudSaving = ref(false);
 
 const exportSave = async () => {
   try {
-    const saveData = getCurrentGameState();
-    const serialized = await saveManager.exportSave(saveData as GameSaveData);
+    const saveData = saveManager.getCurrentGameState();
+    const serialized = await saveManager.exportSave(saveData);
     const blob = await saveManager.createDownloadBlob(serialized);
 
     // Handle file download
@@ -102,7 +97,12 @@ const confirmImport = async () => {
     transactionsStore.$patch(saveData.transactions);
     rouletteStore.$patch(saveData.roulette);
 
-    showSuccess();
+    // If cloud saves are enabled, update cloud
+    if (authStore.isAuthenticated) {
+      await cloudSaveService.saveToCloud();
+    }
+
+    showSuccess('Save imported successfully');
   } catch (error) {
     console.error('Failed to import save:', error);
     importError.value = error instanceof Error ? error.message : 'Failed to import save file';
@@ -112,8 +112,9 @@ const confirmImport = async () => {
   }
 };
 
-const showSuccess = () => {
+const showSuccess = (message: string = 'Operation completed successfully!') => {
   importSuccess.value = true;
+  cloudSaveMessage.value = message;
   importError.value = '';
   setTimeout(() => {
     importSuccess.value = false;
@@ -140,16 +141,121 @@ const confirmDelete = () => {
 const cancelDelete = () => {
   showDeleteConfirm.value = false;
 };
+
+// Cloud save functions
+const enableCloudSaves = () => {
+  showCloudSaveModal.value = true;
+};
+
+const onCloudSaveEnabled = () => {
+  showSuccess('Cloud saves enabled successfully!');
+};
+
+const saveToCloud = async () => {
+  isCloudSaving.value = true;
+  try {
+    const result = await cloudSaveService.saveToCloud();
+    if (result) {
+      showSuccess('Game saved to cloud successfully');
+    } else {
+      importError.value = 'Failed to save to cloud';
+    }
+  } catch (error) {
+    console.error('Failed to save to cloud:', error);
+    importError.value = error instanceof Error ? error.message : 'Failed to save to cloud';
+  } finally {
+    isCloudSaving.value = false;
+  }
+};
+
+const loadFromCloud = async () => {
+  isCloudSaving.value = true;
+  try {
+    const result = await cloudSaveService.loadFromCloud();
+    if (result) {
+      showSuccess('Game loaded from cloud successfully');
+    } else {
+      importError.value = 'Failed to load from cloud';
+    }
+  } catch (error) {
+    console.error('Failed to load from cloud:', error);
+    importError.value = error instanceof Error ? error.message : 'Failed to load from cloud';
+  } finally {
+    isCloudSaving.value = false;
+  }
+};
+
+const logoutFromCloud = async () => {
+  try {
+    await authStore.logout();
+    cloudSaveService.stopAutoSave();
+    showSuccess('Logged out successfully');
+  } catch (error) {
+    console.error('Failed to logout:', error);
+    importError.value = error instanceof Error ? error.message : 'Failed to logout';
+  }
+};
 </script>
 
 <template>
   <BaseLayout title="Settings" icon="gear-fill" :show-balance="false">
     <UsernameSettings />
+
+    <!-- Cloud Save Management -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title d-flex align-items-center mb-4">
+          <i class="bi bi-cloud-upload me-2"></i>
+          Cloud Save Management
+        </h5>
+
+        <div v-if="!authStore.isAuthenticated">
+          <p class="text-muted">
+            Enable cloud saves to sync your progress across devices and participate in global leaderboards.
+          </p>
+          <button @click="enableCloudSaves" class="btn btn-primary">
+            <i class="bi bi-cloud-plus me-2"></i>
+            Enable Cloud Saves
+          </button>
+        </div>
+
+        <div v-else>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <p class="mb-0"><strong>Logged in as:</strong> {{ authStore.currentUser?.username }}</p>
+              <p class="text-success mb-0">
+                <i class="bi bi-cloud-check me-1"></i>
+                Cloud saves enabled
+              </p>
+            </div>
+            <button @click="logoutFromCloud" class="btn btn-outline-secondary">
+              <i class="bi bi-box-arrow-right me-2"></i>
+              Logout
+            </button>
+          </div>
+
+          <div class="d-flex gap-2 mt-4">
+            <button @click="saveToCloud" class="btn btn-primary" :disabled="isCloudSaving">
+              <span v-if="isCloudSaving" class="spinner-border spinner-border-sm me-2"></span>
+              <i v-else class="bi bi-cloud-upload me-2"></i>
+              Save to Cloud
+            </button>
+            <button @click="loadFromCloud" class="btn btn-outline-primary" :disabled="isCloudSaving">
+              <span v-if="isCloudSaving" class="spinner-border spinner-border-sm me-2"></span>
+              <i v-else class="bi bi-cloud-download me-2"></i>
+              Load from Cloud
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Local Save Management -->
     <div class="card">
       <div class="card-body">
         <h5 class="card-title d-flex align-items-center mb-4">
           <i class="bi bi-save me-2"></i>
-          Game Save Management
+          Local Save Management
         </h5>
 
         <!-- Export Section -->
@@ -298,9 +404,16 @@ const cancelDelete = () => {
 
         <div v-if="importSuccess" class="alert alert-success mt-4" role="alert">
           <i class="bi bi-check-circle-fill me-2"></i>
-          Operation completed successfully!
+          {{ cloudSaveMessage || 'Operation completed successfully!' }}
         </div>
       </div>
     </div>
+
+    <!-- Cloud Save Modal -->
+    <CloudSaveModal
+      :show="showCloudSaveModal"
+      @close="showCloudSaveModal = false"
+      @enabled="onCloudSaveEnabled"
+      @skipped="showCloudSaveModal = false" />
   </BaseLayout>
 </template>

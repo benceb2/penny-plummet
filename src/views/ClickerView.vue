@@ -4,7 +4,7 @@ import { useClickerStore } from '@/stores/clickerStore'
 import BaseLayout from '@/components/layout/BaseLayout.vue'
 import { useI18n } from 'vue-i18n'
 
-const { t } = useI18n() // Initialize i18n
+const { t } = useI18n()
 const userStore = useUserStore()
 const clickerStore = useClickerStore()
 </script>

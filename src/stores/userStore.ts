@@ -14,6 +14,8 @@ export const useUserStore = defineStore('user', () => {
   const chips = ref(50)
   const formattedChips = computed(() => formatIntAsCurrency(chips.value))
   const username = ref<string | null>(null)
+  // Add cloud save prompt flag
+  const hasSeenCloudSavePrompt = ref(false)
   const stats = ref({
     handsPlayed: 0,
     totalWinnings: 0,
@@ -82,16 +84,23 @@ export const useUserStore = defineStore('user', () => {
     username.value = newUsername
   }
 
+  // Add function to mark cloud save prompt as seen
+  function markCloudSavePromptAsSeen() {
+    hasSeenCloudSavePrompt.value = true;
+  }
+
   return {
     consented,
     chips,
     formattedChips,
     username,
     stats,
+    hasSeenCloudSavePrompt,
     updateChips,
     updateStats,
     updateUsername,
-    updateConsent
+    updateConsent,
+    markCloudSavePromptAsSeen
   }
 },
   {

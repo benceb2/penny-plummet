@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRouletteStore, RouletteState, type RouletteResult, type BetType } from '@/stores/rouletteStore'
 import { useUserStore } from '@/stores/userStore'
 import { formatIntAsCurrency } from '@/utils/currencyUtil'
@@ -7,6 +8,9 @@ import RouletteSpinner from '@/components/RouletteSpinner.vue'
 import RouletteTable from '@/components/RouletteTable.vue'
 import BaseLayout from '@/components/layout/BaseLayout.vue'
 import GameResult from '@/components/GameResult.vue'
+
+// i18n
+const { t } = useI18n()
 
 const gameStore = useRouletteStore()
 const userStore = useUserStore()
@@ -19,11 +23,11 @@ const quickBetAmounts = [100, 500, 1000, 5000]
 // Game message formatting
 function getGameResultMessage(result: RouletteResult): string {
   if (result.totalWin > result.totalBet) {
-    return `You win ${formatIntAsCurrency(result.totalWin - result.totalBet)}!`
+    return t('roulette.results.win', { amount: formatIntAsCurrency(result.totalWin - result.totalBet) })
   } else if (result.totalWin === result.totalBet) {
-    return `You broke even and ${formatIntAsCurrency(result.totalBet)} was returned!`
+    return t('roulette.results.push', { amount: formatIntAsCurrency(result.totalBet) })
   } else {
-    return `You lose ${formatIntAsCurrency(result.totalBet)}`
+    return t('roulette.results.loss', { amount: formatIntAsCurrency(result.totalBet) })
   }
 }
 
@@ -79,7 +83,7 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
 
 <template>
   <BaseLayout
-    title="Roulette"
+    :title="t('roulette.title')"
     icon="dice-5"
     :showBalance="true">
 
@@ -93,7 +97,7 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
           gameStore.lastResult.totalWin - gameStore.lastResult.totalBet :
           gameStore.lastResult.totalBet,
         message: getGameResultMessage(gameStore.lastResult),
-        details: `Winning Number: ${gameStore.lastResult.winningNumber}`
+        details: t('roulette.results.winningNumber', { number: gameStore.lastResult.winningNumber })
       } : {
         type: 'loss',
         amount: 0
@@ -107,7 +111,7 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
         type="button"
         @click="showStats = !showStats">
         <i class="bi" :class="showStats ? 'bi-eye-slash' : 'bi-eye'"></i>
-        {{ showStats ? 'Hide Stats' : 'View Stats' }}
+        {{ showStats ? t('roulette.stats.hide') : t('roulette.stats.show') }}
       </button>
     </template>
 
@@ -117,7 +121,7 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
         <div class="card">
           <div class="card-header bg-light">
             <h5 class="mb-0">
-              <i class="bi bi-graph-up me-2"></i>Statistics
+              <i class="bi bi-graph-up me-2"></i>{{ t('roulette.stats.title') }}
             </h5>
           </div>
           <div class="card-body">
@@ -125,7 +129,7 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
               <div class="col-md-3">
                 <div class="border rounded p-3 text-center">
                   <h6 class="text-muted mb-2">
-                    <i class="bi bi-collection me-1"></i>Total Spins
+                    <i class="bi bi-collection me-1"></i>{{ t('roulette.stats.totalSpins') }}
                   </h6>
                   <span class="h4">{{ gameStore.sessionStats.spins }}</span>
                 </div>
@@ -133,7 +137,7 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
               <div class="col-md-3">
                 <div class="border rounded p-3 text-center">
                   <h6 class="text-muted mb-2">
-                    <i class="bi bi-cash-stack me-1"></i>Total Wagered
+                    <i class="bi bi-cash-stack me-1"></i>{{ t('roulette.stats.totalWagered') }}
                   </h6>
                   <span class="h4">
                     {{ formatIntAsCurrency(gameStore.sessionStats.totalWagered) }}
@@ -143,7 +147,7 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
               <div class="col-md-3">
                 <div class="border rounded p-3 text-center">
                   <h6 class="text-muted mb-2">
-                    <i class="bi bi-trophy me-1"></i>Biggest Win
+                    <i class="bi bi-trophy me-1"></i>{{ t('roulette.stats.biggestWin') }}
                   </h6>
                   <span class="h4 text-success">
                     {{ formatIntAsCurrency(gameStore.sessionStats.biggestWin) }}
@@ -153,7 +157,7 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
               <div class="col-md-3">
                 <div class="border rounded p-3 text-center">
                   <h6 class="text-muted mb-2">
-                    <i class="bi bi-award me-1"></i>Win Streak
+                    <i class="bi bi-award me-1"></i>{{ t('roulette.stats.winStreak') }}
                   </h6>
                   <span class="h4">
                     {{ gameStore.sessionStats.consecutiveWins }}
@@ -167,11 +171,9 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
     </div>
 
     <!-- Game Result Spinner -->
-    <!-- Game Result Spinner -->
     <RouletteSpinner :is-spinning="gameStore.gameState === RouletteState.spinning"
       :winning-number="gameStore.winningNumber"
       @spin-complete="gameStore.completeGame" />
-
 
     <!-- Roulette Wheel and Table -->
     <div class="row mb-4">
@@ -179,7 +181,7 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
         <div class="card shadow-sm">
           <div class="card-header bg-light">
             <h5 class="mb-0">
-              <i class="bi bi-bullseye me-2"></i>Roulette Table
+              <i class="bi bi-bullseye me-2"></i>{{ t('roulette.table.title') }}
             </h5>
           </div>
           <div class="card-body">
@@ -195,7 +197,7 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
                 <div class="card shadow-sm">
                   <div class="card-header bg-light py-3">
                     <h5 class="mb-0">
-                      <i class="bi bi-joystick me-2"></i>Game Controls
+                      <i class="bi bi-joystick me-2"></i>{{ t('roulette.gameControls.title') }}
                     </h5>
                   </div>
                   <div class="card-body">
@@ -205,19 +207,19 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
                         <div class="h-100">
                           <div class="bg-light p-4 rounded h-100">
                             <h6 class="d-flex align-items-center mb-4">
-                              <i class="bi bi-cash me-2"></i>Betting Controls
+                              <i class="bi bi-cash me-2"></i>{{ t('roulette.gameControls.betting.title') }}
                             </h6>
 
                             <!-- Current Bets Display -->
                             <div class="mb-4">
-                              <h6 class="text-muted mb-2">Current Bets</h6>
+                              <h6 class="text-muted mb-2">{{ t('roulette.gameControls.betting.currentBets') }}</h6>
                               <div class="table-responsive">
                                 <table class="table table-sm">
                                   <thead>
                                     <tr>
-                                      <th>Type</th>
-                                      <th>Numbers</th>
-                                      <th class="text-end">Amount</th>
+                                      <th>{{ t('roulette.gameControls.betting.table.type') }}</th>
+                                      <th>{{ t('roulette.gameControls.betting.table.numbers') }}</th>
+                                      <th class="text-end">{{ t('roulette.gameControls.betting.table.amount') }}</th>
                                     </tr>
                                   </thead>
                                   <tbody>
@@ -229,7 +231,8 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
                                   </tbody>
                                   <tfoot>
                                     <tr>
-                                      <td colspan="2" class="text-end"><strong>Total:</strong></td>
+                                      <td colspan="2" class="text-end"><strong>{{
+                                        t('roulette.gameControls.betting.table.total') }}</strong></td>
                                       <td class="text-end"><strong>{{ formatIntAsCurrency(gameStore.totalBet)
                                           }}</strong>
                                       </td>
@@ -241,7 +244,7 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
 
                             <!-- Bet Amount Controls -->
                             <div class="mb-4">
-                              <h6 class="text-muted mb-2">Bet Amount</h6>
+                              <h6 class="text-muted mb-2">{{ t('roulette.gameControls.betting.betAmount') }}</h6>
                               <div class="input-group mb-3">
                                 <input type="number" class="form-control" v-model="currentBetAmount"
                                   :max="userStore.chips"
@@ -257,7 +260,7 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
                             <!-- Clear Bets Button -->
                             <button class="btn btn-danger w-100" @click="gameStore.clearBets()"
                               :disabled="gameStore.currentBets.length === 0">
-                              <i class="bi bi-trash me-2"></i>Clear All Bets
+                              <i class="bi bi-trash me-2"></i>{{ t('roulette.gameControls.betting.clearAllBets') }}
                             </button>
                           </div>
                         </div>
@@ -268,21 +271,22 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
                         <div class="h-100">
                           <div class="bg-light p-4 rounded h-100">
                             <h6 class="d-flex align-items-center mb-4">
-                              <i class="bi bi-gear-fill me-2"></i>Actions
+                              <i class="bi bi-gear-fill me-2"></i>{{ t('roulette.gameControls.actions.title') }}
                             </h6>
 
                             <div class="d-grid gap-3">
                               <!-- Spin Button -->
                               <button class="btn btn-primary btn-lg" @click="handleSpin"
                                 :disabled="!gameStore.isSpinAllowed">
-                                <i class="bi bi-play-circle-fill me-2"></i>Spin
+                                <i class="bi bi-play-circle-fill me-2"></i>{{ t('roulette.gameControls.actions.spin') }}
                               </button>
 
                               <!-- New Game Button -->
                               <button v-if="gameStore.gameState === RouletteState.complete"
                                 class="btn btn-secondary btn-lg"
                                 @click="handleNewGame">
-                                <i class="bi bi-arrow-clockwise me-2"></i>New Game
+                                <i class="bi bi-arrow-clockwise me-2"></i>{{ t('roulette.gameControls.actions.newGame')
+                                }}
                               </button>
                             </div>
                           </div>

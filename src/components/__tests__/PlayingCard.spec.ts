@@ -4,7 +4,7 @@ import PlayingCard from '@/components/PlayingCard.vue'
 import type { Card } from '@/types/Card'
 
 describe('PlayingCard', () => {
-  it('renders card face up correctly', () => {
+  it('should render card face up correctly', () => {
     const card = {
       suit: 'hearts',
       value: 10,
@@ -28,7 +28,7 @@ describe('PlayingCard', () => {
     expect(wrapper.classes()).toContain('text-danger')
   })
 
-  it('renders card back when face down', () => {
+  it('should render card back when face down', () => {
     const card = {
       suit: 'spades',
       value: 5,
@@ -50,7 +50,7 @@ describe('PlayingCard', () => {
   })
 
   // Test suit color classes
-  it('applies red color class only to hearts and diamonds', async () => {
+  it('should apply red color class only to hearts and diamonds', async () => {
     const redCard = {
       suit: 'diamonds',
       value: 7,
@@ -78,7 +78,7 @@ describe('PlayingCard', () => {
   })
 
   // Test suit symbols
-  it('renders correct suit symbols', () => {
+  it('should render correct suit symbols', () => {
     const suits = {
       hearts: '♥',
       diamonds: '♦',
@@ -102,7 +102,7 @@ describe('PlayingCard', () => {
     }
   })
 
-  it('has the correct structure when face up', () => {
+  it('should have the correct structure when face up', () => {
     const card = {
       suit: 'spades',
       value: 3,

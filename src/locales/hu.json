@@ -311,5 +311,46 @@
       "maxLength": "A felhasználónév nem lehet hosszabb {max} karakternél",
       "invalidCharacters": "A felhasználónév csak betűket, számokat, szóközöket, aláhúzásokat és kötőjeleket tartalmazhat"
     }
+  },
+  "roulette": {
+    "title": "Rulett",
+    "stats": {
+      "show": "Statisztikák Megtekintése",
+      "hide": "Statisztikák Elrejtése",
+      "title": "Statisztikák",
+      "totalSpins": "Összes Pörgetés",
+      "totalWagered": "Összes Tét",
+      "biggestWin": "Legnagyobb Nyeremény",
+      "winStreak": "Nyerési Sorozat"
+    },
+    "table": {
+      "title": "Rulett Asztal"
+    },
+    "gameControls": {
+      "title": "Játék Vezérlők",
+      "betting": {
+        "title": "Tét Vezérlők",
+        "currentBets": "Jelenlegi Tétek",
+        "betAmount": "Tét Összege",
+        "clearAllBets": "Összes Tét Törlése",
+        "table": {
+          "type": "Típus",
+          "numbers": "Számok",
+          "amount": "Összeg",
+          "total": "Összesen:"
+        }
+      },
+      "actions": {
+        "title": "Műveletek",
+        "spin": "Pörgetés",
+        "newGame": "Új Játék"
+      }
+    },
+    "results": {
+      "win": "Nyertél {amount}-t!",
+      "loss": "Vesztettél {amount}-t",
+      "push": "Döntetlenül értél és {amount} visszatérítve!",
+      "winningNumber": "Nyerő Szám: {number}"
+    }
   }
 }

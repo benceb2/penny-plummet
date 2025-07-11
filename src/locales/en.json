@@ -311,5 +311,46 @@
       "maxLength": "Username cannot exceed {max} characters",
       "invalidCharacters": "Username can only contain letters, numbers, spaces, underscores, and hyphens"
     }
+  },
+  "roulette": {
+    "title": "Roulette",
+    "stats": {
+      "show": "View Stats",
+      "hide": "Hide Stats",
+      "title": "Statistics",
+      "totalSpins": "Total Spins",
+      "totalWagered": "Total Wagered",
+      "biggestWin": "Biggest Win",
+      "winStreak": "Win Streak"
+    },
+    "table": {
+      "title": "Roulette Table"
+    },
+    "gameControls": {
+      "title": "Game Controls",
+      "betting": {
+        "title": "Betting Controls",
+        "currentBets": "Current Bets",
+        "betAmount": "Bet Amount",
+        "clearAllBets": "Clear All Bets",
+        "table": {
+          "type": "Type",
+          "numbers": "Numbers",
+          "amount": "Amount",
+          "total": "Total:"
+        }
+      },
+      "actions": {
+        "title": "Actions",
+        "spin": "Spin",
+        "newGame": "New Game"
+      }
+    },
+    "results": {
+      "win": "You win {amount}!",
+      "loss": "You lose {amount}",
+      "push": "You broke even and {amount} was returned!",
+      "winningNumber": "Winning Number: {number}"
+    }
   }
 }

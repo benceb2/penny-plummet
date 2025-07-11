@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { SavePreview } from '@/types/SavePreview';
 import { SaveManager } from '@/utils/saveManager';
 import UsernameSettings from '@/components/UsernameSettings.vue';
@@ -14,6 +15,9 @@ import { useRouletteStore } from '@/stores/rouletteStore';
 import { useAuthStore } from '@/stores/authStore';
 import { cloudSaveService } from '@/services/cloudSaveService';
 import CloudSaveModal from '@/components/modals/CloudSaveModal.vue';
+
+// i18n
+const { t } = useI18n();
 
 // Initialise stores and manager
 const saveManager = new SaveManager();
@@ -62,7 +66,7 @@ const handleFileSelect = async (event: Event) => {
   const file = target?.files?.[0];
 
   if (!file) {
-    importError.value = 'No file selected';
+    importError.value = t('settings.localSave.import.noFileSelected');
     return;
   }
 
@@ -74,7 +78,7 @@ const handleFileSelect = async (event: Event) => {
     showImportConfirm.value = true;
   } catch (error) {
     console.error('Failed to read save file:', error);
-    importError.value = error instanceof Error ? error.message : 'Failed to read save file';
+    importError.value = error instanceof Error ? error.message : t('settings.localSave.import.readError');
   } finally {
     if (fileInput.value) {
       fileInput.value.value = '';
@@ -102,17 +106,17 @@ const confirmImport = async () => {
       await cloudSaveService.saveToCloud();
     }
 
-    showSuccess('Save imported successfully');
+    showSuccess(t('settings.localSave.import.importSuccess'));
   } catch (error) {
     console.error('Failed to import save:', error);
-    importError.value = error instanceof Error ? error.message : 'Failed to import save file';
+    importError.value = error instanceof Error ? error.message : t('settings.localSave.import.importFailed');
   } finally {
     showImportConfirm.value = false;
     pendingImportData.value = null;
   }
 };
 
-const showSuccess = (message: string = 'Operation completed successfully!') => {
+const showSuccess = (message: string = t('settings.messages.operationSuccess')) => {
   importSuccess.value = true;
   cloudSaveMessage.value = message;
   importError.value = '';
@@ -148,7 +152,7 @@ const enableCloudSaves = () => {
 };
 
 const onCloudSaveEnabled = () => {
-  showSuccess('Cloud saves enabled successfully!');
+  showSuccess(t('settings.cloudSave.enabledSuccess'));
 };
 
 const saveToCloud = async () => {
@@ -156,13 +160,13 @@ const saveToCloud = async () => {
   try {
     const result = await cloudSaveService.saveToCloud();
     if (result) {
-      showSuccess('Game saved to cloud successfully');
+      showSuccess(t('settings.cloudSave.saveSuccess'));
     } else {
-      importError.value = 'Failed to save to cloud';
+      importError.value = t('settings.cloudSave.saveFailed');
     }
   } catch (error) {
     console.error('Failed to save to cloud:', error);
-    importError.value = error instanceof Error ? error.message : 'Failed to save to cloud';
+    importError.value = error instanceof Error ? error.message : t('settings.cloudSave.saveFailed');
   } finally {
     isCloudSaving.value = false;
   }
@@ -173,13 +177,13 @@ const loadFromCloud = async () => {
   try {
     const result = await cloudSaveService.loadFromCloud();
     if (result) {
-      showSuccess('Game loaded from cloud successfully');
+      showSuccess(t('settings.cloudSave.loadSuccess'));
     } else {
-      importError.value = 'Failed to load from cloud';
+      importError.value = t('settings.cloudSave.loadFailed');
     }
   } catch (error) {
     console.error('Failed to load from cloud:', error);
-    importError.value = error instanceof Error ? error.message : 'Failed to load from cloud';
+    importError.value = error instanceof Error ? error.message : t('settings.cloudSave.loadFailed');
   } finally {
     isCloudSaving.value = false;
   }
@@ -189,16 +193,16 @@ const logoutFromCloud = async () => {
   try {
     await authStore.logout();
     cloudSaveService.stopAutoSave();
-    showSuccess('Logged out successfully');
+    showSuccess(t('settings.cloudSave.logoutSuccess'));
   } catch (error) {
     console.error('Failed to logout:', error);
-    importError.value = error instanceof Error ? error.message : 'Failed to logout';
+    importError.value = error instanceof Error ? error.message : t('settings.cloudSave.logoutFailed');
   }
 };
 </script>
 
 <template>
-  <BaseLayout title="Settings" icon="gear-fill" :show-balance="false">
+  <BaseLayout :title="t('settings.title')" icon="gear-fill" :show-balance="false">
     <UsernameSettings />
 
     <!-- Cloud Save Management -->
@@ -206,31 +210,32 @@ const logoutFromCloud = async () => {
       <div class="card-body">
         <h5 class="card-title d-flex align-items-center mb-4">
           <i class="bi bi-cloud-upload me-2"></i>
-          Cloud Save Management
+          {{ t('settings.cloudSave.title') }}
         </h5>
 
         <div v-if="!authStore.isAuthenticated">
           <p class="text-muted">
-            Enable cloud saves to sync your progress across devices and participate in global leaderboards.
+            {{ t('settings.cloudSave.description') }}
           </p>
           <button @click="enableCloudSaves" class="btn btn-primary">
             <i class="bi bi-cloud-plus me-2"></i>
-            Enable Cloud Saves
+            {{ t('settings.cloudSave.enable') }}
           </button>
         </div>
 
         <div v-else>
           <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
-              <p class="mb-0"><strong>Logged in as:</strong> {{ authStore.currentUser?.username }}</p>
+              <p class="mb-0"><strong>{{ t('settings.cloudSave.loggedInAs') }}</strong> {{
+                authStore.currentUser?.username }}</p>
               <p class="text-success mb-0">
                 <i class="bi bi-cloud-check me-1"></i>
-                Cloud saves enabled
+                {{ t('settings.cloudSave.enabled') }}
               </p>
             </div>
             <button @click="logoutFromCloud" class="btn btn-outline-secondary">
               <i class="bi bi-box-arrow-right me-2"></i>
-              Logout
+              {{ t('settings.cloudSave.logout') }}
             </button>
           </div>
 
@@ -238,12 +243,12 @@ const logoutFromCloud = async () => {
             <button @click="saveToCloud" class="btn btn-primary" :disabled="isCloudSaving">
               <span v-if="isCloudSaving" class="spinner-border spinner-border-sm me-2"></span>
               <i v-else class="bi bi-cloud-upload me-2"></i>
-              Save to Cloud
+              {{ t('settings.cloudSave.saveToCloud') }}
             </button>
             <button @click="loadFromCloud" class="btn btn-outline-primary" :disabled="isCloudSaving">
               <span v-if="isCloudSaving" class="spinner-border spinner-border-sm me-2"></span>
               <i v-else class="bi bi-cloud-download me-2"></i>
-              Load from Cloud
+              {{ t('settings.cloudSave.loadFromCloud') }}
             </button>
           </div>
         </div>
@@ -255,19 +260,18 @@ const logoutFromCloud = async () => {
       <div class="card-body">
         <h5 class="card-title d-flex align-items-center mb-4">
           <i class="bi bi-save me-2"></i>
-          Local Save Management
+          {{ t('settings.localSave.title') }}
         </h5>
 
         <!-- Export Section -->
         <div class="mb-4">
-          <h6 class="mb-3">Export Save</h6>
+          <h6 class="mb-3">{{ t('settings.localSave.export.title') }}</h6>
           <p class="text-muted small mb-3">
-            Download your current game progress to a file. You can use this file to restore your progress later or on
-            another device.
+            {{ t('settings.localSave.export.description') }}
           </p>
           <button @click="exportSave" class="btn btn-primary">
             <i class="bi bi-download me-2"></i>
-            Export Save File
+            {{ t('settings.localSave.export.button') }}
           </button>
         </div>
 
@@ -275,9 +279,9 @@ const logoutFromCloud = async () => {
 
         <!-- Import Section -->
         <div class="mb-4">
-          <h6 class="mb-3">Import Save</h6>
+          <h6 class="mb-3">{{ t('settings.localSave.import.title') }}</h6>
           <p class="text-muted small mb-3">
-            Restore your progress from a previously exported save file. This will replace your current progress.
+            {{ t('settings.localSave.import.description') }}
           </p>
 
           <div class="mb-3">
@@ -298,20 +302,21 @@ const logoutFromCloud = async () => {
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title">Confirm Import</h5>
+                  <h5 class="modal-title">{{ t('settings.localSave.import.confirmTitle') }}</h5>
                 </div>
                 <div class="modal-body">
                   <div
                     class="save-preview bg-light p-3 rounded mb-3"
                     v-if="savePreview">
-                    <h6 class="mb-3">Save File Preview</h6>
+                    <h6 class="mb-3">{{ t('settings.localSave.import.preview.title') }}</h6>
                     <div class="row g-3">
                       <div class="col-sm-6">
                         <div class="d-flex align-items-center">
                           <i class="bi bi-person-circle text-primary fs-4 me-2"></i>
                           <div>
-                            <div class="text-muted small">Username</div>
-                            <div class="fw-medium">{{ savePreview.username || 'Not set' }}</div>
+                            <div class="text-muted small">{{ t('settings.localSave.import.preview.username') }}</div>
+                            <div class="fw-medium">{{ savePreview.username ||
+                              t('settings.localSave.import.preview.notSet') }}</div>
                           </div>
                         </div>
                       </div>
@@ -319,7 +324,7 @@ const logoutFromCloud = async () => {
                         <div class="d-flex align-items-center">
                           <i class="bi bi-wallet2 text-success fs-4 me-2"></i>
                           <div>
-                            <div class="text-muted small">Balance</div>
+                            <div class="text-muted small">{{ t('settings.localSave.import.preview.balance') }}</div>
                             <div class="fw-medium">{{ formatIntAsCurrency(savePreview.balance) }}</div>
                           </div>
                         </div>
@@ -328,8 +333,9 @@ const logoutFromCloud = async () => {
                         <div class="d-flex align-items-center">
                           <i class="bi bi-stars text-warning fs-4 me-2"></i>
                           <div>
-                            <div class="text-muted small">Level</div>
-                            <div class="fw-medium">Level {{ savePreview.level }}</div>
+                            <div class="text-muted small">{{ t('settings.localSave.import.preview.level') }}</div>
+                            <div class="fw-medium">{{ t('settings.localSave.import.preview.level') }} {{
+                              savePreview.level }}</div>
                           </div>
                         </div>
                       </div>
@@ -337,19 +343,20 @@ const logoutFromCloud = async () => {
                         <div class="d-flex align-items-center">
                           <i class="bi bi-calendar3 text-info fs-4 me-2"></i>
                           <div>
-                            <div class="text-muted small">Save Date</div>
+                            <div class="text-muted small">{{ t('settings.localSave.import.preview.saveDate') }}</div>
                             <div class="fw-medium">{{ new Date(savePreview.timestamp).toLocaleDateString() }}</div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <p class="mb-0">Are you sure you want to import this save file? This will replace your current
-                    progress.</p>
+                  <p class="mb-0">{{ t('settings.localSave.import.confirmMessage') }}</p>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" @click="cancelImport">Cancel</button>
-                  <button type="button" class="btn btn-primary" @click="confirmImport">Import</button>
+                  <button type="button" class="btn btn-secondary" @click="cancelImport">{{
+                    t('settings.localSave.import.cancel') }}</button>
+                  <button type="button" class="btn btn-primary" @click="confirmImport">{{
+                    t('settings.localSave.import.confirm') }}</button>
                 </div>
               </div>
             </div>
@@ -360,13 +367,13 @@ const logoutFromCloud = async () => {
 
         <!-- Delete Section -->
         <div>
-          <h6 class="mb-3">Delete Save</h6>
+          <h6 class="mb-3">{{ t('settings.localSave.delete.title') }}</h6>
           <p class="text-muted small mb-3">
-            Delete all your progress and start fresh. This action cannot be undone unless you have exported your save.
+            {{ t('settings.localSave.delete.description') }}
           </p>
           <button @click="deleteSave" class="btn btn-danger">
             <i class="bi bi-trash me-2"></i>
-            Delete Save Data
+            {{ t('settings.localSave.delete.button') }}
           </button>
 
           <!-- Delete Confirmation Modal -->
@@ -378,18 +385,20 @@ const logoutFromCloud = async () => {
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title">Confirm Delete</h5>
+                  <h5 class="modal-title">{{ t('settings.localSave.delete.confirmTitle') }}</h5>
                 </div>
                 <div class="modal-body">
                   <p class="text-danger">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                    Warning: This will permanently delete all your progress!
+                    {{ t('settings.localSave.delete.warning') }}
                   </p>
-                  <p>Are you sure you want to delete your save data and start fresh?</p>
+                  <p>{{ t('settings.localSave.delete.confirmMessage') }}</p>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" @click="cancelDelete">Cancel</button>
-                  <button type="button" class="btn btn-danger" @click="confirmDelete">Delete</button>
+                  <button type="button" class="btn btn-secondary" @click="cancelDelete">{{
+                    t('settings.localSave.delete.cancel') }}</button>
+                  <button type="button" class="btn btn-danger" @click="confirmDelete">{{
+                    t('settings.localSave.delete.confirm') }}</button>
                 </div>
               </div>
             </div>
@@ -404,7 +413,7 @@ const logoutFromCloud = async () => {
 
         <div v-if="importSuccess" class="alert alert-success mt-4" role="alert">
           <i class="bi bi-check-circle-fill me-2"></i>
-          {{ cloudSaveMessage || 'Operation completed successfully!' }}
+          {{ cloudSaveMessage || t('settings.messages.operationSuccess') }}
         </div>
       </div>
     </div>

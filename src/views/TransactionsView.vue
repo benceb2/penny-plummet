@@ -5,14 +5,9 @@ import { formatIntAsCurrency } from '@/utils/currencyUtil';
 import BaseLayout from '@/components/layout/BaseLayout.vue';
 import BasePagination from '@/components/layout/BasePagination.vue';
 import { usePagination } from '@/composables/usePagination';
-import { createGameSerializer } from '@/utils/gameSaveSerializer';
-
 const transactionStore = useTransactionStore();
 const selectedGame = ref('all');
 const selectedType = ref('all');
-const isDev = import.meta.env.DEV;
-const isRunningTest = ref(false);
-const testResults = ref<any[]>([]);
 const pageSize = ref(10);
 
 const filteredTransactions = computed(() => {
@@ -28,7 +23,6 @@ const filteredTransactions = computed(() => {
 
   return transactions;
 });
-
 
 const {
   currentPage,
@@ -60,89 +54,6 @@ function formatDate(timestamp: number): string {
   });
 }
 
-// Dev-only storage testing functionality
-let runStorageTest: () => Promise<void>;
-if (isDev) {
-  const testStorageLimits = async (
-    incrementSize: number = 1000,
-    maxTestSize: number = 15000
-  ) => {
-    const metrics: any[] = [];
-    const serializer = createGameSerializer();
-
-    const gameTypes = ['blackjack', 'roulette', 'clicker'] as const;
-    const transactionTypes = ['win', 'loss', 'push'] as const;
-
-    try {
-      for (let size = incrementSize; size <= maxTestSize; size += incrementSize) {
-        const transactions = Array.from({ length: size }, (_, i) => ({
-          id: crypto.randomUUID(),
-          timestamp: Date.now() - (i * 60000),
-          amount: Math.floor(Math.random() * 1000000) / 100,
-          type: transactionTypes[i % transactionTypes.length],
-          game: gameTypes[i % gameTypes.length],
-          details: `Test transaction ${i}`
-        }));
-
-        const state = { transactions: { value: transactions } };
-
-        const serializeStart = performance.now();
-        const serialized = serializer.serialize(state);
-        const serializationTime = performance.now() - serializeStart;
-
-        const compressedSize = new Blob([serialized]).size;
-        const rawSize = new Blob([JSON.stringify(state)]).size;
-
-        const deserializeStart = performance.now();
-        serializer.deserialize(serialized);
-        const deserializationTime = performance.now() - deserializeStart;
-
-        metrics.push({
-          transactionCount: size,
-          rawSizeMB: (rawSize / 1024 / 1024).toFixed(2),
-          compressedSizeMB: (compressedSize / 1024 / 1024).toFixed(2),
-          compressionRatio: ((compressedSize / rawSize) * 100).toFixed(1),
-          serializationTime: serializationTime.toFixed(1),
-          deserializationTime: deserializationTime.toFixed(1)
-        });
-
-        // Test localStorage
-        try {
-          localStorage.setItem('test-storage', serialized);
-          localStorage.removeItem('test-storage');
-        } catch (e: any) {
-          console.warn(`localStorage limit reached at ${size} transactions`);
-          console.error(e)
-          break;
-        }
-
-        // Break if processing time gets too high
-        if (serializationTime > 1000 || deserializationTime > 1000) {
-          console.warn(`Performance threshold exceeded at ${size} transactions`);
-          break;
-        }
-
-        // Let UI update
-        await new Promise(resolve => setTimeout(resolve, 0));
-      }
-    } catch (error) {
-      console.error('Testing stopped due to error:', error);
-    }
-
-    return metrics;
-  };
-
-  runStorageTest = async () => {
-    isRunningTest.value = true;
-    testResults.value = [];
-    try {
-      testResults.value = await testStorageLimits();
-    } finally {
-      isRunningTest.value = false;
-    }
-  };
-}
-
 watch([selectedGame, selectedType], () => {
   goToPage(1);
 });
@@ -153,53 +64,6 @@ watch([selectedGame, selectedType], () => {
     title="Transaction History"
     icon="clock-history"
     :showBalance="true">
-
-    <!-- Dev Testing Panel -->
-    <div v-if="isDev" class="card mb-4">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center">
-          <h5 class="mb-0">
-            <i class="bi bi-gear-fill me-2"></i>
-            Development Testing Tools
-          </h5>
-          <button
-            class="btn btn-primary"
-            @click="runStorageTest"
-            :disabled="isRunningTest">
-            <span v-if="isRunningTest" class="spinner-border spinner-border-sm me-2"></span>
-            {{ isRunningTest ? 'Running Tests...' : 'Test Storage Limits' }}
-          </button>
-        </div>
-
-        <!-- Test Results -->
-        <div v-if="testResults.length > 0" class="mt-4">
-          <div class="table-responsive">
-            <table class="table table-sm">
-              <thead>
-                <tr>
-                  <th>Transactions</th>
-                  <th>Raw Size</th>
-                  <th>Compressed</th>
-                  <th>Ratio</th>
-                  <th>Serialize (ms)</th>
-                  <th>Deserialize (ms)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="result in testResults" :key="result.transactionCount">
-                  <td>{{ result.transactionCount.toLocaleString() }}</td>
-                  <td>{{ result.rawSizeMB }} MB</td>
-                  <td>{{ result.compressedSizeMB }} MB</td>
-                  <td>{{ result.compressionRatio }}%</td>
-                  <td>{{ result.serializationTime }}ms</td>
-                  <td>{{ result.deserializationTime }}ms</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- Stats Summary Card -->
     <div class="card mb-4">

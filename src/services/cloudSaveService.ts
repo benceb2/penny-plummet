@@ -189,5 +189,4 @@ export class ExtendedSaveManager extends SaveManager {
   }
 }
 
-// Export a singleton instance
 export const cloudSaveService = new CloudSaveService();

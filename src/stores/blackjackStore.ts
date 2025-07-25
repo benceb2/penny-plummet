@@ -26,7 +26,7 @@ export const useBlackjackStore = defineStore('blackjack', () => {
   const deck = ref<Card[]>([])
   const playerHand = ref<Card[]>([])
   const dealerHand = ref<Card[]>([])
-  const gameState = ref(BlackjackState.betting)
+  const gameState = ref(BlackjackState.BETTING)
   const currentBet = ref(0)
 
   const sessionStats = ref({
@@ -61,7 +61,7 @@ export const useBlackjackStore = defineStore('blackjack', () => {
     deck.value = shuffleDeck(generateDeck())
     playerHand.value = [deck.value.pop()!, deck.value.pop()!]
     dealerHand.value = [deck.value.pop()!, { ...deck.value.pop()!, faceUp: false }]
-    gameState.value = BlackjackState.playerTurn
+    gameState.value = BlackjackState.PLAYER_TURN
 
     // Achievement tracking for first hand
     achievementStore.updateAchievementProgress('first_hand', 1)
@@ -73,7 +73,7 @@ export const useBlackjackStore = defineStore('blackjack', () => {
    * - Automatically ends game if player busts (goes over 21)
    */
   function hit() {
-    if (gameState.value !== BlackjackState.playerTurn) return
+    if (gameState.value !== BlackjackState.PLAYER_TURN) return
     playerHand.value.push(deck.value.pop()!)
     if (playerScore.value > 21) {
       const result = endGame()
@@ -88,8 +88,8 @@ export const useBlackjackStore = defineStore('blackjack', () => {
    * - Dealer must hit on 16 and below, stand on 17 and above (standard casino rules)
    */
   function stand() {
-    if (gameState.value !== BlackjackState.playerTurn) return
-    gameState.value = BlackjackState.dealerTurn
+    if (gameState.value !== BlackjackState.PLAYER_TURN) return
+    gameState.value = BlackjackState.DEALER_TURN
     dealerHand.value[1].faceUp = true
 
     while (dealerScore.value < 17) {
@@ -160,7 +160,7 @@ export const useBlackjackStore = defineStore('blackjack', () => {
    */
   function endGame(): BlackjackResult {
     dealerHand.value[1].faceUp = true
-    gameState.value = BlackjackState.gameOver
+    gameState.value = BlackjackState.GAME_OVER
 
     const result: BlackjackResult = {
       isWin: false,
@@ -198,7 +198,7 @@ export const useBlackjackStore = defineStore('blackjack', () => {
     deck.value = []
     playerHand.value = []
     dealerHand.value = []
-    gameState.value = BlackjackState.betting
+    gameState.value = BlackjackState.BETTING
     currentBet.value = 0
   }
 

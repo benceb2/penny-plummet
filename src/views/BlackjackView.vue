@@ -28,7 +28,7 @@ const quickBetAmounts = computed(() => {
 })
 
 const gameStatus = computed(() => {
-  if (gameStore.gameState === BlackjackState.gameOver) {
+  if (gameStore.gameState === BlackjackState.GAME_OVER) {
     if (gameStore.playerScore > 21) {
       return t('blackjack.gameStatus.bust')
     } else if (gameStore.dealerScore > 21) {
@@ -157,7 +157,7 @@ function canAdjustBet(multiplierStr: string) {
     </div>
 
     <!-- Game Status Alert -->
-    <div v-if="gameStore.gameState === BlackjackState.gameOver" class="alert mb-4" :class="{
+    <div v-if="gameStore.gameState === BlackjackState.GAME_OVER" class="alert mb-4" :class="{
       'alert-success': gameStatus.includes(t('blackjack.gameStatus.youWin')),
       'alert-danger': gameStatus.includes(t('blackjack.gameStatus.dealerWins')),
       'alert-warning': gameStatus.includes(t('blackjack.gameStatus.push'))
@@ -236,7 +236,7 @@ function canAdjustBet(multiplierStr: string) {
           <div class="card-body">
             <div class="row g-4">
               <!-- Betting Section -->
-              <div class="col-md-6" v-if="gameStore.gameState === BlackjackState.betting">
+              <div class="col-md-6" v-if="gameStore.gameState === BlackjackState.BETTING">
                 <div class="h-100">
                   <div class="bg-light p-4 rounded h-100">
                     <h6 class="d-flex align-items-center mb-4">
@@ -273,7 +273,7 @@ function canAdjustBet(multiplierStr: string) {
 
               <!-- Action Controls -->
               <div
-                :class="`col-md-${[BlackjackState.playerTurn, BlackjackState.gameOver].includes(gameStore.gameState) ? '12' : '6'}`">
+                :class="`col-md-${[BlackjackState.PLAYER_TURN, BlackjackState.GAME_OVER].includes(gameStore.gameState) ? '12' : '6'}`">
                 <div class="h-100">
                   <div class="bg-light p-4 rounded h-100">
                     <h6 class="d-flex align-items-center mb-4">
@@ -281,7 +281,7 @@ function canAdjustBet(multiplierStr: string) {
                     </h6>
 
                     <!-- Betting State -->
-                    <div v-if="gameStore.gameState === BlackjackState.betting">
+                    <div v-if="gameStore.gameState === BlackjackState.BETTING">
                       <!-- Quick Bet -->
                       <div class="mb-4">
                         <div class="d-flex align-items-center gap-2 mb-2">
@@ -306,7 +306,7 @@ function canAdjustBet(multiplierStr: string) {
                     </div>
 
                     <!-- Player Turn State -->
-                    <div v-if="gameStore.gameState === BlackjackState.playerTurn"
+                    <div v-if="gameStore.gameState === BlackjackState.PLAYER_TURN"
                       class="d-flex gap-3 justify-content-center">
                       <button class="btn btn-success btn-lg" @click="handleHit">
                         <i class="bi bi-plus-circle-fill me-2"></i>{{ t('blackjack.controls.hit') }}
@@ -317,7 +317,7 @@ function canAdjustBet(multiplierStr: string) {
                     </div>
 
                     <!-- Game Over State -->
-                    <div v-if="gameStore.gameState === BlackjackState.gameOver" class="d-flex justify-content-center">
+                    <div v-if="gameStore.gameState === BlackjackState.GAME_OVER" class="d-flex justify-content-center">
                       <button class="btn btn-primary btn-lg" @click="handleNewGame">
                         <i class="bi bi-arrow-clockwise me-2"></i>{{ t('blackjack.controls.newGame') }}
                       </button>

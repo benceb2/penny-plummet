@@ -89,7 +89,7 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
 
     <!-- Result Alert -->
     <GameResult
-      :show="gameStore.lastResult !== null && gameStore.gameState === RouletteState.complete"
+      :show="gameStore.lastResult !== null && gameStore.gameState === RouletteState.COMPLETE"
       :result="gameStore.lastResult ? {
         type: gameStore.lastResult.totalWin > gameStore.lastResult.totalBet ? 'win' :
           gameStore.lastResult.totalWin === gameStore.lastResult.totalBet ? 'push' : 'loss',
@@ -171,7 +171,7 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
     </div>
 
     <!-- Game Result Spinner -->
-    <RouletteSpinner :is-spinning="gameStore.gameState === RouletteState.spinning"
+    <RouletteSpinner :is-spinning="gameStore.gameState === RouletteState.SPINNING"
       :winning-number="gameStore.winningNumber"
       @spin-complete="gameStore.completeGame" />
 
@@ -282,7 +282,7 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
                               </button>
 
                               <!-- New Game Button -->
-                              <button v-if="gameStore.gameState === RouletteState.complete"
+                              <button v-if="gameStore.gameState === RouletteState.COMPLETE"
                                 class="btn btn-secondary btn-lg"
                                 @click="handleNewGame">
                                 <i class="bi bi-arrow-clockwise me-2"></i>{{ t('roulette.gameControls.actions.newGame')

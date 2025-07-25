@@ -2,7 +2,7 @@ import { computed, ref } from 'vue';
 import { defineStore } from 'pinia';
 
 import { type BlackjackResult } from '@/types/BlackjackResult';
-import { calculateStorageKey, createGameSerializer } from '@/utils/gameSaveSerializer';
+import { calculateStorageKey, createGameSerializer } from '@/utils/gameSaveSerializerUtil';
 import { formatIntAsCurrency } from '@/utils/currencyUtil';
 import { useAchievementStore } from './achievementStore';
 import { useTransactionStore } from './transactionStore';

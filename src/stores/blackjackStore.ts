@@ -15,7 +15,7 @@ import { BlackjackState } from '@/types/BlackjackGameState';
 import type { Card } from '@/types/Card';
 import type { BlackjackResult } from '@/types/BlackjackResult';
 import { generateDeck, shuffleDeck, calculateHandValue } from '@/utils/blackjackUtil';
-import { calculateStorageKey, createGameSerializer } from '../utils/gameSaveSerializer';
+import { calculateStorageKey, createGameSerializer } from '../utils/gameSaveSerializerUtil';
 import { useAchievementStore } from './achievementStore';
 import { useUserStore } from './userStore';
 

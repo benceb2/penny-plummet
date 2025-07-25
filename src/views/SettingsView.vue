@@ -2,7 +2,6 @@
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { SavePreview } from '@/types/SavePreview';
-import { SaveManager } from '@/utils/saveManager';
 import UsernameSettings from '@/components/UsernameSettings.vue';
 import BaseLayout from '@/components/layout/BaseLayout.vue';
 import { useUserStore } from '@/stores/userStore';
@@ -12,12 +11,12 @@ import { useClickerStore } from '@/stores/clickerStore';
 import { formatIntAsCurrency } from '@/utils/currencyUtil';
 import { useTransactionStore } from '@/stores/transactionStore';
 import { useRouletteStore } from '@/stores/rouletteStore';
+import gameSaveUtil from '@/utils/gameSaveUtil';
 
 // i18n
 const { t } = useI18n();
 
-// Initialise stores and manager
-const saveManager = new SaveManager();
+// Stores
 const userStore = useUserStore();
 const achievementStore = useAchievementStore();
 const blackjackStore = useBlackjackStore();
@@ -36,9 +35,9 @@ const pendingImportData = ref<string | null>(null);
 
 const exportSave = async () => {
   try {
-    const saveData = saveManager.getCurrentGameState();
-    const serialized = await saveManager.exportSave(saveData);
-    const blob = await saveManager.createDownloadBlob(serialized);
+    const saveData = gameSaveUtil.getCurrentGameState();
+    const serialized = await gameSaveUtil.exportSave(saveData);
+    const blob = await gameSaveUtil.createDownloadBlob(serialized);
 
     // Handle file download
     const url = URL.createObjectURL(blob);
@@ -65,8 +64,8 @@ const handleFileSelect = async (event: Event) => {
 
   try {
     const text = await file.text();
-    const saveData = await saveManager.importSave(text);
-    savePreview.value = saveManager.extractSavePreview(saveData);
+    const saveData = await gameSaveUtil.importSave(text);
+    savePreview.value = gameSaveUtil.extractSavePreview(saveData);
     pendingImportData.value = text;
     showImportConfirm.value = true;
   } catch (error) {
@@ -84,7 +83,7 @@ const confirmImport = async () => {
   try {
     if (!pendingImportData.value) return;
 
-    const saveData = await saveManager.importSave(pendingImportData.value);
+    const saveData = await gameSaveUtil.importSave(pendingImportData.value);
 
     // Apply the saved states to all stores
     userStore.$patch(saveData.user);

@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
 import { formatIntAsCurrency } from '@/utils/currencyUtil'
-import { calculateStorageKey, createGameSerializer } from '@/utils/gameSaveSerializer'
+import { calculateStorageKey, createGameSerializer } from '@/utils/gameSaveSerializerUtil'
 import { useAchievementStore } from './achievementStore'
 import type { UserStore } from './userStore'
 import { useTransactionStore } from './transactionStore'

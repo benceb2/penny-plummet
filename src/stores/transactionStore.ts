@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import { calculateStorageKey, createGameSerializer } from '@/utils/gameSaveSerializer';
+import { calculateStorageKey, createGameSerializer } from '@/utils/gameSaveSerializerUtil';
 import type { Transaction } from '@/types/Transaction';
 
 const MAX_TRANSACTIONS = 10000 // Keep only the last 10,000 transactions to prevent storage bloat

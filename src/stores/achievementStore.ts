@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { calculateStorageKey, createGameSerializer } from '@/utils/gameSaveSerializer';
+import { calculateStorageKey, createGameSerializer } from '@/utils/gameSaveSerializerUtil';
 import { achievements } from '@/utils/achievementUitl';
 import type { Achievement } from '@/types/Achievement';
 import type { Level } from '@/types/Level';

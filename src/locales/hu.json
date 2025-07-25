@@ -237,23 +237,6 @@
   },
   "settings": {
     "title": "Beállítások",
-    "cloudSave": {
-      "title": "Felhő Mentés Kezelés",
-      "description": "Engedélyezd a felhő mentést, hogy szinkronizáld a haladásodat az eszközök között és részt vehess a globális ranglistákon.",
-      "enable": "Felhő Mentés Engedélyezése",
-      "loggedInAs": "Bejelentkezve mint:",
-      "enabled": "Felhő mentés engedélyezve",
-      "logout": "Kijelentkezés",
-      "saveToCloud": "Mentés a Felhőbe",
-      "loadFromCloud": "Betöltés a Felhőből",
-      "saveSuccess": "Játék sikeresen mentve a felhőbe",
-      "loadSuccess": "Játék sikeresen betöltve a felhőből",
-      "saveFailed": "Nem sikerült menteni a felhőbe",
-      "loadFailed": "Nem sikerült betölteni a felhőből",
-      "logoutSuccess": "Sikeres kijelentkezés",
-      "logoutFailed": "Kijelentkezés sikertelen",
-      "enabledSuccess": "Felhő mentés sikeresen engedélyezve!"
-    },
     "localSave": {
       "title": "Helyi Mentés Kezelés",
       "export": {

@@ -237,23 +237,6 @@
   },
   "settings": {
     "title": "Settings",
-    "cloudSave": {
-      "title": "Cloud Save Management",
-      "description": "Enable cloud saves to sync your progress across devices and participate in global leaderboards.",
-      "enable": "Enable Cloud Saves",
-      "loggedInAs": "Logged in as:",
-      "enabled": "Cloud saves enabled",
-      "logout": "Logout",
-      "saveToCloud": "Save to Cloud",
-      "loadFromCloud": "Load from Cloud",
-      "saveSuccess": "Game saved to cloud successfully",
-      "loadSuccess": "Game loaded from cloud successfully",
-      "saveFailed": "Failed to save to cloud",
-      "loadFailed": "Failed to load from cloud",
-      "logoutSuccess": "Logged out successfully",
-      "logoutFailed": "Failed to logout",
-      "enabledSuccess": "Cloud saves enabled successfully!"
-    },
     "localSave": {
       "title": "Local Save Management",
       "export": {

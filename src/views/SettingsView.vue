@@ -12,9 +12,6 @@ import { useClickerStore } from '@/stores/clickerStore';
 import { formatIntAsCurrency } from '@/utils/currencyUtil';
 import { useTransactionStore } from '@/stores/transactionStore';
 import { useRouletteStore } from '@/stores/rouletteStore';
-import { useAuthStore } from '@/stores/authStore';
-import { cloudSaveService } from '@/services/cloudSaveService';
-import CloudSaveModal from '@/components/modals/CloudSaveModal.vue';
 
 // i18n
 const { t } = useI18n();
@@ -27,7 +24,6 @@ const blackjackStore = useBlackjackStore();
 const clickerStore = useClickerStore();
 const transactionsStore = useTransactionStore();
 const rouletteStore = useRouletteStore();
-const authStore = useAuthStore();
 
 // UI state
 const importError = ref('');
@@ -36,10 +32,8 @@ const fileInput = ref<HTMLInputElement | null>(null);
 const savePreview = ref<SavePreview | null>(null);
 const showImportConfirm = ref(false);
 const showDeleteConfirm = ref(false);
-const showCloudSaveModal = ref(false);
 const pendingImportData = ref<string | null>(null);
 const cloudSaveMessage = ref('');
-const isCloudSaving = ref(false);
 
 const exportSave = async () => {
   try {
@@ -101,11 +95,6 @@ const confirmImport = async () => {
     transactionsStore.$patch(saveData.transactions);
     rouletteStore.$patch(saveData.roulette);
 
-    // If cloud saves are enabled, update cloud
-    if (authStore.isAuthenticated) {
-      await cloudSaveService.saveToCloud();
-    }
-
     showSuccess(t('settings.localSave.import.importSuccess'));
   } catch (error) {
     console.error('Failed to import save:', error);
@@ -145,115 +134,11 @@ const confirmDelete = () => {
 const cancelDelete = () => {
   showDeleteConfirm.value = false;
 };
-
-// Cloud save functions
-const enableCloudSaves = () => {
-  showCloudSaveModal.value = true;
-};
-
-const onCloudSaveEnabled = () => {
-  showSuccess(t('settings.cloudSave.enabledSuccess'));
-};
-
-const saveToCloud = async () => {
-  isCloudSaving.value = true;
-  try {
-    const result = await cloudSaveService.saveToCloud();
-    if (result) {
-      showSuccess(t('settings.cloudSave.saveSuccess'));
-    } else {
-      importError.value = t('settings.cloudSave.saveFailed');
-    }
-  } catch (error) {
-    console.error('Failed to save to cloud:', error);
-    importError.value = error instanceof Error ? error.message : t('settings.cloudSave.saveFailed');
-  } finally {
-    isCloudSaving.value = false;
-  }
-};
-
-const loadFromCloud = async () => {
-  isCloudSaving.value = true;
-  try {
-    const result = await cloudSaveService.loadFromCloud();
-    if (result) {
-      showSuccess(t('settings.cloudSave.loadSuccess'));
-    } else {
-      importError.value = t('settings.cloudSave.loadFailed');
-    }
-  } catch (error) {
-    console.error('Failed to load from cloud:', error);
-    importError.value = error instanceof Error ? error.message : t('settings.cloudSave.loadFailed');
-  } finally {
-    isCloudSaving.value = false;
-  }
-};
-
-const logoutFromCloud = async () => {
-  try {
-    await authStore.logout();
-    cloudSaveService.stopAutoSave();
-    showSuccess(t('settings.cloudSave.logoutSuccess'));
-  } catch (error) {
-    console.error('Failed to logout:', error);
-    importError.value = error instanceof Error ? error.message : t('settings.cloudSave.logoutFailed');
-  }
-};
 </script>
 
 <template>
   <BaseLayout :title="t('settings.title')" icon="gear-fill" :show-balance="false">
     <UsernameSettings />
-
-    <!-- Cloud Save Management -->
-    <div class="card mb-4">
-      <div class="card-body">
-        <h5 class="card-title d-flex align-items-center mb-4">
-          <i class="bi bi-cloud-upload me-2"></i>
-          {{ t('settings.cloudSave.title') }}
-        </h5>
-
-        <div v-if="!authStore.isAuthenticated">
-          <p class="text-muted">
-            {{ t('settings.cloudSave.description') }}
-          </p>
-          <button @click="enableCloudSaves" class="btn btn-primary">
-            <i class="bi bi-cloud-plus me-2"></i>
-            {{ t('settings.cloudSave.enable') }}
-          </button>
-        </div>
-
-        <div v-else>
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
-              <p class="mb-0"><strong>{{ t('settings.cloudSave.loggedInAs') }}</strong> {{
-                authStore.currentUser?.username }}</p>
-              <p class="text-success mb-0">
-                <i class="bi bi-cloud-check me-1"></i>
-                {{ t('settings.cloudSave.enabled') }}
-              </p>
-            </div>
-            <button @click="logoutFromCloud" class="btn btn-outline-secondary">
-              <i class="bi bi-box-arrow-right me-2"></i>
-              {{ t('settings.cloudSave.logout') }}
-            </button>
-          </div>
-
-          <div class="d-flex gap-2 mt-4">
-            <button @click="saveToCloud" class="btn btn-primary" :disabled="isCloudSaving">
-              <span v-if="isCloudSaving" class="spinner-border spinner-border-sm me-2"></span>
-              <i v-else class="bi bi-cloud-upload me-2"></i>
-              {{ t('settings.cloudSave.saveToCloud') }}
-            </button>
-            <button @click="loadFromCloud" class="btn btn-outline-primary" :disabled="isCloudSaving">
-              <span v-if="isCloudSaving" class="spinner-border spinner-border-sm me-2"></span>
-              <i v-else class="bi bi-cloud-download me-2"></i>
-              {{ t('settings.cloudSave.loadFromCloud') }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- Local Save Management -->
     <div class="card">
@@ -417,12 +302,5 @@ const logoutFromCloud = async () => {
         </div>
       </div>
     </div>
-
-    <!-- Cloud Save Modal -->
-    <CloudSaveModal
-      :show="showCloudSaveModal"
-      @close="showCloudSaveModal = false"
-      @enabled="onCloudSaveEnabled"
-      @skipped="showCloudSaveModal = false" />
   </BaseLayout>
 </template>

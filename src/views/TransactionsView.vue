@@ -62,8 +62,7 @@ watch([selectedGame, selectedType], () => {
 <template>
   <BaseLayout
     title="Transaction History"
-    icon="clock-history"
-    :showBalance="true">
+    icon="clock-history">
 
     <!-- Stats Summary Card -->
     <div class="card mb-4">

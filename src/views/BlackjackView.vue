@@ -95,8 +95,7 @@ function canAdjustBet(multiplierStr: string) {
 <template>
   <BaseLayout
     :title="t('blackjack.title')"
-    icon="suit-spade-fill"
-    :showBalance="true">
+    icon="suit-spade-fill">
     <!-- Header Actions Slot -->
     <template #header-actions>
       <button

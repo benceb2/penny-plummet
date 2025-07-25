@@ -75,8 +75,7 @@ watch([selectedCategory, hideCompleted], () => {
 <template>
   <BaseLayout
     title="Profile"
-    icon="person-circle"
-    :showBalance="false">
+    icon="person-circle">
 
     <!-- Level Progress Section -->
     <div class="card mb-4">

@@ -29,8 +29,7 @@ const nearestAchievements = computed(() => {
 <template>
   <BaseLayout
     :title="welcomeTitle"
-    :fontawesome-icon="'fa fa-home'"
-    :showBalance="false">
+    :fontawesome-icon="'fa fa-home'">
 
     <!-- Quick Stats Overview -->
     <div class="card mb-4">

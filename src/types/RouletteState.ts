@@ -1,5 +1,5 @@
 export enum RouletteState {
-  betting = 'betting',
-  spinning = 'spinning',
-  gameOver = 'gameOver'
+  BETTING = 'betting',
+  SPINNING = 'spinning',
+  GAME_OVER = 'gameOver'
 }

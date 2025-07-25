@@ -1,7 +1,8 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { SaveManager } from '@/utils/saveManager';
+import { describe, it, expect, beforeEach } from 'vitest'
+
+import { SIGNATURE } from '../gameSaveSerializerUtil';
+import gameSaveUtil from '../gameSaveUtil';
 import type { GameSaveData } from '@/types/GameSaveData';
-import { SIGNATURE } from '../gameSaveSerializer';
 import type { AchievementStore } from '@/stores/achievementStore';
 import type { UserStore } from '@/stores/userStore';
 import type { BlackjackStore } from '@/stores/blackjackStore';
@@ -9,12 +10,10 @@ import type { ClickerStore } from '@/stores/clickerStore';
 import type { TransactionStore } from '@/stores/transactionStore';
 import type { RouletteStore } from '@/stores/rouletteStore';
 
-describe('SaveManager', () => {
-  let saveManager: SaveManager;
+describe('gameSaveUtil', () => {
   let mockSaveData: GameSaveData;
 
   beforeEach(() => {
-    saveManager = new SaveManager();
     mockSaveData = {
       user: {
         username: 'testUser',
@@ -34,7 +33,7 @@ describe('SaveManager', () => {
   });
 
   it('should export save data successfully', async () => {
-    const result = await saveManager.exportSave(mockSaveData);
+    const result = await gameSaveUtil.exportSave(mockSaveData);
     expect(result).toBeTruthy();
     expect(result.endsWith(SIGNATURE)).toBe(true);
   });
@@ -43,13 +42,13 @@ describe('SaveManager', () => {
     const validSave = `some-data${SIGNATURE}`;
     const invalidSave = 'some-data';
 
-    expect(saveManager.validateSaveFile(validSave)).toBe(true);
-    expect(saveManager.validateSaveFile(invalidSave)).toBe(false);
+    expect(gameSaveUtil.validateSaveFile(validSave)).toBe(true);
+    expect(gameSaveUtil.validateSaveFile(invalidSave)).toBe(false);
   });
 
   it('should import valid save data', async () => {
-    const exported = await saveManager.exportSave(mockSaveData);
-    const imported = await saveManager.importSave(exported);
+    const exported = await gameSaveUtil.exportSave(mockSaveData);
+    const imported = await gameSaveUtil.importSave(exported);
 
     expect(imported).toEqual(mockSaveData);
   });
@@ -57,11 +56,11 @@ describe('SaveManager', () => {
   it('should reject invalid save data', async () => {
     const invalidSave = `{"invalid":"data"}${SIGNATURE}`;
 
-    await expect(saveManager.importSave(invalidSave)).rejects.toThrow();
+    await expect(gameSaveUtil.importSave(invalidSave)).rejects.toThrow();
   });
 
   it('should extract correct save preview', () => {
-    const preview = saveManager.extractSavePreview(mockSaveData);
+    const preview = gameSaveUtil.extractSavePreview(mockSaveData);
 
     expect(preview).toEqual({
       username: 'testUser',

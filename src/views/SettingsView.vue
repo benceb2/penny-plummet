@@ -33,7 +33,6 @@ const savePreview = ref<SavePreview | null>(null);
 const showImportConfirm = ref(false);
 const showDeleteConfirm = ref(false);
 const pendingImportData = ref<string | null>(null);
-const cloudSaveMessage = ref('');
 
 const exportSave = async () => {
   try {
@@ -95,7 +94,7 @@ const confirmImport = async () => {
     transactionsStore.$patch(saveData.transactions);
     rouletteStore.$patch(saveData.roulette);
 
-    showSuccess(t('settings.localSave.import.importSuccess'));
+    showSuccess();
   } catch (error) {
     console.error('Failed to import save:', error);
     importError.value = error instanceof Error ? error.message : t('settings.localSave.import.importFailed');
@@ -105,9 +104,8 @@ const confirmImport = async () => {
   }
 };
 
-const showSuccess = (message: string = t('settings.messages.operationSuccess')) => {
+const showSuccess = () => {
   importSuccess.value = true;
-  cloudSaveMessage.value = message;
   importError.value = '';
   setTimeout(() => {
     importSuccess.value = false;
@@ -298,7 +296,7 @@ const cancelDelete = () => {
 
         <div v-if="importSuccess" class="alert alert-success mt-4" role="alert">
           <i class="bi bi-check-circle-fill me-2"></i>
-          {{ cloudSaveMessage || t('settings.messages.operationSuccess') }}
+          {{ t('settings.messages.operationSuccess') }}
         </div>
       </div>
     </div>

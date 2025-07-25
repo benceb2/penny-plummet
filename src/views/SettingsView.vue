@@ -134,7 +134,7 @@ const cancelDelete = () => {
 </script>
 
 <template>
-  <BaseLayout :title="t('settings.title')" icon="gear-fill" :show-balance="false">
+  <BaseLayout :title="t('settings.title')" bootstrapIcon="gear-fill" :show-balance="false">
     <UsernameSettings />
 
     <!-- Local Save Management -->

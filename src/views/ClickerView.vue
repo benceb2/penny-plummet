@@ -12,7 +12,7 @@ const clickerStore = useClickerStore()
 <template>
   <BaseLayout
     :title="t('clicker.title')"
-    icon="coin"
+    bootstrapIcon="coin"
     :showBalance="true">
     <div class="row g-4">
       <!-- Main Clicker Area -->

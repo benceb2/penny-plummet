@@ -50,7 +50,7 @@ const technologies = computed(() => [
 <template>
   <BaseLayout
     :title="t('about.title')"
-    icon="info-circle-fill"
+    bootstrapIcon="info-circle-fill"
     :show-balance="false">
     <div class="card mb-4">
       <div class="card-body">

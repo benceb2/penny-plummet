@@ -84,7 +84,7 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
 <template>
   <BaseLayout
     :title="t('roulette.title')"
-    icon="dice-5">
+    bootstrapIcon="dice-5">
 
     <!-- Result Alert -->
     <GameResult
@@ -233,7 +233,7 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
                                       <td colspan="2" class="text-end"><strong>{{
                                         t('roulette.gameControls.betting.table.total') }}</strong></td>
                                       <td class="text-end"><strong>{{ formatIntAsCurrency(gameStore.totalBet)
-                                      }}</strong>
+                                          }}</strong>
                                       </td>
                                     </tr>
                                   </tfoot>

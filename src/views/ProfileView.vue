@@ -75,7 +75,7 @@ watch([selectedCategory, hideCompleted], () => {
 <template>
   <BaseLayout
     title="Profile"
-    icon="person-circle">
+    bootstrapIcon="person-circle">
 
     <!-- Level Progress Section -->
     <div class="card mb-4">

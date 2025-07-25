@@ -2,7 +2,7 @@
 
 defineProps<{
   title: string
-  icon?: string
+  bootstrapIcon?: string
   fontawesomeIcon?: string
 }>()
 </script>
@@ -13,10 +13,8 @@ defineProps<{
       <div class="col-12">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
           <h2 class="text-dark mb-0">
-            <!-- Bootstrap Icons -->
-            <i v-if="icon && !fontawesomeIcon" :class="`bi bi-${icon} me-2`"></i>
-            <!-- Font Awesome Icons -->
-            <i v-if="fontawesomeIcon" :class="`fa ${fontawesomeIcon} me-2`"></i>
+            <i v-if="bootstrapIcon && !fontawesomeIcon" :class="`bi bi-${bootstrapIcon} me-2`"></i>
+            <i v-else-if="fontawesomeIcon" :class="`fa ${fontawesomeIcon} me-2`"></i>
             {{ title }}
           </h2>
         </div>

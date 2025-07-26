@@ -44,8 +44,12 @@ watch(localValue, (newValue) => {
   emit('update:modelValue', clampedValue)
 })
 
+// Check if component should be disabled due to insufficient funds
+const isDisabled = computed(() => props.maxAmount <= 0)
+
 // Computed quick bet amounts from percentages
 const percentageBasedBets = computed(() => {
+  if (props.maxAmount <= 0) return []
   return props.quickBetPercentages.map(percentage => {
     const amount = Math.floor(props.maxAmount * percentage)
     return Math.max(props.minAmount, amount)
@@ -54,6 +58,7 @@ const percentageBasedBets = computed(() => {
 
 // Combined quick bet options (percentages + fixed amounts)
 const quickBetOptions = computed(() => {
+  if (props.maxAmount <= 0) return []
   const combined = [...percentageBasedBets.value, ...props.quickBetAmounts]
   // Remove duplicates and sort, filter out amounts that exceed max
   return [...new Set(combined)]
@@ -63,6 +68,7 @@ const quickBetOptions = computed(() => {
 
 // Get percentage for display
 function getPercentage(amount: number): string | null {
+  if (props.maxAmount <= 0) return null
   const percentage = (amount / props.maxAmount) * 100
   if (percentage < 1) return null
   return `${Math.round(percentage)}%`
@@ -95,6 +101,15 @@ const buttonSizeClass = computed(() => {
 
 <template>
   <div class="bet-amount-selector">
+    <!-- Insufficient Funds Alert -->
+    <div v-if="isDisabled" class="alert alert-danger d-flex align-items-center mb-3">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      <div>
+        <strong>Insufficient Funds</strong><br>
+        <small>You need chips to place bets!</small>
+      </div>
+    </div>
+
     <!-- Custom Bet Input -->
     <div class="mb-3">
       <div class="form-floating">
@@ -105,6 +120,7 @@ const buttonSizeClass = computed(() => {
           v-model="localValue"
           :max="maxAmount"
           :min="minAmount"
+          :disabled="isDisabled"
           :placeholder="minAmount.toString()">
         <label for="betAmount" class="d-flex align-items-center">
           <i class="bi bi-cash me-2"></i>{{ label }}
@@ -113,33 +129,40 @@ const buttonSizeClass = computed(() => {
     </div>
 
     <!-- Quick Bet Options -->
-    <div class="mb-3">
+    <div v-if="!isDisabled" class="mb-3">
       <div class="d-flex align-items-center gap-2 mb-2">
         <h6 class="mb-0 text-muted">
           <i class="bi bi-lightning-fill me-1"></i>Quick Bet
         </h6>
       </div>
-      <div class="d-grid gap-2" style="grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));">
-        <button
+      <div class="row g-2">
+        <div
           v-for="amount in quickBetOptions"
           :key="amount"
-          :class="['btn btn-outline-primary text-start', buttonSizeClass, { 'active': localValue === amount }]"
-          :disabled="amount > maxAmount"
-          @click="setPresetBet(amount)">
-          <div class="d-flex justify-content-between align-items-center">
-            <span>{{ formatIntAsCurrency(amount) }}</span>
-            <small v-if="getPercentage(amount)" class="text-muted">
-              {{ getPercentage(amount) }}
-            </small>
-          </div>
-        </button>
+          class="col-6 col-lg-3">
+          <button
+            :class="[
+              'btn btn-outline-primary w-100 text-start',
+              buttonSizeClass,
+              { 'active': localValue === amount }
+            ]"
+            :disabled="amount > maxAmount"
+            @click="setPresetBet(amount)">
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fw-semibold">{{ formatIntAsCurrency(amount) }}</span>
+              <small v-if="getPercentage(amount)" class="text-muted">
+                {{ getPercentage(amount) }}
+              </small>
+            </div>
+          </button>
+        </div>
       </div>
     </div>
 
     <!-- Current Selection Display -->
-    <div class="alert alert-info d-flex justify-content-between align-items-center mb-0">
+    <div v-if="!isDisabled" class="alert alert-info d-flex justify-content-between align-items-center mb-0">
       <span>
-        <i class="bi bi-info-circle me-2"></i>
+        <i class="bi bi-info-circle-fill me-2"></i>
         <strong>Selected:</strong> {{ formatIntAsCurrency(localValue) }}
       </span>
       <small v-if="getPercentage(localValue)" class="text-muted">
@@ -150,19 +173,10 @@ const buttonSizeClass = computed(() => {
 </template>
 
 <style scoped>
+/* Minimal custom CSS - mostly using Bootstrap classes */
 .bet-amount-selector .btn.active {
   background-color: var(--bs-primary);
   border-color: var(--bs-primary);
   color: white;
-}
-
-.bet-amount-selector .btn:disabled {
-  opacity: 0.4;
-}
-
-@media (max-width: 576px) {
-  .bet-amount-selector .d-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 </style>

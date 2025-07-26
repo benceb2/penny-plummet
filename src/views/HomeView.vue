@@ -5,7 +5,7 @@ import BaseLayout from '@/components/layout/BaseLayout.vue';
 import AchievementCard from '@/components/AchievementCard.vue';
 import { useUserStore } from '@/stores/userStore';
 import { useAchievementStore } from '@/stores/achievementStore';
-import { formatIntAsCurrency } from '@/utils/currencyUtil';
+import { formatIntAsCurrency, formatXP } from '@/utils/numberFormatUtil';
 
 const { t } = useI18n();
 const userStore = useUserStore();
@@ -138,13 +138,12 @@ const nearestAchievements = computed(() => {
             :aria-valuenow="achievementStore.levelProgress"
             aria-valuemin="0"
             aria-valuemax="100">
-            {{ Math.floor(achievementStore.levelProgress) }}%
           </div>
         </div>
         <small class="text-muted">
           {{ t('home.levelProgress.xpProgress', {
-            current: achievementStore.currentLevel.currentXP,
-            required: achievementStore.currentLevel.requiredXP
+            current: formatXP(achievementStore.currentLevel.currentXP),
+            required: formatXP(achievementStore.currentLevel.requiredXP)
           }) }}
         </small>
       </div>

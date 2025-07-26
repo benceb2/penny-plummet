@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 
 import { type BlackjackResult } from '@/types/BlackjackResult';
 import { calculateStorageKey, createGameSerializer } from '@/utils/gameSaveSerializerUtil';
-import { formatIntAsCurrency } from '@/utils/currencyUtil';
+import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
 import { useAchievementStore } from './achievementStore';
 import { useTransactionStore } from './transactionStore';
 

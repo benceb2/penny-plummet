@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { formatIntAsCurrency } from '@/utils/currencyUtil';
+import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
 import { useAchievementStore } from '@/stores/achievementStore';
 
 const achievementStore = useAchievementStore();

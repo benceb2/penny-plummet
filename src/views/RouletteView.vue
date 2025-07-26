@@ -3,11 +3,12 @@ import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouletteStore, RouletteState, type RouletteResult, type BetType } from '@/stores/rouletteStore'
 import { useUserStore } from '@/stores/userStore'
-import { formatIntAsCurrency } from '@/utils/currencyUtil'
+import { formatIntAsCurrency } from '@/utils/numberFormatUtil'
 import RouletteSpinner from '@/components/RouletteSpinner.vue'
 import RouletteTable from '@/components/RouletteTable.vue'
 import BaseLayout from '@/components/layout/BaseLayout.vue'
 import GameResult from '@/components/GameResult.vue'
+import BetAmountSelector from '@/components/BetAmountSelector.vue'
 
 // i18n
 const { t } = useI18n()
@@ -16,9 +17,6 @@ const gameStore = useRouletteStore()
 const userStore = useUserStore()
 const showStats = ref(false)
 const currentBetAmount = ref(100)
-
-// Quick bet amount presets
-const quickBetAmounts = [100, 500, 1000, 5000]
 
 // Game message formatting
 function getGameResultMessage(result: RouletteResult): string {
@@ -70,8 +68,8 @@ function handleNewGame() {
   gameStore.reset()
 }
 
-// Watch for changes in user's chips
-const maxBetAmount = computed(() => Math.min(userStore.chips, 10000))
+// Maximum bet amount (50% of chips or remove limit entirely)
+const maxBetAmount = computed(() => userStore.chips)
 
 // Watch for changes in bet amount and validate
 watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
@@ -174,7 +172,7 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
       :winning-number="gameStore.winningNumber"
       @spin-complete="gameStore.completeGame" />
 
-    <!-- Roulette Wheel and Table -->
+    <!-- Roulette Table with Betting Controls -->
     <div class="row mb-4">
       <div class="col-12">
         <div class="card shadow-sm">
@@ -184,117 +182,93 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
             </h5>
           </div>
           <div class="card-body">
-            <!-- Roulette Layout -->
-            <div class="table-responsive">
-              <RouletteTable :current-bets="gameStore.currentBets" :current-bet-amount="currentBetAmount"
-                :on-place-bet="placeBet" :format-currency="formatIntAsCurrency" />
-            </div>
-
-            <!-- Game Controls -->
-            <div class="row">
-              <div class="col-12">
-                <div class="card shadow-sm">
-                  <div class="card-header bg-light py-3">
-                    <h5 class="mb-0">
-                      <i class="bi bi-joystick me-2"></i>{{ t('roulette.gameControls.title') }}
-                    </h5>
-                  </div>
+            <!-- Betting Controls - Now at the top -->
+            <div class="row mb-4">
+              <div class="col-lg-6">
+                <div class="card bg-light">
                   <div class="card-body">
-                    <div class="row g-4">
-                      <!-- Betting Controls -->
-                      <div class="col-md-6">
-                        <div class="h-100">
-                          <div class="bg-light p-4 rounded h-100">
-                            <h6 class="d-flex align-items-center mb-4">
-                              <i class="bi bi-cash me-2"></i>{{ t('roulette.gameControls.betting.title') }}
-                            </h6>
+                    <h6 class="d-flex align-items-center mb-3">
+                      <i class="bi bi-cash me-2"></i>{{ t('roulette.gameControls.betting.title') }}
+                    </h6>
 
-                            <!-- Current Bets Display -->
-                            <div class="mb-4">
-                              <h6 class="text-muted mb-2">{{ t('roulette.gameControls.betting.currentBets') }}</h6>
-                              <div class="table-responsive">
-                                <table class="table table-sm">
-                                  <thead>
-                                    <tr>
-                                      <th>{{ t('roulette.gameControls.betting.table.type') }}</th>
-                                      <th>{{ t('roulette.gameControls.betting.table.numbers') }}</th>
-                                      <th class="text-end">{{ t('roulette.gameControls.betting.table.amount') }}</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr v-for="(bet, index) in gameStore.currentBets" :key="index">
-                                      <td>{{ bet.type }}</td>
-                                      <td>{{ bet.numbers.join(', ') }}</td>
-                                      <td class="text-end">{{ formatIntAsCurrency(bet.amount) }}</td>
-                                    </tr>
-                                  </tbody>
-                                  <tfoot>
-                                    <tr>
-                                      <td colspan="2" class="text-end"><strong>{{
-                                        t('roulette.gameControls.betting.table.total') }}</strong></td>
-                                      <td class="text-end"><strong>{{ formatIntAsCurrency(gameStore.totalBet)
-                                          }}</strong>
-                                      </td>
-                                    </tr>
-                                  </tfoot>
-                                </table>
-                              </div>
-                            </div>
+                    <BetAmountSelector v-model="currentBetAmount" :max-amount="maxBetAmount" :min-amount="1"
+                      size="sm" />
+                  </div>
+                </div>
+              </div>
 
-                            <!-- Bet Amount Controls -->
-                            <div class="mb-4">
-                              <h6 class="text-muted mb-2">{{ t('roulette.gameControls.betting.betAmount') }}</h6>
-                              <div class="input-group mb-3">
-                                <input type="number" class="form-control" v-model="currentBetAmount"
-                                  :max="userStore.chips"
-                                  min="1">
-                                <button v-for="amount in quickBetAmounts" :key="amount"
-                                  class="btn btn-outline-secondary"
-                                  @click="currentBetAmount = amount">
-                                  {{ formatIntAsCurrency(amount) }}
-                                </button>
-                              </div>
-                            </div>
+              <div class="col-lg-6">
+                <div class="card bg-light">
+                  <div class="card-body">
+                    <h6 class="d-flex align-items-center mb-3">
+                      <i class="bi bi-list me-2"></i>{{ t('roulette.gameControls.betting.currentBets') }}
+                    </h6>
 
-                            <!-- Clear Bets Button -->
-                            <button class="btn btn-danger w-100" @click="gameStore.clearBets()"
-                              :disabled="gameStore.currentBets.length === 0">
-                              <i class="bi bi-trash me-2"></i>{{ t('roulette.gameControls.betting.clearAllBets') }}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
+                    <!-- Current Bets Display -->
+                    <div v-if="gameStore.currentBets.length > 0" class="table-responsive">
+                      <table class="table table-sm mb-0">
+                        <tbody>
+                          <tr v-for="(bet, index) in gameStore.currentBets" :key="index" class="small">
+                            <td>{{ bet.type }}</td>
+                            <td>{{ bet.numbers.join(', ') }}</td>
+                            <td class="text-end">{{ formatIntAsCurrency(bet.amount) }}</td>
+                          </tr>
+                        </tbody>
+                        <tfoot>
+                          <tr class="border-top">
+                            <td colspan="2" class="text-end"><strong>Total:</strong></td>
+                            <td class="text-end"><strong>{{ formatIntAsCurrency(gameStore.totalBet) }}</strong></td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                    <div v-else class="text-muted text-center py-3">
+                      <i class="bi bi-info-circle me-2"></i>No bets placed yet
+                    </div>
 
-                      <!-- Action Controls -->
-                      <div class="col-md-6">
-                        <div class="h-100">
-                          <div class="bg-light p-4 rounded h-100">
-                            <h6 class="d-flex align-items-center mb-4">
-                              <i class="bi bi-gear-fill me-2"></i>{{ t('roulette.gameControls.actions.title') }}
-                            </h6>
-
-                            <div class="d-grid gap-3">
-                              <!-- Spin Button -->
-                              <button class="btn btn-primary btn-lg" @click="handleSpin"
-                                :disabled="!gameStore.isSpinAllowed">
-                                <i class="bi bi-play-circle-fill me-2"></i>{{ t('roulette.gameControls.actions.spin') }}
-                              </button>
-
-                              <!-- New Game Button -->
-                              <button v-if="gameStore.gameState === RouletteState.COMPLETE"
-                                class="btn btn-secondary btn-lg"
-                                @click="handleNewGame">
-                                <i class="bi bi-arrow-clockwise me-2"></i>{{ t('roulette.gameControls.actions.newGame')
-                                }}
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                    <!-- Clear Bets Button -->
+                    <div class="mt-3">
+                      <button class="btn btn-danger btn-sm w-100" @click="gameStore.clearBets()"
+                        :disabled="gameStore.currentBets.length === 0">
+                        <i class="bi bi-trash me-2"></i>{{ t('roulette.gameControls.betting.clearAllBets') }}
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+
+            <!-- Roulette Table -->
+            <div class="table-responsive">
+              <RouletteTable :current-bets="gameStore.currentBets" :current-bet-amount="currentBetAmount"
+                :on-place-bet="placeBet" :format-currency="formatIntAsCurrency" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game Action Controls -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card shadow-sm">
+          <div class="card-header bg-light py-3">
+            <h5 class="mb-0">
+              <i class="bi bi-gear-fill me-2"></i>{{ t('roulette.gameControls.actions.title') }}
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="d-flex gap-3 justify-content-center">
+              <!-- Spin Button -->
+              <button class="btn btn-primary btn-lg" @click="handleSpin" :disabled="!gameStore.isSpinAllowed">
+                <i class="bi bi-play-circle-fill me-2"></i>{{ t('roulette.gameControls.actions.spin') }}
+              </button>
+
+              <!-- New Game Button -->
+              <button v-if="gameStore.gameState === RouletteState.COMPLETE" class="btn btn-secondary btn-lg"
+                @click="handleNewGame">
+                <i class="bi bi-arrow-clockwise me-2"></i>{{ t('roulette.gameControls.actions.newGame') }}
+              </button>
             </div>
           </div>
         </div>

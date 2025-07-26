@@ -8,7 +8,7 @@ import { useUserStore } from '@/stores/userStore';
 import { useAchievementStore } from '@/stores/achievementStore';
 import { useBlackjackStore } from '@/stores/blackjackStore';
 import { useClickerStore } from '@/stores/clickerStore';
-import { formatIntAsCurrency } from '@/utils/currencyUtil';
+import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
 import { useTransactionStore } from '@/stores/transactionStore';
 import { useRouletteStore } from '@/stores/rouletteStore';
 import gameSaveUtil from '@/utils/gameSaveUtil';

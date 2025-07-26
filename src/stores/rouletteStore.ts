@@ -13,7 +13,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { calculateStorageKey, createGameSerializer } from '../utils/gameSaveSerializerUtil'
 import { useAchievementStore } from './achievementStore'
-import { formatIntAsCurrency } from '@/utils/currencyUtil'
+import { formatIntAsCurrency } from '@/utils/numberFormatUtil'
 import { useTransactionStore } from './transactionStore'
 import { useUserStore } from './userStore'
 

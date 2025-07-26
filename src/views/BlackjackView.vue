@@ -7,7 +7,8 @@ import { useUserStore } from '@/stores/userStore'
 import PlayingCard from '@/components/PlayingCard.vue'
 import { BlackjackState } from '@/types/BlackjackGameState'
 import BaseLayout from '@/components/layout/BaseLayout.vue'
-import { formatIntAsCurrency } from '@/utils/currencyUtil'
+import BetAmountSelector from '@/components/BetAmountSelector.vue'
+import { formatIntAsCurrency } from '@/utils/numberFormatUtil'
 
 const { t } = useI18n()
 
@@ -15,17 +16,6 @@ const gameStore = useBlackjackStore()
 const userStore = useUserStore()
 const betAmount = ref(0)
 const showStats = ref(false)
-
-const PERCENTAGE_BETS = [0.05, 0.10, 0.25, 0.50] // 5%, 10%, 25%, 50% of current chips
-
-const quickBetAmounts = computed(() => {
-  return PERCENTAGE_BETS.map(percentage => {
-    // Calculate the bet amount based on percentage of current chips
-    const amount = Math.floor(userStore.chips * percentage)
-    // Ensure minimum bet of 1 chip
-    return Math.max(1, amount)
-  })
-})
 
 const gameStatus = computed(() => {
   if (gameStore.gameState === BlackjackState.GAME_OVER) {
@@ -65,31 +55,8 @@ function handleNewGame() {
   betAmount.value = 0
 }
 
-function setPresetBet(amount: number) {
-  if (amount <= userStore.chips) {
-    betAmount.value = amount
-  }
-}
-
-function adjustBet(multiplierStr: string) {
-  betAmount.value = Math.floor(betAmount.value * getMultiplier(multiplierStr))
-}
-
-function getMultiplier(multiplierStr: string) {
-  switch (multiplierStr) {
-    case '1/4x': return 0.25
-    case '1/2x': return 0.5
-    case '2x': return 2
-    case '4x': return 4
-    default: return 1
-  }
-}
-
-function canAdjustBet(multiplierStr: string) {
-  if (betAmount.value <= 0) return false
-  return betAmount.value * getMultiplier(multiplierStr) <= userStore.chips
-}
-
+// Maximum bet amount
+const maxBetAmount = computed(() => userStore.chips)
 </script>
 
 <template>
@@ -242,30 +209,7 @@ function canAdjustBet(multiplierStr: string) {
                       <i class="bi bi-lightning-fill me-2"></i>{{ t('blackjack.controls.placeBet') }}
                     </h6>
 
-                    <!-- Custom Bet Input -->
-                    <div class="mb-4">
-                      <div class="form-floating">
-                        <input type="number" class="form-control form-control-lg" id="betAmount" v-model="betAmount"
-                          :max="userStore.chips" min="1">
-                        <label for="betAmount" class="d-flex align-items-center">
-                          <i class="bi bi-cash me-2"></i>{{ t('blackjack.controls.betAmount') }}
-                        </label>
-                      </div>
-                    </div>
-
-                    <!-- Adjust Bet Controls -->
-                    <div>
-                      <div class="d-flex align-items-center gap-2 mb-2">
-                        <h6 class="mb-0">{{ t('blackjack.controls.adjustBet') }}</h6>
-                      </div>
-                      <div class="btn-group w-100">
-                        <button v-for="multiplier in ['1/4x', '1/2x', '2x', '4x']" :key="multiplier"
-                          class="btn btn-outline-secondary" @click="adjustBet(multiplier)"
-                          :disabled="!canAdjustBet(multiplier)">
-                          {{ multiplier }}
-                        </button>
-                      </div>
-                    </div>
+                    <BetAmountSelector v-model="betAmount" :max-amount="maxBetAmount" :min-amount="1" />
                   </div>
                 </div>
               </div>
@@ -281,23 +225,6 @@ function canAdjustBet(multiplierStr: string) {
 
                     <!-- Betting State -->
                     <div v-if="gameStore.gameState === BlackjackState.BETTING">
-                      <!-- Quick Bet -->
-                      <div class="mb-4">
-                        <div class="d-flex align-items-center gap-2 mb-2">
-                          <h6 class="mb-0">{{ t('blackjack.controls.quickBet') }}</h6>
-                        </div>
-                        <div class="d-grid gap-2">
-                          <button v-for="amount in quickBetAmounts" :key="amount"
-                            class="btn btn-outline-primary text-start p-3" :class="{ 'active': betAmount === amount }"
-                            :disabled="amount > userStore.chips" @click="setPresetBet(amount)">
-                            <div class="d-flex justify-content-between align-items-center">
-                              <span>{{ formatIntAsCurrency(amount) }}</span>
-                              <small class="text-muted">{{ Math.round((amount / userStore.chips) * 100) }}%</small>
-                            </div>
-                          </button>
-                        </div>
-                      </div>
-
                       <button class="btn btn-primary btn-lg w-100 mt-3" @click="handleDeal"
                         :disabled="betAmount <= 0 || betAmount > userStore.chips">
                         <i class="bi bi-play-circle-fill me-2"></i>{{ t('blackjack.controls.dealCards') }}
@@ -331,6 +258,7 @@ function canAdjustBet(multiplierStr: string) {
     </div>
   </BaseLayout>
 </template>
+
 <style scoped>
 .hand-display {
   display: flex;

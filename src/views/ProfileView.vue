@@ -3,7 +3,7 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 import { usePagination } from '@/composables/usePagination';
 import { useAchievementStore } from '@/stores/achievementStore';
-import { formatIntAsCurrency } from '@/utils/currencyUtil';
+import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
 import BaseLayout from '@/components/layout/BaseLayout.vue';
 import BasePagination from '@/components/layout/BasePagination.vue';
 import AchievementCard from '@/components/AchievementCard.vue';

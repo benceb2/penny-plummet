@@ -87,7 +87,7 @@ const comboColor = computed(() => {
       </div>
 
       <!-- Main Game Area -->
-      <div class="row g-3">
+      <div class="row">
         <!-- Left Side - Click Area -->
         <div class="col-lg-8">
           <div class="card border-0 shadow-sm h-100 rounded-4 bg-gradient-light">
@@ -147,12 +147,11 @@ const comboColor = computed(() => {
               </div>
 
               <!-- Action Buttons -->
-              <div class="d-flex gap-3 justify-content-center flex-wrap">
+              <div class="d-flex gap-5 w-75 mx-auto">
                 <button
-                  class="btn btn-success btn-lg rounded-3 shadow-sm action-btn d-flex align-items-center"
+                  class="btn btn-success btn-lg flex-fill"
                   @click="clickerStore.collectChips(userStore)"
-                  :disabled="clickerStore.clicks < 10"
-                  style="min-width: 140px;">
+                  :disabled="clickerStore.clicks < 10">
                   <i class="bi bi-check-circle me-2"></i>
                   <div>
                     <div>Collect Chips</div>
@@ -162,9 +161,8 @@ const comboColor = computed(() => {
 
                 <button
                   v-if="clickerStore.canPrestige"
-                  class="btn btn-warning btn-lg rounded-3 shadow-sm action-btn d-flex align-items-center"
-                  @click="clickerStore.prestige()"
-                  style="min-width: 140px;">
+                  class="btn btn-warning btn-lg flex-fill"
+                  @click="clickerStore.prestige()">
                   <i class="bi bi-star-fill me-2"></i>
                   <div>
                     <div>Prestige</div>
@@ -350,7 +348,6 @@ const comboColor = computed(() => {
 }
 
 /* Hover effects for interactive elements */
-.action-btn:hover,
 .upgrade-item:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
@@ -360,7 +357,6 @@ const comboColor = computed(() => {
   transform: translateY(-1px);
 }
 
-.action-btn,
 .upgrade-item,
 .upgrade-btn {
   transition: all 0.3s ease;
@@ -446,11 +442,6 @@ const comboColor = computed(() => {
 
   .click-icon {
     font-size: 2.5rem;
-  }
-
-  .action-btn {
-    min-width: 120px !important;
-    font-size: 0.9rem;
   }
 }
 </style>

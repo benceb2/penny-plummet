@@ -33,7 +33,7 @@ const comboColor = computed(() => {
       <!-- Stats Header - Compact and Modern -->
       <div class="row g-2 mb-3">
         <div class="col-md-4">
-          <div class="stat-card card border-0 shadow-sm h-100">
+          <div class="card border-0 shadow-sm h-100">
             <div class="card-body text-center py-2">
               <div class="d-flex align-items-center justify-content-center">
                 <i class="bi bi-piggy-bank text-primary me-2 fs-5"></i>
@@ -46,7 +46,7 @@ const comboColor = computed(() => {
           </div>
         </div>
         <div class="col-md-4">
-          <div class="stat-card card border-0 shadow-sm h-100">
+          <div class="card border-0 shadow-sm h-100">
             <div class="card-body text-center py-2">
               <div class="d-flex align-items-center justify-content-center">
                 <i class="bi bi-infinity text-info me-2 fs-5"></i>
@@ -59,7 +59,7 @@ const comboColor = computed(() => {
           </div>
         </div>
         <div class="col-md-4" v-if="clickerStore.prestigeLevel > 0">
-          <div class="stat-card card border-0 shadow-sm h-100">
+          <div class="card border-0 shadow-sm h-100">
             <div class="card-body text-center py-2">
               <div class="d-flex align-items-center justify-content-center">
                 <i class="bi bi-star-fill text-warning me-2 fs-5"></i>
@@ -77,13 +77,13 @@ const comboColor = computed(() => {
       <div class="row g-3">
         <!-- Left Side - Click Area -->
         <div class="col-lg-8">
-          <div class="game-area card border-0 shadow-sm">
-            <div class="card-body d-flex flex-column justify-content-center align-items-center p-5">
+          <div class="game-area card border-0 shadow-sm h-100">
+            <div class="card-body d-flex flex-column justify-content-center align-items-center p-3">
 
               <!-- Combo Display -->
               <div class="combo-section mb-5" style="min-height: 40px;">
                 <div v-if="clickerStore.comboCount > 1" class="combo-badge">
-                  <span :class="`badge ${comboColor} fs-6 pulse px-3 py-2`">
+                  <span :class="`badge ${comboColor} fs-6 pulse px-3 py-1`">
                     <i class="bi bi-lightning-fill me-1"></i>
                     {{ clickerStore.comboCount }}x COMBO!
                     <span class="ms-1 opacity-75">
@@ -282,18 +282,6 @@ const comboColor = computed(() => {
 </template>
 
 <style scoped>
-/* Modern card styling */
-.stat-card {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  transition: all 0.3s ease;
-  border-radius: 12px !important;
-}
-
-.stat-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
-}
-
 /* Game area styling */
 .game-area {
   background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);

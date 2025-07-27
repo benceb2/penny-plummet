@@ -39,7 +39,7 @@ const comboColor = computed(() => {
                 <i class="bi bi-piggy-bank text-primary me-4 fs-5"></i>
                 <div>
                   <div class="h5 mb-0 text-primary">{{ clickerStore.formattedClicks }}</div>
-                  <small class="text-muted">Current Earnings</small>
+                  <small class="text-muted">Available To Collect</small>
                 </div>
               </div>
             </div>
@@ -135,7 +135,6 @@ const comboColor = computed(() => {
                   v-for="animation in clickerStore.clickAnimations"
                   :key="animation.id"
                   class="floating-number position-absolute fw-bold text-success"
-                  :class="{ 'critical text-danger': animation.isCritical }"
                   :style="{
                     left: `${animation.x}px`,
                     top: `${animation.y}px`,

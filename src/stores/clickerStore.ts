@@ -99,8 +99,8 @@ export const useClickerStore = defineStore('clicker', () => {
   }));
 
   const formattedIncome = computed(() => {
-    const passivePerSecond = autoClickersCount.value * clickValue.value * (1000 / autoClickerSpeed.value)
-    return formatNumber(passivePerSecond)
+    const passivePerSecond = Math.floor(autoClickersCount.value * clickValue.value * (1000 / autoClickerSpeed.value))
+    return formatIntAsCurrency(passivePerSecond)
   })
 
   // Enhanced Actions

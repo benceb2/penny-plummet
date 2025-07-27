@@ -93,10 +93,10 @@ export const useClickerStore = defineStore('clicker', () => {
   const formattedCriticalCost = computed(() => formatIntAsCurrency(criticalCost.value))
   const formattedAutoClickerSpeedCost = computed(() => formatIntAsCurrency(autoClickerSpeedCost.value))
   const formattedClicks = computed(() => formatIntAsCurrency(clicks.value))
-  const formattedLifetimeClicks = computed(() => formatNumber(totalLifetimeClicks.value), {
+  const formattedLifetimeClicks = computed(() => formatNumber(totalLifetimeClicks.value, {
     currency: false,
     decimals: 1
-  })
+  }))
 
   // Enhanced Actions
   function handleClick() {

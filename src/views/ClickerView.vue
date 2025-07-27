@@ -9,6 +9,7 @@ const { t } = useI18n()
 const userStore = useUserStore()
 const clickerStore = useClickerStore()
 
+// Computed for dynamic styling
 const buttonScale = computed(() => {
   const scale = Math.min(1 + (clickerStore.comboCount * 0.02), 1.2)
   return `scale(${scale})`
@@ -69,7 +70,7 @@ const comboColor = computed(() => {
             </div>
 
             <!-- Click Button Area -->
-            <div class="d-flex flex-column align-items-center">
+            <div class="d-flex flex-column align-items-center mt-5 mb-5">
               <div class="position-relative">
                 <!-- Main Click Button -->
                 <button
@@ -108,7 +109,7 @@ const comboColor = computed(() => {
               </div>
 
               <!-- Action Buttons -->
-              <div class="d-flex gap-3 flex-wrap justify-content-center">
+              <div class="d-flex gap-3 flex-wrap justify-content-center mt-3">
                 <button
                   class="btn btn-success px-4 py-2"
                   @click="clickerStore.collectChips(userStore)"

@@ -15,7 +15,6 @@ const { t } = useI18n()
 
 const gameStore = useRouletteStore()
 const userStore = useUserStore()
-const showStats = ref(false)
 const currentBetAmount = ref(100)
 
 // Game message formatting
@@ -101,74 +100,9 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
       }"
       @close="gameStore.lastResult = null" />
 
-    <!-- Header Actions Slot -->
-    <template #header-actions>
-      <button
-        class="btn btn-outline-primary"
-        type="button"
-        @click="showStats = !showStats">
-        <i class="bi" :class="showStats ? 'bi-eye-slash' : 'bi-eye'"></i>
-        {{ showStats ? t('roulette.stats.hide') : t('roulette.stats.show') }}
-      </button>
-    </template>
-
-    <!-- Stats Section -->
-    <div v-if="showStats" class="row mb-4">
-      <div class="col-12">
-        <div class="card">
-          <div class="card-header bg-light">
-            <h5 class="mb-0">
-              <i class="bi bi-graph-up me-2"></i>{{ t('roulette.stats.title') }}
-            </h5>
-          </div>
-          <div class="card-body">
-            <div class="row g-3">
-              <div class="col-md-3">
-                <div class="border rounded p-3 text-center">
-                  <h6 class="text-muted mb-2">
-                    <i class="bi bi-collection me-1"></i>{{ t('roulette.stats.totalSpins') }}
-                  </h6>
-                  <span class="h4">{{ gameStore.sessionStats.spins }}</span>
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="border rounded p-3 text-center">
-                  <h6 class="text-muted mb-2">
-                    <i class="bi bi-cash-stack me-1"></i>{{ t('roulette.stats.totalWagered') }}
-                  </h6>
-                  <span class="h4">
-                    {{ formatIntAsCurrency(gameStore.sessionStats.totalWagered) }}
-                  </span>
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="border rounded p-3 text-center">
-                  <h6 class="text-muted mb-2">
-                    <i class="bi bi-trophy me-1"></i>{{ t('roulette.stats.biggestWin') }}
-                  </h6>
-                  <span class="h4 text-success">
-                    {{ formatIntAsCurrency(gameStore.sessionStats.biggestWin) }}
-                  </span>
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="border rounded p-3 text-center">
-                  <h6 class="text-muted mb-2">
-                    <i class="bi bi-award me-1"></i>{{ t('roulette.stats.winStreak') }}
-                  </h6>
-                  <span class="h4">
-                    {{ gameStore.sessionStats.consecutiveWins }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Game Result Spinner -->
-    <RouletteSpinner :is-spinning="gameStore.gameState === RouletteState.SPINNING"
+    <RouletteSpinner
+      :is-spinning="gameStore.gameState === RouletteState.SPINNING"
       :winning-number="gameStore.winningNumber"
       @spin-complete="gameStore.completeGame" />
 

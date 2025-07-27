@@ -11,7 +11,7 @@ const clickerStore = useClickerStore()
 
 // Computed for dynamic styling
 const buttonScale = computed(() => {
-  const scale = Math.min(1.2 + (clickerStore.comboCount * 0.02), 1.6)
+  const scale = Math.min(1 + (clickerStore.comboCount * 0.02), 1.2)
   return `scale(${scale})`
 })
 
@@ -30,13 +30,13 @@ const comboColor = computed(() => {
     :showBalance="true">
 
     <div class="container-fluid px-0">
-      <!-- Stats Header -->
+      <!-- Stats Header - Compact and Modern -->
       <div class="row g-2 mb-3">
         <div class="col-md-3">
           <div class="card border-0 shadow-sm h-100">
             <div class="card-body text-center py-2">
               <div class="d-flex align-items-center justify-content-center">
-                <i class="bi bi-piggy-bank text-primary me-2 fs-5"></i>
+                <i class="bi bi-piggy-bank text-primary me-4 fs-5"></i>
                 <div>
                   <div class="h5 mb-0 text-primary">{{ clickerStore.formattedClicks }}</div>
                   <small class="text-muted">Current Earnings</small>
@@ -49,7 +49,7 @@ const comboColor = computed(() => {
           <div class="card border-0 shadow-sm h-100">
             <div class="card-body text-center py-2">
               <div class="d-flex align-items-center justify-content-center">
-                <i class="bi bi-clock text-success me-2 fs-5"></i>
+                <i class="bi bi-clock text-success me-4 fs-5"></i>
                 <div>
                   <div class="h5 mb-0 text-success">{{ clickerStore.formattedIncome }}/s</div>
                   <small class="text-muted">Income</small>
@@ -62,7 +62,7 @@ const comboColor = computed(() => {
           <div class="card border-0 shadow-sm h-100">
             <div class="card-body text-center py-2">
               <div class="d-flex align-items-center justify-content-center">
-                <i class="bi bi-infinity text-info me-2 fs-5"></i>
+                <i class="bi bi-infinity text-info me-4 fs-5"></i>
                 <div>
                   <div class="h5 mb-0 text-info">{{ clickerStore.formattedLifetimeClicks }}</div>
                   <small class="text-muted">Lifetime Clicks</small>
@@ -75,7 +75,7 @@ const comboColor = computed(() => {
           <div class="card border-0 shadow-sm h-100">
             <div class="card-body text-center py-2">
               <div class="d-flex align-items-center justify-content-center">
-                <i class="bi bi-star-fill text-warning me-2 fs-5"></i>
+                <i class="bi bi-star-fill text-warning me-4 fs-5"></i>
                 <div>
                   <div class="h5 mb-0 text-warning">{{ clickerStore.prestigeLevel }}</div>
                   <small class="text-muted">Prestige Level</small>
@@ -94,7 +94,7 @@ const comboColor = computed(() => {
             <div class="card-body d-flex flex-column justify-content-center align-items-center p-3"
               style="min-height: 600px;">
 
-              <!-- Combo Display -->
+              <!-- Combo Display - only takes space when active -->
               <div class="d-flex justify-content-center align-items-center"
                 :class="clickerStore.comboCount > 1 ? 'mb-3' : 'mb-1'">
                 <div v-if="clickerStore.comboCount > 1" class="combo-badge">
@@ -108,7 +108,7 @@ const comboColor = computed(() => {
                 </div>
               </div>
 
-              <!-- Main Click Area -->
+              <!-- Main Click Area - reduced padding -->
               <div class="position-relative mb-4 p-3 d-flex justify-content-center align-items-center flex-grow-1">
                 <button
                   class="main-click-btn btn btn-primary rounded-circle p-0 position-relative"

@@ -171,12 +171,3 @@ const buttonSizeClass = computed(() => {
     </div>
   </div>
 </template>
-
-<style scoped>
-/* Minimal custom CSS - mostly using Bootstrap classes */
-.bet-amount-selector .btn.active {
-  background-color: var(--bs-primary);
-  border-color: var(--bs-primary);
-  color: white;
-}
-</style>

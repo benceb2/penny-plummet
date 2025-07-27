@@ -156,14 +156,18 @@
       }
     },
     "features": {
-      "title": "Funkciók",
+      "title": "Játék Funkciók",
       "blackjack": {
         "title": "Blackjack",
-        "description": "Klasszikus kaszinó kártyajáték fogadási mechanikával és eredményekkel"
+        "description": "Sajátítsd el a 21-es művészetét ebben a klasszikus kártyajátékban. Győzd le az osztót stratégiai játékkal, nyiss fel eredményeket és mássz fel a ranglistán."
+      },
+      "roulette": {
+        "title": "Rulett",
+        "description": "Pörgesd meg a szerencse kerekeit! Tedd fel tétedet számokra, színekre vagy kombinációkra ebben az időtlen kaszinó kedvencben progresszív jutalmakkal."
       },
       "clicker": {
         "title": "Kattintós Játék",
-        "description": "Tesztelje kattintási sebességét és nyerjen jutalmakat"
+        "description": "Kattintsd magad a gazdagsághoz! Építs kombókat, nyiss fel szorzókat és prestízsálj hatalmas jutalmakért ebben a függőséget okozó idle játékban."
       }
     }
   },

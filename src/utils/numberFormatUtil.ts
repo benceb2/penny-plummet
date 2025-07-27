@@ -73,10 +73,6 @@ export function formatNumber(value: number, options: FormatOptions = {}): string
   return `${isNegative ? '-' : ''}${currency ? currencySymbol : ''}${absValue}`
 }
 
-// =============================================================================
-// MAIN EXPORTED FUNCTIONS
-// =============================================================================
-
 /**
  * E.g. $4,235,256 -> $4.2M
  */
@@ -85,34 +81,7 @@ export const formatIntAsCurrency = (value: number): string => {
 }
 
 /**
- * Format XP values with abbreviations
- * 1,500,000 -> 1.5M
- */
-export const formatXP = (value: number): string => {
-  return formatNumber(value, {
-    currency: false,
-    decimals: 1
-  })
-}
-
-/**
- * Format score values (similar to XP)
- * 25,000 -> 25K
- */
-export const formatScore = (value: number): string => {
-  return formatNumber(value, {
-    currency: false,
-    decimals: 1
-  })
-}
-
-// =============================================================================
-// SPECIALIZED VARIANTS
-// =============================================================================
-
-/**
- * If you need the old full format anywhere
- * $4,235,256 -> $4,235,256
+ * E.g. $4,235,256 -> $4,235,256
  */
 export const formatIntAsCurrencyFull = (value: number): string => {
   return new Intl.NumberFormat('en-US', {
@@ -124,43 +93,11 @@ export const formatIntAsCurrencyFull = (value: number): string => {
 }
 
 /**
- * Ultra-compact currency (no decimals)
- * $4,235,256 -> $4M
+ * E.g. 1,500,000 -> 1.5M
  */
-export const formatCurrencyUltraCompact = (value: number): string => {
+export const formatXP = (value: number): string => {
   return formatNumber(value, {
-    currency: true,
-    decimals: 0
-  })
-}
-
-/**
- * Format for chip displays (with precision)
- * $4,235,256 -> $4.2M
- */
-export const formatChips = (value: number): string => {
-  return formatNumber(value, {
-    currency: true,
+    currency: false,
     decimals: 1
-  })
-}
-
-/**
- * Flexible currency formatter with options
- */
-export const formatCurrencyDetailed = (value: number, options?: {
-  showFullAmount?: boolean
-  decimals?: number
-}): string => {
-  if (options?.showFullAmount) {
-    return formatNumber(value, {
-      currency: true,
-      minAbbreviation: Infinity
-    })
-  }
-
-  return formatNumber(value, {
-    currency: true,
-    decimals: options?.decimals || 1
   })
 }

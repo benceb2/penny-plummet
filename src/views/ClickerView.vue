@@ -30,9 +30,9 @@ const comboColor = computed(() => {
     :showBalance="true">
 
     <div class="container-fluid px-0">
-      <!-- Stats Header - Compact and Modern -->
+      <!-- Stats Header -->
       <div class="row g-2 mb-3">
-        <div class="col-md-4">
+        <div class="col-md-3">
           <div class="card border-0 shadow-sm h-100">
             <div class="card-body text-center py-2">
               <div class="d-flex align-items-center justify-content-center">
@@ -45,7 +45,20 @@ const comboColor = computed(() => {
             </div>
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center py-2">
+              <div class="d-flex align-items-center justify-content-center">
+                <i class="bi bi-clock text-success me-2 fs-5"></i>
+                <div>
+                  <div class="h5 mb-0 text-success">{{ clickerStore.formattedIncome }}/s</div>
+                  <small class="text-muted">Income</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
           <div class="card border-0 shadow-sm h-100">
             <div class="card-body text-center py-2">
               <div class="d-flex align-items-center justify-content-center">
@@ -58,7 +71,7 @@ const comboColor = computed(() => {
             </div>
           </div>
         </div>
-        <div class="col-md-4" v-if="clickerStore.prestigeLevel > 0">
+        <div class="col-md-3" v-if="clickerStore.prestigeLevel > 0">
           <div class="card border-0 shadow-sm h-100">
             <div class="card-body text-center py-2">
               <div class="d-flex align-items-center justify-content-center">
@@ -81,7 +94,7 @@ const comboColor = computed(() => {
             <div class="card-body d-flex flex-column justify-content-center align-items-center p-3"
               style="min-height: 600px;">
 
-              <!-- Combo Display - only takes space when active -->
+              <!-- Combo Display -->
               <div class="d-flex justify-content-center align-items-center"
                 :class="clickerStore.comboCount > 1 ? 'mb-3' : 'mb-1'">
                 <div v-if="clickerStore.comboCount > 1" class="combo-badge">
@@ -95,7 +108,7 @@ const comboColor = computed(() => {
                 </div>
               </div>
 
-              <!-- Main Click Area - reduced padding -->
+              <!-- Main Click Area -->
               <div class="position-relative mb-4 p-3 d-flex justify-content-center align-items-center flex-grow-1">
                 <button
                   class="main-click-btn btn btn-primary rounded-circle p-0 position-relative"

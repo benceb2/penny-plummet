@@ -96,7 +96,12 @@ export const useClickerStore = defineStore('clicker', () => {
   const formattedLifetimeClicks = computed(() => formatNumber(totalLifetimeClicks.value, {
     currency: false,
     decimals: 1
-  }))
+  }));
+
+  const formattedIncome = computed(() => {
+    const passivePerSecond = autoClickersCount.value * clickValue.value * (1000 / autoClickerSpeed.value)
+    return formatNumber(passivePerSecond)
+  })
 
   // Enhanced Actions
   function handleClick() {
@@ -401,6 +406,8 @@ export const useClickerStore = defineStore('clicker', () => {
     formattedAutoClickerSpeedCost,
     formattedClicks,
     formattedLifetimeClicks,
+    formattedIncome,
+
 
     // Enhanced Actions
     handleClick,

@@ -90,7 +90,7 @@ const comboColor = computed(() => {
       <div class="row">
         <!-- Left Side - Click Area -->
         <div class="col-lg-8">
-          <div class="card border-0 shadow-sm h-100 rounded-4 bg-gradient-light">
+          <div class="card border-0 shadow-sm h-100 rounded-4">
             <div class="card-body d-flex flex-column justify-content-center align-items-center p-3"
               style="min-height: 600px;">
 
@@ -178,7 +178,7 @@ const comboColor = computed(() => {
         <!-- Right Side - Upgrades -->
         <div class="col-lg-4">
           <div class="card border-0 shadow-sm h-100 rounded-4">
-            <div class="card-header bg-gradient-dark text-white border-0 rounded-top-4">
+            <div class="card-header border-1 rounded-top-4">
               <h6 class="mb-0 text-center fw-bold">
                 <i class="bi bi-arrow-up-circle me-2"></i>Upgrades
               </h6>
@@ -287,15 +287,6 @@ const comboColor = computed(() => {
 </template>
 
 <style scoped>
-/* Custom gradient backgrounds */
-.bg-gradient-light {
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-}
-
-.bg-gradient-dark {
-  background: linear-gradient(135deg, #6c757d 0%, #495057 100%) !important;
-}
-
 /* Main click button - keep custom since it's core game mechanic */
 .main-click-btn {
   width: 240px;

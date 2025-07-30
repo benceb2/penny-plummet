@@ -13,8 +13,6 @@ const userStore = useUserStore();
 const achievementStore = useAchievementStore();
 
 const selectedCategory = ref('all');
-const hideCompleted = ref(false);
-const showUnclaimed = ref(true);
 
 const { currentLevel, levelProgress, achievements } = achievementStore;
 const userStats = userStore.stats;
@@ -22,17 +20,31 @@ const userStats = userStore.stats;
 const filteredAchievements = computed(() => {
   let filtered = achievements;
 
+  // Apply category filter
   if (selectedCategory.value !== 'all') {
     filtered = filtered.filter(a => a.category === selectedCategory.value);
   }
 
-  if (hideCompleted.value) {
-    filtered = filtered.filter(a => !a.completed);
-  }
+  // Sort achievements: unclaimed first, then by completion status
+  filtered = filtered.sort((a, b) => {
+    // Priority 1: Unclaimed completed achievements first
+    if (a.completed && !a.claimed && !(b.completed && !b.claimed)) return -1;
+    if (b.completed && !b.claimed && !(a.completed && !a.claimed)) return 1;
 
-  if (showUnclaimed.value) {
-    filtered = filtered.filter(a => a.completed && !a.claimed);
-  }
+    // Priority 2: In-progress achievements next
+    if (!a.completed && b.completed && b.claimed) return -1;
+    if (!b.completed && a.completed && a.claimed) return 1;
+
+    // Priority 3: Completed & claimed achievements last
+    if (a.completed && a.claimed && !b.completed) return 1;
+    if (b.completed && b.claimed && !a.completed) return -1;
+
+    // Within same priority, sort by progress percentage (descending)
+    const aProgress = a.completed ? 100 : (a.progress / a.requirement) * 100;
+    const bProgress = b.completed ? 100 : (b.progress / b.requirement) * 100;
+
+    return bProgress - aProgress;
+  });
 
   return filtered;
 });
@@ -71,7 +83,7 @@ onMounted(() => {
   }
 })
 
-watch([selectedCategory, hideCompleted], () => {
+watch([selectedCategory], () => {
   goToPage(1) // Reset to first page when filters change
 })
 </script>
@@ -188,30 +200,6 @@ watch([selectedCategory, hideCompleted], () => {
                   @click="selectedCategory = category">
                   {{ category.charAt(0).toUpperCase() + category.slice(1) }}
                 </button>
-              </div>
-            </div>
-
-            <!-- Checkboxes Row -->
-            <div class="d-flex justify-content-center gap-4 mb-3">
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="hideCompleted"
-                  v-model="hideCompleted">
-                <label class="form-check-label" for="hideCompleted">
-                  Hide completed
-                </label>
-              </div>
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="showUnclaimed"
-                  v-model="showUnclaimed">
-                <label class="form-check-label" for="showUnclaimed">
-                  Show only unclaimed
-                </label>
               </div>
             </div>
           </div>

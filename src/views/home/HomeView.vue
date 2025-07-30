@@ -85,32 +85,6 @@ const nearestAchievements = computed(() => {
       </div>
     </div>
 
-    <!-- Level Progress -->
-    <!-- <div class="card mb-4">
-      <div class="card-body">
-        <h5 class="card-title d-flex align-items-center">
-          <i class="bi bi-graph-up-arrow text-success me-2"></i>
-          {{ t('home.levelProgress.title') }}
-        </h5>
-        <div class="progress mb-2">
-          <div
-            class="progress-bar bg-success"
-            role="progressbar"
-            :style="{ width: `${achievementStore.levelProgress}%` }"
-            :aria-valuenow="achievementStore.levelProgress"
-            aria-valuemin="0"
-            aria-valuemax="100">
-          </div>
-        </div>
-        <small class="text-muted">
-          {{ t('home.levelProgress.xpProgress', {
-            current: formatXP(achievementStore.currentLevel.currentXP),
-            required: formatXP(achievementStore.currentLevel.requiredXP)
-          }) }}
-        </small>
-      </div>
-    </div> -->
-
     <!-- Achievements In Progress -->
     <div class="card">
       <div class="card-body">
@@ -118,21 +92,20 @@ const nearestAchievements = computed(() => {
           <i class="bi bi-award text-primary me-2"></i>
           {{ t('home.achievements.title') }}
         </h5>
-        <!-- View All Achievements -->
-        <!-- <div class="d-flex justify-content-end">
-          <RouterLink
-            to="/profile#achievements"
-            class="btn btn-outline-primary">
-            <i class="bi bi-arrow-right me-2"></i>
-            {{ t('home.achievements.viewAll') }}
-          </RouterLink>
-        </div> -->
         <div class="achievements-list">
           <AchievementCard
             v-for="achievement in nearestAchievements"
             :key="achievement.id"
             :achievement="achievement"
             class="mb-3" />
+        </div>
+        <div class="d-flex justify-content-end">
+          <RouterLink
+            to="/profile#achievements"
+            class="btn btn-outline-primary">
+            <i class="bi bi-arrow-right me-2"></i>
+            {{ t('home.achievements.viewAll') }}
+          </RouterLink>
         </div>
       </div>
     </div>

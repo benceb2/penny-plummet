@@ -6,15 +6,12 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('../views/HomeView.vue'),
-      meta: {
-        title: 'Home'
-      }
+      component: () => import('../views/home/HomeView.vue')
     },
     {
       path: '/blackjack',
-      name: 'Blackjack',
-      component: () => import('../views/BlackjackView.vue'),
+      name: 'blackjack',
+      component: () => import('../views/blackjack/BlackjackView.vue'),
       meta: {
         title: 'Blackjack'
       }
@@ -22,7 +19,7 @@ const router = createRouter({
     {
       path: '/roulette',
       name: 'roulette',
-      component: () => import('../views/RouletteView.vue'),
+      component: () => import('../views/roulette/RouletteView.vue'),
       meta: {
         title: 'Roulette'
       }
@@ -30,7 +27,7 @@ const router = createRouter({
     {
       path: '/about',
       name: 'about',
-      component: () => import('../views/AboutView.vue'),
+      component: () => import('../views/about/AboutView.vue'),
       meta: {
         title: 'About'
       }
@@ -38,7 +35,7 @@ const router = createRouter({
     {
       path: '/clicker',
       name: 'clicker',
-      component: () => import('../views/ClickerView.vue'),
+      component: () => import('../views/clicker/ClickerView.vue'),
       meta: {
         title: 'Earn'
       }
@@ -46,7 +43,7 @@ const router = createRouter({
     {
       path: '/profile',
       name: 'profile',
-      component: () => import('../views/ProfileView.vue'),
+      component: () => import('../views/profile/ProfileView.vue'),
       meta: {
         title: 'Profile'
       }
@@ -54,7 +51,7 @@ const router = createRouter({
     {
       path: '/settings',
       name: 'settings',
-      component: () => import('../views/SettingsView.vue'),
+      component: () => import('../views/settings/SettingsView.vue'),
       meta: {
         title: 'Settings'
       }
@@ -62,7 +59,7 @@ const router = createRouter({
     {
       path: '/transactions',
       name: 'transactions',
-      component: () => import('../views/TransactionsView.vue'),
+      component: () => import('../views/transactions/TransactionsView.vue'),
       meta: {
         title: 'Transaction History'
       }

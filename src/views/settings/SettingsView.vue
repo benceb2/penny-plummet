@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { SavePreview } from '@/types/SavePreview';
-import UsernameSettings from '@/components/UsernameSettings.vue';
+import UsernameSettings from '@/views/settings/UsernameSettings.vue';
 import BaseLayout from '@/components/layout/BaseLayout.vue';
 import { useUserStore } from '@/stores/userStore';
 import { useAchievementStore } from '@/stores/achievementStore';

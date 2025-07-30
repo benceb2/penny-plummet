@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 
 import { useBlackjackStore } from '@/stores/blackjackStore'
 import { useUserStore } from '@/stores/userStore'
-import PlayingCard from '@/components/PlayingCard.vue'
+import PlayingCard from '@/views/blackjack/PlayingCard.vue'
 import { BlackjackState } from '@/types/BlackjackGameState'
 import BaseLayout from '@/components/layout/BaseLayout.vue'
 import BetAmountSelector from '@/components/BetAmountSelector.vue'

@@ -4,18 +4,17 @@ import { useI18n } from 'vue-i18n'
 import { useRouletteStore, RouletteState, type RouletteResult, type BetType } from '@/stores/rouletteStore'
 import { useUserStore } from '@/stores/userStore'
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil'
-import RouletteSpinner from '@/components/RouletteSpinner.vue'
-import RouletteTable from '@/components/RouletteTable.vue'
+import RouletteSpinner from '@/views/roulette/RouletteSpinner.vue'
+import RouletteTable from '@/views/roulette/RouletteTable.vue'
 import BaseLayout from '@/components/layout/BaseLayout.vue'
 import GameResult from '@/components/GameResult.vue'
 import BetAmountSelector from '@/components/BetAmountSelector.vue'
 
-// i18n
 const { t } = useI18n()
 
 const gameStore = useRouletteStore()
 const userStore = useUserStore()
-const currentBetAmount = ref(100)
+const currentBetAmount = ref(0)
 
 // Game message formatting
 function getGameResultMessage(result: RouletteResult): string {

@@ -65,7 +65,7 @@ const {
   paginatedItems: paginatedAchievements,
   totalPages
 } = usePagination(filteredAchievements, {
-  itemsPerPage: 6  // Show 6 achievements per page (3x2 grid)
+  itemsPerPage: 8  // Show 6 achievements per page (3x2 grid)
 })
 
 const route = useRoute()

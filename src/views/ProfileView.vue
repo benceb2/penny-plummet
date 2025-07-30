@@ -14,6 +14,7 @@ const achievementStore = useAchievementStore();
 
 const selectedCategory = ref('all');
 const hideCompleted = ref(false);
+const showUnclaimed = ref(true);
 
 const { currentLevel, levelProgress, achievements } = achievementStore;
 const userStats = userStore.stats;
@@ -27,6 +28,10 @@ const filteredAchievements = computed(() => {
 
   if (hideCompleted.value) {
     filtered = filtered.filter(a => !a.completed);
+  }
+
+  if (showUnclaimed.value) {
+    filtered = filtered.filter(a => a.completed && !a.claimed);
   }
 
   return filtered;
@@ -69,7 +74,6 @@ onMounted(() => {
 watch([selectedCategory, hideCompleted], () => {
   goToPage(1) // Reset to first page when filters change
 })
-
 </script>
 
 <template>
@@ -171,28 +175,44 @@ watch([selectedCategory, hideCompleted], () => {
 
         <!-- Filters -->
         <div class="row gy-3 pb-3 mb-4 border-bottom align-items-center">
-          <div class="col-12 col-md-auto">
-            <div class="btn-group w-100 w-md-auto">
-              <button
-                v-for="category in ['all', 'blackjack', 'clicker', 'general']"
-                :key="category"
-                class="btn"
-                :class="selectedCategory === category ? 'btn-primary' : 'btn-outline-primary'"
-                @click="selectedCategory = category">
-                {{ category.charAt(0).toUpperCase() + category.slice(1) }}
-              </button>
+          <!-- Filters -->
+          <div class="pb-3 mb-4 border-bottom">
+            <!-- Category Buttons Row -->
+            <div class="d-flex justify-content-center mb-4">
+              <div class="btn-group" role="group">
+                <button
+                  v-for="category in ['all', 'blackjack', 'clicker', 'general']"
+                  :key="category"
+                  class="btn"
+                  :class="selectedCategory === category ? 'btn-primary' : 'btn-outline-primary'"
+                  @click="selectedCategory = category">
+                  {{ category.charAt(0).toUpperCase() + category.slice(1) }}
+                </button>
+              </div>
             </div>
-          </div>
-          <div class="col-12 col-md-auto ms-md-auto">
-            <div class="form-check">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                id="hideCompleted"
-                v-model="hideCompleted">
-              <label class="form-check-label" for="hideCompleted">
-                Hide completed
-              </label>
+
+            <!-- Checkboxes Row -->
+            <div class="d-flex justify-content-center gap-4 mb-3">
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="hideCompleted"
+                  v-model="hideCompleted">
+                <label class="form-check-label" for="hideCompleted">
+                  Hide completed
+                </label>
+              </div>
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="showUnclaimed"
+                  v-model="showUnclaimed">
+                <label class="form-check-label" for="showUnclaimed">
+                  Show only unclaimed
+                </label>
+              </div>
             </div>
           </div>
         </div>

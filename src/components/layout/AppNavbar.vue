@@ -16,8 +16,8 @@ const availableLocales = ['en-GB', 'hu-HU'] as const
 type Locale = typeof availableLocales[number]
 
 const flags: Record<Locale, string> = {
-  'en-GB': '🇬🇧',
-  'hu-HU': '🇭🇺'
+  'en-GB': '/flags/gb.png',
+  'hu-HU': '/flags/hu.png'
 }
 
 const switchLanguage = (newLocale: Locale) => {
@@ -95,7 +95,11 @@ watch(locale, (newLocale) => {
               class="badge bg-secondary p-2 px-3 d-flex align-items-center cursor-pointer dropdown-toggle"
               data-bs-toggle="dropdown"
               aria-expanded="false">
-              <span class="me-1" style="transform: scale(1.6)">{{ flags[locale as Locale] }}</span>
+              <img
+                :src="flags[locale as Locale]"
+                :alt="locale"
+                class="me-1 flag-img"
+                style="width: 20px; height: 15px;" />
               <i class="bi bi-chevron-down ms-2 opacity-75"></i>
             </span>
             <ul class="dropdown-menu dropdown-menu-end">
@@ -105,7 +109,11 @@ watch(locale, (newLocale) => {
                   href="#"
                   @click.prevent="switchLanguage(loc)"
                   :class="{ 'active': locale === loc }">
-                  <span class="me-2">{{ flags[loc] }}</span>
+                  <img
+                    :src="flags[loc]"
+                    :alt="loc"
+                    class="flag-img"
+                    style="width: 16px; height: 12px;" />
                   {{ t(`languages.${loc}`) }}
                 </a>
               </li>

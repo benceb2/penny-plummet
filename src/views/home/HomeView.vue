@@ -86,26 +86,40 @@ const nearestAchievements = computed(() => {
     </div>
 
     <!-- Achievements In Progress -->
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title d-flex align-items-center mb-3">
-          <i class="bi bi-award text-primary me-2"></i>
-          {{ t('home.achievements.title') }}
-        </h5>
-        <div class="achievements-list">
-          <AchievementCard
-            v-for="achievement in nearestAchievements"
-            :key="achievement.id"
-            :achievement="achievement"
-            class="mb-3" />
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title d-flex align-items-center mb-3">
+              <i class="bi bi-award text-primary me-2"></i>
+              {{ t('home.achievements.title') }}
+            </h5>
+            <div class="achievements-list">
+              <AchievementCard
+                v-for="achievement in nearestAchievements"
+                :key="achievement.id"
+                :achievement="achievement"
+                class="mb-3" />
+            </div>
+            <div class="d-flex justify-content-end">
+              <RouterLink
+                to="/profile#achievements"
+                class="btn btn-outline-primary">
+                <i class="bi bi-arrow-right me-2"></i>
+                {{ t('home.achievements.viewAll') }}
+              </RouterLink>
+            </div>
+          </div>
         </div>
-        <div class="d-flex justify-content-end">
-          <RouterLink
-            to="/profile#achievements"
-            class="btn btn-outline-primary">
-            <i class="bi bi-arrow-right me-2"></i>
-            {{ t('home.achievements.viewAll') }}
-          </RouterLink>
+      </div>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title d-flex align-items-center mb-3">
+              <i class="bi bi-wallet2 text-success me-2"></i>
+              {{ t('home.transactions.title') }}
+            </h5>
+          </div>
         </div>
       </div>
     </div>

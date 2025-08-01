@@ -55,6 +55,10 @@
     "achievements": {
       "title": "Achievements In Progress",
       "viewAll": "View All Achievements"
+    },
+    "transactions": {
+      "title": "Recent Transactions",
+      "viewAll": "View All Transactions"
     }
   },
   "blackjack": {

@@ -43,7 +43,7 @@
       },
       "roulette": {
         "title": "Rulett",
-        "shortDesc": "Tegyen téteket és pörgessen a nyereményért!",
+        "shortDesc": "Fogadjon számokra a pörgő rulett keréknél.",
         "longDesc": "Próbálja ki szerencséjét a rulett keréknél különböző fogadási lehetőségekkel.",
         "playButton": "Rulett Játék"
       }
@@ -55,6 +55,10 @@
     "achievements": {
       "title": "Folyamatban Lévő Eredmények",
       "viewAll": "Összes Eredmény Megtekintése"
+    },
+    "transactions": {
+      "title": "Legutóbbi tranzakciók",
+      "viewAll": "Összes Tranzakció Megtekintése"
     }
   },
   "blackjack": {

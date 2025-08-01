@@ -5,7 +5,6 @@ import BaseLayout from '@/components/layout/BaseLayout.vue';
 import AchievementCard from '@/components/AchievementCard.vue';
 import { useUserStore } from '@/stores/userStore';
 import { useAchievementStore } from '@/stores/achievementStore';
-import { formatIntAsCurrency } from '@/utils/currencyUtil';
 
 const { t } = useI18n();
 const userStore = useUserStore();
@@ -31,41 +30,6 @@ const nearestAchievements = computed(() => {
     :title="welcomeTitle"
     :fontawesome-icon="'fa fa-home'">
 
-    <!-- Quick Stats Overview -->
-    <div class="card mb-4">
-      <div class="card-body">
-        <div class="row g-3">
-          <div class="col-md-4">
-            <div class="d-flex align-items-center">
-              <i class="bi bi-wallet2 fs-3 text-primary me-2"></i>
-              <div>
-                <h6 class="mb-0">{{ t('home.stats.currentBalance') }}</h6>
-                <h4 class="mb-0">{{ userStore.formattedChips }}</h4>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="d-flex align-items-center">
-              <i class="bi bi-trophy fs-3 text-warning me-2"></i>
-              <div>
-                <h6 class="mb-0">{{ t('home.stats.biggestWin') }}</h6>
-                <h4 class="mb-0">{{ formatIntAsCurrency(userStore.stats.biggestWin) }}</h4>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="d-flex align-items-center">
-              <i class="bi bi-stars fs-3 text-info me-2"></i>
-              <div>
-                <h6 class="mb-0">{{ t('home.stats.level') }}</h6>
-                <h4 class="mb-0">{{ achievementStore.currentLevel.level }}</h4>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Game Selection Cards -->
     <div class="row g-4 mb-4">
       <div class="col-md-4">
@@ -78,7 +42,6 @@ const nearestAchievements = computed(() => {
                 <p class="text-muted mb-0">{{ t('home.games.blackjack.shortDesc') }}</p>
               </div>
             </div>
-            <p class="text-muted">{{ t('home.games.blackjack.longDesc') }}</p>
             <RouterLink to="/blackjack" class="btn btn-primary mt-auto">
               <i class="bi bi-play-circle-fill me-2"></i>{{ t('home.games.blackjack.playButton') }}
             </RouterLink>
@@ -96,7 +59,6 @@ const nearestAchievements = computed(() => {
                 <p class="text-muted mb-0">{{ t('home.games.clicker.shortDesc') }}</p>
               </div>
             </div>
-            <p class="text-muted">{{ t('home.games.clicker.longDesc') }}</p>
             <RouterLink to="/clicker" class="btn btn-success mt-auto">
               <i class="bi bi-play-circle-fill me-2"></i>{{ t('home.games.clicker.playButton') }}
             </RouterLink>
@@ -114,7 +76,6 @@ const nearestAchievements = computed(() => {
                 <p class="text-muted mb-0">{{ t('home.games.roulette.shortDesc') }}</p>
               </div>
             </div>
-            <p class="text-muted">{{ t('home.games.roulette.longDesc') }}</p>
             <RouterLink to="/roulette" class="btn btn-danger mt-auto">
               <i class="bi bi-play-circle-fill me-2"></i>{{ t('home.games.roulette.playButton') }}
             </RouterLink>
@@ -123,54 +84,39 @@ const nearestAchievements = computed(() => {
       </div>
     </div>
 
-    <!-- Level Progress -->
-    <div class="card mb-4">
-      <div class="card-body">
-        <h5 class="card-title d-flex align-items-center">
-          <i class="bi bi-graph-up-arrow text-success me-2"></i>
-          {{ t('home.levelProgress.title') }}
-        </h5>
-        <div class="progress mb-2">
-          <div
-            class="progress-bar bg-success"
-            role="progressbar"
-            :style="{ width: `${achievementStore.levelProgress}%` }"
-            :aria-valuenow="achievementStore.levelProgress"
-            aria-valuemin="0"
-            aria-valuemax="100">
-            {{ Math.floor(achievementStore.levelProgress) }}%
+    <div class="row">
+      <div class="col-md-6 mb-4 mb-md-0">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title d-flex align-items-center mb-3">
+              <i class="bi bi-award text-primary me-2"></i>
+              {{ t('home.achievements.title') }}
+            </h5>
+            <div class="achievements-list">
+              <AchievementCard
+                v-for="achievement in nearestAchievements"
+                :key="achievement.id"
+                :achievement="achievement"
+                class="mb-3" />
+            </div>
+            <div class="d-flex justify-content-end">
+              <RouterLink
+                to="/profile#achievements"
+                class="btn btn-outline-primary">
+                <i class="bi bi-arrow-right me-2"></i>
+                {{ t('home.achievements.viewAll') }}
+              </RouterLink>
+            </div>
           </div>
         </div>
-        <small class="text-muted">
-          {{ t('home.levelProgress.xpProgress', {
-            current: achievementStore.currentLevel.currentXP,
-            required: achievementStore.currentLevel.requiredXP
-          }) }}
-        </small>
       </div>
-    </div>
-
-    <!-- Achievements In Progress -->
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title d-flex align-items-center mb-3">
-          <i class="bi bi-award text-primary me-2"></i>
-          {{ t('home.achievements.title') }}
-        </h5>
-        <div class="achievements-list">
-          <AchievementCard
-            v-for="achievement in nearestAchievements"
-            :key="achievement.id"
-            :achievement="achievement"
-            class="mb-3" />
-          <!-- View All Achievements -->
-          <div class="d-flex justify-content-end">
-            <RouterLink
-              to="/profile#achievements"
-              class="btn btn-outline-primary">
-              <i class="bi bi-arrow-right me-2"></i>
-              {{ t('home.achievements.viewAll') }}
-            </RouterLink>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title d-flex align-items-center mb-3">
+              <i class="bi bi-wallet2 text-success me-2"></i>
+              {{ t('home.transactions.title') }}
+            </h5>
           </div>
         </div>
       </div>

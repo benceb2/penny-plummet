@@ -45,6 +45,24 @@ const technologies = computed(() => [
   }
 ]);
 
+const features = computed(() => [
+  {
+    title: t('about.features.blackjack.title'),
+    description: t('about.features.blackjack.description'),
+    icon: 'bi bi-suit-spade'
+  },
+  {
+    title: t('about.features.roulette.title'),
+    description: t('about.features.roulette.description'),
+    icon: 'bi bi-dice-5'
+  },
+  {
+    title: t('about.features.clicker.title'),
+    description: t('about.features.clicker.description'),
+    icon: 'bi bi-mouse'
+  }
+]);
+
 </script>
 
 <template>
@@ -93,25 +111,14 @@ const technologies = computed(() => [
           {{ t('about.features.title') }}
         </h5>
         <div class="row g-3">
-          <div class="col-md-6">
+          <div class="col-md-6" v-for="feature in features" :key="feature.title">
             <div class="feature-item">
               <h6 class="d-flex align-items-center">
-                <i class="bi bi-suit-spade me-2" />
-                {{ t('about.features.blackjack.title') }}
+                <i :class="`${feature.icon} me-2`" />
+                {{ feature.title }}
               </h6>
               <p class="mb-0 text-muted">
-                {{ t('about.features.blackjack.description') }}
-              </p>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="feature-item">
-              <h6 class="d-flex align-items-center">
-                <i class="bi bi-mouse me-2" />
-                {{ t('about.features.clicker.title') }}
-              </h6>
-              <p class="mb-0 text-muted">
-                {{ t('about.features.clicker.description') }}
+                {{ feature.description }}
               </p>
             </div>
           </div>

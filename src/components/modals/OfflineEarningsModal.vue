@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import BaseModal from './BaseModal.vue'
-import { formatIntAsCurrency } from '@/utils/currencyUtil'
+import { formatIntAsCurrency } from '@/utils/numberFormatUtil'
 
 const props = defineProps<{
   show: boolean

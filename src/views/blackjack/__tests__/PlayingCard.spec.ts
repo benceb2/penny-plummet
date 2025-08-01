@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import PlayingCard from '@/components/PlayingCard.vue'
+
 import type { Card } from '@/types/Card'
+import PlayingCard from '@/views/blackjack/PlayingCard.vue'
 
 describe('PlayingCard', () => {
   it('should render card face up correctly', () => {

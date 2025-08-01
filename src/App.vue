@@ -29,7 +29,7 @@ onMounted(async () => {
       <AppNavbar />
     </header>
 
-    <main class="flex-grow-1 pb-5">
+    <main class="flex-grow-1 pb-3">
       <RouterView />
     </main>
 

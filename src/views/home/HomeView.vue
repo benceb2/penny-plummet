@@ -5,7 +5,6 @@ import BaseLayout from '@/components/layout/BaseLayout.vue';
 import AchievementCard from '@/components/AchievementCard.vue';
 import { useUserStore } from '@/stores/userStore';
 import { useAchievementStore } from '@/stores/achievementStore';
-// import { formatIntAsCurrency, formatXP } from '@/utils/numberFormatUtil';
 
 const { t } = useI18n();
 const userStore = useUserStore();
@@ -85,9 +84,8 @@ const nearestAchievements = computed(() => {
       </div>
     </div>
 
-    <!-- Achievements In Progress -->
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-6 mb-4 mb-md-0">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title d-flex align-items-center mb-3">

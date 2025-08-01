@@ -1,15 +1,19 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
-import UsernameModal from '@/components/modals/UsernameModal.vue'
-import ConsentModal from '@/components/modals/ConsentModal.vue'
-import OfflineEarningsModal from '@/components/modals/OfflineEarningsModal.vue'
-import AppNavbar from '@/components/layout/AppNavbar.vue'
-import AppFooter from '@/components/layout/AppFooter.vue'
-import { useClickerStore } from '@/stores/clickerStore'
+import { onMounted } from 'vue';
+import { RouterView } from 'vue-router';
+import UsernameModal from '@/components/modals/UsernameModal.vue';
+import ConsentModal from '@/components/modals/ConsentModal.vue';
+import OfflineEarningsModal from '@/components/modals/OfflineEarningsModal.vue';
+import AppNavbar from '@/components/layout/AppNavbar.vue';
+import AppFooter from '@/components/layout/AppFooter.vue';
+import { useClickerStore } from '@/stores/clickerStore';
 
-const store = useClickerStore()
+const clickerStore = useClickerStore();
 
-store.initializeOfflineTracking()
+onMounted(async () => {
+  // Initialize offline tracking for clicker game
+  clickerStore.initializeOfflineTracking();
+});
 </script>
 
 <template>
@@ -17,15 +21,15 @@ store.initializeOfflineTracking()
     <ConsentModal />
     <UsernameModal />
     <OfflineEarningsModal
-      :show="store.showOfflineEarnings"
-      :earnings="store.offlineEarnings"
-      :timeAway="store.offlineSeconds"
-      @close="store.closeOfflineEarningsModal" />
+      :show="clickerStore.showOfflineEarnings"
+      :earnings="clickerStore.offlineEarnings"
+      :timeAway="clickerStore.offlineSeconds"
+      @close="clickerStore.closeOfflineEarningsModal" />
     <header>
       <AppNavbar />
     </header>
 
-    <main class="flex-grow-1 pb-5">
+    <main class="flex-grow-1 pb-3">
       <RouterView />
     </main>
 

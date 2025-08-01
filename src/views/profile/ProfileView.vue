@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useUserStore } from '@/stores/userStore';
+import { usePagination } from '@/composables/usePagination';
 import { useAchievementStore } from '@/stores/achievementStore';
-import { formatIntAsCurrency } from '@/utils/currencyUtil';
+import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
 import BaseLayout from '@/components/layout/BaseLayout.vue';
+import BasePagination from '@/components/layout/BasePagination.vue';
 import AchievementCard from '@/components/AchievementCard.vue';
 import { useRoute } from 'vue-router';
 
@@ -11,7 +13,6 @@ const userStore = useUserStore();
 const achievementStore = useAchievementStore();
 
 const selectedCategory = ref('all');
-const hideCompleted = ref(false);
 
 const { currentLevel, levelProgress, achievements } = achievementStore;
 const userStats = userStore.stats;
@@ -19,13 +20,31 @@ const userStats = userStore.stats;
 const filteredAchievements = computed(() => {
   let filtered = achievements;
 
+  // Apply category filter
   if (selectedCategory.value !== 'all') {
     filtered = filtered.filter(a => a.category === selectedCategory.value);
   }
 
-  if (hideCompleted.value) {
-    filtered = filtered.filter(a => !a.completed);
-  }
+  // Sort achievements: unclaimed first, then by completion status
+  filtered = filtered.sort((a, b) => {
+    // Priority 1: Unclaimed completed achievements first
+    if (a.completed && !a.claimed && !(b.completed && !b.claimed)) return -1;
+    if (b.completed && !b.claimed && !(a.completed && !a.claimed)) return 1;
+
+    // Priority 2: In-progress achievements next
+    if (!a.completed && b.completed && b.claimed) return -1;
+    if (!b.completed && a.completed && a.claimed) return 1;
+
+    // Priority 3: Completed & claimed achievements last
+    if (a.completed && a.claimed && !b.completed) return 1;
+    if (b.completed && b.claimed && !a.completed) return -1;
+
+    // Within same priority, sort by progress percentage (descending)
+    const aProgress = a.completed ? 100 : (a.progress / a.requirement) * 100;
+    const bProgress = b.completed ? 100 : (b.progress / b.requirement) * 100;
+
+    return bProgress - aProgress;
+  });
 
   return filtered;
 });
@@ -39,6 +58,15 @@ const achievementProgress = computed(() => {
     percentage: Math.round((completedAchievements / totalAchievements) * 100)
   };
 });
+
+const {
+  goToPage,
+  currentPage,
+  paginatedItems: paginatedAchievements,
+  totalPages
+} = usePagination(filteredAchievements, {
+  itemsPerPage: 8  // Show 6 achievements per page (3x2 grid)
+})
 
 const route = useRoute()
 
@@ -55,13 +83,15 @@ onMounted(() => {
   }
 })
 
+watch([selectedCategory], () => {
+  goToPage(1) // Reset to first page when filters change
+})
 </script>
 
 <template>
   <BaseLayout
     title="Profile"
-    icon="person-circle"
-    :showBalance="false">
+    bootstrapIcon="person-circle">
 
     <!-- Level Progress Section -->
     <div class="card mb-4">
@@ -157,28 +187,20 @@ onMounted(() => {
 
         <!-- Filters -->
         <div class="row gy-3 pb-3 mb-4 border-bottom align-items-center">
-          <div class="col-12 col-md-auto">
-            <div class="btn-group w-100 w-md-auto">
-              <button
-                v-for="category in ['all', 'blackjack', 'clicker', 'general']"
-                :key="category"
-                class="btn"
-                :class="selectedCategory === category ? 'btn-primary' : 'btn-outline-primary'"
-                @click="selectedCategory = category">
-                {{ category.charAt(0).toUpperCase() + category.slice(1) }}
-              </button>
-            </div>
-          </div>
-          <div class="col-12 col-md-auto ms-md-auto">
-            <div class="form-check">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                id="hideCompleted"
-                v-model="hideCompleted">
-              <label class="form-check-label" for="hideCompleted">
-                Hide completed
-              </label>
+          <!-- Filters -->
+          <div class="pb-3 mb-4 border-bottom">
+            <!-- Category Buttons Row -->
+            <div class="d-flex justify-content-center mb-4">
+              <div class="btn-group" role="group">
+                <button
+                  v-for="category in ['all', 'blackjack', 'clicker', 'general']"
+                  :key="category"
+                  class="btn"
+                  :class="selectedCategory === category ? 'btn-primary' : 'btn-outline-primary'"
+                  @click="selectedCategory = category">
+                  {{ category.charAt(0).toUpperCase() + category.slice(1) }}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -186,12 +208,17 @@ onMounted(() => {
         <!-- Achievement Grid -->
         <div class="row g-3">
           <div
-            v-for="achievement in filteredAchievements"
+            v-for="achievement in paginatedAchievements"
             :key="achievement.id"
             class="col-md-6">
             <AchievementCard :achievement="achievement" />
           </div>
         </div>
+
+        <BasePagination
+          :current-page="currentPage"
+          :total-pages="totalPages"
+          @page-change="goToPage" />
       </div>
     </div>
   </BaseLayout>

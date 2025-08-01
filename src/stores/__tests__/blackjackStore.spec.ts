@@ -16,7 +16,7 @@ describe('Blackjack Store', () => {
       expect(store.deck).toEqual([])
       expect(store.playerHand).toEqual([])
       expect(store.dealerHand).toEqual([])
-      expect(store.gameState).toBe(BlackjackState.betting)
+      expect(store.gameState).toBe(BlackjackState.BETTING)
       expect(store.currentBet).toBe(0)
     })
   })
@@ -29,7 +29,7 @@ describe('Blackjack Store', () => {
 
       expect(store.playerHand).toHaveLength(2)
       expect(store.dealerHand).toHaveLength(2)
-      expect(store.gameState).toBe(BlackjackState.playerTurn)
+      expect(store.gameState).toBe(BlackjackState.PLAYER_TURN)
     })
 
     it('deals player cards face up and dealer with one card face down', () => {
@@ -59,7 +59,7 @@ describe('Blackjack Store', () => {
     it('prevents hit when not player turn', () => {
       const store = useBlackjackStore()
       store.dealCards()
-      store.gameState = BlackjackState.gameOver
+      store.gameState = BlackjackState.GAME_OVER
       const initialHandSize = store.playerHand.length
 
       store.hit()
@@ -82,7 +82,7 @@ describe('Blackjack Store', () => {
 
       store.hit()
 
-      expect(store.gameState).toBe(BlackjackState.gameOver)
+      expect(store.gameState).toBe(BlackjackState.GAME_OVER)
       expect(store.playerScore).toBe(30)
     })
 
@@ -92,7 +92,7 @@ describe('Blackjack Store', () => {
 
       store.stand()
 
-      expect(store.gameState).toBe(BlackjackState.gameOver)
+      expect(store.gameState).toBe(BlackjackState.GAME_OVER)
       expect(store.dealerHand[1].faceUp).toBe(true)
     })
   })
@@ -198,7 +198,7 @@ describe('Blackjack Store', () => {
       expect(store.deck).toEqual([])
       expect(store.playerHand).toEqual([])
       expect(store.dealerHand).toEqual([])
-      expect(store.gameState).toBe(BlackjackState.betting)
+      expect(store.gameState).toBe(BlackjackState.BETTING)
       expect(store.currentBet).toBe(0)
     })
   })

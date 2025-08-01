@@ -10,6 +10,7 @@ export const achievements = ref<Achievement[]>([
     requirement: 1,
     progress: 0,
     completed: false,
+    claimed: false,
     reward: {
       chips: 10,
       xp: 10
@@ -23,6 +24,7 @@ export const achievements = ref<Achievement[]>([
     requirement: 100,
     progress: 0,
     completed: false,
+    claimed: false,
     reward: {
       chips: 500,
       xp: 250
@@ -36,6 +38,7 @@ export const achievements = ref<Achievement[]>([
     requirement: 5,
     progress: 0,
     completed: false,
+    claimed: false,
     reward: {
       chips: 250,
       xp: 100
@@ -49,6 +52,7 @@ export const achievements = ref<Achievement[]>([
     requirement: 1000,
     progress: 0,
     completed: false,
+    claimed: false,
     reward: {
       chips: 1000,
       xp: 500
@@ -62,6 +66,7 @@ export const achievements = ref<Achievement[]>([
     requirement: 10,
     progress: 0,
     completed: false,
+    claimed: false,
     reward: {
       chips: 500,
       xp: 200
@@ -75,6 +80,7 @@ export const achievements = ref<Achievement[]>([
     requirement: 500,
     progress: 0,
     completed: false,
+    claimed: false,
     reward: {
       chips: 300,
       xp: 150
@@ -89,6 +95,7 @@ export const achievements = ref<Achievement[]>([
     requirement: 100,
     progress: 0,
     completed: false,
+    claimed: false,
     reward: {
       chips: 50,
       xp: 25
@@ -102,6 +109,7 @@ export const achievements = ref<Achievement[]>([
     requirement: 1000,
     progress: 0,
     completed: false,
+    claimed: false,
     reward: {
       chips: 200,
       xp: 100
@@ -115,6 +123,7 @@ export const achievements = ref<Achievement[]>([
     requirement: 1,
     progress: 0,
     completed: false,
+    claimed: false,
     reward: {
       chips: 100,
       xp: 50
@@ -128,6 +137,7 @@ export const achievements = ref<Achievement[]>([
     requirement: 10,
     progress: 0,
     completed: false,
+    claimed: false,
     reward: {
       chips: 500,
       xp: 250
@@ -141,6 +151,7 @@ export const achievements = ref<Achievement[]>([
     requirement: 5,
     progress: 0,
     completed: false,
+    claimed: false,
     reward: {
       chips: 300,
       xp: 150
@@ -154,6 +165,7 @@ export const achievements = ref<Achievement[]>([
     requirement: 1000,
     progress: 0,
     completed: false,
+    claimed: false,
     reward: {
       chips: 100,
       xp: 50
@@ -167,6 +179,7 @@ export const achievements = ref<Achievement[]>([
     requirement: 10000,
     progress: 0,
     completed: false,
+    claimed: false,
     reward: {
       chips: 1000,
       xp: 250
@@ -180,6 +193,7 @@ export const achievements = ref<Achievement[]>([
     requirement: 100000,
     progress: 0,
     completed: false,
+    claimed: false,
     reward: {
       chips: 10000,
       xp: 1000

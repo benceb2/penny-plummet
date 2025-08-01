@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useUserStore } from '@/stores/userStore';
 
 const props = defineProps({
@@ -12,6 +13,9 @@ const props = defineProps({
     default: 20
   }
 });
+
+// i18n
+const { t } = useI18n();
 
 const userStore = useUserStore();
 const username = ref(userStore.username);
@@ -28,10 +32,10 @@ watch(() => userStore.username, (newValue) => {
 });
 
 const validateUsername = (value: string | null): string => {
-  if (!value) return 'Username is required';
-  if (value.length < props.minLength) return `Username must be at least ${props.minLength} characters`;
-  if (value.length > props.maxLength) return `Username cannot exceed ${props.maxLength} characters`;
-  if (!/^[a-zA-Z0-9_\s-]+$/.test(value)) return 'Username can only contain letters, numbers, spaces, underscores, and hyphens';
+  if (!value) return t('usernameSettings.validation.required');
+  if (value.length < props.minLength) return t('usernameSettings.validation.minLength', { min: props.minLength });
+  if (value.length > props.maxLength) return t('usernameSettings.validation.maxLength', { max: props.maxLength });
+  if (!/^[a-zA-Z0-9_\s-]+$/.test(value)) return t('usernameSettings.validation.invalidCharacters');
   return '';
 };
 
@@ -63,7 +67,7 @@ const updateUsername = async () => {
       showSuccess.value = false;
     }, 3000);
   } catch (err) {
-    error.value = 'Failed to update username';
+    error.value = t('usernameSettings.updateFailed');
     console.error('Username update error:', err);
   } finally {
     isLoading.value = false;
@@ -76,9 +80,8 @@ const updateUsername = async () => {
     <div class="card-body">
       <h5 class="card-title d-flex align-items-center">
         <i class="bi bi-person-circle me-2"></i>
-        Username
+        {{ t('usernameSettings.title') }}
       </h5>
-
       <div class="mb-3 mt-3">
         <div class="d-flex gap-3">
           <div class="flex-grow-1">
@@ -94,18 +97,17 @@ const updateUsername = async () => {
                 @input="handleInput"
                 :disabled="isLoading"
                 :maxlength="maxLength"
-                placeholder="Enter username" />
+                :placeholder="t('usernameSettings.placeholder')" />
             </div>
             <div class="mt-1">
               <small class="text-muted" v-if="!error">
-                {{ username?.length || 0 }}/{{ maxLength }} characters
+                {{ t('usernameSettings.charactersCount', { current: username?.length || 0, max: maxLength }) }}
               </small>
               <small class="text-danger" v-if="error">
                 {{ error }}
               </small>
             </div>
           </div>
-
           <button
             class="btn h-100"
             :class="{
@@ -116,20 +118,19 @@ const updateUsername = async () => {
             :disabled="isLoading || !!error || !isDirty">
             <template v-if="isLoading">
               <span class="spinner-border spinner-border-sm me-1" role="status"></span>
-              Saving...
+              {{ t('usernameSettings.saving') }}
             </template>
             <template v-else>
               <i class="bi bi-check-circle-fill me-1"></i>
-              Save
+              {{ t('usernameSettings.save') }}
             </template>
           </button>
         </div>
       </div>
-
       <!-- Success Alert -->
       <div v-if="showSuccess" class="alert alert-success d-flex align-items-center" role="alert">
         <i class="bi bi-check-circle-fill me-2"></i>
-        Username updated successfully!
+        {{ t('usernameSettings.updateSuccess') }}
       </div>
     </div>
   </div>

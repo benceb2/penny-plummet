@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { defineProps } from 'vue';
-import { formatIntAsCurrency } from '@/utils/currencyUtil';
+import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
+import { useAchievementStore } from '@/stores/achievementStore';
 
-defineProps({
+const achievementStore = useAchievementStore();
+
+const props = defineProps({
   achievement: {
     type: Object,
     required: true
@@ -12,18 +14,28 @@ defineProps({
     default: false
   }
 });
+
+function claimReward() {
+  achievementStore.claimAchievement(props.achievement.id);
+}
 </script>
 
 <template>
   <div
     class="card h-100"
-    :class="{ 'border-success': achievement.completed }">
+    :class="{
+      'border-success': achievement.completed && achievement.claimed,
+      'border-warning': achievement.completed && !achievement.claimed
+    }">
     <div class="card-body d-flex flex-column bg-light">
       <!-- Header -->
       <h5 class="card-title d-flex align-items-center">
         {{ achievement.title }}
-        <span v-if="achievement.completed" class="text-success ms-2">
+        <span v-if="achievement.completed && achievement.claimed" class="text-success ms-2">
           <i class="bi bi-check-circle-fill"></i>
+        </span>
+        <span v-else-if="achievement.completed && !achievement.claimed" class="text-warning ms-2">
+          <i class="bi bi-gift-fill"></i>
         </span>
       </h5>
 
@@ -45,6 +57,15 @@ defineProps({
           </small>
         </div>
       </div>
+
+      <!-- Claim Button -->
+      <button
+        v-if="achievement.completed && !achievement.claimed"
+        @click="claimReward"
+        class="btn btn-warning btn-sm mb-3">
+        <i class="bi bi-gift-fill me-2"></i>
+        Claim Rewards
+      </button>
 
       <!-- Rewards -->
       <div class="mt-auto d-flex align-items-center gap-3">

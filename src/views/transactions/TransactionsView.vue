@@ -1,12 +1,16 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useTransactionStore } from '@/stores/transactionStore';
-import { formatIntAsCurrency } from '@/utils/currencyUtil';
+import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
 import BaseLayout from '@/components/layout/BaseLayout.vue';
+import BasePagination from '@/components/layout/BasePagination.vue';
+import TransactionItem from '@/components/TransactionItem.vue';
 
+import { usePagination } from '@/composables/usePagination';
 const transactionStore = useTransactionStore();
 const selectedGame = ref('all');
 const selectedType = ref('all');
+const pageSize = ref(10);
 
 const filteredTransactions = computed(() => {
   let transactions = transactionStore.transactions;
@@ -22,6 +26,16 @@ const filteredTransactions = computed(() => {
   return transactions;
 });
 
+const {
+  currentPage,
+  paginatedItems: paginatedTransactions,
+  totalPages,
+  goToPage
+} = usePagination(filteredTransactions, {
+  itemsPerPage: pageSize.value
+});
+
+
 const stats = computed(() => {
   const filtered = filteredTransactions.value;
   return {
@@ -32,22 +46,15 @@ const stats = computed(() => {
   };
 });
 
-function formatDate(timestamp: number): string {
-  return new Date(timestamp).toLocaleDateString('en-US', {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  });
-}
+watch([selectedGame, selectedType], () => {
+  goToPage(1);
+});
 </script>
 
 <template>
   <BaseLayout
     title="Transaction History"
-    icon="clock-history"
-    :showBalance="true">
+    bootstrapIcon="clock-history">
 
     <!-- Stats Summary Card -->
     <div class="card mb-4">
@@ -130,44 +137,27 @@ function formatDate(timestamp: number): string {
 
         <!-- Transaction List -->
         <div class="transaction-list">
-          <div
-            v-for="transaction in filteredTransactions"
+          <TransactionItem
+            v-for="transaction in paginatedTransactions"
             :key="transaction.id"
-            class="transaction-item p-3 border-bottom">
-            <div class="d-flex justify-content-between align-items-center">
-              <div>
-                <span
-                  class="badge me-2"
-                  :class="{
-                    'bg-success': transaction.type === 'win',
-                    'bg-danger': transaction.type === 'loss',
-                    'bg-secondary': transaction.type === 'push'
-                  }">
-                  {{ transaction.type.toUpperCase() }}
-                </span>
-                <span class="badge bg-primary me-2">
-                  {{ transaction.game.toUpperCase() }}
-                </span>
-                <span class="text-muted">{{ formatDate(transaction.timestamp) }}</span>
-              </div>
-              <div>
-                <span
-                  :class="{
-                    'text-success': transaction.type === 'win',
-                    'text-danger': transaction.type === 'loss'
-                  }"
-                  class="fw-bold">
-                  {{ transaction.type === 'win' ? '+' : '' }}{{ formatIntAsCurrency(transaction.amount) }}
-                </span>
-              </div>
-            </div>
-            <div class="mt-1 text-muted small">
-              {{ transaction.details }}
-            </div>
+            :transaction="transaction" />
+
+          <div v-if="paginatedTransactions.length === 0" class="text-center py-4 text-muted">
+            No transactions to display
           </div>
 
-          <div v-if="filteredTransactions.length === 0" class="text-center py-4 text-muted">
-            No transactions to display
+          <!-- Pagination -->
+          <BasePagination
+            v-if="totalPages > 1"
+            :current-page="currentPage"
+            :total-pages="totalPages"
+            @page-change="goToPage" />
+
+          <!-- Page Info -->
+          <div class="text-center text-muted mt-2">
+            Showing {{ ((currentPage - 1) * pageSize) + 1 }}
+            to {{ Math.min(currentPage * pageSize, filteredTransactions.length) }}
+            of {{ filteredTransactions.length }} transactions
           </div>
         </div>
       </div>
@@ -177,7 +167,6 @@ function formatDate(timestamp: number): string {
 
 <style scoped>
 .transaction-list {
-  max-height: 600px;
   overflow-y: auto;
 }
 

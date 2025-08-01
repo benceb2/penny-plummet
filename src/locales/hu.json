@@ -1,0 +1,347 @@
+{
+  "languages": {
+    "en-GB": "English",
+    "hu-HU": "Magyar"
+  },
+  "navbar": {
+    "brand": "Penny Plummet",
+    "games": {
+      "blackjack": "Blackjack",
+      "roulette": "Rulett"
+    },
+    "about": "Rólunk",
+    "wallet": {
+      "title": "Több zseton kell?",
+      "clicker": "Kattintós Játék",
+      "transactions": "Tranzakció Előzmények"
+    },
+    "profile": {
+      "settings": "Beállítások",
+      "viewProfile": "Profil Megtekintése"
+    }
+  },
+  "home": {
+    "welcome": "Üdvözöljük a Penny Plummet-ben!",
+    "welcomeBack": "Üdv újra, {username}!",
+    "stats": {
+      "currentBalance": "Aktuális Egyenleg",
+      "biggestWin": "Legnagyobb Nyeremény",
+      "level": "Szint"
+    },
+    "games": {
+      "blackjack": {
+        "title": "Blackjack",
+        "shortDesc": "Próbálja ki szerencséjét az osztó ellen!",
+        "longDesc": "Tegyen téteket és célozza meg a 21-et ebben a klasszikus kártyajátékban.",
+        "playButton": "Blackjack Játék"
+      },
+      "clicker": {
+        "title": "Kattintós Játék",
+        "shortDesc": "Kattintson a gazdagsághoz!",
+        "longDesc": "Szerezzen zsetonokat minden kattintással és oldjon fel erős fejlesztéseket.",
+        "playButton": "Kezdjen Kattintani"
+      },
+      "roulette": {
+        "title": "Rulett",
+        "shortDesc": "Fogadjon számokra a pörgő rulett keréknél.",
+        "longDesc": "Próbálja ki szerencséjét a rulett keréknél különböző fogadási lehetőségekkel.",
+        "playButton": "Rulett Játék"
+      }
+    },
+    "levelProgress": {
+      "title": "Szint Haladás",
+      "xpProgress": "{current} / {required} XP a következő szinthez"
+    },
+    "achievements": {
+      "title": "Folyamatban Lévő Eredmények",
+      "viewAll": "Összes Eredmény Megtekintése"
+    },
+    "transactions": {
+      "title": "Legutóbbi tranzakciók",
+      "viewAll": "Összes Tranzakció Megtekintése"
+    }
+  },
+  "blackjack": {
+    "title": "Blackjack",
+    "stats": {
+      "title": "Statisztikák",
+      "hideStats": "Statisztikák Elrejtése",
+      "viewStats": "Statisztikák Megtekintése",
+      "handsPlayed": "Játszott Kör",
+      "totalWinnings": "Összes Nyeremény",
+      "biggestWin": "Legnagyobb Nyeremény"
+    },
+    "gameStatus": {
+      "bust": "Bust! Az osztó nyert!",
+      "dealerBusts": "Az osztó túllépte! Ön nyert!",
+      "youWin": "Ön nyert!",
+      "dealerWins": "Az osztó nyert!",
+      "push": "Döntetlen!"
+    },
+    "dealer": {
+      "hand": "Az Osztó Keze",
+      "score": "Pontszám"
+    },
+    "player": {
+      "hand": "Az Ön Keze",
+      "score": "Pontszám"
+    },
+    "controls": {
+      "title": "Játék Vezérlés",
+      "placeBet": "Tegye Meg Tétjét",
+      "betAmount": "Tét Összege",
+      "adjustBet": "Tét Módosítása",
+      "actions": "Műveletek",
+      "quickBet": "Gyors Tét",
+      "dealCards": "Lapok Osztása",
+      "hit": "Kérek Lapot",
+      "stand": "Megállok",
+      "newGame": "Új Játék"
+    }
+  },
+  "clicker": {
+    "title": "Zseton Gyűjtés",
+    "earnings": {
+      "current": "Jelenlegi Bevétel",
+      "clickValue": "+"
+    },
+    "collect": {
+      "button": "Zsetonok Begyűjtése",
+      "minimum": "(Min. 10 szükséges)"
+    },
+    "upgrades": {
+      "title": "Fejlesztések",
+      "autoClickers": {
+        "title": "Auto-Kattintók",
+        "owned": "Tulajdonban",
+        "perSecond": "/másodperc",
+        "buy": "Auto-Kattintó Vásárlása"
+      },
+      "multiplier": {
+        "title": "Kattintás Szorzó",
+        "current": "Jelenlegi",
+        "upgrade": "Szorzó Fejlesztése"
+      }
+    }
+  },
+  "about": {
+    "title": "Rólunk",
+    "game": {
+      "title": "A Játékról",
+      "description": "A Penny Plummet egy böngésző-alapú kaszinó játék, amely ötvözi a klasszikus szerencsejátékokat a modern webtechnológiákkal. Próbálja ki szerencséjét a Blackjack-nél vagy tesztelje kattintási sebességét a Kattintós minijátékban!"
+    },
+    "technology": {
+      "title": "Technológiai Stack",
+      "items": {
+        "typescript": {
+          "name": "TypeScript",
+          "description": "Típusos JavaScript"
+        },
+        "vue": {
+          "name": "Vue 3",
+          "description": "Progresszív keretrendszer"
+        },
+        "vite": {
+          "name": "Vite",
+          "description": "Következő generációs frontend eszköz"
+        },
+        "pinia": {
+          "name": "Pinia",
+          "description": "Állapotkezelés"
+        },
+        "bootstrap": {
+          "name": "Bootstrap 5",
+          "description": "UI keretrendszer"
+        },
+        "localStorage": {
+          "name": "Local Storage",
+          "description": "Adatok tárolása"
+        }
+      }
+    },
+    "features": {
+      "title": "Játék Funkciók",
+      "blackjack": {
+        "title": "Blackjack",
+        "description": "Sajátítsd el a 21-es művészetét ebben a klasszikus kártyajátékban. Győzd le az osztót stratégiai játékkal, nyiss fel eredményeket és mássz fel a ranglistán."
+      },
+      "roulette": {
+        "title": "Rulett",
+        "description": "Pörgesd meg a szerencse kerekeit! Tedd fel tétedet számokra, színekre vagy kombinációkra ebben az időtlen kaszinó kedvencben progresszív jutalmakkal."
+      },
+      "clicker": {
+        "title": "Kattintós Játék",
+        "description": "Kattintsd magad a gazdagsághoz! Építs kombókat, nyiss fel szorzókat és prestízsálj hatalmas jutalmakért ebben a függőséget okozó idle játékban."
+      }
+    }
+  },
+  "achievements": {
+    "blackjack": {
+      "first_hand": {
+        "title": "Első Lépések",
+        "description": "Játssza le első Blackjack körét"
+      },
+      "blackjack_veteran": {
+        "title": "Blackjack Veterán",
+        "description": "Játsszon 100 kört Blackjackből"
+      },
+      "winning_streak": {
+        "title": "Szerencsés Széria",
+        "description": "Nyerjen 5 kört egymás után"
+      },
+      "high_roller": {
+        "title": "Nagy Játékos",
+        "description": "Nyerjen 1000$ vagy többet egy körben"
+      },
+      "blackjack_master": {
+        "title": "Természetes Tehetség",
+        "description": "Érjen el Blackjacket 10 alkalommal"
+      },
+      "high_stakes": {
+        "title": "Magas Tétek Játékosa",
+        "description": "Tegyen legalább 500$ tétet"
+      }
+    },
+    "clicker": {
+      "click_novice": {
+        "title": "Kattintás Újonc",
+        "description": "Kattintson 100-szor"
+      },
+      "click_master": {
+        "title": "Kattintás Mester",
+        "description": "Kattintson 1000-szer"
+      },
+      "auto_collector": {
+        "title": "Automatizálás Kezdő",
+        "description": "Vásárolja meg első auto-kattintóját"
+      },
+      "auto_empire": {
+        "title": "Kattintás Birodalom",
+        "description": "Birtokoljon 10 auto-kattintót"
+      },
+      "multiplier_enthusiast": {
+        "title": "Szorzó Rajongó",
+        "description": "Érje el az 5-ös szorzó szintet"
+      }
+    },
+    "general": {
+      "small_fortune": {
+        "title": "Kis Vagyon",
+        "description": "Gyűjtsön össze 1000$ zsetont"
+      },
+      "medium_fortune": {
+        "title": "Közepes Vagyon",
+        "description": "Gyűjtsön össze 10000$ zsetont"
+      },
+      "large_fortune": {
+        "title": "Nagy Vagyon",
+        "description": "Gyűjtsön össze 100000$ zsetont"
+      }
+    },
+    "reward": {
+      "chips": "zseton",
+      "xp": "XP"
+    }
+  },
+  "settings": {
+    "title": "Beállítások",
+    "localSave": {
+      "title": "Helyi Mentés Kezelés",
+      "export": {
+        "title": "Mentés Exportálása",
+        "description": "Töltsd le a jelenlegi játékállapotot egy fájlba. Ezt a fájlt használhatod a haladásod visszaállítására később vagy egy másik eszközön.",
+        "button": "Mentés Fájl Exportálása"
+      },
+      "import": {
+        "title": "Mentés Importálása",
+        "description": "Állítsd vissza a haladásodat egy korábban exportált mentés fájlból. Ez helyettesíti a jelenlegi haladásodat.",
+        "noFileSelected": "Nincs fájl kiválasztva",
+        "readError": "Nem sikerült olvasni a mentés fájlt",
+        "importSuccess": "Mentés sikeresen importálva",
+        "importFailed": "Nem sikerült importálni a mentés fájlt",
+        "confirmTitle": "Importálás Megerősítése",
+        "confirmMessage": "Biztosan importálni szeretnéd ezt a mentés fájlt? Ez helyettesíti a jelenlegi haladásodat.",
+        "cancel": "Mégse",
+        "confirm": "Importálás",
+        "preview": {
+          "title": "Mentés Fájl Előnézet",
+          "username": "Felhasználónév",
+          "balance": "Egyenleg",
+          "level": "Szint",
+          "saveDate": "Mentés Dátuma",
+          "notSet": "Nincs beállítva"
+        }
+      },
+      "delete": {
+        "title": "Mentés Törlése",
+        "description": "Töröld az összes haladásodat és kezdj újra. Ez a művelet nem vonható vissza, kivéve ha exportáltad a mentésedet.",
+        "button": "Mentés Adatok Törlése",
+        "confirmTitle": "Törlés Megerősítése",
+        "warning": "Figyelem: Ez véglegesen törli az összes haladásodat!",
+        "confirmMessage": "Biztosan törölni szeretnéd a mentés adatokat és újrakezdeni?",
+        "cancel": "Mégse",
+        "confirm": "Törlés"
+      }
+    },
+    "messages": {
+      "operationSuccess": "Művelet sikeresen befejezve!",
+      "genericError": "Hiba történt a művelet során"
+    }
+  },
+  "usernameSettings": {
+    "title": "Felhasználónév",
+    "placeholder": "Írd be a felhasználónevet",
+    "charactersCount": "{current}/{max} karakter",
+    "save": "Mentés",
+    "saving": "Mentés...",
+    "updateSuccess": "Felhasználónév sikeresen frissítve!",
+    "updateFailed": "Nem sikerült frissíteni a felhasználónevet",
+    "validation": {
+      "required": "Felhasználónév szükséges",
+      "minLength": "A felhasználónév legalább {min} karakter hosszú legyen",
+      "maxLength": "A felhasználónév nem lehet hosszabb {max} karakternél",
+      "invalidCharacters": "A felhasználónév csak betűket, számokat, szóközöket, aláhúzásokat és kötőjeleket tartalmazhat"
+    }
+  },
+  "roulette": {
+    "title": "Rulett",
+    "stats": {
+      "show": "Statisztikák Megtekintése",
+      "hide": "Statisztikák Elrejtése",
+      "title": "Statisztikák",
+      "totalSpins": "Összes Pörgetés",
+      "totalWagered": "Összes Tét",
+      "biggestWin": "Legnagyobb Nyeremény",
+      "winStreak": "Nyerési Sorozat"
+    },
+    "table": {
+      "title": "Rulett Asztal"
+    },
+    "gameControls": {
+      "title": "Játék Vezérlők",
+      "betting": {
+        "title": "Tét Vezérlők",
+        "currentBets": "Jelenlegi Tétek",
+        "betAmount": "Tét Összege",
+        "clearAllBets": "Összes Tét Törlése",
+        "table": {
+          "type": "Típus",
+          "numbers": "Számok",
+          "amount": "Összeg",
+          "total": "Összesen:"
+        }
+      },
+      "actions": {
+        "title": "Műveletek",
+        "spin": "Pörgetés",
+        "newGame": "Új Játék"
+      }
+    },
+    "results": {
+      "win": "Nyertél {amount}-t!",
+      "loss": "Vesztettél {amount}-t",
+      "push": "Döntetlenül értél és {amount} visszatérítve!",
+      "winningNumber": "Nyerő Szám: {number}"
+    }
+  }
+}

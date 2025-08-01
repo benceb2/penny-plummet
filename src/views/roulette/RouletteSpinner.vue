@@ -1,4 +1,3 @@
-// RouletteSpinner.vue
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
 
@@ -14,7 +13,7 @@ const emit = defineEmits<{
 const spinnerRef = ref<HTMLDivElement | null>(null)
 const numbersStrip = ref<HTMLDivElement | null>(null)
 const isAnimating = ref(false)
-const spinCount = ref(0) // Add this to force animation restart
+const spinCount = ref(0)
 
 // Real European roulette wheel sequence
 const BASE_SEQUENCE = [

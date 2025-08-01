@@ -28,7 +28,7 @@ describe('Roulette Store', () => {
 
   describe('Initial State', () => {
     it('should start in betting state', () => {
-      expect(store.gameState).toBe(RouletteState.betting)
+      expect(store.gameState).toBe(RouletteState.BETTING)
     })
 
     it('should have no current bets', () => {
@@ -54,7 +54,7 @@ describe('Roulette Store', () => {
     })
 
     it('should not allow placing bets when not in betting state', () => {
-      store.gameState = RouletteState.spinning
+      store.gameState = RouletteState.SPINNING
       store.placeBet('straight', [1], 100)
       expect(store.currentBets).toHaveLength(0)
     })
@@ -132,7 +132,7 @@ describe('Roulette Store', () => {
       store.placeBet('straight', [1], 100)
       store.reset()
 
-      expect(store.gameState).toBe(RouletteState.betting)
+      expect(store.gameState).toBe(RouletteState.BETTING)
       expect(store.currentBets).toHaveLength(0)
       expect(store.winningNumber).toBeNull()
     })

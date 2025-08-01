@@ -1,6 +1,8 @@
 import type { AchievementStore } from "@/stores/achievementStore";
 import type { BlackjackStore } from "@/stores/blackjackStore";
 import type { ClickerStore } from "@/stores/clickerStore";
+import type { RouletteStore } from "@/stores/rouletteStore";
+import type { TransactionStore } from "@/stores/transactionStore";
 import type { UserStore } from "@/stores/userStore";
 
 export interface GameSaveData {
@@ -8,5 +10,7 @@ export interface GameSaveData {
   achievements: AchievementStore;
   blackjack: BlackjackStore;
   clicker: ClickerStore;
+  transactions: TransactionStore;
+  roulette: RouletteStore;
   timestamp: number;
 }

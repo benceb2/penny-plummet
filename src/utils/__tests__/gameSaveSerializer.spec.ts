@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { createGameSerializer, shiftString, calculateStorageKey } from '@/utils/gameSaveSerializer'
+import { createGameSerializer, shiftString, calculateStorageKey } from '@/utils/gameSaveSerializerUtil'
 import type { StateTree } from 'pinia'
 
 describe('Pinia Serializer', () => {
@@ -184,5 +184,5 @@ describe('Pinia Serializer', () => {
 
       expect(deserialized).toEqual({})
     })
-  })
+  });
 })

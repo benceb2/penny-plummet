@@ -11,17 +11,17 @@
  */
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { calculateStorageKey, createGameSerializer } from '../utils/gameSaveSerializer'
+import { calculateStorageKey, createGameSerializer } from '../utils/gameSaveSerializerUtil'
 import { useAchievementStore } from './achievementStore'
-import { formatIntAsCurrency } from '@/utils/currencyUtil'
+import { formatIntAsCurrency } from '@/utils/numberFormatUtil'
 import { useTransactionStore } from './transactionStore'
 import { useUserStore } from './userStore'
 
 
 export enum RouletteState {
-  betting = 'betting',
-  spinning = 'spinning',
-  complete = 'complete'
+  BETTING = 'betting',
+  SPINNING = 'spinning',
+  COMPLETE = 'complete'
 }
 
 export type BetType =
@@ -76,7 +76,7 @@ export const useRouletteStore = defineStore('roulette', () => {
   const userStore = useUserStore();
 
   // Game state
-  const gameState = ref<RouletteState>(RouletteState.betting)
+  const gameState = ref<RouletteState>(RouletteState.BETTING)
   const currentBets = ref<RouletteBet[]>([])
   const lastResult = ref<RouletteResult | null>(null)
   const winningNumber = ref<number | null>(null)
@@ -97,7 +97,7 @@ export const useRouletteStore = defineStore('roulette', () => {
   )
 
   const isSpinAllowed = computed(() =>
-    gameState.value === RouletteState.betting && totalBet.value > 0
+    gameState.value === RouletteState.BETTING && totalBet.value > 0
   )
 
   /**
@@ -107,7 +107,7 @@ export const useRouletteStore = defineStore('roulette', () => {
    * @param amount Bet amount
    */
   function placeBet(betType: BetType, numbers: number[], amount: number) {
-    if (gameState.value !== RouletteState.betting) return
+    if (gameState.value !== RouletteState.BETTING) return
 
     currentBets.value.push({
       type: betType,
@@ -125,7 +125,7 @@ export const useRouletteStore = defineStore('roulette', () => {
    * Clears all current bets from the table
    */
   function clearBets() {
-    if (gameState.value !== RouletteState.betting) return
+    if (gameState.value !== RouletteState.BETTING) return
     currentBets.value = []
   }
 
@@ -133,7 +133,7 @@ export const useRouletteStore = defineStore('roulette', () => {
    * Resets the game state for a new round
    */
   function reset() {
-    gameState.value = RouletteState.betting
+    gameState.value = RouletteState.BETTING
     currentBets.value = []
     winningNumber.value = null
     lastResult.value = null
@@ -144,7 +144,7 @@ export const useRouletteStore = defineStore('roulette', () => {
       lastResult.value = pendingResult.value
       pendingResult.value = null
     }
-    gameState.value = RouletteState.complete
+    gameState.value = RouletteState.COMPLETE
   }
 
   function handleSpinResult(result: RouletteResult) {
@@ -188,7 +188,7 @@ export const useRouletteStore = defineStore('roulette', () => {
   async function spin(): Promise<RouletteResult> {
     if (!isSpinAllowed.value) return {} as RouletteResult;
 
-    gameState.value = RouletteState.spinning;
+    gameState.value = RouletteState.SPINNING;
 
     const result: RouletteResult = {
       winningNumber: Math.floor(Math.random() * 37),
@@ -250,3 +250,6 @@ export const useRouletteStore = defineStore('roulette', () => {
     serializer: createGameSerializer()
   }
 } as any)
+
+
+export type RouletteStore = ReturnType<typeof useRouletteStore>;

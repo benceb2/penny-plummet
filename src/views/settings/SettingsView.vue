@@ -1,22 +1,28 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { SavePreview } from '@/types/SavePreview';
-import { SaveManager } from '@/utils/saveManager';
-import UsernameSettings from '@/components/UsernameSettings.vue';
+import UsernameSettings from '@/views/settings/UsernameSettings.vue';
 import BaseLayout from '@/components/layout/BaseLayout.vue';
 import { useUserStore } from '@/stores/userStore';
 import { useAchievementStore } from '@/stores/achievementStore';
 import { useBlackjackStore } from '@/stores/blackjackStore';
 import { useClickerStore } from '@/stores/clickerStore';
-import { formatIntAsCurrency } from '@/utils/currencyUtil';
-import type { GameSaveData } from '@/types/GameSaveData';
+import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
+import { useTransactionStore } from '@/stores/transactionStore';
+import { useRouletteStore } from '@/stores/rouletteStore';
+import gameSaveUtil from '@/utils/gameSaveUtil';
 
-// Initialize stores and manager
-const saveManager = new SaveManager();
+// i18n
+const { t } = useI18n();
+
+// Stores
 const userStore = useUserStore();
 const achievementStore = useAchievementStore();
 const blackjackStore = useBlackjackStore();
 const clickerStore = useClickerStore();
+const transactionsStore = useTransactionStore();
+const rouletteStore = useRouletteStore();
 
 // UI state
 const importError = ref('');
@@ -27,20 +33,11 @@ const showImportConfirm = ref(false);
 const showDeleteConfirm = ref(false);
 const pendingImportData = ref<string | null>(null);
 
-// Collect current game state
-const getCurrentGameState = () => ({
-  user: userStore.$state,
-  achievements: achievementStore.$state,
-  blackjack: blackjackStore.$state,
-  clicker: clickerStore.$state,
-  timestamp: Date.now()
-});
-
 const exportSave = async () => {
   try {
-    const saveData = getCurrentGameState();
-    const serialized = await saveManager.exportSave(saveData as GameSaveData);
-    const blob = await saveManager.createDownloadBlob(serialized);
+    const saveData = gameSaveUtil.getCurrentGameState();
+    const serialized = await gameSaveUtil.exportSave(saveData);
+    const blob = await gameSaveUtil.createDownloadBlob(serialized);
 
     // Handle file download
     const url = URL.createObjectURL(blob);
@@ -61,19 +58,19 @@ const handleFileSelect = async (event: Event) => {
   const file = target?.files?.[0];
 
   if (!file) {
-    importError.value = 'No file selected';
+    importError.value = t('settings.localSave.import.noFileSelected');
     return;
   }
 
   try {
     const text = await file.text();
-    const saveData = await saveManager.importSave(text);
-    savePreview.value = saveManager.extractSavePreview(saveData);
+    const saveData = await gameSaveUtil.importSave(text);
+    savePreview.value = gameSaveUtil.extractSavePreview(saveData);
     pendingImportData.value = text;
     showImportConfirm.value = true;
   } catch (error) {
     console.error('Failed to read save file:', error);
-    importError.value = error instanceof Error ? error.message : 'Failed to read save file';
+    importError.value = error instanceof Error ? error.message : t('settings.localSave.import.readError');
   } finally {
     if (fileInput.value) {
       fileInput.value.value = '';
@@ -86,18 +83,20 @@ const confirmImport = async () => {
   try {
     if (!pendingImportData.value) return;
 
-    const saveData = await saveManager.importSave(pendingImportData.value);
+    const saveData = await gameSaveUtil.importSave(pendingImportData.value);
 
     // Apply the saved states to all stores
     userStore.$patch(saveData.user);
     achievementStore.$patch(saveData.achievements);
     blackjackStore.$patch(saveData.blackjack);
     clickerStore.$patch(saveData.clicker);
+    transactionsStore.$patch(saveData.transactions);
+    rouletteStore.$patch(saveData.roulette);
 
     showSuccess();
   } catch (error) {
     console.error('Failed to import save:', error);
-    importError.value = error instanceof Error ? error.message : 'Failed to import save file';
+    importError.value = error instanceof Error ? error.message : t('settings.localSave.import.importFailed');
   } finally {
     showImportConfirm.value = false;
     pendingImportData.value = null;
@@ -135,25 +134,26 @@ const cancelDelete = () => {
 </script>
 
 <template>
-  <BaseLayout title="Settings" icon="gear-fill" :show-balance="false">
+  <BaseLayout :title="t('settings.title')" bootstrapIcon="gear-fill" :show-balance="false">
     <UsernameSettings />
+
+    <!-- Local Save Management -->
     <div class="card">
       <div class="card-body">
         <h5 class="card-title d-flex align-items-center mb-4">
           <i class="bi bi-save me-2"></i>
-          Game Save Management
+          {{ t('settings.localSave.title') }}
         </h5>
 
         <!-- Export Section -->
         <div class="mb-4">
-          <h6 class="mb-3">Export Save</h6>
+          <h6 class="mb-3">{{ t('settings.localSave.export.title') }}</h6>
           <p class="text-muted small mb-3">
-            Download your current game progress to a file. You can use this file to restore your progress later or on
-            another device.
+            {{ t('settings.localSave.export.description') }}
           </p>
           <button @click="exportSave" class="btn btn-primary">
             <i class="bi bi-download me-2"></i>
-            Export Save File
+            {{ t('settings.localSave.export.button') }}
           </button>
         </div>
 
@@ -161,9 +161,9 @@ const cancelDelete = () => {
 
         <!-- Import Section -->
         <div class="mb-4">
-          <h6 class="mb-3">Import Save</h6>
+          <h6 class="mb-3">{{ t('settings.localSave.import.title') }}</h6>
           <p class="text-muted small mb-3">
-            Restore your progress from a previously exported save file. This will replace your current progress.
+            {{ t('settings.localSave.import.description') }}
           </p>
 
           <div class="mb-3">
@@ -184,20 +184,21 @@ const cancelDelete = () => {
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title">Confirm Import</h5>
+                  <h5 class="modal-title">{{ t('settings.localSave.import.confirmTitle') }}</h5>
                 </div>
                 <div class="modal-body">
                   <div
                     class="save-preview bg-light p-3 rounded mb-3"
                     v-if="savePreview">
-                    <h6 class="mb-3">Save File Preview</h6>
+                    <h6 class="mb-3">{{ t('settings.localSave.import.preview.title') }}</h6>
                     <div class="row g-3">
                       <div class="col-sm-6">
                         <div class="d-flex align-items-center">
                           <i class="bi bi-person-circle text-primary fs-4 me-2"></i>
                           <div>
-                            <div class="text-muted small">Username</div>
-                            <div class="fw-medium">{{ savePreview.username || 'Not set' }}</div>
+                            <div class="text-muted small">{{ t('settings.localSave.import.preview.username') }}</div>
+                            <div class="fw-medium">{{ savePreview.username ||
+                              t('settings.localSave.import.preview.notSet') }}</div>
                           </div>
                         </div>
                       </div>
@@ -205,7 +206,7 @@ const cancelDelete = () => {
                         <div class="d-flex align-items-center">
                           <i class="bi bi-wallet2 text-success fs-4 me-2"></i>
                           <div>
-                            <div class="text-muted small">Balance</div>
+                            <div class="text-muted small">{{ t('settings.localSave.import.preview.balance') }}</div>
                             <div class="fw-medium">{{ formatIntAsCurrency(savePreview.balance) }}</div>
                           </div>
                         </div>
@@ -214,8 +215,9 @@ const cancelDelete = () => {
                         <div class="d-flex align-items-center">
                           <i class="bi bi-stars text-warning fs-4 me-2"></i>
                           <div>
-                            <div class="text-muted small">Level</div>
-                            <div class="fw-medium">Level {{ savePreview.level }}</div>
+                            <div class="text-muted small">{{ t('settings.localSave.import.preview.level') }}</div>
+                            <div class="fw-medium">{{ t('settings.localSave.import.preview.level') }} {{
+                              savePreview.level }}</div>
                           </div>
                         </div>
                       </div>
@@ -223,19 +225,20 @@ const cancelDelete = () => {
                         <div class="d-flex align-items-center">
                           <i class="bi bi-calendar3 text-info fs-4 me-2"></i>
                           <div>
-                            <div class="text-muted small">Save Date</div>
+                            <div class="text-muted small">{{ t('settings.localSave.import.preview.saveDate') }}</div>
                             <div class="fw-medium">{{ new Date(savePreview.timestamp).toLocaleDateString() }}</div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <p class="mb-0">Are you sure you want to import this save file? This will replace your current
-                    progress.</p>
+                  <p class="mb-0">{{ t('settings.localSave.import.confirmMessage') }}</p>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" @click="cancelImport">Cancel</button>
-                  <button type="button" class="btn btn-primary" @click="confirmImport">Import</button>
+                  <button type="button" class="btn btn-secondary" @click="cancelImport">{{
+                    t('settings.localSave.import.cancel') }}</button>
+                  <button type="button" class="btn btn-primary" @click="confirmImport">{{
+                    t('settings.localSave.import.confirm') }}</button>
                 </div>
               </div>
             </div>
@@ -246,13 +249,13 @@ const cancelDelete = () => {
 
         <!-- Delete Section -->
         <div>
-          <h6 class="mb-3">Delete Save</h6>
+          <h6 class="mb-3">{{ t('settings.localSave.delete.title') }}</h6>
           <p class="text-muted small mb-3">
-            Delete all your progress and start fresh. This action cannot be undone unless you have exported your save.
+            {{ t('settings.localSave.delete.description') }}
           </p>
           <button @click="deleteSave" class="btn btn-danger">
             <i class="bi bi-trash me-2"></i>
-            Delete Save Data
+            {{ t('settings.localSave.delete.button') }}
           </button>
 
           <!-- Delete Confirmation Modal -->
@@ -264,18 +267,20 @@ const cancelDelete = () => {
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title">Confirm Delete</h5>
+                  <h5 class="modal-title">{{ t('settings.localSave.delete.confirmTitle') }}</h5>
                 </div>
                 <div class="modal-body">
                   <p class="text-danger">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                    Warning: This will permanently delete all your progress!
+                    {{ t('settings.localSave.delete.warning') }}
                   </p>
-                  <p>Are you sure you want to delete your save data and start fresh?</p>
+                  <p>{{ t('settings.localSave.delete.confirmMessage') }}</p>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" @click="cancelDelete">Cancel</button>
-                  <button type="button" class="btn btn-danger" @click="confirmDelete">Delete</button>
+                  <button type="button" class="btn btn-secondary" @click="cancelDelete">{{
+                    t('settings.localSave.delete.cancel') }}</button>
+                  <button type="button" class="btn btn-danger" @click="confirmDelete">{{
+                    t('settings.localSave.delete.confirm') }}</button>
                 </div>
               </div>
             </div>
@@ -290,7 +295,7 @@ const cancelDelete = () => {
 
         <div v-if="importSuccess" class="alert alert-success mt-4" role="alert">
           <i class="bi bi-check-circle-fill me-2"></i>
-          Operation completed successfully!
+          {{ t('settings.messages.operationSuccess') }}
         </div>
       </div>
     </div>

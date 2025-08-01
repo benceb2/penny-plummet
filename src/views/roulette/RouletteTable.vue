@@ -30,9 +30,23 @@ const getNumberButtonClass = (num: number): Record<string, boolean> => {
   }
 }
 
+// Get bet amount for direct bets on individual numbers only
 const getBetAmount = (num: number): number => {
   return props.currentBets
-    .filter(bet => bet.numbers.includes(num))
+    .filter(bet =>
+      bet.numbers.includes(num) &&
+      (bet.type === 'straight' || bet.numbers.length === 1)
+    )
+    .reduce((total, bet) => total + bet.amount, 0)
+}
+
+// Get bet amount for outside bets (dozens, colors, etc.)
+const getOutsideBetAmount = (betNumbers: number[]): number => {
+  return props.currentBets
+    .filter(bet =>
+      bet.numbers.length === betNumbers.length &&
+      bet.numbers.every(num => betNumbers.includes(num))
+    )
     .reduce((total, bet) => total + bet.amount, 0)
 }
 
@@ -133,12 +147,19 @@ const bottomBets = [
       <!-- Dozen Bets -->
       <div class="row g-2 mb-2">
         <div v-for="bet in outsideBets" :key="bet.label" class="col-4">
-          <button
-            :class="['btn border w-100', bet.class]"
-            style="height: 3.5rem"
-            @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
-            {{ bet.label }}
-          </button>
+          <div class="position-relative">
+            <button
+              :class="['btn border w-100', bet.class, { 'active': getOutsideBetAmount(bet.numbers) > 0 }]"
+              style="height: 3.5rem"
+              @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
+              {{ bet.label }}
+              <span
+                v-if="getOutsideBetAmount(bet.numbers) > 0"
+                class="bet-amount-badge">
+                {{ formatCurrency(getOutsideBetAmount(bet.numbers)) }}
+              </span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -167,11 +188,16 @@ const bottomBets = [
       <!-- Bottom Bets -->
       <div class="bg-success p-3 rounded">
         <div class="d-grid" style="grid-template-columns: repeat(7, 1fr); gap: 0.25rem;">
-          <button v-for="bet in bottomBets" :key="bet.label"
-            :class="['btn btn-outline-light btn-sm w-100 py-2', bet.class]"
-            @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
-            {{ bet.label }}
-          </button>
+          <div v-for="bet in bottomBets" :key="bet.label" class="position-relative">
+            <button
+              :class="['btn btn-outline-light btn-sm w-100 py-2', bet.class, { 'active': getOutsideBetAmount(bet.numbers) > 0 }]"
+              @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
+              {{ bet.label }}
+              <span v-if="getOutsideBetAmount(bet.numbers) > 0" class="bet-amount-badge">
+                {{ formatCurrency(getOutsideBetAmount(bet.numbers)) }}
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -181,10 +207,15 @@ const bottomBets = [
       <!-- Dozen Bets -->
       <div class="row g-2 mb-2">
         <div v-for="bet in outsideBets" :key="bet.label" class="col-4">
-          <button :class="['btn border w-100 py-2', bet.class]"
-            @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
-            {{ bet.label }}
-          </button>
+          <div class="position-relative">
+            <button :class="['btn border w-100 py-2', bet.class, { 'active': getOutsideBetAmount(bet.numbers) > 0 }]"
+              @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
+              {{ bet.label }}
+              <span v-if="getOutsideBetAmount(bet.numbers) > 0" class="bet-amount-badge">
+                {{ formatCurrency(getOutsideBetAmount(bet.numbers)) }}
+              </span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -216,11 +247,18 @@ const bottomBets = [
       <div class="row g-2">
         <template v-for="(bet) in bottomBets" :key="bet.label">
           <div class="col-6">
-            <button
-              :class="['btn border w-100 py-2', bet.class]"
-              @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
-              {{ bet.label }}
-            </button>
+            <div class="position-relative">
+              <button
+                :class="['btn border w-100 py-2', bet.class, { 'active': getOutsideBetAmount(bet.numbers) > 0 }]"
+                @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
+                {{ bet.label }}
+                <span
+                  v-if="getOutsideBetAmount(bet.numbers) > 0"
+                  class="bet-amount-badge">
+                  {{ formatCurrency(getOutsideBetAmount(bet.numbers)) }}
+                </span>
+              </button>
+            </div>
           </div>
         </template>
       </div>

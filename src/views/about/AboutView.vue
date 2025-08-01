@@ -1,61 +1,83 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+import { computed } from 'vue'
+
 import BaseLayout from '@/components/layout/BaseLayout.vue'
 
-const technologies = [
+const { t } = useI18n()
+
+const technologies = computed(() => [
   {
-    name: 'TypeScript',
-    description: 'Type-safe JavaScript',
+    name: t('about.technology.items.typescript.name'),
+    description: t('about.technology.items.typescript.description'),
     icon: 'bi bi-code-slash',
     color: 'primary'
   },
   {
-    name: 'Vue 3',
-    description: 'Progressive framework',
+    name: t('about.technology.items.vue.name'),
+    description: t('about.technology.items.vue.description'),
     icon: 'fa-brands fa-vuejs',
     color: 'success'
   },
   {
-    name: 'Vite',
-    description: 'Next-gen frontend tooling',
+    name: t('about.technology.items.vite.name'),
+    description: t('about.technology.items.vite.description'),
     icon: 'bi bi-lightning-charge-fill',
     color: 'warning'
   },
   {
-    name: 'Pinia',
-    description: 'State management',
+    name: t('about.technology.items.pinia.name'),
+    description: t('about.technology.items.pinia.description'),
     icon: 'fa-solid fa-database',
     color: 'info'
   },
   {
-    name: 'Bootstrap 5',
-    description: 'UI framework',
+    name: t('about.technology.items.bootstrap.name'),
+    description: t('about.technology.items.bootstrap.description'),
     icon: 'fa-brands fa-bootstrap',
     color: 'purple'
   },
   {
-    name: 'Local Storage',
-    description: 'Data persistence',
+    name: t('about.technology.items.localStorage.name'),
+    description: t('about.technology.items.localStorage.description'),
     icon: 'fa-solid fa-hard-drive',
     color: 'secondary'
   }
-]
+]);
+
+const features = computed(() => [
+  {
+    title: t('about.features.blackjack.title'),
+    description: t('about.features.blackjack.description'),
+    icon: 'bi bi-suit-spade'
+  },
+  {
+    title: t('about.features.roulette.title'),
+    description: t('about.features.roulette.description'),
+    icon: 'bi bi-dice-5'
+  },
+  {
+    title: t('about.features.clicker.title'),
+    description: t('about.features.clicker.description'),
+    icon: 'bi bi-mouse'
+  }
+]);
+
 </script>
 
 <template>
   <BaseLayout
-    title="About"
-    icon="info-circle-fill"
+    :title="t('about.title')"
+    bootstrapIcon="info-circle-fill"
     :show-balance="false">
     <div class="card mb-4">
       <div class="card-body">
         <h5 class="card-title d-flex align-items-center">
           <i class="bi bi-joystick me-2 text-primary" />
-          About the Game
+          {{ t('about.game.title') }}
         </h5>
         <p class="card-text">
-          Penny Plummet is a browser-based casino game that combines classic gambling games with modern web
-          technologies.
-          Try your luck at Blackjack or test your clicking speed in the Clicker mini-game!
+          {{ t('about.game.description') }}
         </p>
       </div>
     </div>
@@ -65,7 +87,7 @@ const technologies = [
       <div class="card-body">
         <h5 class="card-title d-flex align-items-center">
           <i class="bi bi-stack me-2 text-success" />
-          Technology Stack
+          {{ t('about.technology.title') }}
         </h5>
         <div class="row g-3">
           <div class="col-md-4 col-sm-6" v-for="tech in technologies" :key="tech.name">
@@ -86,28 +108,17 @@ const technologies = [
       <div class="card-body">
         <h5 class="card-title d-flex align-items-center">
           <i class="bi bi-stars me-2 text-warning" />
-          Features
+          {{ t('about.features.title') }}
         </h5>
         <div class="row g-3">
-          <div class="col-md-6">
+          <div class="col-md-6" v-for="feature in features" :key="feature.title">
             <div class="feature-item">
               <h6 class="d-flex align-items-center">
-                <i class="bi bi-suit-spade me-2" />
-                Blackjack
+                <i :class="`${feature.icon} me-2`" />
+                {{ feature.title }}
               </h6>
               <p class="mb-0 text-muted">
-                Classic casino card game with betting mechanics and achievements
-              </p>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="feature-item">
-              <h6 class="d-flex align-items-center">
-                <i class="bi bi-mouse me-2" />
-                Clicker Game
-              </h6>
-              <p class="mb-0 text-muted">
-                Test your clicking speed and earn rewards
+                {{ feature.description }}
               </p>
             </div>
           </div>

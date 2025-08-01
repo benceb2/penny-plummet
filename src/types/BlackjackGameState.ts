@@ -1,6 +1,6 @@
 export enum BlackjackState {
-  betting,
-  playerTurn,
-  dealerTurn,
-  gameOver
+  BETTING,
+  PLAYER_TURN,
+  DEALER_TURN,
+  GAME_OVER
 }

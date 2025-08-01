@@ -1,6 +1,6 @@
 {
   "name": "penny-plummet",
-  "version": "0.0.2-beta",
+  "version": "0.0.2",
   "private": true,
   "type": "module",
   "scripts": {

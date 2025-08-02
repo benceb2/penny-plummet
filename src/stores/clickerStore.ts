@@ -315,12 +315,16 @@ export const useClickerStore = defineStore('clicker', () => {
     }
   }
 
-  function initializeOfflineTracking() {
+  function initialise() {
     if (typeof window !== 'undefined') {
       window.addEventListener('beforeunload', () => {
         lastOnlineTimestamp.value = Date.now()
       })
       checkOfflineProgress()
+    }
+
+    if (autoClickersCount.value > 0) {
+      startAutoClicker();
     }
   }
 
@@ -418,7 +422,7 @@ export const useClickerStore = defineStore('clicker', () => {
     buyAutoClickerSpeed,
     prestige,
     reset,
-    initializeOfflineTracking,
+    initializeOfflineTracking: initialise,
     checkOfflineProgress,
     closeOfflineEarningsModal,
     startAutoClicker,

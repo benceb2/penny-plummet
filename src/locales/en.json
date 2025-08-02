@@ -58,7 +58,8 @@
     },
     "transactions": {
       "title": "Recent Transactions",
-      "viewAll": "View All Transactions"
+      "viewAll": "View All Transactions",
+      "empty": "No transactions found"
     }
   },
   "blackjack": {

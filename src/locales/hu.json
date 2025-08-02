@@ -58,7 +58,8 @@
     },
     "transactions": {
       "title": "Legutóbbi tranzakciók",
-      "viewAll": "Összes Tranzakció Megtekintése"
+      "viewAll": "Összes Tranzakció Megtekintése",
+      "empty": "Nincs találat"
     }
   },
   "blackjack": {

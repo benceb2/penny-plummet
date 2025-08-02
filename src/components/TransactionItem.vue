@@ -13,24 +13,13 @@ const props = withDefaults(defineProps<Props>(), {
   showDetails: true
 });
 
+import { formatDistanceToNow, format } from 'date-fns';
+
 function formatDate(timestamp: number): string {
   if (props.compact) {
-    // Shorter format for home view
-    return new Date(timestamp).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    return formatDistanceToNow(timestamp, { addSuffix: true });
   } else {
-    // Full format for transactions page
-    return new Date(timestamp).toLocaleDateString('en-US', {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    return format(timestamp, 'EEE, MMM d, h:mm a');
   }
 }
 </script>
@@ -56,7 +45,7 @@ function formatDate(timestamp: number): string {
         <span class="badge bg-primary me-2">
           {{ transaction.game.toUpperCase() }}
         </span>
-        <small class="text-muted">{{ formatDate(transaction.timestamp) }}</small>
+        <small class="fw-bold">{{ formatDate(transaction.timestamp) }}</small>
       </div>
       <div>
         <span

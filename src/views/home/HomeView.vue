@@ -8,6 +8,7 @@ import TransactionItem from '@/components/TransactionItem.vue';
 import { useUserStore } from '@/stores/userStore';
 import { useAchievementStore } from '@/stores/achievementStore';
 import { useTransactionStore } from '@/stores/transactionStore';
+import { sortAchievementsByPriority } from '@/utils/achievementUitl';
 
 const { t } = useI18n();
 const userStore = useUserStore();
@@ -20,19 +21,16 @@ const welcomeTitle = computed(() => {
     : t('home.welcome');
 });
 
-// Get the 3 closest achievements to completion that aren't already completed
 const nearestAchievements = computed(() => {
-  return achievementStore.achievements
-    .filter(a => !a.completed)
-    .sort((a, b) => (b.progress / b.requirement) - (a.progress / a.requirement))
-    .slice(0, 3);
+  return sortAchievementsByPriority(
+    achievementStore.achievements.filter(a => !a.completed)
+  ).slice(0, 3);
 });
 
-// Get the 5 most recent transactions
 const recentTransactions = computed(() => {
-  return [...transactionStore.transactions]
-    .sort((a, b) => b.timestamp - a.timestamp)
-    .slice(0, 10);
+  if (transactionStore.transactions.length === 0) return [];
+
+  return transactionStore.transactions.slice(0, 10);
 });
 </script>
 
@@ -135,12 +133,19 @@ const recentTransactions = computed(() => {
             </h5>
           </div>
           <div class="card-body">
-            <div class="transactions-list">
+            <div class="transactions-list" v-if="recentTransactions.length > 0">
               <TransactionItem
                 v-for="transaction in recentTransactions"
                 :key="transaction.id"
                 :transaction="transaction"
-                :show-details="false" />
+                :compact="true"
+                :show-details="true" />
+            </div>
+            <div v-else class="d-flex flex-column justify-content-center align-items-center h-100 text-center">
+              <i class="bi bi-emoji-smile-upside-down fs-1 text-muted mb-3"></i>
+              <p class="text-muted mb-0">
+                {{ t('home.transactions.empty') }}
+              </p>
             </div>
           </div>
           <div class="card-footer bg-transparent">

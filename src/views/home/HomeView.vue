@@ -23,7 +23,14 @@ const welcomeTitle = computed(() => {
 
 const nearestAchievements = computed(() => {
   return sortAchievementsByPriority(
-    achievementStore.achievements.filter(a => !a.completed)
+    achievementStore.achievements.filter(a => {
+      // Show in-progress achievements
+      if (!a.completed) return true;
+      // Show completed but unclaimed achievements
+      if (a.completed && !a.claimed) return true;
+      // Hide completed and claimed achievements
+      return false;
+    })
   ).slice(0, 3);
 });
 

@@ -166,7 +166,7 @@ export const useClickerStore = defineStore('clicker', () => {
 
       transactionStore.addTransaction({
         amount: amount,
-        type: 'win',
+        type: 'income',
         game: 'clicker',
         details: `Collected ${formatIntAsCurrency(amount)} chips from clicking`
       });
@@ -184,7 +184,7 @@ export const useClickerStore = defineStore('clicker', () => {
 
       transactionStore.addTransaction({
         amount: -cost,
-        type: 'loss',
+        type: 'purchase',
         game: 'clicker',
         details: `Purchased Auto-Clicker (Level ${autoClickersCount.value})`
       });
@@ -206,7 +206,7 @@ export const useClickerStore = defineStore('clicker', () => {
 
       transactionStore.addTransaction({
         amount: -cost,
-        type: 'loss',
+        type: 'purchase',
         game: 'clicker',
         details: `Purchased Multiplier (Level ${multiplierLevel.value})`
       });
@@ -224,7 +224,7 @@ export const useClickerStore = defineStore('clicker', () => {
 
       transactionStore.addTransaction({
         amount: -cost,
-        type: 'loss',
+        type: 'purchase',
         game: 'clicker',
         details: `Purchased Critical Hit Upgrade (Level ${criticalLevel.value})`
       });
@@ -240,7 +240,7 @@ export const useClickerStore = defineStore('clicker', () => {
 
       transactionStore.addTransaction({
         amount: -cost,
-        type: 'loss',
+        type: 'purchase',
         game: 'clicker',
         details: `Purchased Auto-Clicker Speed (Level ${autoClickerSpeedLevel.value})`
       });

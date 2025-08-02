@@ -29,7 +29,7 @@ export const useClickerStore = defineStore('clicker', () => {
 
   const achievementStore = useAchievementStore()
   const transactionStore = useTransactionStore();
-  const autoClickerInterval = ref<ReturnType<typeof setInterval> | null>(null)
+  const autoClickerRAF = ref<number | null>(null)
 
   // Enhanced State
   const clicks = ref(0)
@@ -39,8 +39,6 @@ export const useClickerStore = defineStore('clicker', () => {
   const autoClickerCost = ref(50)
   const multiplierLevel = ref(1)
   const multiplierCost = ref(100)
-
-  startAutoClicker();
 
   // New upgrade types
   const criticalLevel = ref(0)
@@ -282,29 +280,54 @@ export const useClickerStore = defineStore('clicker', () => {
   // Enhanced auto-clicker with variable speed
   function startAutoClicker() {
     if (typeof window !== 'undefined') {
-      if (autoClickerInterval.value) {
-        clearInterval(autoClickerInterval.value)
+      // Clear any existing RAF
+      if (autoClickerRAF.value) {
+        cancelAnimationFrame(autoClickerRAF.value)
+        autoClickerRAF.value = null
       }
 
       if (autoClickersCount.value > 0) {
-        autoClickerInterval.value = setInterval(() => {
-          const autoValue = autoClickersCount.value * clickValue.value;
-          clicks.value += autoValue;
-          totalLifetimeClicks.value += autoValue;
+        let lastCalculation = Date.now()
 
-          // Add subtle animation for auto-clicks
-          if (Math.random() < 0.3) { // 30% chance to show auto-click animation
-            addClickAnimation(autoValue, false);
+        function autoClickerLoop() {
+          const now = Date.now()
+          const deltaTime = now - lastCalculation
+          const updateInterval = Math.max(autoClickerSpeed.value / 10, 50) // Update 10x faster than click speed, min 50ms
+
+          if (deltaTime >= updateInterval) {
+            const clicksPerSecond = autoClickersCount.value * clickValue.value * (1000 / autoClickerSpeed.value)
+            const earnings = Math.floor((deltaTime / 1000) * clicksPerSecond)
+
+            if (earnings > 0) {
+              clicks.value += earnings
+              totalLifetimeClicks.value += earnings
+
+              // Add subtle animation for auto-clicks (less frequent)
+              if (Math.random() < 0.1) { // 10% chance to show auto-click animation
+                addClickAnimation(earnings, false)
+              }
+
+              lastCalculation = now
+            }
           }
-        }, autoClickerSpeed.value)
+
+          // Continue the loop if we still have auto-clickers
+          if (autoClickersCount.value > 0) {
+            autoClickerRAF.value = requestAnimationFrame(autoClickerLoop)
+          }
+        }
+
+        // Start the loop
+        autoClickerRAF.value = requestAnimationFrame(autoClickerLoop)
       }
     }
   }
 
+
   function stopAutoClicker(clearStorage: boolean = true) {
-    if (autoClickerInterval.value) {
-      clearInterval(autoClickerInterval.value)
-      autoClickerInterval.value = null
+    if (autoClickerRAF.value) {
+      cancelAnimationFrame(autoClickerRAF.value)
+      autoClickerRAF.value = null
     }
 
     if (clearStorage) {

@@ -32,7 +32,7 @@ const nearestAchievements = computed(() => {
 const recentTransactions = computed(() => {
   return [...transactionStore.transactions]
     .sort((a, b) => b.timestamp - a.timestamp)
-    .slice(0, 5);
+    .slice(0, 10);
 });
 </script>
 
@@ -98,11 +98,13 @@ const recentTransactions = computed(() => {
     <div class="row">
       <div class="col-md-6 mb-4 mb-md-0">
         <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title d-flex align-items-center mb-3">
+          <div class="card-header">
+            <h5 class="card-title d-flex align-items-center mb-0">
               <i class="bi bi-award text-primary me-2"></i>
               {{ t('home.achievements.title') }}
             </h5>
+          </div>
+          <div class="card-body">
             <div class="achievements-list">
               <AchievementCard
                 v-for="achievement in nearestAchievements"
@@ -110,6 +112,8 @@ const recentTransactions = computed(() => {
                 :achievement="achievement"
                 class="mb-3" />
             </div>
+          </div>
+          <div class="card-footer bg-transparent">
             <div class="d-flex justify-content-end">
               <RouterLink
                 to="/profile#achievements"
@@ -121,23 +125,26 @@ const recentTransactions = computed(() => {
           </div>
         </div>
       </div>
+
       <div class="col-md-6">
         <div class="card h-100">
-          <div class="card-body d-flex flex-column">
-            <h5 class="card-title d-flex align-items-center mb-3">
+          <div class="card-header">
+            <h5 class="card-title d-flex align-items-center mb-0">
               <i class="bi bi-wallet2 text-success me-2"></i>
               {{ t('home.transactions.title') }}
             </h5>
-
-            <div class="transactions-list flex-grow-1">
+          </div>
+          <div class="card-body">
+            <div class="transactions-list">
               <TransactionItem
                 v-for="transaction in recentTransactions"
                 :key="transaction.id"
                 :transaction="transaction"
                 :show-details="false" />
             </div>
-
-            <div class="d-flex justify-content-end mt-3">
+          </div>
+          <div class="card-footer bg-transparent">
+            <div class="d-flex justify-content-end">
               <RouterLink
                 to="/transactions"
                 class="btn btn-outline-success">

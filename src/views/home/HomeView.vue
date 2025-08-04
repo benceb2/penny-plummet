@@ -31,13 +31,13 @@ const nearestAchievements = computed(() => {
       // Hide completed and claimed achievements
       return false;
     })
-  ).slice(0, 3);
+  ).slice(0, 2);
 });
 
 const recentTransactions = computed(() => {
   if (transactionStore.transactions.length === 0) return [];
 
-  return transactionStore.transactions.slice(0, 7);
+  return transactionStore.transactions.slice(0, 5);
 });
 </script>
 

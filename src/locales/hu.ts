@@ -1,4 +1,4 @@
-{
+export default {
   "languages": {
     "en-GB": "English",
     "hu-HU": "Magyar"

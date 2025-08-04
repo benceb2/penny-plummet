@@ -37,7 +37,7 @@ const nearestAchievements = computed(() => {
 const recentTransactions = computed(() => {
   if (transactionStore.transactions.length === 0) return [];
 
-  return transactionStore.transactions.slice(0, 10);
+  return transactionStore.transactions.slice(0, 7);
 });
 </script>
 

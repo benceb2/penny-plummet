@@ -26,9 +26,7 @@ function formatDate(timestamp: number): string {
 
 <template>
   <div
-    class="transaction-item border-bottom"
-    :class="{ 'py-2': compact, 'p-3': !compact }">
-
+    class="transaction-item border-bottom p-3">
     <div class="d-flex align-items-start justify-content-between">
       <!-- Left side: Game info and details -->
       <div class="flex-grow-1 me-3">
@@ -58,13 +56,13 @@ function formatDate(timestamp: number): string {
       <!-- Right side: Amount -->
       <div class="text-end">
         <span
-          class="fs-5 fw-bold"
+          class="fs-5"
           :class="{
-            'text-success': transaction.type === 'win',
-            'text-danger': transaction.type === 'loss',
+            'text-success': ['win', 'income'].includes(transaction.type),
+            'text-danger': ['loss', 'purchase'].includes(transaction.type),
             'text-muted': transaction.type === 'push'
           }">
-          {{ transaction.type === 'win' ? '+' : '' }}{{ formatIntAsCurrency(transaction.amount) }}
+          {{ ['win', 'income'].includes(transaction.type) ? '+' : '' }}{{ formatIntAsCurrency(transaction.amount) }}
         </span>
       </div>
     </div>

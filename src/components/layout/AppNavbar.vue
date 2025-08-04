@@ -124,7 +124,7 @@ watch(locale, (newLocale) => {
           <!-- Stats Row -->
           <div class="d-flex align-items-center gap-2">
             <!-- Chips -->
-            <span class="badge bg-success fs-6 px-3 py-2">
+            <span class="badge bg-success fs-6 px-3 py-2 me-2">
               <i class="bi bi-wallet2 me-1"></i>
               {{ userStore.formattedChips }}
             </span>
@@ -143,7 +143,7 @@ watch(locale, (newLocale) => {
           </div>
 
           <!-- Controls Row -->
-          <div class="d-flex align-items-center gap-2">
+          <div class="d-flex align-items-center gap-3">
             <!-- Language Selector -->
             <div class="dropdown">
               <button

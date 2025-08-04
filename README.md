@@ -13,7 +13,8 @@ Penny Plummet is a browser-based casino game built with:
 Current features include:
 
 - Blackjack
-- Clicker game
+- Clicker
+- Roulette
 
 ## Project Setup
 

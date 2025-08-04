@@ -8,6 +8,7 @@ import BaseLayout from '@/components/layout/BaseLayout.vue';
 import BasePagination from '@/components/layout/BasePagination.vue';
 import AchievementCard from '@/components/AchievementCard.vue';
 import { useRoute } from 'vue-router';
+import { filterAndSortAchievements } from '@/utils/achievementUitl';
 
 const userStore = useUserStore();
 const achievementStore = useAchievementStore();
@@ -18,35 +19,7 @@ const { currentLevel, levelProgress, achievements } = achievementStore;
 const userStats = userStore.stats;
 
 const filteredAchievements = computed(() => {
-  let filtered = achievements;
-
-  // Apply category filter
-  if (selectedCategory.value !== 'all') {
-    filtered = filtered.filter(a => a.category === selectedCategory.value);
-  }
-
-  // Sort achievements: unclaimed first, then by completion status
-  filtered = filtered.sort((a, b) => {
-    // Priority 1: Unclaimed completed achievements first
-    if (a.completed && !a.claimed && !(b.completed && !b.claimed)) return -1;
-    if (b.completed && !b.claimed && !(a.completed && !a.claimed)) return 1;
-
-    // Priority 2: In-progress achievements next
-    if (!a.completed && b.completed && b.claimed) return -1;
-    if (!b.completed && a.completed && a.claimed) return 1;
-
-    // Priority 3: Completed & claimed achievements last
-    if (a.completed && a.claimed && !b.completed) return 1;
-    if (b.completed && b.claimed && !a.completed) return -1;
-
-    // Within same priority, sort by progress percentage (descending)
-    const aProgress = a.completed ? 100 : (a.progress / a.requirement) * 100;
-    const bProgress = b.completed ? 100 : (b.progress / b.requirement) * 100;
-
-    return bProgress - aProgress;
-  });
-
-  return filtered;
+  return filterAndSortAchievements(achievements, selectedCategory.value);
 });
 
 const achievementProgress = computed(() => {

@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, onMounted, onUnmounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 interface Props {
   show: boolean
@@ -9,10 +12,14 @@ interface Props {
     message?: string
     details?: string
   }
+  autoDismiss?: boolean
+  dismissDelay?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  show: false
+  show: false,
+  autoDismiss: true,
+  dismissDelay: 3000
 })
 
 const emit = defineEmits<{
@@ -21,19 +28,65 @@ const emit = defineEmits<{
 
 const isVisible = ref(false)
 const isAnimating = ref(false)
+let dismissTimer: number | null = null
 
 // Handle showing/hiding of modal with animations
 watch(() => props.show, (newVal) => {
   if (newVal) {
     isVisible.value = true
     isAnimating.value = true
-    setTimeout(() => {
-      isAnimating.value = false
-      setTimeout(() => {
-        isVisible.value = false
-        emit('close')
-      }, 500)
-    }, 2500)
+
+    // Clear any existing timer
+    if (dismissTimer) {
+      clearTimeout(dismissTimer)
+    }
+
+    // Auto-dismiss if enabled
+    if (props.autoDismiss) {
+      dismissTimer = setTimeout(() => {
+        dismiss()
+      }, props.dismissDelay)
+    }
+  }
+})
+
+const dismiss = () => {
+  if (dismissTimer) {
+    clearTimeout(dismissTimer)
+    dismissTimer = null
+  }
+
+  isAnimating.value = false
+  setTimeout(() => {
+    isVisible.value = false
+    emit('close')
+  }, 300) // Shorter exit animation
+}
+
+// Handle backdrop click
+const handleBackdropClick = (event: MouseEvent) => {
+  // Check if clicking on the overlay itself (not the card)
+  if (event.target === event.currentTarget) {
+    dismiss()
+  }
+}
+
+// Handle keyboard events
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Escape' || event.key === ' ' || event.key === 'Enter') {
+    dismiss()
+  }
+}
+
+// Add/remove event listeners
+onMounted(() => {
+  document.addEventListener('keydown', handleKeydown)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleKeydown)
+  if (dismissTimer) {
+    clearTimeout(dismissTimer)
   }
 })
 
@@ -66,26 +119,36 @@ const resultIcon = computed(() => {
 const resultText = computed(() => {
   switch (props.result.type) {
     case 'win':
-      return 'WIN!'
+      return t('gameResult.win')
     case 'loss':
-      return 'LOSS'
+      return t('gameResult.loss')
     case 'push':
-      return 'PUSH'
+      return t('gameResult.push')
     default:
-      return 'UNKNOWN'
+      return t('gameResult.unknown')
   }
 })
 </script>
 
 <template>
-  <div v-if="isVisible" class="game-result-overlay">
+  <div v-if="isVisible" class="game-result-overlay" @click="handleBackdropClick">
     <!-- Semi-transparent backdrop -->
-    <div class="game-result-backdrop"></div>
+    <div class="game-result-backdrop" @click="dismiss"></div>
 
     <!-- Result Card -->
     <div
       class="game-result-card"
-      :class="[resultClass, { 'animate-result': isAnimating }]">
+      :class="[resultClass, { 'animate-result': isAnimating }]"
+      @click.stop>
+
+      <!-- Close button -->
+      <button
+        class="close-button"
+        @click="dismiss"
+        aria-label="Close result">
+        <i class="bi bi-x-lg"></i>
+      </button>
+
       <!-- Result Icon -->
       <div class="game-result-icon">
         <i :class="['bi', resultIcon, { 'animate-icon': isAnimating }]"></i>
@@ -106,6 +169,11 @@ const resultText = computed(() => {
         <p v-if="props.result.details" class="result-details">
           {{ props.result.details }}
         </p>
+
+        <!-- Dismiss hint -->
+        <p class="dismiss-hint">
+          {{ t('gameResult.dismissHint') }}
+        </p>
       </div>
     </div>
   </div>
@@ -119,6 +187,7 @@ const resultText = computed(() => {
   align-items: center;
   justify-content: center;
   z-index: 1060;
+  cursor: pointer;
 }
 
 .game-result-backdrop {
@@ -139,6 +208,7 @@ const resultText = computed(() => {
   transform: scale(0.95);
   opacity: 0;
   transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  cursor: default;
 }
 
 .game-result-card.animate-result {
@@ -146,6 +216,28 @@ const resultText = computed(() => {
     floatUpDown 2s ease-in-out infinite;
   opacity: 1;
   transform: scale(1);
+}
+
+.close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.close-button:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .game-result-icon {
@@ -186,6 +278,14 @@ const resultText = computed(() => {
 .result-details {
   font-size: 1.25rem;
   opacity: 0.9;
+  margin-bottom: 1rem;
+}
+
+.dismiss-hint {
+  font-size: 0.9rem;
+  opacity: 0.7;
+  margin-top: 1rem;
+  font-style: italic;
 }
 
 @keyframes bounceIn {

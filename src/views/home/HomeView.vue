@@ -8,6 +8,7 @@ import TransactionItem from '@/components/TransactionItem.vue';
 import { useUserStore } from '@/stores/userStore';
 import { useAchievementStore } from '@/stores/achievementStore';
 import { useTransactionStore } from '@/stores/transactionStore';
+import { sortAchievementsByPriority } from '@/utils/achievementUitl';
 
 const { t } = useI18n();
 const userStore = useUserStore();
@@ -20,19 +21,23 @@ const welcomeTitle = computed(() => {
     : t('home.welcome');
 });
 
-// Get the 3 closest achievements to completion that aren't already completed
 const nearestAchievements = computed(() => {
-  return achievementStore.achievements
-    .filter(a => !a.completed)
-    .sort((a, b) => (b.progress / b.requirement) - (a.progress / a.requirement))
-    .slice(0, 3);
+  return sortAchievementsByPriority(
+    achievementStore.achievements.filter(a => {
+      // Show in-progress achievements
+      if (!a.completed) return true;
+      // Show completed but unclaimed achievements
+      if (a.completed && !a.claimed) return true;
+      // Hide completed and claimed achievements
+      return false;
+    })
+  ).slice(0, 3);
 });
 
-// Get the 5 most recent transactions
 const recentTransactions = computed(() => {
-  return [...transactionStore.transactions]
-    .sort((a, b) => b.timestamp - a.timestamp)
-    .slice(0, 5);
+  if (transactionStore.transactions.length === 0) return [];
+
+  return transactionStore.transactions.slice(0, 7);
 });
 </script>
 
@@ -98,11 +103,13 @@ const recentTransactions = computed(() => {
     <div class="row">
       <div class="col-md-6 mb-4 mb-md-0">
         <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title d-flex align-items-center mb-3">
+          <div class="card-header">
+            <h5 class="card-title d-flex align-items-center mb-0">
               <i class="bi bi-award text-primary me-2"></i>
               {{ t('home.achievements.title') }}
             </h5>
+          </div>
+          <div class="card-body">
             <div class="achievements-list">
               <AchievementCard
                 v-for="achievement in nearestAchievements"
@@ -110,6 +117,8 @@ const recentTransactions = computed(() => {
                 :achievement="achievement"
                 class="mb-3" />
             </div>
+          </div>
+          <div class="card-footer bg-transparent">
             <div class="d-flex justify-content-end">
               <RouterLink
                 to="/profile#achievements"
@@ -121,23 +130,33 @@ const recentTransactions = computed(() => {
           </div>
         </div>
       </div>
+
       <div class="col-md-6">
         <div class="card h-100">
-          <div class="card-body d-flex flex-column">
-            <h5 class="card-title d-flex align-items-center mb-3">
+          <div class="card-header">
+            <h5 class="card-title d-flex align-items-center mb-0">
               <i class="bi bi-wallet2 text-success me-2"></i>
               {{ t('home.transactions.title') }}
             </h5>
-
-            <div class="transactions-list flex-grow-1">
+          </div>
+          <div class="card-body">
+            <div class="transactions-list" v-if="recentTransactions.length > 0">
               <TransactionItem
                 v-for="transaction in recentTransactions"
                 :key="transaction.id"
                 :transaction="transaction"
-                :show-details="false" />
+                :compact="true"
+                :show-details="true" />
             </div>
-
-            <div class="d-flex justify-content-end mt-3">
+            <div v-else class="d-flex flex-column justify-content-center align-items-center h-100 text-center">
+              <i class="bi bi-emoji-smile-upside-down fs-1 text-muted mb-3"></i>
+              <p class="text-muted mb-0">
+                {{ t('home.transactions.empty') }}
+              </p>
+            </div>
+          </div>
+          <div class="card-footer bg-transparent">
+            <div class="d-flex justify-content-end">
               <RouterLink
                 to="/transactions"
                 class="btn btn-outline-success">

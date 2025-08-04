@@ -201,3 +201,38 @@ export const achievements = ref<Achievement[]>([
     category: 'general'
   }
 ]);
+
+export function sortAchievementsByPriority(achievements: Achievement[]): Achievement[] {
+  return [...achievements].sort((a, b) => {
+    // Priority 1: Unclaimed completed achievements first
+    if (a.completed && !a.claimed && !(b.completed && !b.claimed)) return -1;
+    if (b.completed && !b.claimed && !(a.completed && !a.claimed)) return 1;
+
+    // Priority 2: In-progress achievements next
+    if (!a.completed && b.completed && b.claimed) return -1;
+    if (!b.completed && a.completed && a.claimed) return 1;
+
+    // Priority 3: Completed & claimed achievements last
+    if (a.completed && a.claimed && !b.completed) return 1;
+    if (b.completed && b.claimed && !a.completed) return -1;
+
+    // Within same priority, sort by progress percentage (descending)
+    const aProgress = a.completed ? 100 : (a.progress / a.requirement) * 100;
+    const bProgress = b.completed ? 100 : (b.progress / b.requirement) * 100;
+    return bProgress - aProgress;
+  });
+}
+
+export function filterAndSortAchievements(
+  achievements: Achievement[],
+  category: string = 'all'
+): Achievement[] {
+  let filtered = achievements;
+
+  // Apply category filter
+  if (category !== 'all') {
+    filtered = filtered.filter(a => a.category === category);
+  }
+
+  return sortAchievementsByPriority(filtered);
+}

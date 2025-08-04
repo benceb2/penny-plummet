@@ -58,7 +58,8 @@
     },
     "transactions": {
       "title": "Recent Transactions",
-      "viewAll": "View All Transactions"
+      "viewAll": "View All Transactions",
+      "empty": "No transactions found"
     }
   },
   "blackjack": {
@@ -97,6 +98,10 @@
       "hit": "Hit",
       "stand": "Stand",
       "newGame": "New Game"
+    },
+    "result": {
+      "playerBusted": "You went over 21!",
+      "dealerBusted": "Dealer went over 21!"
     }
   },
   "clicker": {
@@ -343,5 +348,12 @@
       "push": "You broke even and {amount} was returned!",
       "winningNumber": "Winning Number: {number}"
     }
+  },
+  "gameResult": {
+    "win": "WIN!",
+    "loss": "LOSS",
+    "push": "PUSH",
+    "unknown": "UNKNOWN",
+    "dismissHint": "Click to dismiss, press ESC, or wait"
   }
 }

@@ -27,7 +27,6 @@ const switchLanguage = (newLocale: Locale) => {
 watch(locale, (newLocale) => {
   localStorage.setItem('userLocale', newLocale)
 })
-
 </script>
 
 <template>
@@ -35,8 +34,8 @@ watch(locale, (newLocale) => {
     <div class="container">
       <!-- Brand -->
       <RouterLink class="navbar-brand fw-bold" to="/">
-        <i class="bi bi-coin-fill me-2"></i>
-        <i class="bi bi-graph-down-arrow me-2"></i> {{ t('navbar.brand') }}
+        <i class="bi bi-coin-fill text-warning me-2"></i>
+        {{ t('navbar.brand') }}
       </RouterLink>
 
       <!-- Mobile Toggle -->
@@ -56,147 +55,163 @@ watch(locale, (newLocale) => {
         :class="{ 'show': isNavOpen, 'collapse': !isNavOpen }"
         id="navbarNav">
 
-        <!-- Left Side Navigation Links -->
+        <!-- Left Side - Navigation -->
         <ul class="navbar-nav me-auto">
+          <!-- Games Dropdown -->
+          <li class="nav-item dropdown me-3">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
+              data-bs-toggle="dropdown">
+              <i class="bi bi-controller me-2"></i>
+              {{ t('navbar.games.title') }}
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <RouterLink class="dropdown-item" to="/blackjack" @click="isNavOpen = false">
+                  <i class="bi bi-suit-spade-fill me-2"></i>
+                  {{ t('navbar.games.blackjack') }}
+                </RouterLink>
+              </li>
+              <li>
+                <RouterLink class="dropdown-item" to="/roulette" @click="isNavOpen = false">
+                  <i class="bi bi-dice-5-fill me-2"></i>
+                  {{ t('navbar.games.roulette') }}
+                </RouterLink>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Earn Dropdown -->
+          <li class="nav-item dropdown me-3">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
+              data-bs-toggle="dropdown">
+              <i class="bi bi-cash-coin me-2"></i>
+              {{ t('navbar.earn.title') }}
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <RouterLink class="dropdown-item" to="/clicker" @click="isNavOpen = false">
+                  <i class="bi bi-piggy-bank me-2"></i>
+                  {{ t('navbar.earn.clicker') }}
+                </RouterLink>
+              </li>
+              <li class="d-lg-none">
+                <RouterLink class="dropdown-item" to="/transactions" @click="isNavOpen = false">
+                  <i class="fa fa-history me-2"></i>
+                  {{ t('navbar.wallet.transactions') }}
+                </RouterLink>
+              </li>
+            </ul>
+          </li>
+
+          <!-- About -->
           <li class="nav-item">
             <RouterLink
-              class="nav-link px-3"
-              @click="isNavOpen = false"
-              to="/blackjack">
-              <i class="bi bi-suit-spade-fill me-1 transition-transform"></i>
-              {{ t('navbar.games.blackjack') }}
-            </RouterLink>
-          </li>
-          <li class="nav-item me-3">
-            <RouterLink
-              class="nav-link px-3"
-              @click="isNavOpen = false"
-              to="/roulette">
-              <i class="bi bi-dice-5-fill me-1 transition-transform"></i>
-              {{ t('navbar.games.roulette') }}
-            </RouterLink>
-          </li>
-          <li class="nav-item">
-            <RouterLink
-              class="nav-link px-3"
+              class="nav-link"
               @click="isNavOpen = false"
               to="/about">
-              <i class="bi bi-info-circle-fill me-1 transition-transform"></i>
+              <i class="bi bi-info-circle-fill me-2"></i>
               {{ t('navbar.about') }}
             </RouterLink>
           </li>
         </ul>
 
-        <!-- Right Side User Stats & Controls -->
+        <!-- Mobile Separator -->
+        <hr class="d-lg-none text-white-50 my-3">
+
+        <!-- Right Side - User Info -->
         <div class="d-flex align-items-center flex-column flex-lg-row gap-3">
 
-          <div class="dropdown">
-            <span
-              class="badge bg-secondary p-2 px-3 d-flex align-items-center cursor-pointer dropdown-toggle"
-              data-bs-toggle="dropdown"
-              aria-expanded="false">
-              <img
-                :src="flags[locale as Locale]"
-                :alt="locale"
-                class="me-1 flag-img"
-                style="width: 20px; height: 15px;" />
-              <i class="bi bi-chevron-down ms-2 opacity-75"></i>
-            </span>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li v-for="loc in availableLocales" :key="loc">
-                <a
-                  class="dropdown-item py-2 d-flex align-items-center gap-2"
-                  href="#"
-                  @click.prevent="switchLanguage(loc)"
-                  :class="{ 'active': locale === loc }">
-                  <img
-                    :src="flags[loc]"
-                    :alt="loc"
-                    class="flag-img"
-                    style="width: 16px; height: 12px;" />
-                  {{ t(`languages.${loc}`) }}
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Chips Dropdown -->
-          <div class="dropdown">
-            <span
-              class="badge bg-success p-2 px-3 d-flex align-items-center cursor-pointer dropdown-toggle"
-              data-bs-toggle="dropdown"
-              aria-expanded="false">
+          <!-- Stats Row -->
+          <div class="d-flex align-items-center gap-2">
+            <!-- Chips -->
+            <span class="badge bg-success fs-6 px-3 py-2 me-2">
               <i class="bi bi-wallet2 me-1"></i>
               {{ userStore.formattedChips }}
-              <i class="bi bi-chevron-down ms-2 opacity-75"></i>
             </span>
-            <ul class="dropdown-menu dropdown-menu-end min-w-200">
-              <li>
-                <h6 class="dropdown-header">{{ t('navbar.wallet.title') }}</h6>
-              </li>
-              <li>
-                <RouterLink class="dropdown-item py-2" to="/clicker">
-                  <i class="bi bi-piggy-bank me-2 opacity-75"></i>
-                  {{ t('navbar.wallet.clicker') }}
-                </RouterLink>
-              </li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-              <li>
-                <RouterLink class="dropdown-item py-2" to="/transactions">
-                  <i class="fa fa-history me-2 opacity-75"></i>
-                  {{ t('navbar.wallet.transactions') }}
-                </RouterLink>
-              </li>
-            </ul>
-          </div>
 
-          <div class="d-flex align-items-center">
-            <span class="badge bg-info p-2 position-relative d-flex align-items-center">
-              <i class="bi bi-stars me-1"></i>
+            <!-- Level with Progress -->
+            <span class="badge bg-info fs-6 px-3 py-2 d-flex align-items-center">
+              <i class="bi bi-stars me-2"></i>
               {{ achievementStore.currentLevel.level }}
-              <!-- Progress bar inside the badge but next to the level -->
-              <div class="progress ms-2" style="width: 40px; height: 4px; background: rgba(0,0,0,0.2);">
+              <div class="progress ms-2" style="width: 30px; height: 4px;">
                 <div
                   class="progress-bar bg-white"
-                  role="progressbar"
-                  :style="{
-                    width: achievementStore.levelProgress + '%',
-                    transition: 'width 0.3s ease'
-                  }"
-                  :aria-valuenow="achievementStore.levelProgress"
-                  aria-valuemin="0"
-                  aria-valuemax="100">
+                  :style="{ width: achievementStore.levelProgress + '%' }">
                 </div>
               </div>
             </span>
           </div>
 
-          <!-- User Profile Dropdown -->
-          <div class="dropdown">
-            <div class="d-flex align-items-center gap-2 cursor-pointer" data-bs-toggle="dropdown">
-              <span class="badge bg-primary p-2 px-3 d-flex align-items-center">
-                <i class="bi bi-person-circle me-1"></i>
-                {{ userStore.username }}
-                <i class="bi bi-chevron-down ms-2 opacity-75"></i>
-              </span>
+          <!-- Controls Row -->
+          <div class="d-flex align-items-center gap-3">
+            <!-- Language Selector -->
+            <div class="dropdown">
+              <button
+                class="btn btn-light btn-sm d-flex align-items-center"
+                type="button"
+                data-bs-toggle="dropdown">
+                <img
+                  :src="flags[locale as Locale]"
+                  :alt="locale"
+                  width="18"
+                  height="13"
+                  class="me-2 rounded" />
+                <span class="d-none d-sm-inline">{{ t(`languages.${locale}`) }}</span>
+                <i class="bi bi-chevron-down ms-1"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li v-for="loc in availableLocales" :key="loc">
+                  <a
+                    class="dropdown-item d-flex align-items-center gap-2"
+                    href="#"
+                    @click.prevent="switchLanguage(loc)"
+                    :class="{ 'active': locale === loc }">
+                    <img
+                      :src="flags[loc]"
+                      :alt="loc"
+                      width="16"
+                      height="12"
+                      class="rounded" />
+                    {{ t(`languages.${loc}`) }}
+                  </a>
+                </li>
+              </ul>
             </div>
 
-            <ul class="dropdown-menu dropdown-menu-end min-w-200">
-              <li>
-                <RouterLink to="/settings" class="dropdown-item py-2" href="#">
-                  <i class="bi bi-gear me-2 opacity-75"></i>
-                  {{ t('navbar.profile.settings') }}
-                </RouterLink>
-              </li>
-              <li>
-                <RouterLink class="dropdown-item py-2" to="/profile">
-                  <i class="bi bi-person me-2 opacity-75"></i>
-                  {{ t('navbar.profile.viewProfile') }}
-                </RouterLink>
-              </li>
-            </ul>
+            <!-- User Menu -->
+            <div class="dropdown">
+              <button
+                class="btn btn-primary btn-sm d-flex align-items-center"
+                type="button"
+                data-bs-toggle="dropdown">
+                <i class="bi bi-person-circle me-1"></i>
+                <span class="d-none d-sm-inline">{{ userStore.username }}</span>
+                <i class="bi bi-chevron-down ms-1"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <RouterLink to="/profile" class="dropdown-item">
+                    <i class="bi bi-person me-2"></i>
+                    {{ t('navbar.profile.viewProfile') }}
+                  </RouterLink>
+                </li>
+                <li class="d-none d-lg-block">
+                  <RouterLink to="/transactions" class="dropdown-item">
+                    <i class="fa fa-history me-2"></i>
+                    {{ t('navbar.wallet.transactions') }}
+                  </RouterLink>
+                </li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li>
+                  <RouterLink to="/settings" class="dropdown-item">
+                    <i class="bi bi-gear me-2"></i>
+                    {{ t('navbar.profile.settings') }}
+                  </RouterLink>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -206,33 +221,7 @@ watch(locale, (newLocale) => {
 </template>
 
 <style scoped>
-.progress-bar {
-  transition: width 0.3s ease;
-}
-
-.cursor-pointer {
-  cursor: pointer;
-}
-
-.transition-transform {
-  transition: transform 0.2s ease;
-}
-
-.nav-link:hover i {
-  transform: scale(1.1);
-}
-
-.min-w-200 {
-  min-width: 200px;
-}
-
-.dropdown-toggle::after {
-  display: none;
-}
-
-@media (max-width: 991px) {
-  .navbar-collapse {
-    padding: 1rem 0;
-  }
+.progress {
+  background-color: rgba(255, 255, 255, 0.3);
 }
 </style>

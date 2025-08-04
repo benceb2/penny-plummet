@@ -348,5 +348,12 @@
       "push": "Döntetlenül értél és {amount} visszatérítve!",
       "winningNumber": "Nyerő Szám: {number}"
     }
+  },
+  "gameResult": {
+    "win": "NYERTÉL!",
+    "loss": "VESZTETTÉL",
+    "push": "DÖNTETLEN",
+    "unknown": "ISMERETLEN",
+    "dismissHint": "Kattints a bezáráshoz, nyomd meg az ESC-et, vagy várj"
   }
 }

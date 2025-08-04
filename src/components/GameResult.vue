@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, watch, onMounted, onUnmounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 interface Props {
   show: boolean
@@ -116,13 +119,13 @@ const resultIcon = computed(() => {
 const resultText = computed(() => {
   switch (props.result.type) {
     case 'win':
-      return 'WIN!'
+      return t('gameResult.win')
     case 'loss':
-      return 'LOSS'
+      return t('gameResult.loss')
     case 'push':
-      return 'PUSH'
+      return t('gameResult.push')
     default:
-      return 'UNKNOWN'
+      return t('gameResult.unknown')
   }
 })
 </script>
@@ -169,7 +172,7 @@ const resultText = computed(() => {
 
         <!-- Dismiss hint -->
         <p class="dismiss-hint">
-          Click to dismiss, press ESC, or wait
+          {{ t('gameResult.dismissHint') }}
         </p>
       </div>
     </div>

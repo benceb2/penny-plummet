@@ -62,6 +62,7 @@ const dismiss = () => {
 
 // Handle backdrop click
 const handleBackdropClick = (event: MouseEvent) => {
+  // Check if clicking on the overlay itself (not the card)
   if (event.target === event.currentTarget) {
     dismiss()
   }
@@ -129,7 +130,7 @@ const resultText = computed(() => {
 <template>
   <div v-if="isVisible" class="game-result-overlay" @click="handleBackdropClick">
     <!-- Semi-transparent backdrop -->
-    <div class="game-result-backdrop"></div>
+    <div class="game-result-backdrop" @click="dismiss"></div>
 
     <!-- Result Card -->
     <div
@@ -168,7 +169,7 @@ const resultText = computed(() => {
 
         <!-- Dismiss hint -->
         <p class="dismiss-hint">
-          Click anywhere, press ESC, or wait to dismiss
+          Click to dismiss, press ESC, or wait
         </p>
       </div>
     </div>

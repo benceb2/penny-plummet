@@ -98,6 +98,10 @@
       "hit": "Kérek Lapot",
       "stand": "Megállok",
       "newGame": "Új Játék"
+    },
+    "result": {
+      "playerBusted": "Túllépted a 21-et!",
+      "dealerBusted": "Az osztó túllépte a 21-et!"
     }
   },
   "clicker": {

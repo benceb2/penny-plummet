@@ -6,13 +6,16 @@
   "navbar": {
     "brand": "Penny Plummet",
     "games": {
+      "title": "Games",
       "blackjack": "Blackjack",
       "roulette": "Roulette"
     },
+    "earn": {
+      "title": "Earn",
+      "clicker": "Clicker Game"
+    },
     "about": "About",
     "wallet": {
-      "title": "Need more chips?",
-      "clicker": "Clicker Game",
       "transactions": "Transaction History"
     },
     "profile": {

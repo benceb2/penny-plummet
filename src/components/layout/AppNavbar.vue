@@ -55,44 +55,55 @@ watch(locale, (newLocale) => {
         :class="{ 'show': isNavOpen, 'collapse': !isNavOpen }"
         id="navbarNav">
 
-        <!-- Left Side - Games & Links -->
+        <!-- Left Side - Navigation -->
         <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <RouterLink
-              class="nav-link"
-              @click="isNavOpen = false"
-              to="/blackjack">
-              <i class="bi bi-suit-spade-fill me-2"></i>
-              {{ t('navbar.games.blackjack') }}
-            </RouterLink>
+          <!-- Games Dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
+              data-bs-toggle="dropdown">
+              <i class="bi bi-controller me-2"></i>
+              {{ t('navbar.games.title') }}
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <RouterLink class="dropdown-item" to="/blackjack" @click="isNavOpen = false">
+                  <i class="bi bi-suit-spade-fill me-2"></i>
+                  {{ t('navbar.games.blackjack') }}
+                </RouterLink>
+              </li>
+              <li>
+                <RouterLink class="dropdown-item" to="/roulette" @click="isNavOpen = false">
+                  <i class="bi bi-dice-5-fill me-2"></i>
+                  {{ t('navbar.games.roulette') }}
+                </RouterLink>
+              </li>
+            </ul>
           </li>
-          <li class="nav-item">
-            <RouterLink
-              class="nav-link"
-              @click="isNavOpen = false"
-              to="/roulette">
-              <i class="bi bi-dice-5-fill me-2"></i>
-              {{ t('navbar.games.roulette') }}
-            </RouterLink>
+
+          <!-- Earn Dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
+              data-bs-toggle="dropdown">
+              <i class="bi bi-cash-coin me-2"></i>
+              {{ t('navbar.earn.title') }}
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <RouterLink class="dropdown-item" to="/clicker" @click="isNavOpen = false">
+                  <i class="bi bi-piggy-bank me-2"></i>
+                  {{ t('navbar.wallet.clicker') }}
+                </RouterLink>
+              </li>
+              <li class="d-lg-none">
+                <RouterLink class="dropdown-item" to="/transactions" @click="isNavOpen = false">
+                  <i class="fa fa-history me-2"></i>
+                  {{ t('navbar.wallet.transactions') }}
+                </RouterLink>
+              </li>
+            </ul>
           </li>
-          <li class="nav-item">
-            <RouterLink
-              class="nav-link"
-              @click="isNavOpen = false"
-              to="/clicker">
-              <i class="bi bi-piggy-bank me-2"></i>
-              {{ t('navbar.wallet.clicker') }}
-            </RouterLink>
-          </li>
-          <li class="nav-item d-lg-none">
-            <RouterLink
-              class="nav-link"
-              @click="isNavOpen = false"
-              to="/transactions">
-              <i class="fa fa-history me-2"></i>
-              {{ t('navbar.wallet.transactions') }}
-            </RouterLink>
-          </li>
+
+          <!-- About -->
           <li class="nav-item">
             <RouterLink
               class="nav-link"

@@ -6,8 +6,13 @@
   "navbar": {
     "brand": "Penny Plummet",
     "games": {
+      "title": "Játékok",
       "blackjack": "Blackjack",
       "roulette": "Rulett"
+    },
+    "earn": {
+      "title": "Pénzt keres",
+      "clicker": "Kattintós Játék"
     },
     "about": "Rólunk",
     "wallet": {

@@ -98,6 +98,10 @@
       "hit": "Hit",
       "stand": "Stand",
       "newGame": "New Game"
+    },
+    "result": {
+      "playerBusted": "You went over 21!",
+      "dealerBusted": "Dealer went over 21!"
     }
   },
   "clicker": {

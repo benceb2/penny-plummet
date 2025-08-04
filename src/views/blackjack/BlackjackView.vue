@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { useBlackjackStore } from '@/stores/blackjackStore'
 import { useUserStore } from '@/stores/userStore'
 import PlayingCard from '@/views/blackjack/PlayingCard.vue'
+import GameResult from '@/components/GameResult.vue'
 import { BlackjackState } from '@/types/BlackjackGameState'
 import BaseLayout from '@/components/layout/BaseLayout.vue'
 import BetAmountSelector from '@/components/BetAmountSelector.vue'
@@ -16,22 +17,66 @@ const gameStore = useBlackjackStore()
 const userStore = useUserStore()
 const betAmount = ref(0)
 const showStats = ref(false)
+const showGameResult = ref(false)
 
-const gameStatus = computed(() => {
-  if (gameStore.gameState === BlackjackState.GAME_OVER) {
-    if (gameStore.playerScore > 21) {
-      return t('blackjack.gameStatus.bust')
-    } else if (gameStore.dealerScore > 21) {
-      return t('blackjack.gameStatus.dealerBusts')
-    } else if (gameStore.playerScore > gameStore.dealerScore) {
-      return t('blackjack.gameStatus.youWin')
-    } else if (gameStore.playerScore < gameStore.dealerScore) {
-      return t('blackjack.gameStatus.dealerWins')
-    } else {
-      return t('blackjack.gameStatus.push')
-    }
+const gameResult = computed(() => {
+  if (gameStore.gameState !== BlackjackState.GAME_OVER) {
+    return { type: 'win' as const, amount: 0 }
   }
-  return ''
+
+  let resultType: 'win' | 'loss' | 'push'
+  let amount = 0
+  let message = ''
+  let details = ''
+
+  if (gameStore.playerScore > 21) {
+    // Player busts
+    resultType = 'loss'
+    amount = -gameStore.currentBet
+    message = t('blackjack.gameStatus.bust')
+    details = t('blackjack.result.playerBusted')
+  } else if (gameStore.dealerScore > 21) {
+    // Dealer busts
+    resultType = 'win'
+    amount = gameStore.currentBet * 2 // Return bet + winnings
+    message = t('blackjack.gameStatus.dealerBusts')
+    details = t('blackjack.result.dealerBusted')
+  } else if (gameStore.playerScore > gameStore.dealerScore) {
+    // Player wins
+    resultType = 'win'
+    amount = gameStore.currentBet * 2
+    message = t('blackjack.gameStatus.youWin')
+    details = `${gameStore.playerScore} vs ${gameStore.dealerScore}`
+  } else if (gameStore.playerScore < gameStore.dealerScore) {
+    // Dealer wins
+    resultType = 'loss'
+    amount = -gameStore.currentBet
+    message = t('blackjack.gameStatus.dealerWins')
+    details = `${gameStore.playerScore} vs ${gameStore.dealerScore}`
+  } else {
+    // Push (tie)
+    resultType = 'push'
+    amount = 0 // Bet is returned
+    message = t('blackjack.gameStatus.push')
+    details = `${gameStore.playerScore} vs ${gameStore.dealerScore}`
+  }
+
+  return {
+    type: resultType,
+    amount,
+    message,
+    details
+  }
+})
+
+// Watch for game over state to show result
+watch(() => gameStore.gameState, (newState) => {
+  if (newState === BlackjackState.GAME_OVER) {
+    // Small delay to let the final card animation finish
+    setTimeout(() => {
+      showGameResult.value = true
+    }, 500)
+  }
 })
 
 function handleDeal() {
@@ -53,6 +98,19 @@ function handleStand() {
 function handleNewGame() {
   gameStore.reset()
   betAmount.value = 0
+}
+
+function handleResultClose() {
+  showGameResult.value = false
+
+  // Update chips based on game result
+  const result = gameResult.value
+  if (result.type === 'win') {
+    userStore.updateChips(result.amount)
+  } else if (result.type === 'push') {
+    userStore.updateChips(gameStore.currentBet) // Return the bet
+  }
+  // For losses, chips were already deducted when bet was placed
 }
 
 // Maximum bet amount
@@ -119,24 +177,6 @@ const maxBetAmount = computed(() => userStore.chips)
             </div>
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- Game Status Alert -->
-    <div v-if="gameStore.gameState === BlackjackState.GAME_OVER" class="alert mb-4" :class="{
-      'alert-success': gameStatus.includes(t('blackjack.gameStatus.youWin')),
-      'alert-danger': gameStatus.includes(t('blackjack.gameStatus.dealerWins')),
-      'alert-warning': gameStatus.includes(t('blackjack.gameStatus.push'))
-    }" role="alert">
-      <div class="d-flex justify-content-between align-items-center">
-        <span class="h5 mb-0">
-          <i class="bi" :class="{
-            'bi-trophy-fill': gameStatus.includes(t('blackjack.gameStatus.youWin')),
-            'bi-x-circle-fill': gameStatus.includes(t('blackjack.gameStatus.dealerWins')),
-            'bi-dash-circle-fill': gameStatus.includes(t('blackjack.gameStatus.push'))
-          }"></i>
-          {{ gameStatus }}
-        </span>
       </div>
     </div>
 
@@ -256,6 +296,9 @@ const maxBetAmount = computed(() => userStore.chips)
         </div>
       </div>
     </div>
+
+    <!-- Game Result Modal -->
+    <GameResult :show="showGameResult" :result="gameResult" :auto-dismiss="false" @close="handleResultClose" />
   </BaseLayout>
 </template>
 

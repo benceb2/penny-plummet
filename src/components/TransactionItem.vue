@@ -36,8 +36,8 @@ function formatDate(timestamp: number): string {
           <span
             class="badge me-2"
             :class="{
-              'bg-success': transaction.type === 'win',
-              'bg-danger': transaction.type === 'loss',
+              'bg-success': ['win', 'income'].includes(transaction.type),
+              'bg-danger': ['loss', 'purchase'].includes(transaction.type),
               'bg-secondary': transaction.type === 'push'
             }">
             {{ transaction.type.toUpperCase() }}

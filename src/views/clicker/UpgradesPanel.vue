@@ -80,26 +80,6 @@
           Upgrade {{ clickerStore.formattedAutoClickerSpeedCost }}
         </button>
       </div>
-
-      <!-- Prestige Info -->
-      <div v-if="!clickerStore.canPrestige && clickerStore.totalLifetimeClicks > 0"
-        class="mt-4 p-3 rounded-3 bg-warning bg-opacity-10 border border-warning border-opacity-25">
-        <div class="text-center">
-          <div class="fw-semibold text-warning mb-2">
-            <i class="bi bi-star me-1"></i>Prestige Progress
-          </div>
-          <div class="progress mb-2" style="height: 8px;">
-            <div
-              class="progress-bar bg-warning"
-              :style="{ width: Math.min(clickerStore.totalLifetimeClicks / 1000000 * 100, 100) + '%' }">
-            </div>
-          </div>
-          <small class="text-muted">
-            {{ clickerStore.formattedLifetimeClicks }} / 1M clicks
-            <br><em>Reset for permanent bonuses!</em>
-          </small>
-        </div>
-      </div>
     </div>
   </div>
 </template>

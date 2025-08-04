@@ -92,19 +92,6 @@
             </div>
           </div>
         </button>
-
-        <button
-          v-if="clickerStore.canPrestige"
-          class="btn btn-warning btn-lg flex-fill"
-          @click="clickerStore.prestige()">
-          <i class="bi bi-star-fill me-2"></i>
-          <div>
-            <div>Prestige</div>
-            <small class="opacity-75">
-              +{{ clickerStore.prestigePointsGain - clickerStore.prestigePoints }} pts
-            </small>
-          </div>
-        </button>
       </div>
     </div>
   </div>

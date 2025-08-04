@@ -6,7 +6,7 @@ const clickerStore = useClickerStore()
 
 <template>
   <div class="row g-2 mb-3">
-    <div class="col-md-3">
+    <div class="col-md-4">
       <div class="card border-0 shadow-sm h-100">
         <div class="card-body text-center py-2">
           <div class="d-flex align-items-center justify-content-center">
@@ -19,7 +19,7 @@ const clickerStore = useClickerStore()
         </div>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
       <div class="card border-0 shadow-sm h-100">
         <div class="card-body text-center py-2">
           <div class="d-flex align-items-center justify-content-center">
@@ -32,7 +32,7 @@ const clickerStore = useClickerStore()
         </div>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
       <div class="card border-0 shadow-sm h-100">
         <div class="card-body text-center py-2">
           <div class="d-flex align-items-center justify-content-center">
@@ -40,19 +40,6 @@ const clickerStore = useClickerStore()
             <div>
               <div class="h5 mb-0 text-info">{{ clickerStore.formattedLifetimeClicks }}</div>
               <small class="text-muted">Lifetime Clicks</small>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3" v-if="clickerStore.prestigeLevel > 0">
-      <div class="card border-0 shadow-sm h-100">
-        <div class="card-body text-center py-2">
-          <div class="d-flex align-items-center justify-content-center">
-            <i class="bi bi-star-fill text-warning me-4 fs-5"></i>
-            <div>
-              <div class="h5 mb-0 text-warning">{{ clickerStore.prestigeLevel }}</div>
-              <small class="text-muted">Prestige Level</small>
             </div>
           </div>
         </div>

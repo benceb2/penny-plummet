@@ -147,7 +147,7 @@ watch(locale, (newLocale) => {
             <!-- Language Selector -->
             <div class="dropdown">
               <button
-                class="btn btn-light btn-sm d-flex align-items-center"
+                class="btn btn-secondary btn-sm d-flex align-items-center"
                 type="button"
                 data-bs-toggle="dropdown">
                 <img
@@ -155,7 +155,7 @@ watch(locale, (newLocale) => {
                   :alt="locale"
                   width="18"
                   height="13"
-                  class="me-2 rounded" />
+                  class="me-2" />
                 <span class="d-none d-sm-inline">{{ t(`languages.${locale}`) }}</span>
                 <i class="bi bi-chevron-down ms-1"></i>
               </button>
@@ -170,8 +170,7 @@ watch(locale, (newLocale) => {
                       :src="flags[loc]"
                       :alt="loc"
                       width="16"
-                      height="12"
-                      class="rounded" />
+                      height="12" />
                     {{ t(`languages.${loc}`) }}
                   </a>
                 </li>

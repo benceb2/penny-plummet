@@ -1,3 +1,11 @@
+<script setup lang="ts">
+import { useUserStore } from '@/stores/userStore'
+import { useClickerStore } from '@/stores/clickerStore'
+
+const userStore = useUserStore()
+const clickerStore = useClickerStore()
+</script>
+
 <template>
   <div class="card border-0 shadow-sm h-100 rounded-4">
     <div class="card-header border-1 rounded-top-4">
@@ -83,14 +91,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useUserStore } from '@/stores/userStore'
-import { useClickerStore } from '@/stores/clickerStore'
-
-const userStore = useUserStore()
-const clickerStore = useClickerStore()
-</script>
 
 <style scoped>
 /* Hover effects for interactive elements */

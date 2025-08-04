@@ -1,3 +1,58 @@
+<script setup lang="ts">
+import { useUserStore } from '@/stores/userStore'
+import { useClickerStore } from '@/stores/clickerStore'
+import { computed, ref } from 'vue'
+
+const userStore = useUserStore()
+const clickerStore = useClickerStore()
+
+const buttonScale = computed(() => {
+  const baseScale = 1
+  const comboEffect = Math.min(clickerStore.comboCount * 0.005, 0.08)
+  return baseScale + comboEffect
+})
+
+const glowIntensity = computed(() => {
+  if (clickerStore.comboCount <= 5) return 0
+  if (clickerStore.comboCount <= 15) return 0.3
+  if (clickerStore.comboCount <= 30) return 0.6
+  return 1
+})
+
+const comboColor = computed(() => {
+  if (clickerStore.comboCount > 20) return 'text-danger'
+  if (clickerStore.comboCount > 10) return 'text-warning'
+  if (clickerStore.comboCount > 5) return 'text-info'
+  return 'text-primary'
+})
+
+const clickScale = ref(1)
+const collectButtonScale = ref(1)
+
+const handleClickWithAnimation = () => {
+  clickerStore.handleClick()
+
+  // Quick click animation
+  clickScale.value = 0.95
+  setTimeout(() => {
+    clickScale.value = 1
+  }, 100)
+}
+
+const handleCollectWithAnimation = () => {
+  clickerStore.collectChips(userStore)
+
+  // Collect button animation
+  collectButtonScale.value = 0.9
+  setTimeout(() => {
+    collectButtonScale.value = 1.1
+    setTimeout(() => {
+      collectButtonScale.value = 1
+    }, 200)
+  }, 100)
+}
+</script>
+
 <template>
   <div class="card border-0 shadow-sm h-100 rounded-4">
     <div class="card-body d-flex flex-column justify-content-center align-items-center p-3"
@@ -96,61 +151,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useUserStore } from '@/stores/userStore'
-import { useClickerStore } from '@/stores/clickerStore'
-import { computed, ref } from 'vue'
-
-const userStore = useUserStore()
-const clickerStore = useClickerStore()
-
-const buttonScale = computed(() => {
-  const baseScale = 1
-  const comboEffect = Math.min(clickerStore.comboCount * 0.005, 0.08)
-  return baseScale + comboEffect
-})
-
-const glowIntensity = computed(() => {
-  if (clickerStore.comboCount <= 5) return 0
-  if (clickerStore.comboCount <= 15) return 0.3
-  if (clickerStore.comboCount <= 30) return 0.6
-  return 1
-})
-
-const comboColor = computed(() => {
-  if (clickerStore.comboCount > 20) return 'text-danger'
-  if (clickerStore.comboCount > 10) return 'text-warning'
-  if (clickerStore.comboCount > 5) return 'text-info'
-  return 'text-primary'
-})
-
-const clickScale = ref(1)
-const collectButtonScale = ref(1)
-
-const handleClickWithAnimation = () => {
-  clickerStore.handleClick()
-
-  // Quick click animation
-  clickScale.value = 0.95
-  setTimeout(() => {
-    clickScale.value = 1
-  }, 100)
-}
-
-const handleCollectWithAnimation = () => {
-  clickerStore.collectChips(userStore)
-
-  // Collect button animation
-  collectButtonScale.value = 0.9
-  setTimeout(() => {
-    collectButtonScale.value = 1.1
-    setTimeout(() => {
-      collectButtonScale.value = 1
-    }, 200)
-  }, 100)
-}
-</script>
 
 <style scoped>
 /* Main click button - improved with better contrast */

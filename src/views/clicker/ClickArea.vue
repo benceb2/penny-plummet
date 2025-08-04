@@ -58,10 +58,9 @@ const handleCollectWithAnimation = () => {
     <div class="card-body d-flex flex-column justify-content-center align-items-center p-3"
       style="min-height: 600px;">
 
-      <!-- Combo Display - only takes space when active -->
-      <div class="d-flex justify-content-center align-items-center"
-        :class="clickerStore.comboCount > 1 ? 'mb-3' : 'mb-1'">
-        <div v-if="clickerStore.comboCount > 1" class="combo-badge">
+      <!-- Combo Display -->
+      <div class="position-relative w-100 d-flex justify-content-center mb-3" style="height: 0;">
+        <div v-if="clickerStore.comboCount > 1" class="combo-badge position-absolute" style="top: 10px; z-index: 10;">
           <span :class="`badge ${comboColor} fs-6 pulse px-3 py-1`">
             <i class="bi bi-lightning-fill me-1"></i>
             {{ clickerStore.comboCount }}x COMBO!
@@ -147,6 +146,8 @@ const handleCollectWithAnimation = () => {
             </div>
           </div>
         </button>
+
+
       </div>
     </div>
   </div>

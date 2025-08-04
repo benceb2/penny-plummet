@@ -221,11 +221,6 @@ watch(locale, (newLocale) => {
 </template>
 
 <style scoped>
-/* Only the truly necessary custom styles */
-.dropdown-toggle::after {
-  display: none;
-}
-
 .progress {
   background-color: rgba(255, 255, 255, 0.3);
 }

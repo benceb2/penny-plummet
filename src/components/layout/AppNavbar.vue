@@ -58,7 +58,7 @@ watch(locale, (newLocale) => {
         <!-- Left Side - Navigation -->
         <ul class="navbar-nav me-auto">
           <!-- Games Dropdown -->
-          <li class="nav-item dropdown">
+          <li class="nav-item dropdown me-3">
             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
               data-bs-toggle="dropdown">
               <i class="bi bi-controller me-2"></i>
@@ -81,7 +81,7 @@ watch(locale, (newLocale) => {
           </li>
 
           <!-- Earn Dropdown -->
-          <li class="nav-item dropdown">
+          <li class="nav-item dropdown me-3">
             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
               data-bs-toggle="dropdown">
               <i class="bi bi-cash-coin me-2"></i>
@@ -91,7 +91,7 @@ watch(locale, (newLocale) => {
               <li>
                 <RouterLink class="dropdown-item" to="/clicker" @click="isNavOpen = false">
                   <i class="bi bi-piggy-bank me-2"></i>
-                  {{ t('navbar.wallet.clicker') }}
+                  {{ t('navbar.earn.clicker') }}
                 </RouterLink>
               </li>
               <li class="d-lg-none">

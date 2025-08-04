@@ -141,12 +141,22 @@ export const useClickerStore = defineStore('clicker', () => {
 
   function addClickAnimation(value: number, isCritical = false) {
     const id = Date.now() + Math.random()
+
+    const angle = Math.random() * Math.PI * 2 // Random angle in radians
+    const distance = 80 + Math.random() * 120 // Random distance 80-200px from center
+    const x = Math.cos(angle) * distance
+    const y = Math.sin(angle) * distance
+
+    // Add some extra randomness for variety
+    const jitterX = (Math.random() - 0.5) * 60 // Additional ±30px jitter
+    const jitterY = (Math.random() - 0.5) * 60
+
     clickAnimations.value.push({
       id,
       value,
       isCritical,
-      x: Math.random() * 200 - 100, // Random position
-      y: Math.random() * 50 - 25
+      x: x + jitterX,
+      y: y + jitterY
     })
 
     // Remove animation after 2 seconds
@@ -277,7 +287,6 @@ export const useClickerStore = defineStore('clicker', () => {
     startAutoClicker();
   }
 
-  // Enhanced auto-clicker with variable speed
   function startAutoClicker() {
     if (typeof window !== 'undefined') {
       // Clear any existing RAF
@@ -398,7 +407,7 @@ export const useClickerStore = defineStore('clicker', () => {
   }
 
   return {
-    // Enhanced State
+    // State
     clicks,
     totalLifetimeClicks,
     baseClickValue,
@@ -420,7 +429,7 @@ export const useClickerStore = defineStore('clicker', () => {
     comboMultiplier,
     comboCount,
 
-    // Enhanced Computed
+    // Computed
     clickValue,
     criticalChance,
     autoClickerSpeed,
@@ -436,7 +445,7 @@ export const useClickerStore = defineStore('clicker', () => {
     formattedIncome,
 
 
-    // Enhanced Actions
+    // Actions
     handleClick,
     collectChips,
     buyAutoClicker,

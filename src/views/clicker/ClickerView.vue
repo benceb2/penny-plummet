@@ -3,16 +3,23 @@ import { useUserStore } from '@/stores/userStore'
 import { useClickerStore } from '@/stores/clickerStore'
 import BaseLayout from '@/components/layout/BaseLayout.vue'
 import { useI18n } from 'vue-i18n'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const { t } = useI18n()
 const userStore = useUserStore()
 const clickerStore = useClickerStore()
 
-// Computed for dynamic styling
 const buttonScale = computed(() => {
-  const scale = Math.min(1 + (clickerStore.comboCount * 0.02), 1.2)
-  return `scale(${scale})`
+  const baseScale = 1
+  const comboEffect = Math.min(clickerStore.comboCount * 0.005, 0.08)
+  return baseScale + comboEffect
+})
+
+const glowIntensity = computed(() => {
+  if (clickerStore.comboCount <= 5) return 0
+  if (clickerStore.comboCount <= 15) return 0.3
+  if (clickerStore.comboCount <= 30) return 0.6
+  return 1
 })
 
 const comboColor = computed(() => {
@@ -21,6 +28,20 @@ const comboColor = computed(() => {
   if (clickerStore.comboCount > 5) return 'text-info'
   return 'text-primary'
 })
+
+const clickScale = ref(1)
+
+const handleClickWithAnimation = () => {
+  clickerStore.handleClick()
+
+  // Quick click animation
+  clickScale.value = 0.95
+  setTimeout(() => {
+    clickScale.value = 1
+  }, 100)
+}
+
+
 </script>
 
 <template>
@@ -108,15 +129,18 @@ const comboColor = computed(() => {
                 </div>
               </div>
 
-              <!-- Main Click Area - reduced padding -->
+              <!-- Main Click Area -->
               <div class="position-relative mb-4 p-3 d-flex justify-content-center align-items-center flex-grow-1">
                 <button
                   class="main-click-btn btn btn-primary rounded-circle p-0 position-relative"
                   :style="{
-                    transform: buttonScale,
-                    filter: clickerStore.comboCount > 10 ? 'drop-shadow(0 0 30px rgba(13, 110, 253, 0.8))' : 'none'
+                    transform: `scale(${buttonScale * clickScale})`,
+                    boxShadow: glowIntensity > 0 ?
+                      `0 12px 40px rgba(0, 123, 255, ${0.3 + glowIntensity * 0.5}),
+       0 0 ${30 + glowIntensity * 20}px rgba(13, 110, 253, ${glowIntensity * 0.8})` :
+                      '0 12px 40px rgba(0, 123, 255, 0.3)'
                   }"
-                  @click="clickerStore.handleClick">
+                  @click="handleClickWithAnimation">
 
                   <div class="click-content text-white">
                     <i class="bi bi-coin click-icon d-block mb-2"></i>
@@ -131,17 +155,25 @@ const comboColor = computed(() => {
                 </button>
 
                 <!-- Floating Click Animations -->
-                <div
-                  v-for="animation in clickerStore.clickAnimations"
-                  :key="animation.id"
-                  class="floating-number position-absolute fw-bold text-success"
-                  :style="{
-                    left: `${animation.x}px`,
-                    top: `${animation.y}px`,
-                    fontSize: animation.isCritical ? '1.5rem' : '1.2rem'
-                  }">
-                  +{{ animation.value.toLocaleString() }}
-                  <i v-if="animation.isCritical" class="bi bi-exclamation-circle ms-1"></i>
+                <div class="floating-animations-container position-absolute"
+                  style="top: 50%; left: 50%; pointer-events: none; z-index: 15;">
+                  <div
+                    v-for="animation in clickerStore.clickAnimations"
+                    :key="animation.id"
+                    class="floating-number position-absolute fw-bold"
+                    :class="animation.isCritical ? 'text-warning floating-critical' : 'text-success floating-normal'"
+                    :style="{
+                      left: `${animation.x}px`,
+                      top: `${animation.y}px`,
+                      transform: 'translate(-50%, -50%)',
+                      fontSize: animation.isCritical ? '1.6rem' : '1.3rem',
+                      textShadow: animation.isCritical ?
+                        '0 0 10px rgba(255, 193, 7, 0.8), 0 1px 3px rgba(0, 0, 0, 0.3)' :
+                        '0 1px 3px rgba(0, 0, 0, 0.3)'
+                    }">
+                    +{{ animation.value.toLocaleString() }}
+                    <i v-if="animation.isCritical" class="bi bi-exclamation-diamond-fill ms-1"></i>
+                  </div>
                 </div>
               </div>
 
@@ -359,9 +391,16 @@ const comboColor = computed(() => {
 
 .floating-number {
   pointer-events: none;
-  animation: floatUp 2s ease-out forwards;
-  z-index: 10;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.floating-normal {
+  animation: floatUpImproved 2s ease-out forwards;
+}
+
+.floating-critical {
+  animation: floatUpCritical 2.2s ease-out forwards;
 }
 
 .pulse {
@@ -432,6 +471,65 @@ const comboColor = computed(() => {
 
   .click-icon {
     font-size: 2.5rem;
+  }
+}
+
+@keyframes floatUpImproved {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateY(0px) scale(1) rotate(0deg);
+  }
+
+  10% {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateY(-10px) scale(1.1) rotate(-2deg);
+  }
+
+  30% {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) translateY(-35px) scale(1.05) rotate(1deg);
+  }
+
+  70% {
+    opacity: 0.4;
+    transform: translate(-50%, -50%) translateY(-65px) scale(0.9) rotate(-1deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translateY(-100px) scale(0.7) rotate(0deg);
+  }
+}
+
+@keyframes floatUpCritical {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateY(0px) scale(1) rotate(0deg);
+  }
+
+  5% {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateY(-5px) scale(1.3) rotate(-3deg);
+  }
+
+  15% {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateY(-20px) scale(1.2) rotate(2deg);
+  }
+
+  35% {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) translateY(-45px) scale(1.1) rotate(-1deg);
+  }
+
+  70% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) translateY(-75px) scale(0.95) rotate(1deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translateY(-120px) scale(0.6) rotate(0deg);
   }
 }
 </style>

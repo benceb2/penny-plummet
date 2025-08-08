@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRouletteStore, RouletteState, type RouletteResult, type BetType } from '@/stores/rouletteStore'
+import { useRouletteStore, type RouletteResult, type BetType } from '@/stores/rouletteStore'
 import { useUserStore } from '@/stores/userStore'
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil'
 import RouletteSpinner from '@/views/roulette/RouletteSpinner.vue'
@@ -9,6 +9,7 @@ import RouletteTable from '@/views/roulette/RouletteTable.vue'
 import BaseLayout from '@/components/layout/BaseLayout.vue'
 import GameResult from '@/components/GameResult.vue'
 import BetAmountSelector from '@/components/BetAmountSelector.vue'
+import { RouletteState } from '@/types/RouletteState'
 
 const { t } = useI18n()
 
@@ -84,7 +85,7 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
 
     <!-- Result Alert -->
     <GameResult
-      :show="gameStore.lastResult !== null && gameStore.gameState === RouletteState.COMPLETE"
+      :show="gameStore.lastResult !== null && gameStore.gameState === RouletteTable.COMPLETE"
       :result="gameStore.lastResult ? {
         type: gameStore.lastResult.totalWin > gameStore.lastResult.totalBet ? 'win' :
           gameStore.lastResult.totalWin === gameStore.lastResult.totalBet ? 'push' : 'loss',
@@ -101,6 +102,7 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
 
     <!-- Game Result Spinner -->
     <RouletteSpinner
+      v-if="gameStore.gameState === RouletteState.SPINNING"
       :is-spinning="gameStore.gameState === RouletteState.SPINNING"
       :winning-number="gameStore.winningNumber"
       @spin-complete="gameStore.completeGame" />

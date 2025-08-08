@@ -16,13 +16,7 @@ import { useAchievementStore } from './achievementStore'
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil'
 import { useTransactionStore } from './transactionStore'
 import { useUserStore } from './userStore'
-
-
-export enum RouletteState {
-  BETTING = 'betting',
-  SPINNING = 'spinning',
-  COMPLETE = 'complete'
-}
+import { RouletteState } from '@/types/RouletteState'
 
 export type BetType =
   | 'straight'    // Single number

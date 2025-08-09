@@ -8,14 +8,14 @@ import RouletteSpinner from '@/views/roulette/RouletteSpinner.vue'
 import RouletteTable from '@/views/roulette/RouletteTable.vue'
 import BaseLayout from '@/components/layout/BaseLayout.vue'
 import GameResult from '@/components/GameResult.vue'
-import BetAmountSelector from '@/components/BetAmountSelector.vue'
 import { RouletteState } from '@/types/RouletteState'
 
 const { t } = useI18n()
 
 const gameStore = useRouletteStore()
 const userStore = useUserStore()
-const currentBetAmount = ref(0)
+const currentBetAmount = ref(100)
+const activeView = ref<'table' | 'bets'>('table')
 
 // Game message formatting
 function getGameResultMessage(result: RouletteResult): string {
@@ -30,16 +30,10 @@ function getGameResultMessage(result: RouletteResult): string {
 
 // Game action handlers
 function placeBet(betType: BetType, numbers: number[], amount: number) {
-  // Validate bet amount
-  if (amount <= 0 || amount > userStore.chips) {
-    return
-  }
+  if (amount <= 0 || amount > userStore.chips) return
 
-  // Check if total bets would exceed chips
   const potentialTotalBet = gameStore.totalBet + amount
-  if (potentialTotalBet > userStore.chips) {
-    return
-  }
+  if (potentialTotalBet > userStore.chips) return
 
   gameStore.placeBet(betType, numbers, amount)
 }
@@ -48,44 +42,108 @@ async function handleSpin() {
   if (!gameStore.isSpinAllowed) return
 
   try {
-    // Deduct total bet amount from user's chips
     userStore.chips -= gameStore.totalBet
-
     const result = await gameStore.spin()
 
-    // Add winnings to user's chips
     if (result.totalWin > 0) {
       userStore.chips += result.totalWin
     }
   } catch (error) {
     console.error('Error during spin:', error)
-    // Handle error - maybe show a toast notification?
   }
 }
 
 function handleNewGame() {
   gameStore.reset()
+  activeView.value = 'table'
 }
 
-// Maximum bet amount (50% of chips or remove limit entirely)
 const maxBetAmount = computed(() => userStore.chips)
 
-// Watch for changes in bet amount and validate
+// Dynamic quick bet presets based on chip balance
+const quickBets = computed(() => {
+  const chips = userStore.chips
+  if (chips <= 0) return []
+
+  // Calculate percentage-based bets
+  const percentages = [0.05, 0.10, 0.25, 0.50, 1.0] // 5%, 10%, 25%, 50%, ALL IN!
+  const bets = percentages.map(p => Math.floor(chips * p)).filter(b => b > 0)
+
+  // Add some fixed small bets for penny gameplay
+  if (chips >= 10) bets.unshift(10)
+  if (chips >= 50) bets.unshift(50)
+  if (chips >= 100) bets.unshift(100)
+
+  // Remove duplicates and sort
+  return [...new Set(bets)].sort((a, b) => a - b).slice(0, 6) // Max 6 options
+})
+
+// Set initial bet amount to a reasonable default
 watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
   if (newBetAmount > newMaxAmount) {
-    currentBetAmount.value = newMaxAmount
+    currentBetAmount.value = Math.min(Math.floor(newMaxAmount * 0.1), newMaxAmount)
   }
 })
+
+// Initialize current bet amount
+if (currentBetAmount.value === 100 && userStore.chips < 100) {
+  currentBetAmount.value = Math.min(10, userStore.chips)
+}
 </script>
 
 <template>
-  <BaseLayout
-    :title="t('roulette.title')"
-    bootstrapIcon="dice-5">
+  <BaseLayout :title="t('roulette.title')" bootstrapIcon="dice-5">
+
+    <!-- Compact Betting Bar -->
+    <div class="card bg-dark text-white mb-3">
+      <div class="card-body py-2">
+        <div class="row align-items-center g-2">
+          <div class="col-12 col-md-auto">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">
+                <i class="bi bi-coin"></i>
+              </span>
+              <input
+                type="number"
+                class="form-control"
+                style="max-width: 100px;"
+                v-model="currentBetAmount"
+                :max="maxBetAmount"
+                :min="1">
+              <span class="input-group-text text-warning fw-bold">
+                {{ formatIntAsCurrency(currentBetAmount) }}
+              </span>
+            </div>
+          </div>
+          <div class="col">
+            <div class="d-flex gap-1 flex-wrap">
+              <button
+                v-for="amount in quickBets"
+                :key="amount"
+                class="btn btn-sm"
+                :class="[
+                  currentBetAmount === amount ? 'btn-warning' : 'btn-outline-warning',
+                  amount === userStore.chips ? 'fw-bold' : ''
+                ]"
+                @click="currentBetAmount = amount">
+                <span v-if="amount === userStore.chips">ALL IN</span>
+                <span v-else>{{ formatIntAsCurrency(amount) }}</span>
+              </button>
+            </div>
+          </div>
+          <div class="col-auto">
+            <div v-if="gameStore.totalBet > 0" class="text-end">
+              <small class="text-muted">Total Bet</small><br>
+              <strong class="text-warning">{{ formatIntAsCurrency(gameStore.totalBet) }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Result Alert -->
     <GameResult
-      :show="gameStore.lastResult !== null && gameStore.gameState === RouletteTable.COMPLETE"
+      :show="gameStore.lastResult !== null && gameStore.gameState === RouletteState.COMPLETE"
       :result="gameStore.lastResult ? {
         type: gameStore.lastResult.totalWin > gameStore.lastResult.totalBet ? 'win' :
           gameStore.lastResult.totalWin === gameStore.lastResult.totalBet ? 'push' : 'loss',
@@ -94,120 +152,123 @@ watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
           gameStore.lastResult.totalBet,
         message: getGameResultMessage(gameStore.lastResult),
         details: t('roulette.results.winningNumber', { number: gameStore.lastResult.winningNumber })
-      } : {
-        type: 'loss',
-        amount: 0
-      }"
+      } : { type: 'loss', amount: 0 }"
       @close="gameStore.lastResult = null" />
 
-    <!-- Game Result Spinner -->
-    <RouletteSpinner
-      v-if="gameStore.gameState === RouletteState.SPINNING"
-      :is-spinning="gameStore.gameState === RouletteState.SPINNING"
-      :winning-number="gameStore.winningNumber"
-      @spin-complete="gameStore.completeGame" />
+    <!-- Spinner -->
+    <div v-if="gameStore.gameState === RouletteState.SPINNING" class="mb-3">
+      <RouletteSpinner
+        :is-spinning="gameStore.gameState === RouletteState.SPINNING"
+        :winning-number="gameStore.winningNumber"
+        @spin-complete="gameStore.completeGame" />
+    </div>
 
-    <!-- Roulette Table with Betting Controls -->
-    <div class="row mb-4">
-      <div class="col-12">
-        <div class="card shadow-sm">
-          <div class="card-header bg-light">
-            <h5 class="mb-0">
-              <i class="bi bi-bullseye me-2"></i>{{ t('roulette.table.title') }}
-            </h5>
+    <!-- Main Game Area -->
+    <div class="card mb-3">
+      <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              :class="{ active: activeView === 'table' }"
+              href="#"
+              @click.prevent="activeView = 'table'">
+              <i class="bi bi-grid-3x3-gap me-2"></i>Table
+            </a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link position-relative"
+              :class="{ active: activeView === 'bets' }"
+              href="#"
+              @click.prevent="activeView = 'bets'">
+              <i class="bi bi-list-ul me-2"></i>
+              My Bets
+              <span
+                v-if="gameStore.currentBets.length > 0"
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {{ gameStore.currentBets.length }}
+              </span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card-body">
+        <!-- Table View -->
+        <div v-show="activeView === 'table'">
+          <RouletteTable
+            :current-bets="gameStore.currentBets"
+            :current-bet-amount="currentBetAmount"
+            :on-place-bet="placeBet"
+            :format-currency="formatIntAsCurrency" />
+        </div>
+
+        <!-- Bets View -->
+        <div v-show="activeView === 'bets'">
+          <div v-if="gameStore.currentBets.length > 0">
+            <div class="list-group mb-3">
+              <div
+                v-for="(bet, index) in gameStore.currentBets"
+                :key="index"
+                class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <strong>{{ bet.type }}</strong>
+                  <small class="text-muted ms-2">
+                    [{{ bet.numbers.join(', ') }}]
+                  </small>
+                </div>
+                <span class="badge bg-primary rounded-pill">
+                  {{ formatIntAsCurrency(bet.amount) }}
+                </span>
+              </div>
+            </div>
+
+            <div class="alert alert-info">
+              <div class="d-flex justify-content-between align-items-center">
+                <strong>Total Bet:</strong>
+                <h5 class="mb-0">{{ formatIntAsCurrency(gameStore.totalBet) }}</h5>
+              </div>
+            </div>
           </div>
-          <div class="card-body">
-            <!-- Betting Controls - Now at the top -->
-            <div class="row mb-4">
-              <div class="col-lg-6">
-                <div class="card bg-light">
-                  <div class="card-body">
-                    <h6 class="d-flex align-items-center mb-3">
-                      <i class="bi bi-cash me-2"></i>{{ t('roulette.gameControls.betting.title') }}
-                    </h6>
 
-                    <BetAmountSelector v-model="currentBetAmount" :max-amount="maxBetAmount" :min-amount="1"
-                      size="sm" />
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-lg-6">
-                <div class="card bg-light">
-                  <div class="card-body">
-                    <h6 class="d-flex align-items-center mb-3">
-                      <i class="bi bi-list me-2"></i>{{ t('roulette.gameControls.betting.currentBets') }}
-                    </h6>
-
-                    <!-- Current Bets Display -->
-                    <div v-if="gameStore.currentBets.length > 0" class="table-responsive">
-                      <table class="table table-sm mb-0">
-                        <tbody>
-                          <tr v-for="(bet, index) in gameStore.currentBets" :key="index" class="small">
-                            <td>{{ bet.type }}</td>
-                            <td>{{ bet.numbers.join(', ') }}</td>
-                            <td class="text-end">{{ formatIntAsCurrency(bet.amount) }}</td>
-                          </tr>
-                        </tbody>
-                        <tfoot>
-                          <tr class="border-top">
-                            <td colspan="2" class="text-end"><strong>Total:</strong></td>
-                            <td class="text-end"><strong>{{ formatIntAsCurrency(gameStore.totalBet) }}</strong></td>
-                          </tr>
-                        </tfoot>
-                      </table>
-                    </div>
-                    <div v-else class="text-muted text-center py-3">
-                      <i class="bi bi-info-circle me-2"></i>No bets placed yet
-                    </div>
-
-                    <!-- Clear Bets Button -->
-                    <div class="mt-3">
-                      <button class="btn btn-danger btn-sm w-100" @click="gameStore.clearBets()"
-                        :disabled="gameStore.currentBets.length === 0">
-                        <i class="bi bi-trash me-2"></i>{{ t('roulette.gameControls.betting.clearAllBets') }}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Roulette Table -->
-            <div class="table-responsive">
-              <RouletteTable :current-bets="gameStore.currentBets" :current-bet-amount="currentBetAmount"
-                :on-place-bet="placeBet" :format-currency="formatIntAsCurrency" />
-            </div>
+          <div v-else class="text-center py-5 text-muted">
+            <i class="bi bi-inbox display-4 d-block mb-3"></i>
+            <p>No bets placed yet</p>
+            <small>Switch to the table view to place your bets</small>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Game Action Controls -->
-    <div class="row">
-      <div class="col-12">
-        <div class="card shadow-sm">
-          <div class="card-header bg-light py-3">
-            <h5 class="mb-0">
-              <i class="bi bi-gear-fill me-2"></i>{{ t('roulette.gameControls.actions.title') }}
-            </h5>
-          </div>
-          <div class="card-body">
-            <div class="d-flex gap-3 justify-content-center">
-              <!-- Spin Button -->
-              <button class="btn btn-primary btn-lg" @click="handleSpin" :disabled="!gameStore.isSpinAllowed">
-                <i class="bi bi-play-circle-fill me-2"></i>{{ t('roulette.gameControls.actions.spin') }}
-              </button>
+    <!-- Action Buttons -->
+    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+      <button
+        class="btn btn-danger"
+        @click="gameStore.clearBets()"
+        :disabled="gameStore.currentBets.length === 0 || gameStore.gameState !== RouletteState.BETTING">
+        <i class="bi bi-x-circle me-2"></i>Clear Bets
+      </button>
 
-              <!-- New Game Button -->
-              <button v-if="gameStore.gameState === RouletteState.COMPLETE" class="btn btn-secondary btn-lg"
-                @click="handleNewGame">
-                <i class="bi bi-arrow-clockwise me-2"></i>{{ t('roulette.gameControls.actions.newGame') }}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <button
+        class="btn btn-success btn-lg"
+        @click="handleSpin"
+        :disabled="!gameStore.isSpinAllowed || gameStore.gameState === RouletteState.SPINNING">
+        <i class="bi bi-play-circle-fill me-2"></i>
+        <span v-if="gameStore.gameState === RouletteState.SPINNING">
+          Spinning...
+        </span>
+        <span v-else>
+          Spin the Wheel
+        </span>
+      </button>
+
+      <button
+        v-if="gameStore.gameState === RouletteState.COMPLETE"
+        class="btn btn-primary"
+        @click="handleNewGame">
+        <i class="bi bi-arrow-clockwise me-2"></i>New Game
+      </button>
     </div>
   </BaseLayout>
 </template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const props = defineProps<{
   isSpinning: boolean
@@ -13,7 +13,6 @@ const emit = defineEmits<{
 const spinnerRef = ref<HTMLDivElement | null>(null)
 const numbersStrip = ref<HTMLDivElement | null>(null)
 const isAnimating = ref(false)
-const spinCount = ref(0)
 
 // Real European roulette wheel sequence
 const BASE_SEQUENCE = [
@@ -27,80 +26,102 @@ const getNumberColor = (num: number): string => {
 }
 
 const generateSpinSequence = () => {
-  return [...BASE_SEQUENCE, ...BASE_SEQUENCE, ...BASE_SEQUENCE]
+  // Create multiple copies for smooth scrolling
+  return [...BASE_SEQUENCE, ...BASE_SEQUENCE, ...BASE_SEQUENCE, ...BASE_SEQUENCE, ...BASE_SEQUENCE]
 }
 
 const startSpin = async () => {
-  if (!spinnerRef.value || !numbersStrip.value || isAnimating.value || props.winningNumber === null) return
+  if (!spinnerRef.value || !numbersStrip.value || isAnimating.value || props.winningNumber === null) {
+    console.log('Cannot start spin:', {
+      spinner: !!spinnerRef.value,
+      strip: !!numbersStrip.value,
+      animating: isAnimating.value,
+      winningNumber: props.winningNumber
+    })
+    return
+  }
 
   isAnimating.value = true
-  spinCount.value++ // Increment to force animation restart
 
-  // Reset position
+  // Reset position instantly
   numbersStrip.value.style.transition = 'none'
   numbersStrip.value.style.transform = 'translateX(0)'
+
+  // Force browser to apply the reset
   void numbersStrip.value.offsetWidth
 
   const numberWidth = 64
   const sequence = generateSpinSequence()
 
-  // Find the winning number in the middle sequence
+  // Find winning number in middle sequences (for better animation)
   const baseLength = BASE_SEQUENCE.length
-  const startSearchAt = baseLength
-  const endSearchAt = baseLength * 2
-
   let targetIndex = -1
-  for (let i = startSearchAt; i < endSearchAt; i++) {
-    if (sequence[i] === props.winningNumber) {
-      targetIndex = i
-      break
+
+  // Look for the winning number in the 3rd or 4th repetition
+  for (let rep = 2; rep < 4; rep++) {
+    const startIdx = baseLength * rep
+    for (let i = 0; i < baseLength; i++) {
+      if (sequence[startIdx + i] === props.winningNumber) {
+        targetIndex = startIdx + i
+        break
+      }
     }
+    if (targetIndex !== -1) break
   }
 
   if (targetIndex === -1) {
-    console.error('Could not find winning number in sequence')
+    console.error('Could not find winning number in sequence:', props.winningNumber)
+    isAnimating.value = false
     return
   }
 
+  // Calculate position to center the winning number
   const spinnerCenter = spinnerRef.value.offsetWidth / 2
   const finalPosition = -(targetIndex * numberWidth) + (spinnerCenter - numberWidth / 2)
 
-  const SPIN_DURATION = 10000
-  numbersStrip.value.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.2, 0.8, 0.2, 0.99)`
-  numbersStrip.value.style.transform = `translateX(${finalPosition}px)`
+  // Apply the animation
+  requestAnimationFrame(() => {
+    if (!numbersStrip.value) return
 
-  setTimeout(() => {
-    isAnimating.value = false
-    emit('spinComplete')
-  }, SPIN_DURATION)
+    const SPIN_DURATION = 4000 // Reduced from 10 seconds to 4 seconds
+    numbersStrip.value.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.17, 0.67, 0.12, 0.99)`
+    numbersStrip.value.style.transform = `translateX(${finalPosition}px)`
+
+    setTimeout(() => {
+      isAnimating.value = false
+      emit('spinComplete')
+    }, SPIN_DURATION)
+  })
 }
 
-watch(() => props.isSpinning, (newValue) => {
-  if (newValue && props.winningNumber !== null) {
-    startSpin()
-  }
-})
-
+// Start spinning when component mounts (since it only renders when spinning)
 onMounted(() => {
-  if (numbersStrip.value) {
-    numbersStrip.value.style.transform = 'translateX(0)'
+  if (props.isSpinning && props.winningNumber !== null) {
+    // Small delay to ensure DOM is ready
+    setTimeout(() => {
+      startSpin()
+    }, 100)
   }
 })
 </script>
 
 <template>
-  <div class="roulette-spinner-container mb-4">
-    <div ref="spinnerRef" class="roulette-spinner">
-      <div ref="numbersStrip" class="numbers-strip" :class="{ 'spinning': isAnimating }" :data-spin-count="spinCount">
-        <div v-for="(number, index) in generateSpinSequence()"
-          :key="index"
-          class="number-block"
-          :class="getNumberColor(number)">
-          {{ number }}
+  <div class="card mb-3">
+    <div class="card-body p-2">
+      <div class="roulette-spinner-container">
+        <div ref="spinnerRef" class="roulette-spinner">
+          <div ref="numbersStrip" class="numbers-strip">
+            <div
+              v-for="(number, index) in generateSpinSequence()"
+              :key="`${index}-${number}`"
+              :class="['number-block', getNumberColor(number)]">
+              {{ number }}
+            </div>
+          </div>
         </div>
+        <div class="pointer"></div>
       </div>
     </div>
-    <div class="pointer"></div>
   </div>
 </template>
 
@@ -109,73 +130,71 @@ onMounted(() => {
   position: relative;
   overflow: hidden;
   height: 80px;
-  background: #1a1a1a;
-  border-radius: 8px;
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(to right, #0d5a2e, #0a4122);
+  border-radius: 0.5rem;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .roulette-spinner {
   overflow: hidden;
-  height: 70px;
-  margin: 5px 0;
+  height: 100%;
+  position: relative;
 }
 
 .numbers-strip {
   display: flex;
-  transform: translateX(0);
-  will-change: transform;
   height: 100%;
-  filter: blur(0px);
-  transition: transform, filter;
+  align-items: center;
+  will-change: transform;
 }
 
 .number-block {
   flex: 0 0 60px;
-  height: 60px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  font-size: 1.5rem;
-  margin: 5px 2px;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-size: 1.25rem;
+  margin: 0 2px;
+  border-radius: 0.25rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 .pointer {
   position: absolute;
-  top: 0;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  width: 4px;
-  height: 100%;
-  background: linear-gradient(to bottom,
-      #ffd700,
-      #ffed4a 50%,
-      #ffd700);
-  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 20px solid #ffc107;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
   z-index: 10;
 }
 
-.spinning {
-  animation: spinBlur 10s forwards;
+.pointer::before {
+  content: '';
+  position: absolute;
+  bottom: 20px;
+  left: -2px;
+  width: 4px;
+  height: 30px;
+  background: #ffc107;
 }
 
-@keyframes spinBlur {
-  0% {
-    filter: blur(0px);
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .roulette-spinner-container {
+    height: 60px;
   }
 
-  10% {
-    filter: blur(1px);
-  }
-
-  70% {
-    filter: blur(1px);
-  }
-
-  100% {
-    filter: blur(0px);
+  .number-block {
+    flex: 0 0 45px;
+    height: 40px;
+    font-size: 1rem;
   }
 }
 </style>

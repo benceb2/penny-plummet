@@ -110,8 +110,8 @@ const outsideBets = {
         <!-- Zero -->
         <div class="d-flex align-items-center">
           <button
-            :class="`btn btn-success ${getBetAmount(0) > 0 ? 'active position-relative' : ''}`"
-            style="width: 50px; height: 120px; font-size: 1.5rem; font-weight: bold; writing-mode: vertical-lr;"
+            :class="`btn btn-outline-light ${getBetAmount(0) > 0 ? 'active position-relative' : ''}`"
+            style="width: 50px; height: 120px; font-size: 1.5rem; font-weight: bold; writing-mode: vertical-lr; display: flex; align-items: center; justify-content: center;"
             @click="onPlaceBet('straight', [0], currentBetAmount)">
             0
             <span
@@ -169,7 +169,7 @@ const outsideBets = {
       <div class="row g-1 mb-2" style="padding-top: 10px;">
         <div class="col-3">
           <button
-            :class="`btn btn-success w-100 ${getBetAmount(0) > 0 ? 'active position-relative' : ''}`"
+            :class="`btn btn-outline-light w-100 ${getBetAmount(0) > 0 ? 'active position-relative' : ''}`"
             style="height: 50px; font-size: 1.25rem; font-weight: bold;"
             @click="onPlaceBet('straight', [0], currentBetAmount)">
             0

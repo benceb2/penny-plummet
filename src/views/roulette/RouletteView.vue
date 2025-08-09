@@ -252,7 +252,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
       </button>
 
       <button
-        class="btn btn-success btn-lg"
+        class="btn btn-success"
         @click="handleSpin"
         :disabled="!gameStore.isSpinAllowed || gameStore.gameState === RouletteState.SPINNING">
         <i class="bi bi-play-circle-fill me-2"></i>

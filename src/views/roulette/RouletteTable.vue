@@ -58,6 +58,15 @@ const numberGrid = computed(() => {
   return grid
 })
 
+// Mobile-friendly grid (4 columns x 9 rows)
+const mobileGrid = computed(() => {
+  const grid = []
+  for (let i = 1; i <= 36; i += 4) {
+    grid.push([i, i + 1, i + 2, i + 3].filter(n => n <= 36))
+  }
+  return grid
+})
+
 const outsideBets = {
   dozens: [
     { type: 'dozen' as BetType, label: '1st 12', numbers: Array.from({ length: 12 }, (_, i) => i + 1) },
@@ -76,101 +85,217 @@ const outsideBets = {
 </script>
 
 <template>
-  <div class="bg-success p-3 rounded" style="overflow: visible;">
-    <!-- Zero -->
-    <div class="text-center mb-3" style="padding-top: 10px;">
-      <button
-        :class="`btn btn-success ${getBetAmount(0) > 0 ? 'active position-relative' : ''}`"
-        style="width: 60px; height: 60px; font-size: 1.5rem; font-weight: bold;"
-        @click="onPlaceBet('straight', [0], currentBetAmount)">
-        0
-        <span
-          v-if="getBetAmount(0) > 0"
-          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark"
-          style="z-index: 1000;">
-          {{ formatCurrency(getBetAmount(0)) }}
-        </span>
-      </button>
-    </div>
+  <div class="bg-success p-2 p-md-3 rounded" style="overflow: visible;">
 
-    <!-- Dozens -->
-    <div class="row g-2 mb-2" style="padding-top: 10px;">
-      <div v-for="bet in outsideBets.dozens" :key="bet.label" class="col-4">
-        <button
-          :class="`btn btn-outline-light w-100 ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
-          @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
-          {{ bet.label }}
-          <span
-            v-if="getOutsideBetAmount(bet.numbers) > 0"
-            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark"
-            style="z-index: 1000;">
-            {{ formatCurrency(getOutsideBetAmount(bet.numbers)) }}
-          </span>
-        </button>
+    <!-- Desktop Layout -->
+    <div class="d-none d-md-block">
+      <!-- Dozens -->
+      <div class="row g-2 mb-2" style="padding-top: 10px;">
+        <div v-for="bet in outsideBets.dozens" :key="bet.label" class="col-4">
+          <button
+            :class="`btn btn-outline-light w-100 ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
+            @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
+            {{ bet.label }}
+            <span
+              v-if="getOutsideBetAmount(bet.numbers) > 0"
+              class="position-absolute badge rounded-pill bg-warning text-dark bet-badge">
+              {{ formatCurrency(getOutsideBetAmount(bet.numbers)) }}
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Numbers with Zero on the side -->
+      <div class="d-flex gap-2">
+        <!-- Zero -->
+        <div class="d-flex align-items-center">
+          <button
+            :class="`btn btn-success ${getBetAmount(0) > 0 ? 'active position-relative' : ''}`"
+            style="width: 50px; height: 120px; font-size: 1.5rem; font-weight: bold; writing-mode: vertical-lr;"
+            @click="onPlaceBet('straight', [0], currentBetAmount)">
+            0
+            <span
+              v-if="getBetAmount(0) > 0"
+              class="position-absolute badge rounded-pill bg-warning text-dark bet-badge">
+              {{ formatCurrency(getBetAmount(0)) }}
+            </span>
+          </button>
+        </div>
+
+        <!-- Number Grid -->
+        <div class="flex-grow-1" style="padding-top: 10px;">
+          <table class="table table-borderless mb-0 roulette-table">
+            <tbody>
+              <tr v-for="(row, rowIndex) in numberGrid" :key="rowIndex">
+                <td v-for="num in row" :key="num" class="p-1">
+                  <button
+                    :class="getNumberButtonClass(num)"
+                    class="number-btn"
+                    @click="onPlaceBet('straight', [num], currentBetAmount)">
+                    {{ num }}
+                    <span
+                      v-if="getBetAmount(num) > 0"
+                      class="position-absolute badge rounded-pill bg-warning text-dark bet-badge">
+                      {{ formatCurrency(getBetAmount(num)) }}
+                    </span>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Even Money Bets -->
+      <div class="row g-2 mt-2" style="padding-top: 10px;">
+        <div v-for="bet in outsideBets.even_money" :key="bet.label" class="col-2">
+          <button
+            :class="`btn w-100 ${bet.btnClass || 'btn-outline-light'} ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
+            @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
+            {{ bet.label }}
+            <span
+              v-if="getOutsideBetAmount(bet.numbers) > 0"
+              class="position-absolute badge rounded-pill bg-warning text-dark bet-badge">
+              {{ formatCurrency(getOutsideBetAmount(bet.numbers)) }}
+            </span>
+          </button>
+        </div>
       </div>
     </div>
 
-    <!-- Number Grid -->
-    <div class="mb-2" style="padding-top: 10px;">
-      <table class="table table-borderless mb-0" style="background-color: transparent !important;">
-        <tbody style="background-color: transparent;">
-          <tr v-for="(row, rowIndex) in numberGrid" :key="rowIndex">
-            <td v-for="num in row" :key="num" class="p-1" style="background-color: transparent; overflow: visible;">
+    <!-- Mobile Layout -->
+    <div class="d-md-none">
+      <!-- Zero and Dozens in one row -->
+      <div class="row g-1 mb-2" style="padding-top: 10px;">
+        <div class="col-3">
+          <button
+            :class="`btn btn-success w-100 ${getBetAmount(0) > 0 ? 'active position-relative' : ''}`"
+            style="height: 50px; font-size: 1.25rem; font-weight: bold;"
+            @click="onPlaceBet('straight', [0], currentBetAmount)">
+            0
+            <span
+              v-if="getBetAmount(0) > 0"
+              class="position-absolute badge rounded-pill bg-warning text-dark bet-badge-sm">
+              {{ formatCurrency(getBetAmount(0)) }}
+            </span>
+          </button>
+        </div>
+        <div v-for="bet in outsideBets.dozens" :key="bet.label" class="col-3">
+          <button
+            :class="`btn btn-outline-light w-100 ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
+            style="height: 50px; font-size: 0.75rem;"
+            @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
+            {{ bet.label }}
+            <span
+              v-if="getOutsideBetAmount(bet.numbers) > 0"
+              class="position-absolute badge rounded-pill bg-warning text-dark bet-badge-sm">
+              {{ formatCurrency(getOutsideBetAmount(bet.numbers)) }}
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Number Grid (4 columns) -->
+      <div class="mb-2" style="padding-top: 10px;">
+        <div class="row g-1">
+          <div v-for="row in mobileGrid" :key="row[0]" class="col-12 mb-1">
+            <div class="d-flex gap-1">
               <button
+                v-for="num in row"
+                :key="num"
                 :class="getNumberButtonClass(num)"
-                style="width: 100%; height: 40px; font-weight: bold; position: relative;"
+                class="flex-fill mobile-number-btn"
                 @click="onPlaceBet('straight', [num], currentBetAmount)">
                 {{ num }}
                 <span
                   v-if="getBetAmount(num) > 0"
-                  class="position-absolute badge rounded-pill bg-warning text-dark"
-                  style="font-size: 0.65rem; z-index: 1000; top: -8px; right: -8px;">
+                  class="position-absolute badge rounded-pill bg-warning text-dark bet-badge-sm">
                   {{ formatCurrency(getBetAmount(num)) }}
                 </span>
               </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    <!-- Even Money Bets -->
-    <div class="row g-2" style="padding-top: 10px;">
-      <div v-for="bet in outsideBets.even_money" :key="bet.label" class="col-6 col-md-2">
-        <button
-          :class="`btn w-100 ${bet.btnClass || 'btn-outline-light'} ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
-          @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
-          {{ bet.label }}
-          <span
-            v-if="getOutsideBetAmount(bet.numbers) > 0"
-            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark"
-            style="z-index: 1000;">
-            {{ formatCurrency(getOutsideBetAmount(bet.numbers)) }}
-          </span>
-        </button>
+      <!-- Mobile Even Money Bets (2x3 grid) -->
+      <div class="row g-1" style="padding-top: 10px;">
+        <div v-for="bet in outsideBets.even_money" :key="bet.label" class="col-4">
+          <button
+            :class="`btn w-100 ${bet.btnClass || 'btn-outline-light'} ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
+            style="font-size: 0.75rem; padding: 0.5rem 0.25rem;"
+            @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
+            {{ bet.label }}
+            <span
+              v-if="getOutsideBetAmount(bet.numbers) > 0"
+              class="position-absolute badge rounded-pill bg-warning text-dark bet-badge-sm">
+              {{ formatCurrency(getOutsideBetAmount(bet.numbers)) }}
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-/* Override Bootstrap table styles to ensure transparent background */
-.table {
-  --bs-table-bg: transparent !important;
+/* Table styles */
+.roulette-table {
   background-color: transparent !important;
 }
 
-.table td {
+.roulette-table td {
   background-color: transparent !important;
   border: none !important;
+  overflow: visible;
 }
 
-/* Ensure badges are visible */
+/* Number button styles */
+.number-btn {
+  width: 100%;
+  height: 40px;
+  font-weight: bold;
+  position: relative;
+  overflow: visible !important;
+}
+
+.mobile-number-btn {
+  height: 45px;
+  font-weight: bold;
+  position: relative;
+  overflow: visible !important;
+  font-size: 0.9rem;
+}
+
+/* Badge styles */
+.bet-badge {
+  font-size: 0.65rem;
+  z-index: 1000;
+  top: -8px;
+  right: -8px;
+}
+
+.bet-badge-sm {
+  font-size: 0.5rem;
+  z-index: 1000;
+  top: -6px;
+  right: -6px;
+  padding: 0.125rem 0.25rem;
+}
+
+/* Ensure overflow is visible */
 .btn {
   overflow: visible !important;
 }
 
 .position-relative {
   overflow: visible !important;
+}
+
+/* Mobile optimizations */
+@media (max-width: 767px) {
+  .bg-success {
+    padding: 0.5rem !important;
+  }
 }
 </style>

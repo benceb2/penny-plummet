@@ -59,27 +59,35 @@ function handleNewGame() {
 
 const maxBetAmount = computed(() => userStore.chips)
 
-// Dynamic quick bet presets based on chip balance
+// Quick bet presets with percentages
 const quickBets = computed(() => {
   const chips = userStore.chips
   if (chips <= 0) return []
 
-  // lculate percentage-based bets
-  const percentages = [0.05, 0.10, 0.25, 0.50, 1.0] // 5%, 10%, 25%, 50%, ALL IN!
-  const bets = percentages.map(p => Math.floor(chips * p)).filter(b => b > 0)
+  const bets = [
+    { amount: Math.max(1, Math.floor(chips * 0.05)), label: '5%' },
+    { amount: Math.max(1, Math.floor(chips * 0.10)), label: '10%' },
+    { amount: Math.max(1, Math.floor(chips * 0.25)), label: '25%' },
+    { amount: Math.max(1, Math.floor(chips * 0.50)), label: '50%' },
+    { amount: chips, label: 'ALL IN', isAllIn: true }
+  ]
 
-  // Adsome fixed small bets for penny gameplay
-  if (chips >= 10) bets.unshift(10)
-  if (chips >= 50) bets.unshift(50)
-  if (chips >= 100) bets.unshift(100)
+  // Filter out duplicates and very small amounts
+  return bets.filter((bet, index, self) =>
+    bet.amount >= 1 &&
+    self.findIndex(b => b.amount === bet.amount) === index
+  )
+})
 
-  // Remo duplicates and sort
-  return [...new Set(bets)].sort((a, b) => a - b).slice(0, 6) // Max 6 options
+// Get current bet percentage
+const currentBetPercentage = computed(() => {
+  if (userStore.chips === 0) return 0
+  return Math.round((currentBetAmount.value / userStore.chips) * 100)
 })
 
 // Set initial bet amount to a reasonable default
-watch([currentBetAmount, maxBetAmount], ([newBetAmount, newMaxAmount]) => {
-  if (newBetAmount > newMaxAmount) {
+watch(maxBetAmount, (newMaxAmount) => {
+  if (currentBetAmount.value > newMaxAmount) {
     currentBetAmount.value = Math.min(Math.floor(newMaxAmount * 0.1), newMaxAmount)
   }
 })
@@ -93,13 +101,23 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
 <template>
   <BaseLayout :title="t('roulette.title')" bootstrapIcon="dice-5">
 
-    <!-- Compact Betting Bar -->
+    <!-- Simplified Betting Bar -->
     <div class="card bg-light border-0 mb-3">
       <div class="card-body py-2">
         <div class="row align-items-center g-2">
-          <div class="col-12 col-md-auto">
+          <!-- Balance Display -->
+          <div class="col-auto">
+            <div class="d-flex align-items-center text-muted">
+              <i class="bi bi-wallet2 me-2"></i>
+              <small>Balance:</small>
+              <strong class="ms-1 text-dark">{{ formatIntAsCurrency(userStore.chips) }}</strong>
+            </div>
+          </div>
+
+          <!-- Bet Input -->
+          <div class="col-auto">
             <div class="input-group input-group-sm">
-              <span class="input-group-text bg-white">
+              <span class="input-group-text">
                 <i class="bi bi-coin text-warning"></i>
               </span>
               <input
@@ -109,33 +127,39 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
                 v-model="currentBetAmount"
                 :max="maxBetAmount"
                 :min="1">
-              <span class="input-group-text bg-warning text-dark fw-bold">
-                {{ formatIntAsCurrency(currentBetAmount) }}
+              <span class="input-group-text text-muted" style="min-width: 50px;">
+                {{ currentBetPercentage }}%
               </span>
             </div>
           </div>
+
+          <!-- Quick Bet Buttons -->
           <div class="col">
             <div class="d-flex gap-1 flex-wrap">
               <button
-                v-for="amount in quickBets"
-                :key="amount"
+                v-for="bet in quickBets"
+                :key="bet.amount"
                 class="btn btn-sm"
                 :class="[
-                  currentBetAmount === amount ? 'btn-primary' : 'btn-outline-secondary',
-                  amount === userStore.chips ? 'btn-danger fw-bold' : ''
+                  currentBetAmount === bet.amount ? 'btn-primary' : 'btn-outline-secondary',
+                  bet.isAllIn ? 'btn-danger fw-bold' : ''
                 ]"
-                @click="currentBetAmount = amount">
-                <span v-if="amount === userStore.chips">ALL IN</span>
-                <span v-else>{{ formatIntAsCurrency(amount) }}</span>
+                @click="currentBetAmount = bet.amount"
+                :title="`${formatIntAsCurrency(bet.amount)} (${bet.label} of balance)`">
+                <span v-if="bet.isAllIn">{{ bet.label }}</span>
+                <span v-else>
+                  {{ formatIntAsCurrency(bet.amount) }}
+                  <small class="opacity-75 ms-1">({{ bet.label }})</small>
+                </span>
               </button>
             </div>
           </div>
-          <div class="col-auto">
-            <div v-if="gameStore.totalBet > 0" class="d-flex align-items-center">
-              <div class="bg-warning rounded px-3 py-1">
-                <small class="text-dark d-block" style="font-size: 0.7rem;">Total Bet</small>
-                <strong class="text-dark">{{ formatIntAsCurrency(gameStore.totalBet) }}</strong>
-              </div>
+
+          <!-- Total Bet Display -->
+          <div class="col-auto ms-auto">
+            <div v-if="gameStore.totalBet > 0" class="text-end">
+              <small class="text-muted d-block" style="font-size: 0.7rem;">Total Bet</small>
+              <strong class="text-primary">{{ formatIntAsCurrency(gameStore.totalBet) }}</strong>
             </div>
           </div>
         </div>

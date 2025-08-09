@@ -31,7 +31,6 @@ function getGameResultMessage(result: RouletteResult): string {
 // Game action handlers
 function placeBet(betType: BetType, numbers: number[], amount: number) {
   if (amount <= 0 || amount > userStore.chips) return
-
   const potentialTotalBet = gameStore.totalBet + amount
   if (potentialTotalBet > userStore.chips) return
 
@@ -65,16 +64,16 @@ const quickBets = computed(() => {
   const chips = userStore.chips
   if (chips <= 0) return []
 
-  // Calculate percentage-based bets
+  // lculate percentage-based bets
   const percentages = [0.05, 0.10, 0.25, 0.50, 1.0] // 5%, 10%, 25%, 50%, ALL IN!
   const bets = percentages.map(p => Math.floor(chips * p)).filter(b => b > 0)
 
-  // Add some fixed small bets for penny gameplay
+  // Adsome fixed small bets for penny gameplay
   if (chips >= 10) bets.unshift(10)
   if (chips >= 50) bets.unshift(50)
   if (chips >= 100) bets.unshift(100)
 
-  // Remove duplicates and sort
+  // Remo duplicates and sort
   return [...new Set(bets)].sort((a, b) => a - b).slice(0, 6) // Max 6 options
 })
 
@@ -95,13 +94,13 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
   <BaseLayout :title="t('roulette.title')" bootstrapIcon="dice-5">
 
     <!-- Compact Betting Bar -->
-    <div class="card bg-dark text-white mb-3">
+    <div class="card bg-light border-0 mb-3">
       <div class="card-body py-2">
         <div class="row align-items-center g-2">
           <div class="col-12 col-md-auto">
             <div class="input-group input-group-sm">
-              <span class="input-group-text">
-                <i class="bi bi-coin"></i>
+              <span class="input-group-text bg-white">
+                <i class="bi bi-coin text-warning"></i>
               </span>
               <input
                 type="number"
@@ -110,7 +109,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
                 v-model="currentBetAmount"
                 :max="maxBetAmount"
                 :min="1">
-              <span class="input-group-text text-warning fw-bold">
+              <span class="input-group-text bg-warning text-dark fw-bold">
                 {{ formatIntAsCurrency(currentBetAmount) }}
               </span>
             </div>
@@ -122,8 +121,8 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
                 :key="amount"
                 class="btn btn-sm"
                 :class="[
-                  currentBetAmount === amount ? 'btn-warning' : 'btn-outline-warning',
-                  amount === userStore.chips ? 'fw-bold' : ''
+                  currentBetAmount === amount ? 'btn-primary' : 'btn-outline-secondary',
+                  amount === userStore.chips ? 'btn-danger fw-bold' : ''
                 ]"
                 @click="currentBetAmount = amount">
                 <span v-if="amount === userStore.chips">ALL IN</span>
@@ -132,9 +131,11 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
             </div>
           </div>
           <div class="col-auto">
-            <div v-if="gameStore.totalBet > 0" class="text-end">
-              <small class="text-muted">Total Bet</small><br>
-              <strong class="text-warning">{{ formatIntAsCurrency(gameStore.totalBet) }}</strong>
+            <div v-if="gameStore.totalBet > 0" class="d-flex align-items-center">
+              <div class="bg-warning rounded px-3 py-1">
+                <small class="text-dark d-block" style="font-size: 0.7rem;">Total Bet</small>
+                <strong class="text-dark">{{ formatIntAsCurrency(gameStore.totalBet) }}</strong>
+              </div>
             </div>
           </div>
         </div>

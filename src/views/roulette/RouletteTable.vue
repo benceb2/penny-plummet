@@ -76,9 +76,9 @@ const outsideBets = {
 </script>
 
 <template>
-  <div class="bg-success p-3 rounded">
+  <div class="bg-success p-3 rounded" style="overflow: visible;">
     <!-- Zero -->
-    <div class="text-center mb-3">
+    <div class="text-center mb-3" style="padding-top: 10px;">
       <button
         :class="`btn btn-success ${getBetAmount(0) > 0 ? 'active position-relative' : ''}`"
         style="width: 60px; height: 60px; font-size: 1.5rem; font-weight: bold;"
@@ -86,14 +86,15 @@ const outsideBets = {
         0
         <span
           v-if="getBetAmount(0) > 0"
-          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
+          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark"
+          style="z-index: 1000;">
           {{ formatCurrency(getBetAmount(0)) }}
         </span>
       </button>
     </div>
 
     <!-- Dozens -->
-    <div class="row g-2 mb-2">
+    <div class="row g-2 mb-2" style="padding-top: 10px;">
       <div v-for="bet in outsideBets.dozens" :key="bet.label" class="col-4">
         <button
           :class="`btn btn-outline-light w-100 ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
@@ -101,7 +102,8 @@ const outsideBets = {
           {{ bet.label }}
           <span
             v-if="getOutsideBetAmount(bet.numbers) > 0"
-            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
+            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark"
+            style="z-index: 1000;">
             {{ formatCurrency(getOutsideBetAmount(bet.numbers)) }}
           </span>
         </button>
@@ -109,20 +111,20 @@ const outsideBets = {
     </div>
 
     <!-- Number Grid -->
-    <div class="table-responsive mb-2">
-      <table class="table table-borderless mb-0">
-        <tbody>
+    <div class="mb-2" style="padding-top: 10px;">
+      <table class="table table-borderless mb-0" style="background-color: transparent !important;">
+        <tbody style="background-color: transparent;">
           <tr v-for="(row, rowIndex) in numberGrid" :key="rowIndex">
-            <td v-for="num in row" :key="num" class="p-1">
+            <td v-for="num in row" :key="num" class="p-1" style="background-color: transparent; overflow: visible;">
               <button
                 :class="getNumberButtonClass(num)"
-                style="width: 100%; height: 40px; font-weight: bold;"
+                style="width: 100%; height: 40px; font-weight: bold; position: relative;"
                 @click="onPlaceBet('straight', [num], currentBetAmount)">
                 {{ num }}
                 <span
                   v-if="getBetAmount(num) > 0"
-                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark"
-                  style="font-size: 0.65rem;">
+                  class="position-absolute badge rounded-pill bg-warning text-dark"
+                  style="font-size: 0.65rem; z-index: 1000; top: -8px; right: -8px;">
                   {{ formatCurrency(getBetAmount(num)) }}
                 </span>
               </button>
@@ -133,7 +135,7 @@ const outsideBets = {
     </div>
 
     <!-- Even Money Bets -->
-    <div class="row g-2">
+    <div class="row g-2" style="padding-top: 10px;">
       <div v-for="bet in outsideBets.even_money" :key="bet.label" class="col-6 col-md-2">
         <button
           :class="`btn w-100 ${bet.btnClass || 'btn-outline-light'} ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
@@ -141,7 +143,8 @@ const outsideBets = {
           {{ bet.label }}
           <span
             v-if="getOutsideBetAmount(bet.numbers) > 0"
-            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
+            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark"
+            style="z-index: 1000;">
             {{ formatCurrency(getOutsideBetAmount(bet.numbers)) }}
           </span>
         </button>
@@ -149,3 +152,25 @@ const outsideBets = {
     </div>
   </div>
 </template>
+
+<style scoped>
+/* Override Bootstrap table styles to ensure transparent background */
+.table {
+  --bs-table-bg: transparent !important;
+  background-color: transparent !important;
+}
+
+.table td {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+/* Ensure badges are visible */
+.btn {
+  overflow: visible !important;
+}
+
+.position-relative {
+  overflow: visible !important;
+}
+</style>

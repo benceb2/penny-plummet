@@ -168,6 +168,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
     <!-- Result Alert -->
     <GameResult
       :show="gameStore.lastResult !== null && gameStore.gameState === RouletteState.COMPLETE"
+      :auto-dismiss="false"
       :result="gameStore.lastResult ? {
         type: gameStore.lastResult.totalWin > gameStore.lastResult.totalBet ? 'win' :
           gameStore.lastResult.totalWin === gameStore.lastResult.totalBet ? 'push' : 'loss',
@@ -177,7 +178,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
         message: getGameResultMessage(gameStore.lastResult),
         details: t('roulette.results.winningNumber', { number: gameStore.lastResult.winningNumber })
       } : { type: 'loss', amount: 0 }"
-      @close="gameStore.lastResult = null" />
+      @close="handleNewGame" />
 
     <!-- Spinner -->
     <div v-if="gameStore.gameState === RouletteState.SPINNING" class="mb-3">
@@ -278,13 +279,6 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
         <span v-else>
           Spin the Wheel
         </span>
-      </button>
-
-      <button
-        v-if="gameStore.gameState === RouletteState.COMPLETE"
-        class="btn btn-primary"
-        @click="handleNewGame">
-        <i class="bi bi-arrow-clockwise me-2"></i>New Game
       </button>
     </div>
   </BaseLayout>

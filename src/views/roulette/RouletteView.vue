@@ -105,14 +105,6 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
     <div class="card bg-light border-0 mb-3">
       <div class="card-body py-2">
         <div class="row align-items-center g-2">
-          <!-- Balance Display -->
-          <div class="col-auto">
-            <div class="d-flex align-items-center text-muted">
-              <i class="bi bi-wallet2 me-2"></i>
-              <small>Balance:</small>
-              <strong class="ms-1 text-dark">{{ formatIntAsCurrency(userStore.chips) }}</strong>
-            </div>
-          </div>
 
           <!-- Bet Input -->
           <div class="col-auto">
@@ -146,12 +138,19 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
                 ]"
                 @click="currentBetAmount = bet.amount"
                 :title="`${formatIntAsCurrency(bet.amount)} (${bet.label} of balance)`">
-                <span v-if="bet.isAllIn">{{ bet.label }}</span>
+                <span class="text-light" v-if="bet.isAllIn">{{ bet.label }}</span>
                 <span v-else>
                   {{ formatIntAsCurrency(bet.amount) }}
                   <small class="opacity-75 ms-1">({{ bet.label }})</small>
                 </span>
               </button>
+              <button
+                class="btn btn-danger"
+                @click="gameStore.clearBets()"
+                :disabled="gameStore.currentBets.length === 0 || gameStore.gameState !== RouletteState.BETTING">
+                <i class="bi bi-x-circle me-2"></i>Clear Bets
+              </button>
+
             </div>
           </div>
 
@@ -189,7 +188,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
     </div>
 
     <!-- Main Game Area -->
-    <div class="card mb-3">
+    <div class="card mb-3" v-if="gameStore.gameState === RouletteState.BETTING">
       <div class="card-header">
         <ul class="nav nav-tabs card-header-tabs">
           <li class="nav-item">
@@ -268,13 +267,6 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
 
     <!-- Action Buttons -->
     <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-      <button
-        class="btn btn-danger"
-        @click="gameStore.clearBets()"
-        :disabled="gameStore.currentBets.length === 0 || gameStore.gameState !== RouletteState.BETTING">
-        <i class="bi bi-x-circle me-2"></i>Clear Bets
-      </button>
-
       <button
         class="btn btn-success"
         @click="handleSpin"

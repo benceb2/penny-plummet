@@ -66,8 +66,8 @@ const PAYOUT_MULTIPLIERS = {
 
 export const useRouletteStore = defineStore('roulette', () => {
   const achievementStore = useAchievementStore()
-  const transactionStore = useTransactionStore();
-  const userStore = useUserStore();
+  const transactionStore = useTransactionStore()
+  const userStore = useUserStore()
 
   // Game state
   const gameState = ref<RouletteState>(RouletteState.BETTING)
@@ -91,7 +91,9 @@ export const useRouletteStore = defineStore('roulette', () => {
   )
 
   const isSpinAllowed = computed(() =>
-    gameState.value === RouletteState.BETTING && totalBet.value > 0
+    gameState.value === RouletteState.BETTING &&
+    totalBet.value > 0 &&
+    totalBet.value <= userStore.chips // Ensure user has enough chips
   )
 
   /**
@@ -102,6 +104,12 @@ export const useRouletteStore = defineStore('roulette', () => {
    */
   function placeBet(betType: BetType, numbers: number[], amount: number) {
     if (gameState.value !== RouletteState.BETTING) return
+
+    // Check if adding this bet would exceed user's chips
+    if (totalBet.value + amount > userStore.chips) {
+      console.warn('Cannot place bet: would exceed available chips')
+      return
+    }
 
     currentBets.value.push({
       type: betType,
@@ -135,6 +143,8 @@ export const useRouletteStore = defineStore('roulette', () => {
 
   function completeGame() {
     if (pendingResult.value) {
+      // NOW apply the chip changes after spinner completes
+      handleSpinResult(pendingResult.value)
       lastResult.value = pendingResult.value
       pendingResult.value = null
     }
@@ -142,81 +152,118 @@ export const useRouletteStore = defineStore('roulette', () => {
   }
 
   function handleSpinResult(result: RouletteResult) {
-    // Update user's chips based on result
-    const netWinnings = result.totalWin - result.totalBet;
-    userStore.updateChips(netWinnings);
+    // First deduct the bet amount
+    userStore.chips -= result.totalBet
+
+    // Then add any winnings
+    if (result.totalWin > 0) {
+      userStore.chips += result.totalWin
+    }
 
     if (result.totalWin > 0) {
-      sessionStats.value.consecutiveWins++;
+      // Player won something
+      sessionStats.value.consecutiveWins++
       sessionStats.value.maxConsecutiveWins = Math.max(
         sessionStats.value.maxConsecutiveWins,
         sessionStats.value.consecutiveWins
-      );
+      )
 
-      transactionStore.addTransaction({
-        amount: netWinnings,
-        type: 'win',
-        game: 'roulette',
-        details: `Won ${formatIntAsCurrency(result.totalWin)} on number ${result.winningNumber}`
-      });
+      if (result.totalWin > result.totalBet) {
+        // Net win
+        transactionStore.addTransaction({
+          amount: result.totalWin - result.totalBet,
+          type: 'win',
+          game: 'roulette',
+          details: `Won ${formatIntAsCurrency(result.totalWin)} on number ${result.winningNumber}`
+        })
+      } else if (result.totalWin === result.totalBet) {
+        // Push/break even
+        transactionStore.addTransaction({
+          amount: 0,
+          type: 'push',
+          game: 'roulette',
+          details: `Broke even on number ${result.winningNumber}`
+        })
+      }
     } else {
-      sessionStats.value.consecutiveWins = 0;
+      // Complete loss
+      sessionStats.value.consecutiveWins = 0
 
       transactionStore.addTransaction({
         amount: -result.totalBet,
         type: 'loss',
         game: 'roulette',
         details: `Lost ${formatIntAsCurrency(result.totalBet)} on number ${result.winningNumber}`
-      });
+      })
     }
 
     // Update session stats
-    sessionStats.value.biggestWin = Math.max(sessionStats.value.biggestWin, result.totalWin);
+    sessionStats.value.biggestWin = Math.max(sessionStats.value.biggestWin, result.totalWin)
 
     // Track achievements if needed
     if (result.totalWin >= 1000) {
-      achievementStore.updateAchievementProgress('high_roller', result.totalWin);
+      achievementStore.updateAchievementProgress('high_roller', result.totalWin)
+    }
+
+    // Track single number win achievement
+    const straightBetWins = result.winningBets.filter(bet => bet.type === 'straight')
+    if (straightBetWins.length > 0) {
+      achievementStore.updateAchievementProgress('lucky_number', 1)
     }
   }
 
   async function spin(): Promise<RouletteResult> {
-    if (!isSpinAllowed.value) return {} as RouletteResult;
+    if (!isSpinAllowed.value) {
+      console.error('Spin not allowed:', {
+        state: gameState.value,
+        totalBet: totalBet.value,
+        chips: userStore.chips
+      })
+      return {} as RouletteResult
+    }
 
-    gameState.value = RouletteState.SPINNING;
+    // Validate user has enough chips (double-check)
+    if (totalBet.value > userStore.chips) {
+      console.error('Insufficient chips for bet')
+      return {} as RouletteResult
+    }
 
+    gameState.value = RouletteState.SPINNING
+
+    // Generate winning number
     const result: RouletteResult = {
       winningNumber: Math.floor(Math.random() * 37),
       totalWin: 0,
       totalBet: totalBet.value,
       winningBets: [],
       losingBets: []
-    };
+    }
 
-    // Calculate results
+    // Calculate winnings for each bet
     currentBets.value.forEach(bet => {
       if (bet.numbers.includes(result.winningNumber)) {
-        const payout = bet.amount * (PAYOUT_MULTIPLIERS[bet.type] + 1);
-        result.totalWin += payout;
-        result.winningBets.push(bet);
+        // This bet wins - payout is bet amount * multiplier + original bet
+        const payout = bet.amount * (PAYOUT_MULTIPLIERS[bet.type] + 1)
+        result.totalWin += payout
+        result.winningBets.push(bet)
       } else {
-        result.losingBets.push(bet);
+        result.losingBets.push(bet)
       }
-    });
+    })
 
     // Update session stats
-    sessionStats.value.spins++;
-    sessionStats.value.totalWagered += totalBet.value;
+    sessionStats.value.spins++
+    sessionStats.value.totalWagered += totalBet.value
 
-    // Store the result
-    pendingResult.value = result;
-    winningNumber.value = result.winningNumber;
+    // Store the result for later
+    pendingResult.value = result
+    winningNumber.value = result.winningNumber
 
-    // Handle the result immediately
-    handleSpinResult(result);
+    // Handle the result (update chips, transactions, etc.)
+    handleSpinResult(result)
 
-    return result;
+    return result
   }
-
 
   return {
     // State
@@ -245,5 +292,4 @@ export const useRouletteStore = defineStore('roulette', () => {
   }
 } as any)
 
-
-export type RouletteStore = ReturnType<typeof useRouletteStore>;
+export type RouletteStore = ReturnType<typeof useRouletteStore>

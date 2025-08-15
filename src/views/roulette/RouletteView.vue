@@ -41,12 +41,7 @@ async function handleSpin() {
   if (!gameStore.isSpinAllowed) return
 
   try {
-    userStore.chips -= gameStore.totalBet
-    const result = await gameStore.spin()
-
-    if (result.totalWin > 0) {
-      userStore.chips += result.totalWin
-    }
+    await gameStore.spin()
   } catch (error) {
     console.error('Error during spin:', error)
   }
@@ -101,7 +96,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
 <template>
   <BaseLayout :title="t('roulette.title')" bootstrapIcon="dice-5">
 
-    <!-- Simplified Betting Bar -->
+    <!-- Betting Bar -->
     <div class="card bg-light border-0 mb-3">
       <div class="card-body py-2">
         <div class="row align-items-center g-2">
@@ -118,7 +113,8 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
                 style="max-width: 100px;"
                 v-model="currentBetAmount"
                 :max="maxBetAmount"
-                :min="1">
+                :min="1"
+                :disabled="gameStore.gameState !== RouletteState.BETTING">
               <span class="input-group-text text-muted" style="min-width: 50px;">
                 {{ currentBetPercentage }}%
               </span>
@@ -137,6 +133,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
                   bet.isAllIn ? 'btn-danger fw-bold' : ''
                 ]"
                 @click="currentBetAmount = bet.amount"
+                :disabled="gameStore.gameState !== RouletteState.BETTING"
                 :title="`${formatIntAsCurrency(bet.amount)} (${bet.label} of balance)`">
                 <span class="text-light" v-if="bet.isAllIn">{{ bet.label }}</span>
                 <span v-else>
@@ -180,12 +177,45 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
       } : { type: 'loss', amount: 0 }"
       @close="handleNewGame" />
 
-    <!-- Spinner -->
+    <!-- Spinner and Betting Info During Spin -->
     <div v-if="gameStore.gameState === RouletteState.SPINNING" class="mb-3">
       <RouletteSpinner
         :is-spinning="gameStore.gameState === RouletteState.SPINNING"
         :winning-number="gameStore.winningNumber"
         @spin-complete="gameStore.completeGame" />
+
+      <!-- Show current bets while spinning -->
+      <div class="row g-2 mt-2">
+        <div class="col-md-6">
+          <div class="card bg-light">
+            <div class="card-body">
+              <h6 class="card-title">Your Bets</h6>
+              <div class="small">
+                <div v-for="(bet, idx) in gameStore.currentBets.slice(0, 5)" :key="idx"
+                  class="d-flex justify-content-between mb-1">
+                  <span>{{ bet.type }} [{{ bet.numbers.slice(0, 3).join(', ') }}{{ bet.numbers.length > 3 ? '...' : ''
+                  }}]</span>
+                  <strong>{{ formatIntAsCurrency(bet.amount) }}</strong>
+                </div>
+                <div v-if="gameStore.currentBets.length > 5" class="text-muted">
+                  ...and {{ gameStore.currentBets.length - 5 }} more
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card bg-light">
+            <div class="card-body">
+              <h6 class="card-title">Waiting for Result...</h6>
+              <div class="d-flex justify-content-between align-items-center">
+                <span>Total at Risk:</span>
+                <h4 class="mb-0 text-danger">{{ formatIntAsCurrency(gameStore.totalBet) }}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Main Game Area -->

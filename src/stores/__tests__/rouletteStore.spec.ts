@@ -2,19 +2,26 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { useRouletteStore } from '../rouletteStore'
 import { RouletteState } from '@/types/RouletteState'
-// import { useAchievementStore } from '../achievementStore'
-// import { useUserStore } from '../userStore'
 
-// Mock the achievement and user stores
-vi.mock('./achievementStore', () => ({
+// Mock the achievement store
+vi.mock('../achievementStore', () => ({
   useAchievementStore: () => ({
     updateAchievementProgress: vi.fn(),
     addXP: vi.fn()
   })
 }))
 
-vi.mock('./userStore', () => ({
+// Mock the transaction store
+vi.mock('../transactionStore', () => ({
+  useTransactionStore: () => ({
+    addTransaction: vi.fn()
+  })
+}))
+
+// Mock the user store with chips property
+vi.mock('../userStore', () => ({
   useUserStore: () => ({
+    chips: 10000, // Give the user some chips to work with
     updateStats: vi.fn()
   })
 }))
@@ -25,6 +32,8 @@ describe('Roulette Store', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     store = useRouletteStore()
+    // Reset mocks
+    vi.clearAllMocks()
   })
 
   describe('Initial State', () => {
@@ -58,6 +67,20 @@ describe('Roulette Store', () => {
       store.gameState = RouletteState.SPINNING
       store.placeBet('straight', [1], 100)
       expect(store.currentBets).toHaveLength(0)
+    })
+
+    it('should not allow placing bets that exceed available chips', () => {
+      store.placeBet('straight', [1], 15000) // More than the 10000 chips we have
+      expect(store.currentBets).toHaveLength(0)
+    })
+
+    it('should not allow placing additional bets that would exceed available chips', () => {
+      store.placeBet('straight', [1], 6000)
+      expect(store.currentBets).toHaveLength(1)
+
+      store.placeBet('straight', [2], 5000) // Would total 11000, exceeding 10000 chips
+      expect(store.currentBets).toHaveLength(1) // Should still be just 1 bet
+      expect(store.totalBet).toBe(6000)
     })
 
     it('should clear all bets', () => {
@@ -104,27 +127,46 @@ describe('Roulette Store', () => {
       expect(result.losingBets).toHaveLength(1)
     })
 
-    it.skip('should update session stats after spin', async () => {
+    it('should update session stats after spin', async () => {
       store.placeBet('straight', [3], 100) // Will win
       await store.spin()
 
       expect(store.sessionStats.spins).toBe(1)
       expect(store.sessionStats.totalWagered).toBe(100)
-      expect(store.sessionStats.consecutiveWins).toBe(1)
+      // Note: consecutiveWins is updated in completeGame/handleSpinResult
+      // which happens after the spinner animation completes
     })
 
-    it.skip('should track consecutive wins correctly', async () => {
+    it('should track consecutive wins correctly', async () => {
       // First spin - win
       store.placeBet('straight', [3], 100)
       await store.spin()
+      store.completeGame() // Simulate spinner animation completion
 
       // Reset and second spin - win
       store.reset()
       store.placeBet('straight', [3], 100)
       await store.spin()
+      store.completeGame() // Simulate spinner animation completion
 
       expect(store.sessionStats.consecutiveWins).toBe(2)
       expect(store.sessionStats.maxConsecutiveWins).toBe(2)
+    })
+
+    it('should reset consecutive wins on loss', async () => {
+      // First spin - win
+      store.placeBet('straight', [3], 100)
+      await store.spin()
+      store.completeGame()
+
+      // Reset and second spin - loss
+      store.reset()
+      vi.spyOn(Math, 'random').mockReturnValue(0.5) // Different number
+      store.placeBet('straight', [3], 100)
+      await store.spin()
+      store.completeGame()
+
+      expect(store.sessionStats.consecutiveWins).toBe(0)
     })
   })
 
@@ -136,6 +178,35 @@ describe('Roulette Store', () => {
       expect(store.gameState).toBe(RouletteState.BETTING)
       expect(store.currentBets).toHaveLength(0)
       expect(store.winningNumber).toBeNull()
+    })
+
+    it('should preserve session stats on reset', () => {
+      store.sessionStats.spins = 5
+      store.sessionStats.biggestWin = 1000
+      store.reset()
+
+      expect(store.sessionStats.spins).toBe(5)
+      expect(store.sessionStats.biggestWin).toBe(1000)
+    })
+  })
+
+  describe('Complete Game', () => {
+    beforeEach(() => {
+      vi.spyOn(Math, 'random').mockReturnValue(0.1) // Number 3
+    })
+
+    it('should complete game and update state', async () => {
+      store.placeBet('straight', [3], 100)
+      await store.spin()
+
+      expect(store.gameState).toBe(RouletteState.SPINNING)
+      expect(store.pendingResult).not.toBeNull()
+
+      store.completeGame()
+
+      expect(store.gameState).toBe(RouletteState.COMPLETE)
+      expect(store.lastResult).not.toBeNull()
+      expect(store.pendingResult).toBeNull()
     })
   })
 })

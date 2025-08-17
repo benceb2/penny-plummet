@@ -7,7 +7,7 @@ const clickerStore = useClickerStore()
 </script>
 
 <template>
-  <div class="card border-0 shadow-sm h-100 rounded-4">
+  <div class="card shadow-sm h-100 rounded-4">
     <div class="card-header border-1 rounded-top-4">
       <h6 class="mb-0 text-center fw-bold">
         <i class="bi bi-arrow-up-circle me-2"></i>Upgrades
@@ -91,20 +91,3 @@ const clickerStore = useClickerStore()
     </div>
   </div>
 </template>
-
-<style scoped>
-/* Hover effects for interactive elements */
-.upgrade-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-}
-
-.upgrade-btn:hover {
-  transform: translateY(-1px);
-}
-
-.upgrade-item,
-.upgrade-btn {
-  transition: all 0.3s ease;
-}
-</style>

@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
-import { useRouletteStore, RouletteState } from '../rouletteStore'
+import { useRouletteStore } from '../rouletteStore'
+import { RouletteState } from '@/types/RouletteState'
 // import { useAchievementStore } from '../achievementStore'
 // import { useUserStore } from '../userStore'
 

@@ -1,4 +1,4 @@
-{
+export default {
   "languages": {
     "en-GB": "English",
     "hu-HU": "Magyar"
@@ -6,13 +6,16 @@
   "navbar": {
     "brand": "Penny Plummet",
     "games": {
+      "title": "Games",
       "blackjack": "Blackjack",
       "roulette": "Roulette"
     },
+    "earn": {
+      "title": "Earn",
+      "clicker": "Clicker Game"
+    },
     "about": "About",
     "wallet": {
-      "title": "Need more chips?",
-      "clicker": "Clicker Game",
       "transactions": "Transaction History"
     },
     "profile": {
@@ -354,6 +357,6 @@
     "loss": "LOSS",
     "push": "PUSH",
     "unknown": "UNKNOWN",
-    "dismissHint": "Click to dismiss, press ESC, or wait"
+    "dismissHint": "Click to dismiss or press ESC"
   }
 }

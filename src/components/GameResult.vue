@@ -2,6 +2,8 @@
 import { computed, ref, watch, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import { formatIntAsCurrency } from '@/utils/numberFormatUtil'
+
 const { t } = useI18n()
 
 interface Props {
@@ -158,10 +160,7 @@ const resultText = computed(() => {
       <div class="game-result-content">
         <h2 class="result-title">{{ resultText }}</h2>
         <p class="result-amount">
-          {{ props.result.amount.toLocaleString('en-US', {
-            style: 'currency',
-            currency: 'USD'
-          }) }}
+          {{ formatIntAsCurrency(props.result.amount) }}
         </p>
         <p v-if="props.result.message" class="result-message">
           {{ props.result.message }}

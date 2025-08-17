@@ -17,8 +17,7 @@ const emit = defineEmits<{
 const formattedTime = computed(() => {
   const hours = Math.floor(props.timeAway / 3600)
   const minutes = Math.floor((props.timeAway % 3600) / 60)
-
-  return hours > 0
+ return hours > 0
     ? `${hours}h ${minutes}m`
     : `${minutes}m`
 })
@@ -31,12 +30,15 @@ const formattedTime = computed(() => {
     centered
     static>
     <div class="text-center">
+      <div class="mb-3">
+        <i class="bi bi-piggy-bank-fill text-success" style="font-size: 48px;"></i>
+      </div>
       <p>While you were away for {{ formattedTime }}:</p>
       <p class="text-success font-bold mt-3 text-xl">
-        +{{ formatIntAsCurrency(earnings) }} clicks earned
+        +{{ formatIntAsCurrency(earnings) }} chips collected!
       </p>
       <p class="text-muted">
-        You can collect your earnings from the Clicker mini-game.
+        Your auto-clickers have been working hard and the chips have been added to your balance.
       </p>
     </div>
 
@@ -46,10 +48,6 @@ const formattedTime = computed(() => {
         class="btn btn-primary w-100">
         Awesome!
       </button>
-      <RouterLink @click.prevent="emit('close')" to="/clicker" class="btn btn-outline-secondary w-100">
-        Collect earnings
-        <i class="bi bi-arrow-right ms-2"></i>
-      </RouterLink>
     </template>
   </BaseModal>
 </template>

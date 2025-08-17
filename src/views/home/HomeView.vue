@@ -105,7 +105,6 @@ const recentTransactions = computed(() => {
                 v-for="achievement in nearestAchievements"
                 :key="achievement.id"
                 :achievement="achievement"
-                :compact="true"
                 class="mb-3" />
             </div>
           </div>

@@ -141,6 +141,9 @@ export const useRouletteStore = defineStore('roulette', () => {
     lastResult.value = null
   }
 
+  /**
+   * Complete the game after spinner animation finishes
+   */
   function completeGame() {
     if (pendingResult.value) {
       // NOW apply the chip changes after spinner completes
@@ -151,6 +154,9 @@ export const useRouletteStore = defineStore('roulette', () => {
     gameState.value = RouletteState.COMPLETE
   }
 
+  /**
+   * Handle the spin result - update chips, log transactions, track achievements
+   */
   function handleSpinResult(result: RouletteResult) {
     // First deduct the bet amount
     userStore.chips -= result.totalBet
@@ -212,6 +218,9 @@ export const useRouletteStore = defineStore('roulette', () => {
     }
   }
 
+  /**
+   * Spin the roulette wheel
+   */
   async function spin(): Promise<RouletteResult> {
     if (!isSpinAllowed.value) {
       console.error('Spin not allowed:', {
@@ -255,12 +264,9 @@ export const useRouletteStore = defineStore('roulette', () => {
     sessionStats.value.spins++
     sessionStats.value.totalWagered += totalBet.value
 
-    // Store the result for later
+    // Store the result for later (don't update chips yet!)
     pendingResult.value = result
     winningNumber.value = result.winningNumber
-
-    // Handle the result (update chips, transactions, etc.)
-    handleSpinResult(result)
 
     return result
   }

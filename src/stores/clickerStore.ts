@@ -4,6 +4,7 @@ import { ref, computed } from 'vue'
 import { formatIntAsCurrency, formatNumber } from '@/utils/numberFormatUtil'
 import { calculateStorageKey, createGameSerializer } from '@/utils/gameSaveSerializerUtil'
 import { useAchievementStore } from './achievementStore'
+import { useUserStore } from './userStore'
 import type { UserStore } from './userStore'
 import { useTransactionStore } from './transactionStore'
 import * as clickerUtil from '@/utils/clickerUtil'
@@ -319,6 +320,7 @@ export const useClickerStore = defineStore('clicker', () => {
   }
 
   function checkOfflineProgress() {
+    const userStore = useUserStore()
     const result = clickerUtil.calculateOfflineEarnings(
       lastOnlineTimestamp.value,
       autoClickersCount.value,
@@ -327,11 +329,45 @@ export const useClickerStore = defineStore('clicker', () => {
     )
 
     if (result.earnings > 0) {
-      showOfflineEarnings.value = true
-      offlineEarnings.value = result.earnings
-      offlineSeconds.value = result.seconds
+      // Add earnings to clicks
       clicks.value += result.earnings
       totalLifetimeClicks.value += result.earnings
+
+      // Automatically collect the chips if there's enough
+      if (clicks.value >= 10) {
+        const amount = clicks.value
+
+        // Update user's chip balance
+        userStore.updateChips(amount)
+
+        // Calculate and add XP
+        const calculatedXP = Math.floor(amount * 0.2)
+        achievementStore.addXP(calculatedXP)
+
+        // Add transaction for transparency
+        const timeAwayText = result.seconds >= 3600
+          ? `${Math.floor(result.seconds / 3600)}h ${Math.floor((result.seconds % 3600) / 60)}m`
+          : `${Math.floor(result.seconds / 60)}m`
+
+        transactionStore.addTransaction({
+          amount: amount,
+          type: 'income',
+          game: 'clicker',
+          details: `Offline earnings collected (${timeAwayText} away)`
+        })
+
+        // Set up modal data with the collected amount
+        offlineEarnings.value = amount
+        offlineSeconds.value = result.seconds
+        showOfflineEarnings.value = true
+
+        // Reset clicks since we collected them
+        clicks.value = 0
+      } else {
+        // If earnings are too small, don't show modal
+        // The earnings remain in clicks for when they manually collect
+        console.log(`Small offline earnings (${result.earnings} clicks) added to balance`)
+      }
     }
 
     lastOnlineTimestamp.value = Date.now()

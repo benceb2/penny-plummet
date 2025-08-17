@@ -449,7 +449,21 @@ export const useClickerStore = defineStore('clicker', () => {
 }, {
   persist: {
     key: calculateStorageKey("clicker-store"),
-    serializer: createGameSerializer()
+    serializer: createGameSerializer(),
+    paths: [
+      'clicks',
+      'totalLifetimeClicks',
+      'baseClickValue',
+      'autoClickersCount',
+      'autoClickerCost',
+      'multiplierLevel',
+      'multiplierCost',
+      'criticalLevel',
+      'criticalCost',
+      'autoClickerSpeedLevel',
+      'autoClickerSpeedCost',
+      'lastOnlineTimestamp'
+    ]
   }
 } as any)
 

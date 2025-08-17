@@ -5,21 +5,13 @@ import BaseLayout from '@/components/layout/BaseLayout.vue';
 import AchievementCard from '@/components/AchievementCard.vue';
 import TransactionItem from '@/components/TransactionItem.vue';
 
-import { useUserStore } from '@/stores/userStore';
 import { useAchievementStore } from '@/stores/achievementStore';
 import { useTransactionStore } from '@/stores/transactionStore';
 import { sortAchievementsByPriority } from '@/utils/achievementUitl';
 
 const { t } = useI18n();
-const userStore = useUserStore();
 const achievementStore = useAchievementStore();
 const transactionStore = useTransactionStore();
-
-const welcomeTitle = computed(() => {
-  return userStore.username
-    ? t('home.welcomeBack', { username: userStore.username })
-    : t('home.welcome');
-});
 
 const nearestAchievements = computed(() => {
   return sortAchievementsByPriority(
@@ -31,20 +23,18 @@ const nearestAchievements = computed(() => {
       // Hide completed and claimed achievements
       return false;
     })
-  ).slice(0, 2);
+  ).slice(0, 3);
 });
 
 const recentTransactions = computed(() => {
   if (transactionStore.transactions.length === 0) return [];
 
-  return transactionStore.transactions.slice(0, 5);
+  return transactionStore.transactions.slice(0, 6);
 });
 </script>
 
 <template>
-  <BaseLayout
-    :title="welcomeTitle"
-    :fontawesome-icon="'fa fa-home'">
+  <BaseLayout>
 
     <!-- Game Selection Cards -->
     <div class="row g-4 mb-4">
@@ -115,6 +105,7 @@ const recentTransactions = computed(() => {
                 v-for="achievement in nearestAchievements"
                 :key="achievement.id"
                 :achievement="achievement"
+                :compact="true"
                 class="mb-3" />
             </div>
           </div>

@@ -27,9 +27,23 @@ function claimReward() {
       'border-success': achievement.completed && achievement.claimed,
       'border-warning': achievement.completed && !achievement.claimed
     }">
-    <div class="card-body d-flex flex-column bg-light">
+    <div class="card-body d-flex flex-column bg-light position-relative">
+      <!-- Rewards in top right -->
+      <div
+        class="position-absolute top-0 end-0 mt-2 me-2 d-flex align-items-center gap-2"
+        :class="{ 'd-none': !compact && false }"> <!-- Change false to true to only show in compact mode -->
+        <small class="text-success d-flex align-items-center">
+          <i class="bi bi-coin me-1"></i>
+          {{ formatIntAsCurrency(achievement.reward.chips) }}
+        </small>
+        <small class="text-info d-flex align-items-center">
+          <i class="bi bi-star me-1"></i>
+          {{ achievement.reward.xp }} XP
+        </small>
+      </div>
+
       <!-- Header -->
-      <h5 class="card-title d-flex align-items-center">
+      <h5 class="card-title d-flex align-items-center" :class="{ 'pe-5': compact }">
         {{ achievement.title }}
         <span v-if="achievement.completed && achievement.claimed" class="text-success ms-2">
           <i class="bi bi-check-circle-fill"></i>
@@ -67,8 +81,10 @@ function claimReward() {
         Claim Rewards
       </button>
 
-      <!-- Rewards -->
-      <div class="mt-auto d-flex align-items-center gap-3">
+      <!-- Rewards at bottom (show only when not in compact mode or when configured) -->
+      <div
+        v-if="!compact"
+        class="mt-auto d-flex align-items-center gap-3">
         <small class="text-success d-flex align-items-center">
           <i class="bi bi-coin me-1"></i>
           {{ formatIntAsCurrency(achievement.reward.chips) }}

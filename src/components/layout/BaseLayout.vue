@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 defineProps<{
-  title: string
+  title?: string
   bootstrapIcon?: string
   fontawesomeIcon?: string
 }>()

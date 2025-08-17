@@ -1,4 +1,4 @@
-{
+export default {
   "languages": {
     "en-GB": "English",
     "hu-HU": "Magyar"
@@ -357,6 +357,6 @@
     "loss": "LOSS",
     "push": "PUSH",
     "unknown": "UNKNOWN",
-    "dismissHint": "Click to dismiss, press ESC, or wait"
+    "dismissHint": "Click to dismiss or press ESC"
   }
 }

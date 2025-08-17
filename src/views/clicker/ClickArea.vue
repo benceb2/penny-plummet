@@ -54,7 +54,7 @@ const handleCollectWithAnimation = () => {
 </script>
 
 <template>
-  <div class="card border-0 shadow-sm h-100 rounded-4">
+  <div class="card shadow-sm h-100 rounded-4">
     <div class="card-body d-flex flex-column justify-content-center align-items-center p-3"
       style="min-height: 600px;">
 
@@ -154,7 +154,7 @@ const handleCollectWithAnimation = () => {
 </template>
 
 <style scoped>
-/* Main click button - improved with better contrast */
+/* Main click button */
 .main-click-btn {
   width: 240px;
   height: 240px;

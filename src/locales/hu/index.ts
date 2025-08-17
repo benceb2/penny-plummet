@@ -1,4 +1,4 @@
-{
+export default {
   "languages": {
     "en-GB": "English",
     "hu-HU": "Magyar"
@@ -359,6 +359,6 @@
     "loss": "VESZTETTÉL",
     "push": "DÖNTETLEN",
     "unknown": "ISMERETLEN",
-    "dismissHint": "Kattints a bezáráshoz, nyomd meg az ESC-et, vagy várj"
+    "dismissHint": "Kattints a bezáráshoz vagy nyomd meg az ESC-et"
   }
 }

@@ -7,7 +7,7 @@ const clickerStore = useClickerStore()
 <template>
   <div class="row g-2 mb-3">
     <div class="col-md-4">
-      <div class="card border-0 shadow-sm h-100">
+      <div class="card shadow-sm h-100">
         <div class="card-body text-center py-2">
           <div class="d-flex align-items-center justify-content-center">
             <i class="bi bi-piggy-bank text-primary me-4 fs-5"></i>
@@ -20,7 +20,7 @@ const clickerStore = useClickerStore()
       </div>
     </div>
     <div class="col-md-4">
-      <div class="card border-0 shadow-sm h-100">
+      <div class="card shadow-sm h-100">
         <div class="card-body text-center py-2">
           <div class="d-flex align-items-center justify-content-center">
             <i class="bi bi-clock text-success me-4 fs-5"></i>
@@ -33,7 +33,7 @@ const clickerStore = useClickerStore()
       </div>
     </div>
     <div class="col-md-4">
-      <div class="card border-0 shadow-sm h-100">
+      <div class="card shadow-sm h-100">
         <div class="card-body text-center py-2">
           <div class="d-flex align-items-center justify-content-center">
             <i class="bi bi-infinity text-info me-4 fs-5"></i>

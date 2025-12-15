@@ -99,13 +99,13 @@ const recentTransactions = computed(() => {
               {{ t('home.achievements.title') }}
             </h5>
           </div>
-          <div class="card-body">
+          <div class="card-body p-2">
             <div class="achievements-list">
               <AchievementCard
                 v-for="achievement in nearestAchievements"
                 :key="achievement.id"
                 :achievement="achievement"
-                class="mb-3" />
+                class="mb-2" />
             </div>
           </div>
           <div class="card-footer bg-transparent">
@@ -113,7 +113,7 @@ const recentTransactions = computed(() => {
               <RouterLink
                 to="/profile#achievements"
                 class="btn btn-outline-primary">
-                <i class="bi bi-arrow-right me-2"></i>
+                <i class="fa fa-trophy me-2"></i>
                 {{ t('home.achievements.viewAll') }}
               </RouterLink>
             </div>
@@ -129,8 +129,8 @@ const recentTransactions = computed(() => {
               {{ t('home.transactions.title') }}
             </h5>
           </div>
-          <div class="card-body">
-            <div class="transactions-list" v-if="recentTransactions.length > 0">
+          <div class="card-body p-0 mt-1">
+            <div v-if="recentTransactions.length > 0">
               <TransactionItem
                 v-for="transaction in recentTransactions"
                 :key="transaction.id"
@@ -150,7 +150,7 @@ const recentTransactions = computed(() => {
               <RouterLink
                 to="/transactions"
                 class="btn btn-outline-success">
-                <i class="bi bi-arrow-right me-2"></i>
+                <i class="fa fa-money-bill-wave me-2"></i>
                 {{ t('home.transactions.viewAll') }}
               </RouterLink>
             </div>

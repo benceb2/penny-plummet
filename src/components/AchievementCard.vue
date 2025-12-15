@@ -18,12 +18,12 @@ function claimReward() {
 
 <template>
   <div
-    class="card h-100"
+    class="card bg-light h-100"
     :class="{
       'border-success': achievement.completed && achievement.claimed,
       'border-warning': achievement.completed && !achievement.claimed
     }">
-    <div class="card-body d-flex flex-column bg-light position-relative">
+    <div class="card-body d-flex flex-column position-relative">
       <!-- Rewards in top right -->
       <div
         class="position-absolute top-0 end-0 mt-2 me-2 d-flex align-items-center gap-2">

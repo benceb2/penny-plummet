@@ -1,7 +1,6 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { Transaction } from '@/types/Transaction';
-import { calculateStorageKey, createGameSerializer } from '@/utils/gameSaveSerializerUtil';
 import {
   clearTransactionsDb,
   getAllTransactions,
@@ -16,8 +15,6 @@ import { STARTING_CHIPS } from '@/stores/userStore';
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
 
 const LATEST_TRANSACTIONS_LIMIT = 6;
-const LEGACY_STORAGE_KEY = calculateStorageKey('transaction-store');
-const LEGACY_SERIALIZER = createGameSerializer();
 
 type TransactionFilters = {
   game: Transaction['game'] | 'all';
@@ -82,25 +79,10 @@ export const useTransactionStore = defineStore('transactions', () => {
     await putTransaction(opening);
   };
 
-  const migrateLegacyStorage = async () => {
-    const raw = localStorage.getItem(LEGACY_STORAGE_KEY);
-    if (!raw) return;
-
-    try {
-      const decoded = LEGACY_SERIALIZER.deserialize(raw) as { transactions?: Transaction[] };
-      if (Array.isArray(decoded?.transactions)) {
-        await replaceAllTransactions(decoded.transactions);
-      }
-    } finally {
-      localStorage.removeItem(LEGACY_STORAGE_KEY);
-    }
-  };
-
   const ensureDbReady = async () => {
     if (!hasIndexedDb) return;
     if (!dbReadyPromise) {
       dbReadyPromise = (async () => {
-        await migrateLegacyStorage();
         await ensureOpeningBalance();
       })();
     }

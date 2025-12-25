@@ -35,10 +35,7 @@ const pendingImportData = ref<string | null>(null);
 
 const exportSave = async () => {
   try {
-    if (transactionsStore.isLoading) {
-      await transactionsStore.hydrateFromDb();
-    }
-    const saveData = gameSaveUtil.getCurrentGameState();
+    const saveData = await gameSaveUtil.getCurrentGameState();
     const serialized = await gameSaveUtil.exportSave(saveData);
     const blob = await gameSaveUtil.createDownloadBlob(serialized);
 

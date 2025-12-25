@@ -55,6 +55,7 @@ export default {
         "loss": "Lost {amount} on number {number}"
       }
     },
+    "loading": "Loading transactions...",
     "empty": "No transactions to display",
     "pagination": {
       "summary": "Showing {from} to {to} of {total} transactions"

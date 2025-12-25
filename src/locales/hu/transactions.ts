@@ -55,6 +55,7 @@ export default {
         "loss": "Vesztettél {amount} a {number} számon"
       }
     },
+    "loading": "Tranzakciók betöltése...",
     "empty": "Nincsenek megjeleníthető tranzakciók",
     "pagination": {
       "summary": "{from}–{to} / {total} tranzakció"

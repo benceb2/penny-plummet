@@ -6,51 +6,41 @@ import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
 import BaseLayout from '@/components/layout/BaseLayout.vue';
 import BasePagination from '@/components/layout/BasePagination.vue';
 import TransactionItem from '@/components/TransactionItem.vue';
-
-import { usePagination } from '@/composables/usePagination';
 const transactionStore = useTransactionStore();
 const selectedGame = ref('all');
 const selectedType = ref('all');
 const pageSize = ref(10);
+const currentPage = ref(1);
 const { t } = useI18n();
 
-const filteredTransactions = computed(() => {
-  let transactions = transactionStore.transactions;
+const paginatedTransactions = computed(() => transactionStore.transactions);
+const stats = computed(() => transactionStore.stats);
+const totalPages = computed(() => {
+  const total = transactionStore.totalCount;
+  return total === 0 ? 1 : Math.ceil(total / pageSize.value);
+});
 
-  if (selectedGame.value !== 'all') {
-    transactions = transactions.filter(t => t.game === selectedGame.value);
+const loadPage = async () => {
+  await transactionStore.loadTransactionsPage({
+    game: selectedGame.value,
+    type: selectedType.value,
+    page: currentPage.value,
+    pageSize: pageSize.value
+  });
+};
+
+watch([selectedGame, selectedType, pageSize, currentPage], async ([game, type, size, page], [prevGame, prevType, prevSize, prevPage]) => {
+  const filtersChanged = game !== prevGame || type !== prevType || size !== prevSize;
+  if (filtersChanged && page !== 1) {
+    currentPage.value = 1;
+    return;
   }
+  await loadPage();
+}, { immediate: true });
 
-  if (selectedType.value !== 'all') {
-    transactions = transactions.filter(t => t.type === selectedType.value);
-  }
-
-  return transactions;
-});
-
-const {
-  currentPage,
-  paginatedItems: paginatedTransactions,
-  totalPages,
-  goToPage
-} = usePagination(filteredTransactions, {
-  itemsPerPage: pageSize.value
-});
-
-
-const stats = computed(() => {
-  const filtered = filteredTransactions.value;
-  return {
-    totalWins: filtered.filter(t => t.type === 'win').length,
-    totalLosses: filtered.filter(t => t.type === 'loss').length,
-    totalPushes: filtered.filter(t => t.type === 'push').length,
-    netAmount: filtered.reduce((sum, t) => sum + t.amount, 0)
-  };
-});
-
-watch([selectedGame, selectedType], () => {
-  goToPage(1);
-});
+const goToPage = (page: number) => {
+  currentPage.value = page;
+};
 </script>
 
 <template>
@@ -139,30 +129,39 @@ watch([selectedGame, selectedType], () => {
 
         <!-- Transaction List -->
         <div class="transaction-list">
-          <TransactionItem
-            v-for="transaction in paginatedTransactions"
-            :key="transaction.id"
-            :transaction="transaction" />
-
-          <div v-if="paginatedTransactions.length === 0" class="text-center py-4 text-muted">
-            {{ t('transactions.empty') }}
+          <div
+            v-if="transactionStore.isListLoading"
+            class="d-flex flex-column align-items-center py-4 text-muted">
+            <div class="spinner-border mb-2" role="status" aria-hidden="true"></div>
+            <span>{{ t('transactions.loading') }}</span>
           </div>
 
-          <!-- Pagination -->
-          <BasePagination
-            v-if="totalPages > 1"
-            :current-page="currentPage"
-            :total-pages="totalPages"
-            @page-change="goToPage" />
+          <template v-else>
+            <TransactionItem
+              v-for="transaction in paginatedTransactions"
+              :key="transaction.id"
+              :transaction="transaction" />
 
-          <!-- Page Info -->
-          <div class="text-center text-muted mt-2">
-            {{ t('transactions.pagination.summary', {
-              from: ((currentPage - 1) * pageSize) + 1,
-              to: Math.min(currentPage * pageSize, filteredTransactions.length),
-              total: filteredTransactions.length
-            }) }}
-          </div>
+            <div v-if="paginatedTransactions.length === 0" class="text-center py-4 text-muted">
+              {{ t('transactions.empty') }}
+            </div>
+
+            <!-- Pagination -->
+            <BasePagination
+              v-if="totalPages > 1"
+              :current-page="currentPage"
+              :total-pages="totalPages"
+              @page-change="goToPage" />
+
+            <!-- Page Info -->
+            <div class="text-center text-muted mt-2">
+              {{ t('transactions.pagination.summary', {
+                from: transactionStore.totalCount === 0 ? 0 : ((currentPage - 1) * pageSize) + 1,
+                to: Math.min(currentPage * pageSize, transactionStore.totalCount),
+                total: transactionStore.totalCount
+              }) }}
+            </div>
+          </template>
         </div>
       </div>
     </div>

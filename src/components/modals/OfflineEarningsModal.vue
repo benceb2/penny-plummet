@@ -13,13 +13,12 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'close'): void
 }>()
-const { t, locale } = useI18n()
+const { t } = useI18n()
 
 // Convert seconds to readable format
 const formattedTime = computed(() => {
   const hours = Math.floor(props.timeAway / 3600)
   const minutes = Math.floor((props.timeAway % 3600) / 60)
-  const _locale = locale.value
   const hourUnit = t('time.units.hourShort')
   const minuteUnit = t('time.units.minuteShort')
   return hours > 0

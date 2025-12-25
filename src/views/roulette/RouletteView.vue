@@ -10,7 +10,7 @@ import BaseLayout from '@/components/layout/BaseLayout.vue'
 import GameResult from '@/components/GameResult.vue'
 import { RouletteState } from '@/types/RouletteState'
 
-const { t, locale } = useI18n()
+const { t } = useI18n()
 
 const gameStore = useRouletteStore()
 const userStore = useUserStore()
@@ -58,7 +58,6 @@ const maxBetAmount = computed(() => userStore.chips)
 const quickBets = computed(() => {
   const chips = userStore.chips
   if (chips <= 0) return []
-  const _locale = locale.value
 
   const bets = [
     { amount: Math.max(1, Math.floor(chips * 0.05)), label: '5%' },
@@ -198,7 +197,8 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
               <div class="small">
                 <div v-for="(bet, idx) in gameStore.currentBets.slice(0, 5)" :key="idx"
                   class="d-flex justify-content-between mb-1">
-                  <span>{{ getBetTypeLabel(bet.type) }} [{{ bet.numbers.slice(0, 3).join(', ') }}{{ bet.numbers.length > 3 ? '...' : ''
+                  <span>{{ getBetTypeLabel(bet.type) }} [{{ bet.numbers.slice(0, 3).join(', ') }}{{ bet.numbers.length >
+                    3 ? '...' : ''
                   }}]</span>
                   <strong>{{ formatIntAsCurrency(bet.amount) }}</strong>
                 </div>

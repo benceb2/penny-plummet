@@ -5,4 +5,6 @@ export interface Transaction {
   type: 'win' | 'loss' | 'push' | 'income' | 'purchase';
   game: 'blackjack' | 'roulette' | 'clicker';
   details?: string;
+  detailsKey?: string;
+  detailsParams?: Record<string, string | number>;
 }

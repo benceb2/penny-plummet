@@ -45,6 +45,13 @@ function getTypeLabel(type: Transaction['type']): string {
 function getGameLabel(game: Transaction['game']): string {
   return t(`transactions.badges.game.${game}`);
 }
+
+function getDetails(): string | undefined {
+  if (props.transaction.detailsKey) {
+    return t(props.transaction.detailsKey, props.transaction.detailsParams ?? {});
+  }
+  return props.transaction.details;
+}
 </script>
 
 <template>
@@ -70,9 +77,9 @@ function getGameLabel(game: Transaction['game']): string {
         </div>
 
         <div
-          v-if="showDetails && transaction.details"
+          v-if="showDetails && getDetails()"
           class="text-muted small">
-          {{ transaction.details }}
+          {{ getDetails() }}
         </div>
       </div>
 

@@ -292,6 +292,10 @@ export default {
       }
     },
     "general": {
+      "lucky_number": {
+        "title": "Lucky Number",
+        "description": "Win with a straight bet in Roulette"
+      },
       "small_fortune": {
         "title": "Small Fortune",
         "description": "Accumulate $1,000 in chips"

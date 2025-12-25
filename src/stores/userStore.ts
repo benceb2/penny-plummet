@@ -4,7 +4,6 @@ import { defineStore } from 'pinia';
 import { type BlackjackResult } from '@/types/BlackjackResult';
 import { calculateStorageKey, createGameSerializer } from '@/utils/gameSaveSerializerUtil';
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
-import i18n from '@/i18n';
 import { useAchievementStore } from './achievementStore';
 import { useTransactionStore } from './transactionStore';
 
@@ -49,11 +48,12 @@ export const useUserStore = defineStore('user', () => {
         amount: winAmount,
         type: 'win',
         game: 'blackjack',
-        details: i18n.global.t('transactions.details.blackjack.win', {
+        detailsKey: 'transactions.details.blackjack.win',
+        detailsParams: {
           amount: formatIntAsCurrency(winAmount),
           playerScore: gameResult.playerScore,
           dealerScore: gameResult.dealerScore
-        })
+        }
       });
 
     } else if (gameResult.isPush) {
@@ -64,7 +64,7 @@ export const useUserStore = defineStore('user', () => {
         amount: 0,
         type: 'push',
         game: 'blackjack',
-        details: i18n.global.t('transactions.details.blackjack.push')
+        detailsKey: 'transactions.details.blackjack.push'
       });
 
     } else {
@@ -75,11 +75,12 @@ export const useUserStore = defineStore('user', () => {
         amount: -gameResult.initialBet,
         type: 'loss',
         game: 'blackjack',
-        details: i18n.global.t('transactions.details.blackjack.loss', {
+        detailsKey: 'transactions.details.blackjack.loss',
+        detailsParams: {
           amount: formatIntAsCurrency(gameResult.initialBet),
           playerScore: gameResult.playerScore,
           dealerScore: gameResult.dealerScore
-        })
+        }
       });
     }
   }

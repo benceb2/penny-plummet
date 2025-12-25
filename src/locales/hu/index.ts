@@ -294,6 +294,10 @@ export default {
       }
     },
     "general": {
+      "lucky_number": {
+        "title": "Szerencsés szám",
+        "description": "Nyerj egyenes téttel a rulettben"
+      },
       "small_fortune": {
         "title": "Kis Vagyon",
         "description": "Gyűjtsön össze 1000$ zsetont"

@@ -4,6 +4,7 @@ import { calculateStorageKey, createGameSerializer } from '@/utils/gameSaveSeria
 import { achievements } from '@/utils/achievementUitl';
 import type { Achievement } from '@/types/Achievement';
 import type { Level } from '@/types/Level';
+import i18n from '@/i18n';
 import { useUserStore } from './userStore';
 import { useToastStore } from './toastStore';
 
@@ -46,6 +47,18 @@ export const useAchievementStore = defineStore('achievements', () => {
   });
 
   // Methods
+  function getAchievementKey(achievement: AchievementWithClaim) {
+    return `achievements.${achievement.category}.${achievement.id}`;
+  }
+
+  function getAchievementTexts(achievement: AchievementWithClaim) {
+    const key = getAchievementKey(achievement);
+    return {
+      title: i18n.global.t(`${key}.title`),
+      description: i18n.global.t(`${key}.description`)
+    };
+  }
+
   function addXP(amount: number) {
     currentLevel.value.currentXP += amount;
     checkLevelUp();
@@ -130,7 +143,8 @@ export const useAchievementStore = defineStore('achievements', () => {
     if (!achievement.completed) {
       achievement.completed = true;
       achievement.claimed = false; // Mark as unclaimed initially
-      toastStore.achievementUnlocked(achievement.title, achievement.description);
+      const { title, description } = getAchievementTexts(achievement);
+      toastStore.achievementUnlocked(title, description);
     }
   }
 
@@ -142,8 +156,11 @@ export const useAchievementStore = defineStore('achievements', () => {
       addXP(achievement.reward.xp);
       toastStore.addToast({
         type: 'success',
-        title: 'Rewards Claimed!',
-        message: `Received ${achievement.reward.chips} chips and ${achievement.reward.xp} XP`,
+        title: i18n.global.t('toast.rewardsClaimed.title'),
+        message: i18n.global.t('toast.rewardsClaimed.message', {
+          chips: achievement.reward.chips,
+          xp: achievement.reward.xp
+        }),
         icon: 'bi-gift-fill'
       });
     }
@@ -167,4 +184,3 @@ export const useAchievementStore = defineStore('achievements', () => {
 } as any);
 
 export type AchievementStore = ReturnType<typeof useAchievementStore>;
-

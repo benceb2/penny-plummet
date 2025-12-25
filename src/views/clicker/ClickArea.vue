@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/stores/userStore'
 import { useClickerStore } from '@/stores/clickerStore'
 import { computed, ref } from 'vue'
 
 const userStore = useUserStore()
 const clickerStore = useClickerStore()
+const { t } = useI18n()
 
 const buttonScale = computed(() => {
   const baseScale = 1
@@ -63,9 +65,9 @@ const handleCollectWithAnimation = () => {
         <div v-if="clickerStore.comboCount > 1" class="combo-badge position-absolute" style="top: 10px; z-index: 10;">
           <span :class="`badge ${comboColor} fs-6 pulse px-3 py-1`">
             <i class="bi bi-lightning-fill me-1"></i>
-            {{ clickerStore.comboCount }}x COMBO!
+            {{ t('clicker.combo.label', { count: clickerStore.comboCount }) }}
             <span class="ms-1 opacity-75">
-              ({{ (clickerStore.comboMultiplier * 100 - 100).toFixed(0) }}% bonus)
+              {{ t('clicker.combo.bonus', { percent: (clickerStore.comboMultiplier * 100 - 100).toFixed(0) }) }}
             </span>
           </span>
         </div>
@@ -88,7 +90,7 @@ const handleCollectWithAnimation = () => {
             <i class="bi bi-coin click-icon d-block mb-2"></i>
             <div class="fw-bold fs-5 mb-1">+{{ clickerStore.formattedClickValue }}</div>
             <div class="small opacity-90" v-if="clickerStore.criticalChance > 0.1">
-              {{ (clickerStore.criticalChance * 100).toFixed(0) }}% Crit
+              {{ t('clicker.combo.critical', { percent: (clickerStore.criticalChance * 100).toFixed(0) }) }}
             </div>
           </div>
 
@@ -134,8 +136,8 @@ const handleCollectWithAnimation = () => {
           <div class="position-relative z-2 d-flex align-items-center justify-content-center">
             <i class="bi bi-gem me-2 collect-icon"></i>
             <div>
-              <div class="fw-bold">Collect Chips</div>
-              <small class="opacity-90">(Min: 10)</small>
+              <div class="fw-bold">{{ t('clicker.collect.button') }}</div>
+              <small class="opacity-90">{{ t('clicker.collect.minimum') }}</small>
             </div>
 
             <!-- Sparkle effects -->

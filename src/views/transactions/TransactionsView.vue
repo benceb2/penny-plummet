@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useTransactionStore } from '@/stores/transactionStore';
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
 import BaseLayout from '@/components/layout/BaseLayout.vue';
@@ -11,6 +12,7 @@ const transactionStore = useTransactionStore();
 const selectedGame = ref('all');
 const selectedType = ref('all');
 const pageSize = ref(10);
+const { t } = useI18n();
 
 const filteredTransactions = computed(() => {
   let transactions = transactionStore.transactions;
@@ -53,7 +55,7 @@ watch([selectedGame, selectedType], () => {
 
 <template>
   <BaseLayout
-    title="Transaction History"
+    :title="t('transactions.title')"
     bootstrapIcon="clock-history">
 
     <!-- Stats Summary Card -->
@@ -65,7 +67,7 @@ watch([selectedGame, selectedType], () => {
               <div class="mb-2">
                 <i class="bi bi-graph-up text-success fs-1"></i>
               </div>
-              <h5 class="text-muted">Net Amount</h5>
+              <h5 class="text-muted">{{ t('transactions.stats.netAmount') }}</h5>
               <p
                 class="fs-4 fw-bold mb-0"
                 :class="{ 'text-success': stats.netAmount > 0, 'text-danger': stats.netAmount < 0 }">
@@ -78,7 +80,7 @@ watch([selectedGame, selectedType], () => {
               <div class="mb-2">
                 <i class="bi bi-trophy text-success fs-1"></i>
               </div>
-              <h5 class="text-muted">Wins</h5>
+              <h5 class="text-muted">{{ t('transactions.stats.wins') }}</h5>
               <p class="fs-4 fw-bold mb-0">{{ stats.totalWins }}</p>
             </div>
           </div>
@@ -87,7 +89,7 @@ watch([selectedGame, selectedType], () => {
               <div class="mb-2">
                 <i class="bi bi-x-circle text-danger fs-1"></i>
               </div>
-              <h5 class="text-muted">Losses</h5>
+              <h5 class="text-muted">{{ t('transactions.stats.losses') }}</h5>
               <p class="fs-4 fw-bold mb-0">{{ stats.totalLosses }}</p>
             </div>
           </div>
@@ -96,7 +98,7 @@ watch([selectedGame, selectedType], () => {
               <div class="mb-2">
                 <i class="bi bi-arrow-repeat text-info fs-1"></i>
               </div>
-              <h5 class="text-muted">Pushes</h5>
+              <h5 class="text-muted">{{ t('transactions.stats.pushes') }}</h5>
               <p class="fs-4 fw-bold mb-0">{{ stats.totalPushes }}</p>
             </div>
           </div>
@@ -117,7 +119,7 @@ watch([selectedGame, selectedType], () => {
                 class="btn"
                 :class="selectedGame === game ? 'btn-primary' : 'btn-outline-primary'"
                 @click="selectedGame = game">
-                {{ game.charAt(0).toUpperCase() + game.slice(1) }}
+                {{ t(`transactions.filters.game.${game}`) }}
               </button>
             </div>
           </div>
@@ -129,7 +131,7 @@ watch([selectedGame, selectedType], () => {
                 class="btn"
                 :class="selectedType === type ? 'btn-primary' : 'btn-outline-primary'"
                 @click="selectedType = type">
-                {{ type.charAt(0).toUpperCase() + type.slice(1) }}
+                {{ t(`transactions.filters.type.${type}`) }}
               </button>
             </div>
           </div>
@@ -143,7 +145,7 @@ watch([selectedGame, selectedType], () => {
             :transaction="transaction" />
 
           <div v-if="paginatedTransactions.length === 0" class="text-center py-4 text-muted">
-            No transactions to display
+            {{ t('transactions.empty') }}
           </div>
 
           <!-- Pagination -->
@@ -155,9 +157,11 @@ watch([selectedGame, selectedType], () => {
 
           <!-- Page Info -->
           <div class="text-center text-muted mt-2">
-            Showing {{ ((currentPage - 1) * pageSize) + 1 }}
-            to {{ Math.min(currentPage * pageSize, filteredTransactions.length) }}
-            of {{ filteredTransactions.length }} transactions
+            {{ t('transactions.pagination.summary', {
+              from: ((currentPage - 1) * pageSize) + 1,
+              to: Math.min(currentPage * pageSize, filteredTransactions.length),
+              total: filteredTransactions.length
+            }) }}
           </div>
         </div>
       </div>

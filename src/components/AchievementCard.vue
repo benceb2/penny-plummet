@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
 import { useAchievementStore } from '@/stores/achievementStore';
 
@@ -9,6 +11,11 @@ const props = defineProps({
     type: Object,
     required: true
   }
+});
+const { t } = useI18n();
+
+const achievementKey = computed(() => {
+  return `achievements.${props.achievement.category}.${props.achievement.id}`;
 });
 
 function claimReward() {
@@ -39,7 +46,7 @@ function claimReward() {
 
       <!-- Header -->
       <h5 class="card-title d-flex align-items-center">
-        {{ achievement.title }}
+        {{ t(`${achievementKey}.title`) }}
         <span v-if="achievement.completed && achievement.claimed" class="text-success ms-2">
           <i class="bi bi-check-circle-fill"></i>
         </span>
@@ -49,7 +56,7 @@ function claimReward() {
       </h5>
 
       <!-- Description -->
-      <p class="card-text text-muted">{{ achievement.description }}</p>
+      <p class="card-text text-muted">{{ t(`${achievementKey}.description`) }}</p>
 
       <!-- Progress Section -->
       <div v-if="!achievement.completed" class="mb-3">
@@ -73,7 +80,7 @@ function claimReward() {
         @click="claimReward"
         class="btn btn-warning btn-sm mb-3">
         <i class="bi bi-gift-fill me-2"></i>
-        Claim Rewards
+        {{ t('achievements.actions.claimRewards') }}
       </button>
     </div>
   </div>

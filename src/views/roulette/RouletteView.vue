@@ -10,7 +10,7 @@ import BaseLayout from '@/components/layout/BaseLayout.vue'
 import GameResult from '@/components/GameResult.vue'
 import { RouletteState } from '@/types/RouletteState'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const gameStore = useRouletteStore()
 const userStore = useUserStore()
@@ -58,13 +58,14 @@ const maxBetAmount = computed(() => userStore.chips)
 const quickBets = computed(() => {
   const chips = userStore.chips
   if (chips <= 0) return []
+  const _locale = locale.value
 
   const bets = [
     { amount: Math.max(1, Math.floor(chips * 0.05)), label: '5%' },
     { amount: Math.max(1, Math.floor(chips * 0.10)), label: '10%' },
     { amount: Math.max(1, Math.floor(chips * 0.25)), label: '25%' },
     { amount: Math.max(1, Math.floor(chips * 0.50)), label: '50%' },
-    { amount: chips, label: 'ALL IN', isAllIn: true }
+    { amount: chips, label: t('roulette.ui.allIn'), isAllIn: true }
   ]
 
   // Filter out duplicates and very small amounts
@@ -73,6 +74,10 @@ const quickBets = computed(() => {
     self.findIndex(b => b.amount === bet.amount) === index
   )
 })
+
+function getBetTypeLabel(type: BetType): string {
+  return t(`roulette.betTypes.${type}`)
+}
 
 // Get current bet percentage
 const currentBetPercentage = computed(() => {
@@ -134,7 +139,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
                 ]"
                 @click="currentBetAmount = bet.amount"
                 :disabled="gameStore.gameState !== RouletteState.BETTING"
-                :title="`${formatIntAsCurrency(bet.amount)} (${bet.label} of balance)`">
+                :title="t('roulette.ui.quickBetTitle', { amount: formatIntAsCurrency(bet.amount), label: bet.label })">
                 <span class="text-light" v-if="bet.isAllIn">{{ bet.label }}</span>
                 <span v-else>
                   {{ formatIntAsCurrency(bet.amount) }}
@@ -145,7 +150,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
                 class="btn btn-danger"
                 @click="gameStore.clearBets()"
                 :disabled="gameStore.currentBets.length === 0 || gameStore.gameState !== RouletteState.BETTING">
-                <i class="bi bi-x-circle me-2"></i>Clear Bets
+                <i class="bi bi-x-circle me-2"></i>{{ t('roulette.ui.clearBets') }}
               </button>
 
             </div>
@@ -154,7 +159,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
           <!-- Total Bet Display -->
           <div class="col-auto ms-auto">
             <div v-if="gameStore.totalBet > 0" class="text-end">
-              <small class="text-muted d-block" style="font-size: 0.7rem;">Total Bet</small>
+              <small class="text-muted d-block" style="font-size: 0.7rem;">{{ t('roulette.ui.totalBet') }}</small>
               <strong class="text-primary">{{ formatIntAsCurrency(gameStore.totalBet) }}</strong>
             </div>
           </div>
@@ -189,16 +194,16 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
         <div class="col-md-6">
           <div class="card bg-light">
             <div class="card-body">
-              <h6 class="card-title">Your Bets</h6>
+              <h6 class="card-title">{{ t('roulette.ui.yourBets') }}</h6>
               <div class="small">
                 <div v-for="(bet, idx) in gameStore.currentBets.slice(0, 5)" :key="idx"
                   class="d-flex justify-content-between mb-1">
-                  <span>{{ bet.type }} [{{ bet.numbers.slice(0, 3).join(', ') }}{{ bet.numbers.length > 3 ? '...' : ''
+                  <span>{{ getBetTypeLabel(bet.type) }} [{{ bet.numbers.slice(0, 3).join(', ') }}{{ bet.numbers.length > 3 ? '...' : ''
                   }}]</span>
                   <strong>{{ formatIntAsCurrency(bet.amount) }}</strong>
                 </div>
                 <div v-if="gameStore.currentBets.length > 5" class="text-muted">
-                  ...and {{ gameStore.currentBets.length - 5 }} more
+                  {{ t('roulette.ui.moreBets', { count: gameStore.currentBets.length - 5 }) }}
                 </div>
               </div>
             </div>
@@ -207,9 +212,9 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
         <div class="col-md-6">
           <div class="card bg-light">
             <div class="card-body">
-              <h6 class="card-title">Waiting for Result...</h6>
+              <h6 class="card-title">{{ t('roulette.ui.waitingForResult') }}</h6>
               <div class="d-flex justify-content-between align-items-center">
-                <span>Total at Risk:</span>
+                <span>{{ t('roulette.ui.totalAtRisk') }}:</span>
                 <h4 class="mb-0 text-danger">{{ formatIntAsCurrency(gameStore.totalBet) }}</h4>
               </div>
             </div>
@@ -228,7 +233,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
               :class="{ active: activeView === 'table' }"
               href="#"
               @click.prevent="activeView = 'table'">
-              <i class="bi bi-grid-3x3-gap me-2"></i>Table
+              <i class="bi bi-grid-3x3-gap me-2"></i>{{ t('roulette.ui.tableTab') }}
             </a>
           </li>
           <li class="nav-item">
@@ -238,7 +243,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
               href="#"
               @click.prevent="activeView = 'bets'">
               <i class="bi bi-list-ul me-2"></i>
-              My Bets
+              {{ t('roulette.ui.myBetsTab') }}
               <span
                 v-if="gameStore.currentBets.length > 0"
                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -268,7 +273,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
                 :key="index"
                 class="list-group-item d-flex justify-content-between align-items-center">
                 <div>
-                  <strong>{{ bet.type }}</strong>
+                  <strong>{{ getBetTypeLabel(bet.type) }}</strong>
                   <small class="text-muted ms-2">
                     [{{ bet.numbers.join(', ') }}]
                   </small>
@@ -281,7 +286,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
 
             <div class="alert alert-info">
               <div class="d-flex justify-content-between align-items-center">
-                <strong>Total Bet:</strong>
+                <strong>{{ t('roulette.ui.totalBet') }}:</strong>
                 <h5 class="mb-0">{{ formatIntAsCurrency(gameStore.totalBet) }}</h5>
               </div>
             </div>
@@ -289,8 +294,8 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
 
           <div v-else class="text-center py-5 text-muted">
             <i class="bi bi-inbox display-4 d-block mb-3"></i>
-            <p>No bets placed yet</p>
-            <small>Switch to the table view to place your bets</small>
+            <p>{{ t('roulette.ui.noBetsTitle') }}</p>
+            <small>{{ t('roulette.ui.noBetsHint') }}</small>
           </div>
         </div>
       </div>
@@ -304,10 +309,10 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
         :disabled="!gameStore.isSpinAllowed || gameStore.gameState === RouletteState.SPINNING">
         <i class="bi bi-play-circle-fill me-2"></i>
         <span v-if="gameStore.gameState === RouletteState.SPINNING">
-          Spinning...
+          {{ t('roulette.ui.spinning') }}
         </span>
         <span v-else>
-          Spin the Wheel
+          {{ t('roulette.ui.spinTheWheel') }}
         </span>
       </button>
     </div>

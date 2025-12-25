@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import type { BetType } from '@/stores/rouletteStore'
 
 interface Bet {
@@ -16,6 +17,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const { t, locale } = useI18n()
 
 // Utility functions
 const redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
@@ -67,21 +69,24 @@ const mobileGrid = computed(() => {
   return grid
 })
 
-const outsideBets = {
-  dozens: [
-    { type: 'dozen' as BetType, label: '1st 12', numbers: Array.from({ length: 12 }, (_, i) => i + 1) },
-    { type: 'dozen' as BetType, label: '2nd 12', numbers: Array.from({ length: 12 }, (_, i) => i + 13) },
-    { type: 'dozen' as BetType, label: '3rd 12', numbers: Array.from({ length: 12 }, (_, i) => i + 25) }
-  ],
-  even_money: [
-    { type: 'low' as BetType, label: '1-18', numbers: Array.from({ length: 18 }, (_, i) => i + 1) },
-    { type: 'even' as BetType, label: 'EVEN', numbers: Array.from({ length: 18 }, (_, i) => (i + 1) * 2) },
-    { type: 'red' as BetType, label: 'RED', numbers: redNumbers, btnClass: 'btn-danger' },
-    { type: 'black' as BetType, label: 'BLACK', numbers: [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35], btnClass: 'btn-dark' },
-    { type: 'odd' as BetType, label: 'ODD', numbers: Array.from({ length: 18 }, (_, i) => i * 2 + 1) },
-    { type: 'high' as BetType, label: '19-36', numbers: Array.from({ length: 18 }, (_, i) => i + 19) }
-  ]
-}
+const outsideBets = computed(() => {
+  const _locale = locale.value
+  return {
+    dozens: [
+      { type: 'dozen' as BetType, label: t('roulette.table.bets.dozen1'), numbers: Array.from({ length: 12 }, (_, i) => i + 1) },
+      { type: 'dozen' as BetType, label: t('roulette.table.bets.dozen2'), numbers: Array.from({ length: 12 }, (_, i) => i + 13) },
+      { type: 'dozen' as BetType, label: t('roulette.table.bets.dozen3'), numbers: Array.from({ length: 12 }, (_, i) => i + 25) }
+    ],
+    even_money: [
+      { type: 'low' as BetType, label: t('roulette.table.bets.low'), numbers: Array.from({ length: 18 }, (_, i) => i + 1) },
+      { type: 'even' as BetType, label: t('roulette.table.bets.even'), numbers: Array.from({ length: 18 }, (_, i) => (i + 1) * 2) },
+      { type: 'red' as BetType, label: t('roulette.table.bets.red'), numbers: redNumbers, btnClass: 'btn-danger' },
+      { type: 'black' as BetType, label: t('roulette.table.bets.black'), numbers: [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35], btnClass: 'btn-dark' },
+      { type: 'odd' as BetType, label: t('roulette.table.bets.odd'), numbers: Array.from({ length: 18 }, (_, i) => i * 2 + 1) },
+      { type: 'high' as BetType, label: t('roulette.table.bets.high'), numbers: Array.from({ length: 18 }, (_, i) => i + 19) }
+    ]
+  }
+})
 </script>
 
 <template>

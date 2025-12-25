@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import BaseModal from './BaseModal.vue'
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil'
 
@@ -12,33 +13,37 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'close'): void
 }>()
+const { t, locale } = useI18n()
 
 // Convert seconds to readable format
 const formattedTime = computed(() => {
   const hours = Math.floor(props.timeAway / 3600)
   const minutes = Math.floor((props.timeAway % 3600) / 60)
- return hours > 0
-    ? `${hours}h ${minutes}m`
-    : `${minutes}m`
+  const _locale = locale.value
+  const hourUnit = t('time.units.hourShort')
+  const minuteUnit = t('time.units.minuteShort')
+  return hours > 0
+    ? `${hours}${hourUnit} ${minutes}${minuteUnit}`
+    : `${minutes}${minuteUnit}`
 })
 </script>
 
 <template>
   <BaseModal
     :show="show"
-    title="Welcome Back!"
+    :title="t('offlineEarningsModal.title')"
     centered
     static>
     <div class="text-center">
       <div class="mb-3">
         <i class="bi bi-piggy-bank-fill text-success" style="font-size: 48px;"></i>
       </div>
-      <p>While you were away for {{ formattedTime }}:</p>
+      <p>{{ t('offlineEarningsModal.intro', { time: formattedTime }) }}</p>
       <p class="text-success font-bold mt-3 text-xl">
-        +{{ formatIntAsCurrency(earnings) }} chips collected!
+        {{ t('offlineEarningsModal.collected', { amount: formatIntAsCurrency(earnings) }) }}
       </p>
       <p class="text-muted">
-        Your auto-clickers have been working hard and the chips have been added to your balance.
+        {{ t('offlineEarningsModal.description') }}
       </p>
     </div>
 
@@ -46,7 +51,7 @@ const formattedTime = computed(() => {
       <button
         @click="emit('close')"
         class="btn btn-primary w-100">
-        Awesome!
+        {{ t('offlineEarningsModal.confirm') }}
       </button>
     </template>
   </BaseModal>

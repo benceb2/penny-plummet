@@ -23,6 +23,39 @@ export default {
       "viewProfile": "View Profile"
     }
   },
+  "betAmountSelector": {
+    "label": "Bet Amount",
+    "insufficientFunds": {
+      "title": "Insufficient Funds",
+      "description": "You need chips to place bets!"
+    },
+    "quickBet": "Quick Bet",
+    "selected": "Selected",
+    "ofChips": "of chips"
+  },
+  "consentModal": {
+    "title": "Local Storage Notice",
+    "description": "This game uses local storage to save your progress and settings. No personal data is collected or shared with third parties. By clicking \"Accept\", you agree to the use of local storage.",
+    "accept": "Accept"
+  },
+  "usernameModal": {
+    "title": "Welcome to Penny Plummet!",
+    "prompt": "Please enter your username:",
+    "startPlaying": "Start Playing"
+  },
+  "offlineEarningsModal": {
+    "title": "Welcome Back!",
+    "intro": "While you were away for {time}:",
+    "collected": "+{amount} chips collected!",
+    "description": "Your auto-clickers have been working hard and the chips have been added to your balance.",
+    "confirm": "Awesome!"
+  },
+  "time": {
+    "units": {
+      "hourShort": "h",
+      "minuteShort": "m"
+    }
+  },
   "home": {
     "welcome": "Welcome to Penny Plummet!",
     "welcomeBack": "Welcome back, {username}!",
@@ -113,12 +146,22 @@ export default {
       "current": "Current Earnings",
       "clickValue": "+"
     },
+    "stats": {
+      "availableToCollect": "Available To Collect",
+      "income": "Income",
+      "lifetimeClicks": "Lifetime Clicks",
+      "perSecondSuffix": "/s"
+    },
     "collect": {
       "button": "Collect Chips",
       "minimum": "(Min. 10 required)"
     },
     "upgrades": {
       "title": "Upgrades",
+      "actions": {
+        "buy": "Buy {cost}",
+        "upgrade": "Upgrade {cost}"
+      },
       "autoClickers": {
         "title": "Auto-Clickers",
         "owned": "Owned",
@@ -129,7 +172,23 @@ export default {
         "title": "Click Multiplier",
         "current": "Current",
         "upgrade": "Upgrade Multiplier"
+      },
+      "critical": {
+        "title": "Critical Hits",
+        "chance": "{percent}% chance",
+        "damage": "2x damage",
+        "upgrade": "Upgrade"
+      },
+      "speed": {
+        "title": "Auto-Click Speed",
+        "interval": "{ms}ms interval",
+        "upgrade": "Upgrade"
       }
+    },
+    "combo": {
+      "label": "{count}x COMBO!",
+      "bonus": "({percent}% bonus)",
+      "critical": "{percent}% Crit"
     }
   },
   "about": {
@@ -249,6 +308,97 @@ export default {
     "reward": {
       "chips": "chips",
       "xp": "XP"
+    },
+    "actions": {
+      "claimRewards": "Claim Rewards"
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "level": {
+      "title": "Level {level}",
+      "currentXp": "{xp} XP",
+      "xpNeeded": "{xp} XP needed",
+      "rewardsTitle": "Level Rewards",
+      "rewardsChips": "Chips"
+    },
+    "stats": {
+      "title": "Statistics",
+      "handsPlayed": "Hands Played",
+      "totalWinnings": "Total Winnings",
+      "biggestWin": "Biggest Win",
+      "achievements": "Achievements"
+    },
+    "achievements": {
+      "title": "Achievements",
+      "completed": "{completed}/{total} completed",
+      "categories": {
+        "all": "All",
+        "blackjack": "Blackjack",
+        "clicker": "Clicker",
+        "general": "General"
+      }
+    }
+  },
+  "transactions": {
+    "title": "Transaction History",
+    "stats": {
+      "netAmount": "Net Amount",
+      "wins": "Wins",
+      "losses": "Losses",
+      "pushes": "Pushes"
+    },
+    "filters": {
+      "game": {
+        "all": "All",
+        "blackjack": "Blackjack",
+        "roulette": "Roulette",
+        "clicker": "Clicker"
+      },
+      "type": {
+        "all": "All",
+        "win": "Win",
+        "loss": "Loss",
+        "push": "Push"
+      }
+    },
+    "badges": {
+      "type": {
+        "win": "Win",
+        "loss": "Loss",
+        "push": "Push",
+        "income": "Income",
+        "purchase": "Purchase"
+      },
+      "game": {
+        "blackjack": "Blackjack",
+        "roulette": "Roulette",
+        "clicker": "Clicker"
+      }
+    },
+    "details": {
+      "blackjack": {
+        "win": "Won {amount} with {playerScore} versus the dealer's {dealerScore}",
+        "push": "Push - bet returned",
+        "loss": "Lost {amount} with {playerScore} versus the dealer's {dealerScore}"
+      },
+      "clicker": {
+        "collect": "Collected {amount} chips from clicking",
+        "autoClicker": "Purchased Auto-Clicker (Level {level})",
+        "multiplier": "Purchased Multiplier (Level {level})",
+        "critical": "Purchased Critical Hit Upgrade (Level {level})",
+        "speed": "Purchased Auto-Clicker Speed (Level {level})",
+        "offlineEarnings": "Offline earnings collected ({timeAway} away)"
+      },
+      "roulette": {
+        "win": "Won {amount} on number {number}",
+        "push": "Broke even on number {number}",
+        "loss": "Lost {amount} on number {number}"
+      }
+    },
+    "empty": "No transactions to display",
+    "pagination": {
+      "summary": "Showing {from} to {to} of {total} transactions"
     }
   },
   "settings": {
@@ -323,7 +473,18 @@ export default {
       "winStreak": "Win Streak"
     },
     "table": {
-      "title": "Roulette Table"
+      "title": "Roulette Table",
+      "bets": {
+        "dozen1": "1st 12",
+        "dozen2": "2nd 12",
+        "dozen3": "3rd 12",
+        "low": "1-18",
+        "even": "EVEN",
+        "red": "RED",
+        "black": "BLACK",
+        "odd": "ODD",
+        "high": "19-36"
+      }
     },
     "gameControls": {
       "title": "Game Controls",
@@ -345,11 +506,57 @@ export default {
         "newGame": "New Game"
       }
     },
+    "betTypes": {
+      "straight": "Straight",
+      "split": "Split",
+      "street": "Street",
+      "corner": "Corner",
+      "line": "Line",
+      "dozen": "Dozen",
+      "column": "Column",
+      "red": "Red",
+      "black": "Black",
+      "even": "Even",
+      "odd": "Odd",
+      "low": "Low",
+      "high": "High"
+    },
+    "ui": {
+      "clearBets": "Clear Bets",
+      "totalBet": "Total Bet",
+      "yourBets": "Your Bets",
+      "waitingForResult": "Waiting for Result...",
+      "totalAtRisk": "Total at Risk",
+      "tableTab": "Table",
+      "myBetsTab": "My Bets",
+      "noBetsTitle": "No bets placed yet",
+      "noBetsHint": "Switch to the table view to place your bets",
+      "spinning": "Spinning...",
+      "spinTheWheel": "Spin the Wheel",
+      "allIn": "ALL IN",
+      "ofBalance": "of balance",
+      "quickBetTitle": "{amount} ({label} of balance)",
+      "moreBets": "...and {count} more"
+    },
     "results": {
       "win": "You win {amount}!",
       "loss": "You lose {amount}",
       "push": "You broke even and {amount} was returned!",
       "winningNumber": "Winning Number: {number}"
+    }
+  },
+  "toast": {
+    "achievementUnlocked": {
+      "title": "Achievement Unlocked!",
+      "message": "{title} - {description}"
+    },
+    "levelUp": {
+      "title": "Level Up!",
+      "message": "You've reached level {level}! Rewards: {chips}"
+    },
+    "rewardsClaimed": {
+      "title": "Rewards Claimed!",
+      "message": "Received {chips} chips and {xp} XP"
     }
   },
   "gameResult": {

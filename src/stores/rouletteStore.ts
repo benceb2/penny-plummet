@@ -14,6 +14,7 @@ import { ref, computed } from 'vue'
 import { calculateStorageKey, createGameSerializer } from '../utils/gameSaveSerializerUtil'
 import { useAchievementStore } from './achievementStore'
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil'
+import i18n from '@/i18n'
 import { useTransactionStore } from './transactionStore'
 import { useUserStore } from './userStore'
 import { RouletteState } from '@/types/RouletteState'
@@ -180,7 +181,10 @@ export const useRouletteStore = defineStore('roulette', () => {
           amount: result.totalWin - result.totalBet,
           type: 'win',
           game: 'roulette',
-          details: `Won ${formatIntAsCurrency(result.totalWin)} on number ${result.winningNumber}`
+          details: i18n.global.t('transactions.details.roulette.win', {
+            amount: formatIntAsCurrency(result.totalWin),
+            number: result.winningNumber
+          })
         })
       } else if (result.totalWin === result.totalBet) {
         // Push/break even
@@ -188,7 +192,9 @@ export const useRouletteStore = defineStore('roulette', () => {
           amount: 0,
           type: 'push',
           game: 'roulette',
-          details: `Broke even on number ${result.winningNumber}`
+          details: i18n.global.t('transactions.details.roulette.push', {
+            number: result.winningNumber
+          })
         })
       }
     } else {
@@ -199,7 +205,10 @@ export const useRouletteStore = defineStore('roulette', () => {
         amount: -result.totalBet,
         type: 'loss',
         game: 'roulette',
-        details: `Lost ${formatIntAsCurrency(result.totalBet)} on number ${result.winningNumber}`
+        details: i18n.global.t('transactions.details.roulette.loss', {
+          amount: formatIntAsCurrency(result.totalBet),
+          number: result.winningNumber
+        })
       })
     }
 

@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import { useClickerStore } from '@/stores/clickerStore'
 
 const clickerStore = useClickerStore()
+const { t } = useI18n()
 </script>
 
 <template>
@@ -13,7 +15,7 @@ const clickerStore = useClickerStore()
             <i class="bi bi-piggy-bank text-primary me-4 fs-5"></i>
             <div>
               <div class="h5 mb-0 text-primary">{{ clickerStore.formattedClicks }}</div>
-              <small class="text-muted">Available To Collect</small>
+              <small class="text-muted">{{ t('clicker.stats.availableToCollect') }}</small>
             </div>
           </div>
         </div>
@@ -25,8 +27,10 @@ const clickerStore = useClickerStore()
           <div class="d-flex align-items-center justify-content-center">
             <i class="bi bi-clock text-success me-4 fs-5"></i>
             <div>
-              <div class="h5 mb-0 text-success">{{ clickerStore.formattedIncome }}/s</div>
-              <small class="text-muted">Income</small>
+              <div class="h5 mb-0 text-success">
+                {{ clickerStore.formattedIncome }}{{ t('clicker.stats.perSecondSuffix') }}
+              </div>
+              <small class="text-muted">{{ t('clicker.stats.income') }}</small>
             </div>
           </div>
         </div>
@@ -39,7 +43,7 @@ const clickerStore = useClickerStore()
             <i class="bi bi-infinity text-info me-4 fs-5"></i>
             <div>
               <div class="h5 mb-0 text-info">{{ clickerStore.formattedLifetimeClicks }}</div>
-              <small class="text-muted">Lifetime Clicks</small>
+              <small class="text-muted">{{ t('clicker.stats.lifetimeClicks') }}</small>
             </div>
           </div>
         </div>

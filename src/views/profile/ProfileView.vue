@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useUserStore } from '@/stores/userStore';
 import { usePagination } from '@/composables/usePagination';
 import { useAchievementStore } from '@/stores/achievementStore';
@@ -12,6 +13,7 @@ import { filterAndSortAchievements } from '@/utils/achievementUitl';
 
 const userStore = useUserStore();
 const achievementStore = useAchievementStore();
+const { t } = useI18n();
 
 const selectedCategory = ref('all');
 
@@ -63,7 +65,7 @@ watch([selectedCategory], () => {
 
 <template>
   <BaseLayout
-    title="Profile"
+    :title="t('profile.title')"
     bootstrapIcon="person-circle">
 
     <!-- Level Progress Section -->
@@ -71,7 +73,7 @@ watch([selectedCategory], () => {
       <div class="card-body">
         <h3 class="card-title">
           <i class="bi bi-stars text-info me-2"></i>
-          Level {{ currentLevel.level }}
+          {{ t('profile.level.title', { level: currentLevel.level }) }}
         </h3>
         <div class="progress mb-3">
           <div
@@ -85,13 +87,13 @@ watch([selectedCategory], () => {
           </div>
         </div>
         <div class="d-flex justify-content-between text-muted">
-          <small>{{ currentLevel.currentXP }} XP</small>
-          <small>{{ currentLevel.requiredXP }} XP needed</small>
+          <small>{{ t('profile.level.currentXp', { xp: currentLevel.currentXP }) }}</small>
+          <small>{{ t('profile.level.xpNeeded', { xp: currentLevel.requiredXP }) }}</small>
         </div>
         <div class="mt-3">
-          <h5>Level Rewards:</h5>
+          <h5>{{ t('profile.level.rewardsTitle') }}:</h5>
           <ul class="list-unstyled">
-            <li>Chips: {{ formatIntAsCurrency(currentLevel.rewards.chips) }}</li>
+            <li>{{ t('profile.level.rewardsChips') }}: {{ formatIntAsCurrency(currentLevel.rewards.chips) }}</li>
           </ul>
         </div>
       </div>
@@ -102,7 +104,7 @@ watch([selectedCategory], () => {
       <div class="card-body">
         <h3 class="card-title">
           <i class="bi bi-graph-up-arrow text-primary me-2"></i>
-          Statistics
+          {{ t('profile.stats.title') }}
         </h3>
         <div class="row">
           <div class="col-md-3">
@@ -110,7 +112,7 @@ watch([selectedCategory], () => {
               <div class="mb-3">
                 <i class="bi bi-joystick text-primary fs-1"></i>
               </div>
-              <h5 class="text-muted">Hands Played</h5>
+              <h5 class="text-muted">{{ t('profile.stats.handsPlayed') }}</h5>
               <p class="fs-4 fw-bold mb-0">{{ userStats.handsPlayed }}</p>
             </div>
           </div>
@@ -119,7 +121,7 @@ watch([selectedCategory], () => {
               <div class="mb-3">
                 <i class="bi bi-coin text-success fs-1"></i>
               </div>
-              <h5 class="text-muted">Total Winnings</h5>
+              <h5 class="text-muted">{{ t('profile.stats.totalWinnings') }}</h5>
               <p class="fs-4 fw-bold mb-0">{{ formatIntAsCurrency(userStats.totalWinnings) }}</p>
             </div>
           </div>
@@ -128,7 +130,7 @@ watch([selectedCategory], () => {
               <div class="mb-3">
                 <i class="bi bi-trophy text-warning fs-1"></i>
               </div>
-              <h5 class="text-muted">Biggest Win</h5>
+              <h5 class="text-muted">{{ t('profile.stats.biggestWin') }}</h5>
               <p class="fs-4 fw-bold mb-0">{{ formatIntAsCurrency(userStats.biggestWin) }}</p>
             </div>
           </div>
@@ -137,7 +139,7 @@ watch([selectedCategory], () => {
               <div class="mb-3">
                 <i class="bi bi-award text-info fs-1"></i>
               </div>
-              <h5 class="text-muted">Achievements</h5>
+              <h5 class="text-muted">{{ t('profile.stats.achievements') }}</h5>
               <p class="fs-4 fw-bold mb-0">{{ achievementProgress.percentage }}%</p>
             </div>
           </div>
@@ -151,10 +153,10 @@ watch([selectedCategory], () => {
         <h3 class="card-title d-flex justify-content-between align-items-center mb-4">
           <div class="d-flex align-items-center">
             <i class="bi bi-award text-primary me-2"></i>
-            Achievements
+            {{ t('profile.achievements.title') }}
           </div>
           <span class="text-muted fs-6">
-            {{ achievementProgress.completed }}/{{ achievementProgress.total }} completed
+            {{ t('profile.achievements.completed', { completed: achievementProgress.completed, total: achievementProgress.total }) }}
           </span>
         </h3>
 
@@ -171,7 +173,7 @@ watch([selectedCategory], () => {
                   class="btn"
                   :class="selectedCategory === category ? 'btn-primary' : 'btn-outline-primary'"
                   @click="selectedCategory = category">
-                  {{ category.charAt(0).toUpperCase() + category.slice(1) }}
+                  {{ t(`profile.achievements.categories.${category}`) }}
                 </button>
               </div>
             </div>

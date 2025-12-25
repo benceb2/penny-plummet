@@ -25,6 +25,39 @@ export default {
       "viewProfile": "Profil Megtekintése"
     }
   },
+  "betAmountSelector": {
+    "label": "Tét összege",
+    "insufficientFunds": {
+      "title": "Nincs elég zseton",
+      "description": "Téthez zsetonokra van szükséged!"
+    },
+    "quickBet": "Gyors tét",
+    "selected": "Kiválasztva",
+    "ofChips": "a zsetonokból"
+  },
+  "consentModal": {
+    "title": "Helyi tárhely tájékoztató",
+    "description": "Ez a játék a helyi tárhelyet használja a haladás és a beállítások mentéséhez. Nem gyűjtünk személyes adatokat, és nem osztjuk meg harmadik felekkel. Az \"Elfogadom\" gombra kattintva hozzájárulsz a helyi tárhely használatához.",
+    "accept": "Elfogadom"
+  },
+  "usernameModal": {
+    "title": "Üdvözlünk a Penny Plummetben!",
+    "prompt": "Kérjük, add meg a felhasználóneved:",
+    "startPlaying": "Kezdés"
+  },
+  "offlineEarningsModal": {
+    "title": "Üdv újra!",
+    "intro": "Amíg távol voltál ({time}):",
+    "collected": "+{amount} zseton begyűjtve!",
+    "description": "Az auto-kattintók dolgoztak, és a zsetonok hozzáadódtak az egyenlegedhez.",
+    "confirm": "Szuper!"
+  },
+  "time": {
+    "units": {
+      "hourShort": "ó",
+      "minuteShort": "p"
+    }
+  },
   "home": {
     "welcome": "Üdvözöljük a Penny Plummet-ben!",
     "welcomeBack": "Üdv újra, {username}!",
@@ -115,12 +148,22 @@ export default {
       "current": "Jelenlegi Bevétel",
       "clickValue": "+"
     },
+    "stats": {
+      "availableToCollect": "Begyűjthető",
+      "income": "Bevétel",
+      "lifetimeClicks": "Összes kattintás",
+      "perSecondSuffix": "/mp"
+    },
     "collect": {
       "button": "Zsetonok Begyűjtése",
       "minimum": "(Min. 10 szükséges)"
     },
     "upgrades": {
       "title": "Fejlesztések",
+      "actions": {
+        "buy": "Vedd meg {cost}",
+        "upgrade": "Fejleszd {cost}"
+      },
       "autoClickers": {
         "title": "Auto-Kattintók",
         "owned": "Tulajdonban",
@@ -131,7 +174,23 @@ export default {
         "title": "Kattintás Szorzó",
         "current": "Jelenlegi",
         "upgrade": "Szorzó Fejlesztése"
+      },
+      "critical": {
+        "title": "Kritikus találatok",
+        "chance": "{percent}% esély",
+        "damage": "2x sebzés",
+        "upgrade": "Fejlesztés"
+      },
+      "speed": {
+        "title": "Auto-kattintás sebesség",
+        "interval": "{ms} ms intervallum",
+        "upgrade": "Fejlesztés"
       }
+    },
+    "combo": {
+      "label": "{count}x KOMBO!",
+      "bonus": "({percent}% bónusz)",
+      "critical": "{percent}% Krit"
     }
   },
   "about": {
@@ -251,6 +310,97 @@ export default {
     "reward": {
       "chips": "zseton",
       "xp": "XP"
+    },
+    "actions": {
+      "claimRewards": "Jutalom igénylése"
+    }
+  },
+  "profile": {
+    "title": "Profil",
+    "level": {
+      "title": "Szint {level}",
+      "currentXp": "{xp} XP",
+      "xpNeeded": "{xp} XP szükséges",
+      "rewardsTitle": "Szint jutalmak",
+      "rewardsChips": "Zseton"
+    },
+    "stats": {
+      "title": "Statisztikák",
+      "handsPlayed": "Játszott körök",
+      "totalWinnings": "Összes nyeremény",
+      "biggestWin": "Legnagyobb nyeremény",
+      "achievements": "Eredmények"
+    },
+    "achievements": {
+      "title": "Eredmények",
+      "completed": "{completed}/{total} kész",
+      "categories": {
+        "all": "Összes",
+        "blackjack": "Blackjack",
+        "clicker": "Kattintós",
+        "general": "Általános"
+      }
+    }
+  },
+  "transactions": {
+    "title": "Tranzakció Előzmények",
+    "stats": {
+      "netAmount": "Nettó összeg",
+      "wins": "Nyerések",
+      "losses": "Veszteségek",
+      "pushes": "Döntetlenek"
+    },
+    "filters": {
+      "game": {
+        "all": "Összes",
+        "blackjack": "Blackjack",
+        "roulette": "Rulett",
+        "clicker": "Kattintós"
+      },
+      "type": {
+        "all": "Összes",
+        "win": "Nyerés",
+        "loss": "Veszteség",
+        "push": "Döntetlen"
+      }
+    },
+    "badges": {
+      "type": {
+        "win": "Nyerés",
+        "loss": "Veszteség",
+        "push": "Döntetlen",
+        "income": "Bevétel",
+        "purchase": "Vásárlás"
+      },
+      "game": {
+        "blackjack": "Blackjack",
+        "roulette": "Rulett",
+        "clicker": "Kattintós"
+      }
+    },
+    "details": {
+      "blackjack": {
+        "win": "Nyeremény {amount}, {playerScore} a krupié {dealerScore} ellen",
+        "push": "Döntetlen - tét visszatérítve",
+        "loss": "Vesztettél {amount}, {playerScore} a krupié {dealerScore} ellen"
+      },
+      "clicker": {
+        "collect": "{amount} zseton begyűjtve kattintásból",
+        "autoClicker": "Auto-kattintó vásárlás (Szint {level})",
+        "multiplier": "Szorzó vásárlás (Szint {level})",
+        "critical": "Kritikus fejlesztés vásárlás (Szint {level})",
+        "speed": "Auto-kattintás sebesség vásárlás (Szint {level})",
+        "offlineEarnings": "Offline bevétel begyűjtve ({timeAway} távollét)"
+      },
+      "roulette": {
+        "win": "Nyeremény {amount} a {number} számon",
+        "push": "Döntetlen a {number} számon",
+        "loss": "Vesztettél {amount} a {number} számon"
+      }
+    },
+    "empty": "Nincsenek megjeleníthető tranzakciók",
+    "pagination": {
+      "summary": "{from}–{to} / {total} tranzakció"
     }
   },
   "settings": {
@@ -325,7 +475,18 @@ export default {
       "winStreak": "Nyerési Sorozat"
     },
     "table": {
-      "title": "Rulett Asztal"
+      "title": "Rulett Asztal",
+      "bets": {
+        "dozen1": "1. 12",
+        "dozen2": "2. 12",
+        "dozen3": "3. 12",
+        "low": "1-18",
+        "even": "PÁROS",
+        "red": "PIROS",
+        "black": "FEKETE",
+        "odd": "PÁRATLAN",
+        "high": "19-36"
+      }
     },
     "gameControls": {
       "title": "Játék Vezérlők",
@@ -347,11 +508,57 @@ export default {
         "newGame": "Új Játék"
       }
     },
+    "betTypes": {
+      "straight": "Egyenes",
+      "split": "Osztott",
+      "street": "Sor",
+      "corner": "Sarok",
+      "line": "Vonal",
+      "dozen": "Tucat",
+      "column": "Oszlop",
+      "red": "Piros",
+      "black": "Fekete",
+      "even": "Páros",
+      "odd": "Páratlan",
+      "low": "Alacsony",
+      "high": "Magas"
+    },
+    "ui": {
+      "clearBets": "Tétek törlése",
+      "totalBet": "Összes tét",
+      "yourBets": "Téteid",
+      "waitingForResult": "Eredményre várunk...",
+      "totalAtRisk": "Kockáztatott összeg",
+      "tableTab": "Asztal",
+      "myBetsTab": "Téteim",
+      "noBetsTitle": "Még nincs tét",
+      "noBetsHint": "Válts az asztal nézetre a tétek megtételéhez",
+      "spinning": "Pörgetés...",
+      "spinTheWheel": "Pörgesd meg",
+      "allIn": "MINDENT FEL",
+      "ofBalance": "az egyenlegből",
+      "quickBetTitle": "{amount} ({label} az egyenlegből)",
+      "moreBets": "...és még {count}"
+    },
     "results": {
       "win": "Nyertél {amount}-t!",
       "loss": "Vesztettél {amount}-t",
       "push": "Döntetlenül értél és {amount} visszatérítve!",
       "winningNumber": "Nyerő Szám: {number}"
+    }
+  },
+  "toast": {
+    "achievementUnlocked": {
+      "title": "Eredmény feloldva!",
+      "message": "{title} - {description}"
+    },
+    "levelUp": {
+      "title": "Szintlépés!",
+      "message": "Elérted a(z) {level}. szintet! Jutalmak: {chips}"
+    },
+    "rewardsClaimed": {
+      "title": "Jutalom igényelve!",
+      "message": "Kaptál {chips} zsetont és {xp} XP-t"
     }
   },
   "gameResult": {

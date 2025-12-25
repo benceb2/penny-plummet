@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil'
 
@@ -21,11 +22,11 @@ const props = withDefaults(defineProps<Props>(), {
   minAmount: 1,
   quickBetPercentages: () => [0.05, 0.10, 0.25, 0.50], // 5%, 10%, 25%, 50%
   quickBetAmounts: () => [100, 500, 1000, 5000],
-  label: 'Bet Amount',
   size: 'md'
 })
 
 const emit = defineEmits<Emits>()
+const { t } = useI18n()
 
 const localValue = ref(props.modelValue)
 
@@ -105,8 +106,8 @@ const buttonSizeClass = computed(() => {
     <div v-if="isDisabled" class="alert alert-danger d-flex align-items-center mb-3">
       <i class="bi bi-exclamation-triangle-fill me-2"></i>
       <div>
-        <strong>Insufficient Funds</strong><br>
-        <small>You need chips to place bets!</small>
+        <strong>{{ t('betAmountSelector.insufficientFunds.title') }}</strong><br>
+        <small>{{ t('betAmountSelector.insufficientFunds.description') }}</small>
       </div>
     </div>
 
@@ -123,7 +124,7 @@ const buttonSizeClass = computed(() => {
           :disabled="isDisabled"
           :placeholder="minAmount.toString()">
         <label for="betAmount" class="d-flex align-items-center">
-          <i class="bi bi-cash me-2"></i>{{ label }}
+          <i class="bi bi-cash me-2"></i>{{ label ?? t('betAmountSelector.label') }}
         </label>
       </div>
     </div>
@@ -132,7 +133,7 @@ const buttonSizeClass = computed(() => {
     <div v-if="!isDisabled" class="mb-3">
       <div class="d-flex align-items-center gap-2 mb-2">
         <h6 class="mb-0 text-muted">
-          <i class="bi bi-lightning-fill me-1"></i>Quick Bet
+          <i class="bi bi-lightning-fill me-1"></i>{{ t('betAmountSelector.quickBet') }}
         </h6>
       </div>
       <div class="row g-2">
@@ -163,10 +164,10 @@ const buttonSizeClass = computed(() => {
     <div v-if="!isDisabled" class="alert alert-info d-flex justify-content-between align-items-center mb-0">
       <span>
         <i class="bi bi-info-circle-fill me-2"></i>
-        <strong>Selected:</strong> {{ formatIntAsCurrency(localValue) }}
+        <strong>{{ t('betAmountSelector.selected') }}:</strong> {{ formatIntAsCurrency(localValue) }}
       </span>
       <small v-if="getPercentage(localValue)" class="text-muted">
-        {{ getPercentage(localValue) }} of chips
+        {{ getPercentage(localValue) }} {{ t('betAmountSelector.ofChips') }}
       </small>
     </div>
   </div>

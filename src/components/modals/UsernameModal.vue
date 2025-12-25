@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/stores/userStore'
 import BaseModal from './BaseModal.vue'
 
@@ -19,12 +20,13 @@ const username = ref('')
 const showModal = ref(false)
 const error = ref('')
 const isLoading = ref(false)
+const { t } = useI18n()
 
 const validateUsername = (value: string | null): string => {
-  if (!value) return 'Username is required'
-  if (value.length < props.minLength) return `Username must be at least ${props.minLength} characters`
-  if (value.length > props.maxLength) return `Username cannot exceed ${props.maxLength} characters`
-  if (!/^[a-zA-Z0-9_\s-]+$/.test(value)) return 'Username can only contain letters, numbers, spaces, underscores, and hyphens'
+  if (!value) return t('usernameSettings.validation.required')
+  if (value.length < props.minLength) return t('usernameSettings.validation.minLength', { min: props.minLength })
+  if (value.length > props.maxLength) return t('usernameSettings.validation.maxLength', { max: props.maxLength })
+  if (!/^[a-zA-Z0-9_\s-]+$/.test(value)) return t('usernameSettings.validation.invalidCharacters')
   return ''
 }
 
@@ -46,7 +48,7 @@ const submitUsername = async () => {
     await userStore.updateUsername(username.value.trim())
     showModal.value = false
   } catch (err) {
-    error.value = 'Failed to update username'
+    error.value = t('usernameSettings.updateFailed')
     console.error('Username update error:', err)
   } finally {
     isLoading.value = false
@@ -67,12 +69,12 @@ watch(
 <template>
   <BaseModal
     :show="showModal"
-    title="Welcome to Penny Plummet!"
+    :title="t('usernameModal.title')"
     :centered="true"
     :static="true">
     <form @submit.prevent="submitUsername">
       <div class="mb-3">
-        <label for="username" class="form-label">Please enter your username:</label>
+        <label for="username" class="form-label">{{ t('usernameModal.prompt') }}</label>
         <input
           type="text"
           class="form-control"
@@ -83,10 +85,10 @@ watch(
           :maxlength="maxLength"
           autocomplete="off"
           :disabled="isLoading"
-          placeholder="Enter username">
+          :placeholder="t('usernameSettings.placeholder')">
         <div class="mt-1">
           <small class="text-muted" v-if="!error">
-            {{ username.length }}/{{ maxLength }} characters
+            {{ t('usernameSettings.charactersCount', { current: username.length, max: maxLength }) }}
           </small>
           <small class="text-danger" v-if="error">
             {{ error }}
@@ -99,10 +101,10 @@ watch(
         :disabled="isLoading || !!error">
         <template v-if="isLoading">
           <span class="spinner-border spinner-border-sm me-1" role="status"></span>
-          Saving...
+          {{ t('usernameSettings.saving') }}
         </template>
         <template v-else>
-          Start Playing
+          {{ t('usernameModal.startPlaying') }}
         </template>
       </button>
     </form>

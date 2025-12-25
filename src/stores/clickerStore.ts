@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 
 import { formatIntAsCurrency, formatNumber } from '@/utils/numberFormatUtil'
 import { calculateStorageKey, createGameSerializer } from '@/utils/gameSaveSerializerUtil'
+import i18n from '@/i18n'
 import { useAchievementStore } from './achievementStore'
 import { useUserStore } from './userStore'
 import type { UserStore } from './userStore'
@@ -153,7 +154,9 @@ export const useClickerStore = defineStore('clicker', () => {
         amount: amount,
         type: 'income',
         game: 'clicker',
-        details: `Collected ${formatIntAsCurrency(amount)} chips from clicking`
+        details: i18n.global.t('transactions.details.clicker.collect', {
+          amount: formatIntAsCurrency(amount)
+        })
       })
 
       clicks.value = 0
@@ -173,7 +176,9 @@ export const useClickerStore = defineStore('clicker', () => {
         amount: -cost,
         type: 'purchase',
         game: 'clicker',
-        details: `Purchased Auto-Clicker (Level ${autoClickersCount.value})`
+        details: i18n.global.t('transactions.details.clicker.autoClicker', {
+          level: autoClickersCount.value
+        })
       })
 
       achievementStore.updateAchievementProgress('auto_collector', autoClickersCount.value)
@@ -197,7 +202,9 @@ export const useClickerStore = defineStore('clicker', () => {
         amount: -cost,
         type: 'purchase',
         game: 'clicker',
-        details: `Purchased Multiplier (Level ${multiplierLevel.value})`
+        details: i18n.global.t('transactions.details.clicker.multiplier', {
+          level: multiplierLevel.value
+        })
       })
 
       achievementStore.updateAchievementProgress('multiplier_enthusiast', multiplierLevel.value)
@@ -217,7 +224,9 @@ export const useClickerStore = defineStore('clicker', () => {
         amount: -cost,
         type: 'purchase',
         game: 'clicker',
-        details: `Purchased Critical Hit Upgrade (Level ${criticalLevel.value})`
+        details: i18n.global.t('transactions.details.clicker.critical', {
+          level: criticalLevel.value
+        })
       })
     }
   }
@@ -235,7 +244,9 @@ export const useClickerStore = defineStore('clicker', () => {
         amount: -cost,
         type: 'purchase',
         game: 'clicker',
-        details: `Purchased Auto-Clicker Speed (Level ${autoClickerSpeedLevel.value})`
+        details: i18n.global.t('transactions.details.clicker.speed', {
+          level: autoClickerSpeedLevel.value
+        })
       })
 
       // Restart auto-clicker with new speed
@@ -353,7 +364,9 @@ export const useClickerStore = defineStore('clicker', () => {
           amount: amount,
           type: 'income',
           game: 'clicker',
-          details: `Offline earnings collected (${timeAwayText} away)`
+          details: i18n.global.t('transactions.details.clicker.offlineEarnings', {
+            timeAway: timeAwayText
+          })
         })
 
         // Set up modal data with the collected amount

@@ -292,35 +292,3 @@ export const getTransactionCount = async (): Promise<number> => {
     request.onerror = () => reject(request.error);
   });
 };
-
-export const trimTransactionsToLimit = async (limit: number): Promise<boolean> => {
-  const total = await getTransactionCount();
-
-  if (total <= limit) return false;
-
-  const excess = total - limit;
-  const db = await openDb();
-
-  await new Promise<void>((resolve, reject) => {
-    const transaction = db.transaction(STORE_NAME, 'readwrite');
-    const store = transaction.objectStore(STORE_NAME);
-    const index = store.index(TIMESTAMP_INDEX);
-    let deleted = 0;
-    const request = index.openCursor(null, 'next');
-
-    request.onsuccess = () => {
-      const cursor = request.result;
-      if (!cursor || deleted >= excess) {
-        resolve();
-        return;
-      }
-      cursor.delete();
-      deleted += 1;
-      cursor.continue();
-    };
-
-    request.onerror = () => reject(request.error);
-  });
-
-  return true;
-};

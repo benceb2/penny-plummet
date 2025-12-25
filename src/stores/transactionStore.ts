@@ -10,13 +10,11 @@ import {
   getTransactionSummary,
   getTransactionsPage,
   putTransaction,
-  replaceAllTransactions,
-  trimTransactionsToLimit
+  replaceAllTransactions
 } from '@/utils/transactionDb';
 import { STARTING_CHIPS } from '@/stores/userStore';
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
 
-const MAX_TRANSACTIONS = 100000; // Keep only the last 100,000 transactions to prevent storage bloat
 const LATEST_TRANSACTIONS_LIMIT = 6;
 const LEGACY_STORAGE_KEY = calculateStorageKey('transaction-store');
 const LEGACY_SERIALIZER = createGameSerializer();
@@ -91,7 +89,7 @@ export const useTransactionStore = defineStore('transactions', () => {
     try {
       const decoded = LEGACY_SERIALIZER.deserialize(raw) as { transactions?: Transaction[] };
       if (Array.isArray(decoded?.transactions)) {
-        await replaceAllTransactions(decoded.transactions.slice(0, MAX_TRANSACTIONS));
+        await replaceAllTransactions(decoded.transactions);
       }
     } finally {
       localStorage.removeItem(LEGACY_STORAGE_KEY);
@@ -154,7 +152,6 @@ export const useTransactionStore = defineStore('transactions', () => {
     };
 
     await putTransaction(next);
-    const trimmed = await trimTransactionsToLimit(MAX_TRANSACTIONS);
 
     latestTransactions.value.unshift(next);
     if (latestTransactions.value.length > latestLimit.value) {
@@ -180,18 +177,13 @@ export const useTransactionStore = defineStore('transactions', () => {
           transactions.value.unshift(next);
         }
       }
-
-      if (trimmed) {
-        await loadTransactionsPage(lastQuery.value);
-      }
     }
   }
 
   async function replaceTransactions(next: Transaction[]) {
     if (!hasIndexedDb) return;
     await ensureDbReady();
-    const trimmed = next.slice(0, MAX_TRANSACTIONS);
-    await replaceAllTransactions(trimmed);
+    await replaceAllTransactions(next);
     await loadLatestTransactions();
     if (lastQuery.value) {
       await loadTransactionsPage(lastQuery.value);

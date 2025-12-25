@@ -12,7 +12,7 @@ const transactionStore = useTransactionStore();
 type GameFilter = Transaction['game'] | 'all';
 type TypeFilter = Transaction['type'] | 'all';
 
-const gameOptions = ['all', 'blackjack', 'roulette', 'clicker'] as const;
+const gameOptions = ['all', 'blackjack', 'roulette', 'clicker', 'general'] as const;
 const typeOptions = ['all', 'win', 'loss', 'push'] as const;
 
 const selectedGame = ref<GameFilter>('all');

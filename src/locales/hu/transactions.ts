@@ -12,7 +12,8 @@ export default {
         "all": "Összes",
         "blackjack": "Blackjack",
         "roulette": "Rulett",
-        "clicker": "Kattintós"
+        "clicker": "Kattintós",
+        "general": "Általános"
       },
       "type": {
         "all": "Összes",
@@ -32,10 +33,15 @@ export default {
       "game": {
         "blackjack": "Blackjack",
         "roulette": "Rulett",
-        "clicker": "Kattintós"
+        "clicker": "Kattintós",
+        "general": "Általános"
       }
     },
     "details": {
+      "general": {
+        "levelUp": "{level}. szint jutalma (+{amount})",
+        "achievementReward": "Eredmény jutalom: {title} (+{amount})"
+      },
       "blackjack": {
         "win": "Nyeremény {amount}, {playerScore} a krupié {dealerScore} ellen",
         "push": "Döntetlen - tét visszatérítve",

@@ -102,15 +102,6 @@ function handleNewGame() {
 
 function handleResultClose() {
   showGameResult.value = false
-
-  // Update chips based on game result
-  const result = gameResult.value
-  if (result.type === 'win') {
-    userStore.updateChips(result.amount)
-  } else if (result.type === 'push') {
-    userStore.updateChips(gameStore.currentBet) // Return the bet
-  }
-  // For losses, chips were already deducted when bet was placed
 }
 
 // Maximum bet amount

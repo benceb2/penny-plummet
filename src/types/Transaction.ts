@@ -3,7 +3,7 @@ export interface Transaction {
   timestamp: number;
   amount: number;
   type: 'win' | 'loss' | 'push' | 'income' | 'purchase';
-  game: 'blackjack' | 'roulette' | 'clicker';
+  game: 'blackjack' | 'roulette' | 'clicker' | 'general';
   details?: string;
   detailsKey?: string;
   detailsParams?: Record<string, string | number>;

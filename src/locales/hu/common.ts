@@ -45,6 +45,21 @@ export default {
     "prompt": "Kérjük, add meg a felhasználóneved:",
     "startPlaying": "Kezdés"
   },
+  "usernameSettings": {
+    "title": "Felhasználónév",
+    "placeholder": "Add meg a felhasználóneved",
+    "charactersCount": "{current}/{max} karakter",
+    "save": "Mentés",
+    "saving": "Mentés...",
+    "updateSuccess": "Felhasználónév frissítve!",
+    "updateFailed": "Nem sikerült frissíteni a felhasználónevet",
+    "validation": {
+      "required": "A felhasználónév kötelező",
+      "minLength": "A felhasználónév legalább {min} karakter",
+      "maxLength": "A felhasználónév legfeljebb {max} karakter",
+      "invalidCharacters": "Csak betűk, számok, szóköz, kötőjel és aláhúzás engedélyezett"
+    }
+  },
   "offlineEarningsModal": {
     "title": "Üdv újra!",
     "intro": "Amíg távol voltál ({time}):",

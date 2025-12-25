@@ -43,6 +43,21 @@ export default {
     "prompt": "Please enter your username:",
     "startPlaying": "Start Playing"
   },
+  "usernameSettings": {
+    "title": "Username",
+    "placeholder": "Enter a username",
+    "charactersCount": "{current}/{max} characters",
+    "save": "Save",
+    "saving": "Saving...",
+    "updateSuccess": "Username updated!",
+    "updateFailed": "Failed to update username",
+    "validation": {
+      "required": "Username is required",
+      "minLength": "Username must be at least {min} characters",
+      "maxLength": "Username must be at most {max} characters",
+      "invalidCharacters": "Only letters, numbers, spaces, hyphens, and underscores are allowed"
+    }
+  },
   "offlineEarningsModal": {
     "title": "Welcome Back!",
     "intro": "While you were away for {time}:",

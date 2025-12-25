@@ -41,9 +41,12 @@ export default {
     },
     "balanceAudit": {
       "title": "Egyenleg Audit",
-      "description": "Egyenleg újraszámítása a tranzakciók alapján (feltételezett kezdő egyenleg: {amount}).",
+      "description": "Egyenleg újraszámítása a tranzakciók alapján (tartalmazza a kezdő egyenleg tranzakciót).",
       "run": "Egyenleg Audit Futtatása",
       "running": "Audit fut...",
+      "recalculate": "Egyenleg Újraszámítása",
+      "recalculating": "Újraszámítás...",
+      "recalculateSuccess": "Az egyenleg frissítve a tranzakciók alapján.",
       "match": "Az egyenleg egyezik a tranzakciókkal.",
       "mismatch": "Az egyenleg nem egyezik a tranzakciókkal.",
       "expected": "Várt Egyenleg",

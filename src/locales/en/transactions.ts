@@ -39,6 +39,7 @@ export default {
     },
     "details": {
       "general": {
+        "openingBalance": "Opening balance (+{amount})",
         "levelUp": "Level {level} reward (+{amount})",
         "achievementReward": "Achievement reward: {title} (+{amount})"
       },

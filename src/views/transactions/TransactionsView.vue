@@ -38,7 +38,7 @@ const loadPage = async () => {
   });
 };
 
-watch([selectedGame, selectedType, pageSize, currentPage], async ([game, type, size, page], [prevGame, prevType, prevSize, prevPage]) => {
+watch([selectedGame, selectedType, pageSize, currentPage], async ([game, type, size, page], [prevGame, prevType, prevSize]) => {
   const filtersChanged = game !== prevGame || type !== prevType || size !== prevSize;
   if (filtersChanged && page !== 1) {
     currentPage.value = 1;

@@ -41,9 +41,12 @@ export default {
     },
     "balanceAudit": {
       "title": "Balance Audit",
-      "description": "Recalculate balance from your transaction history (assumes a starting balance of {amount}).",
+      "description": "Recalculate balance from your transaction history (includes the opening balance transaction).",
       "run": "Run Balance Audit",
       "running": "Auditing...",
+      "recalculate": "Recalculate Balance",
+      "recalculating": "Recalculating...",
+      "recalculateSuccess": "Balance updated from transaction history.",
       "match": "Balance matches transaction history.",
       "mismatch": "Balance does not match transaction history.",
       "expected": "Expected Balance",

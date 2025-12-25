@@ -39,6 +39,7 @@ export default {
     },
     "details": {
       "general": {
+        "openingBalance": "Kezdő egyenleg (+{amount})",
         "levelUp": "{level}. szint jutalma (+{amount})",
         "achievementReward": "Eredmény jutalom: {title} (+{amount})"
       },

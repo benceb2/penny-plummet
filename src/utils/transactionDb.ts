@@ -280,10 +280,10 @@ export const clearTransactionsDb = async (): Promise<void> => {
   await withStore('readwrite', store => store.clear());
 };
 
-export const trimTransactionsToLimit = async (limit: number): Promise<boolean> => {
+export const getTransactionCount = async (): Promise<number> => {
   const db = await openDb();
 
-  const total = await new Promise<number>((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const transaction = db.transaction(STORE_NAME, 'readonly');
     const store = transaction.objectStore(STORE_NAME);
     const request = store.count();
@@ -291,6 +291,10 @@ export const trimTransactionsToLimit = async (limit: number): Promise<boolean> =
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error);
   });
+};
+
+export const trimTransactionsToLimit = async (limit: number): Promise<boolean> => {
+  const total = await getTransactionCount();
 
   if (total <= limit) return false;
 

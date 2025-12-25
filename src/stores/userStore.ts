@@ -7,11 +7,13 @@ import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
 import { useAchievementStore } from './achievementStore';
 import { useTransactionStore } from './transactionStore';
 
+export const STARTING_CHIPS = 50;
+
 export const useUserStore = defineStore('user', () => {
   const achievementStore = useAchievementStore()
 
   const consented = ref(false)
-  const chips = ref(50)
+  const chips = ref(STARTING_CHIPS)
   const formattedChips = computed(() => formatIntAsCurrency(chips.value))
   const username = ref<string | null>(null)
 

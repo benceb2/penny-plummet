@@ -6,12 +6,15 @@ import {
   clearTransactionsDb,
   getAllTransactions,
   getLatestTransactions,
+  getTransactionCount,
   getTransactionSummary,
   getTransactionsPage,
   putTransaction,
   replaceAllTransactions,
   trimTransactionsToLimit
 } from '@/utils/transactionDb';
+import { STARTING_CHIPS } from '@/stores/userStore';
+import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
 
 const MAX_TRANSACTIONS = 100000; // Keep only the last 100,000 transactions to prevent storage bloat
 const LATEST_TRANSACTIONS_LIMIT = 6;
@@ -56,9 +59,30 @@ export const useTransactionStore = defineStore('transactions', () => {
   });
   const isListLoading = ref(true);
   const listError = ref<string | null>(null);
+  const hasIndexedDb = typeof indexedDB !== 'undefined';
   let dbReadyPromise: Promise<void> | null = null;
   const latestLimit = ref(LATEST_TRANSACTIONS_LIMIT);
   const lastQuery = ref<TransactionQuery | null>(null);
+
+  const ensureOpeningBalance = async () => {
+    if (!hasIndexedDb) return;
+    const count = await getTransactionCount();
+    if (count > 0) return;
+
+    const opening: Transaction = {
+      id: crypto.randomUUID(),
+      timestamp: Date.now(),
+      amount: STARTING_CHIPS,
+      type: 'income',
+      game: 'general',
+      detailsKey: 'transactions.details.general.openingBalance',
+      detailsParams: {
+        amount: formatIntAsCurrency(STARTING_CHIPS)
+      }
+    };
+
+    await putTransaction(opening);
+  };
 
   const migrateLegacyStorage = async () => {
     const raw = localStorage.getItem(LEGACY_STORAGE_KEY);
@@ -75,19 +99,25 @@ export const useTransactionStore = defineStore('transactions', () => {
   };
 
   const ensureDbReady = async () => {
+    if (!hasIndexedDb) return;
     if (!dbReadyPromise) {
-      dbReadyPromise = migrateLegacyStorage();
+      dbReadyPromise = (async () => {
+        await migrateLegacyStorage();
+        await ensureOpeningBalance();
+      })();
     }
     await dbReadyPromise;
   };
 
   const loadLatestTransactions = async (limit = latestLimit.value) => {
+    if (!hasIndexedDb) return;
     await ensureDbReady();
     latestLimit.value = limit;
     latestTransactions.value = await getLatestTransactions(limit);
   };
 
   const loadTransactionsPage = async (query: TransactionQuery) => {
+    if (!hasIndexedDb) return;
     await ensureDbReady();
     isListLoading.value = true;
     listError.value = null;
@@ -115,6 +145,7 @@ export const useTransactionStore = defineStore('transactions', () => {
   void loadLatestTransactions();
 
   async function addTransaction(transaction: Omit<Transaction, 'id' | 'timestamp'>) {
+    if (!hasIndexedDb) return;
     await ensureDbReady();
     const next = {
       ...transaction,
@@ -157,6 +188,7 @@ export const useTransactionStore = defineStore('transactions', () => {
   }
 
   async function replaceTransactions(next: Transaction[]) {
+    if (!hasIndexedDb) return;
     await ensureDbReady();
     const trimmed = next.slice(0, MAX_TRANSACTIONS);
     await replaceAllTransactions(trimmed);
@@ -177,15 +209,26 @@ export const useTransactionStore = defineStore('transactions', () => {
       totalPushes: 0,
       netAmount: 0
     };
+    if (!hasIndexedDb) return;
     await clearTransactionsDb();
+    await ensureOpeningBalance();
   }
 
   const getAllSavedTransactions = async () => {
+    if (!hasIndexedDb) return [];
     await ensureDbReady();
     return getAllTransactions();
   };
 
   const auditBalance = async (baseBalance: number, actualBalance: number): Promise<BalanceAudit> => {
+    if (!hasIndexedDb) {
+      return {
+        expectedBalance: baseBalance,
+        actualBalance,
+        delta: actualBalance - baseBalance,
+        transactionCount: 0
+      };
+    }
     await ensureDbReady();
     const summary = await getTransactionSummary({ game: 'all', type: 'all' });
     const expectedBalance = baseBalance + summary.netAmount;

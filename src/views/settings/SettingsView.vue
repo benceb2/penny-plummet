@@ -35,6 +35,9 @@ const pendingImportData = ref<string | null>(null);
 
 const exportSave = async () => {
   try {
+    if (transactionsStore.isLoading) {
+      await transactionsStore.hydrateFromDb();
+    }
     const saveData = gameSaveUtil.getCurrentGameState();
     const serialized = await gameSaveUtil.exportSave(saveData);
     const blob = await gameSaveUtil.createDownloadBlob(serialized);
@@ -90,7 +93,7 @@ const confirmImport = async () => {
     achievementStore.$patch(saveData.achievements);
     blackjackStore.$patch(saveData.blackjack);
     clickerStore.$patch(saveData.clicker);
-    transactionsStore.$patch(saveData.transactions);
+    await transactionsStore.replaceTransactions(saveData.transactions?.transactions ?? []);
     rouletteStore.$patch(saveData.roulette);
 
     showSuccess();
@@ -121,9 +124,10 @@ const deleteSave = () => {
   showDeleteConfirm.value = true;
 };
 
-const confirmDelete = () => {
+const confirmDelete = async () => {
   clickerStore.reset();
   clickerStore.stopAutoClicker();
+  await transactionsStore.clearTransactions();
   localStorage.clear();
   window.location.reload();
 };

@@ -299,6 +299,7 @@ export const trimTransactionsToLimit = async (limit: number): Promise<boolean> =
   if (total <= limit) return false;
 
   const excess = total - limit;
+  const db = await openDb();
 
   await new Promise<void>((resolve, reject) => {
     const transaction = db.transaction(STORE_NAME, 'readwrite');

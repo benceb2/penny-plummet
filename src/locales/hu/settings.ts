@@ -39,6 +39,19 @@ export default {
         "confirm": "Törlés"
       }
     },
+    "balanceAudit": {
+      "title": "Egyenleg Audit",
+      "description": "Egyenleg újraszámítása a tranzakciók alapján (feltételezett kezdő egyenleg: {amount}).",
+      "run": "Egyenleg Audit Futtatása",
+      "running": "Audit fut...",
+      "match": "Az egyenleg egyezik a tranzakciókkal.",
+      "mismatch": "Az egyenleg nem egyezik a tranzakciókkal.",
+      "expected": "Várt Egyenleg",
+      "actual": "Tényleges Egyenleg",
+      "delta": "Eltérés",
+      "transactionCount": "Tranzakciók",
+      "error": "Nem sikerült az egyenleg auditja"
+    },
     "messages": {
       "operationSuccess": "Művelet sikeresen befejezve!",
       "genericError": "Hiba történt a művelet során"

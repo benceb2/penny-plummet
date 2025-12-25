@@ -36,7 +36,7 @@ type TransactionQuery = TransactionFilters & {
   pageSize: number;
 };
 
-type BalanceAudit = {
+export type BalanceAudit = {
   expectedBalance: number;
   actualBalance: number;
   delta: number;
@@ -95,9 +95,10 @@ export const useTransactionStore = defineStore('transactions', () => {
 
     try {
       const offset = Math.max(0, (query.page - 1) * query.pageSize);
+      const filters = { game: query.game, type: query.type };
       const [pageItems, summary] = await Promise.all([
-        getTransactionsPage(query, offset, query.pageSize),
-        getTransactionSummary(query)
+        getTransactionsPage(filters, offset, query.pageSize),
+        getTransactionSummary(filters)
       ]);
 
       transactions.value = pageItems;
@@ -130,7 +131,7 @@ export const useTransactionStore = defineStore('transactions', () => {
     }
 
     if (lastQuery.value) {
-      const { game, type, page, pageSize } = lastQuery.value;
+      const { game, type, page } = lastQuery.value;
       const matchesGame = game === 'all' || game === next.game;
       const matchesType = type === 'all' || type === next.type;
       if (matchesGame && matchesType) {
@@ -146,9 +147,6 @@ export const useTransactionStore = defineStore('transactions', () => {
 
         if (page === 1) {
           transactions.value.unshift(next);
-          if (transactions.value.length > pageSize) {
-            transactions.value = transactions.value.slice(0, pageSize);
-          }
         }
       }
 

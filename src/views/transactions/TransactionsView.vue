@@ -2,19 +2,28 @@
 import { ref, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useTransactionStore } from '@/stores/transactionStore';
+import type { Transaction } from '@/types/Transaction';
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
 import BaseLayout from '@/components/layout/BaseLayout.vue';
 import BasePagination from '@/components/layout/BasePagination.vue';
 import TransactionItem from '@/components/TransactionItem.vue';
 const transactionStore = useTransactionStore();
-const selectedGame = ref('all');
-const selectedType = ref('all');
+
+type GameFilter = Transaction['game'] | 'all';
+type TypeFilter = Transaction['type'] | 'all';
+
+const gameOptions = ['all', 'blackjack', 'roulette', 'clicker'] as const;
+const typeOptions = ['all', 'win', 'loss', 'push'] as const;
+
+const selectedGame = ref<GameFilter>('all');
+const selectedType = ref<TypeFilter>('all');
 const pageSize = ref(10);
 const currentPage = ref(1);
 const { t } = useI18n();
 
 const paginatedTransactions = computed(() => transactionStore.transactions);
 const stats = computed(() => transactionStore.stats);
+const isInitialLoading = computed(() => transactionStore.isListLoading && paginatedTransactions.value.length === 0);
 const totalPages = computed(() => {
   const total = transactionStore.totalCount;
   return total === 0 ? 1 : Math.ceil(total / pageSize.value);
@@ -104,7 +113,7 @@ const goToPage = (page: number) => {
           <div class="col-12 col-md-auto">
             <div class="btn-group">
               <button
-                v-for="game in ['all', 'blackjack', 'roulette', 'clicker']"
+                v-for="game in gameOptions"
                 :key="game"
                 class="btn"
                 :class="selectedGame === game ? 'btn-primary' : 'btn-outline-primary'"
@@ -116,7 +125,7 @@ const goToPage = (page: number) => {
           <div class="col-12 col-md-auto ms-md-3">
             <div class="btn-group">
               <button
-                v-for="type in ['all', 'win', 'loss', 'push']"
+                v-for="type in typeOptions"
                 :key="type"
                 class="btn"
                 :class="selectedType === type ? 'btn-primary' : 'btn-outline-primary'"
@@ -130,7 +139,7 @@ const goToPage = (page: number) => {
         <!-- Transaction List -->
         <div class="transaction-list">
           <div
-            v-if="transactionStore.isListLoading"
+            v-if="isInitialLoading"
             class="d-flex flex-column align-items-center py-4 text-muted">
             <div class="spinner-border mb-2" role="status" aria-hidden="true"></div>
             <span>{{ t('transactions.loading') }}</span>
@@ -146,13 +155,6 @@ const goToPage = (page: number) => {
               {{ t('transactions.empty') }}
             </div>
 
-            <!-- Pagination -->
-            <BasePagination
-              v-if="totalPages > 1"
-              :current-page="currentPage"
-              :total-pages="totalPages"
-              @page-change="goToPage" />
-
             <!-- Page Info -->
             <div class="text-center text-muted mt-2">
               {{ t('transactions.pagination.summary', {
@@ -161,6 +163,13 @@ const goToPage = (page: number) => {
                 total: transactionStore.totalCount
               }) }}
             </div>
+
+            <!-- Pagination -->
+            <BasePagination
+              v-if="totalPages > 1"
+              :current-page="currentPage"
+              :total-pages="totalPages"
+              @page-change="goToPage" />
           </template>
         </div>
       </div>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { SavePreview } from '@/types/SavePreview';
 import UsernameSettings from '@/views/settings/UsernameSettings.vue';
@@ -9,7 +9,7 @@ import { useAchievementStore } from '@/stores/achievementStore';
 import { useBlackjackStore } from '@/stores/blackjackStore';
 import { useClickerStore } from '@/stores/clickerStore';
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
-import { useTransactionStore } from '@/stores/transactionStore';
+import { useTransactionStore, type BalanceAudit } from '@/stores/transactionStore';
 import { useRouletteStore } from '@/stores/rouletteStore';
 import gameSaveUtil from '@/utils/gameSaveUtil';
 
@@ -32,6 +32,15 @@ const savePreview = ref<SavePreview | null>(null);
 const showImportConfirm = ref(false);
 const showDeleteConfirm = ref(false);
 const pendingImportData = ref<string | null>(null);
+const auditResult = ref<BalanceAudit | null>(null);
+const auditLoading = ref(false);
+const auditError = ref('');
+const STARTING_CHIPS = 50;
+
+const auditStatus = computed(() => {
+  if (!auditResult.value) return null;
+  return auditResult.value.delta === 0 ? 'match' : 'mismatch';
+});
 
 const exportSave = async () => {
   try {
@@ -131,6 +140,19 @@ const confirmDelete = async () => {
 
 const cancelDelete = () => {
   showDeleteConfirm.value = false;
+};
+
+const runAudit = async () => {
+  auditLoading.value = true;
+  auditError.value = '';
+
+  try {
+    auditResult.value = await transactionsStore.auditBalance(STARTING_CHIPS, userStore.chips);
+  } catch (error) {
+    auditError.value = error instanceof Error ? error.message : t('settings.balanceAudit.error');
+  } finally {
+    auditLoading.value = false;
+  }
 };
 </script>
 
@@ -297,6 +319,58 @@ const cancelDelete = () => {
         <div v-if="importSuccess" class="alert alert-success mt-4" role="alert">
           <i class="bi bi-check-circle-fill me-2"></i>
           {{ t('settings.messages.operationSuccess') }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Balance Audit -->
+    <div class="card mt-4">
+      <div class="card-body">
+        <h5 class="card-title d-flex align-items-center mb-3">
+          <i class="bi bi-shield-check me-2"></i>
+          {{ t('settings.balanceAudit.title') }}
+        </h5>
+        <p class="text-muted small mb-3">
+          {{ t('settings.balanceAudit.description', { amount: formatIntAsCurrency(STARTING_CHIPS) }) }}
+        </p>
+        <button @click="runAudit" class="btn btn-outline-primary" :disabled="auditLoading">
+          <i class="bi bi-search me-2"></i>
+          {{ auditLoading ? t('settings.balanceAudit.running') : t('settings.balanceAudit.run') }}
+        </button>
+
+        <div v-if="auditResult" class="mt-3">
+          <div
+            class="alert"
+            :class="auditStatus === 'match' ? 'alert-success' : 'alert-warning'"
+            role="alert">
+            {{ auditStatus === 'match'
+              ? t('settings.balanceAudit.match')
+              : t('settings.balanceAudit.mismatch') }}
+          </div>
+          <div class="row g-3">
+            <div class="col-md-3">
+              <div class="text-muted small">{{ t('settings.balanceAudit.expected') }}</div>
+              <div class="fw-bold">{{ formatIntAsCurrency(auditResult.expectedBalance) }}</div>
+            </div>
+            <div class="col-md-3">
+              <div class="text-muted small">{{ t('settings.balanceAudit.actual') }}</div>
+              <div class="fw-bold">{{ formatIntAsCurrency(auditResult.actualBalance) }}</div>
+            </div>
+            <div class="col-md-3">
+              <div class="text-muted small">{{ t('settings.balanceAudit.delta') }}</div>
+              <div class="fw-bold">
+                {{ auditResult.delta > 0 ? '+' : '' }}{{ formatIntAsCurrency(auditResult.delta) }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="text-muted small">{{ t('settings.balanceAudit.transactionCount') }}</div>
+              <div class="fw-bold">{{ auditResult.transactionCount }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="auditError" class="text-danger small mt-2">
+          {{ auditError }}
         </div>
       </div>
     </div>

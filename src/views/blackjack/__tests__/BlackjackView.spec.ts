@@ -56,12 +56,13 @@ describe('BlackjackView', () => {
           BaseLayout: { template: '<div><slot /></div>' },
           BetAmountSelector: true,
           PlayingCard: true,
-          GameResult: { template: '<div></div>', emits: ['close'] }
+          GameResult: { name: 'GameResult', template: '<div></div>', emits: ['close'] }
         }
       }
     });
 
-    wrapper.findComponent({ name: 'GameResult' }).vm.$emit('close');
+    const gameResult = wrapper.findComponent({ name: 'GameResult' });
+    gameResult.vm.$emit('close');
 
     expect(updateChipsMock).not.toHaveBeenCalled();
   });

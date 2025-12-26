@@ -41,6 +41,12 @@ const gameResult = computed(() => {
     amount = gameStore.currentBet * 2 // Return bet + winnings
     message = t('blackjack.gameStatus.dealerBusts')
     details = t('blackjack.result.dealerBusted')
+  } else if (gameStore.isBlackjack && gameStore.playerScore === 21 && gameStore.dealerScore !== 21) {
+    // Natural blackjack pays 3:2
+    resultType = 'win'
+    amount = gameStore.currentBet * 2.5
+    message = t('blackjack.gameStatus.youWin')
+    details = `${gameStore.playerScore} vs ${gameStore.dealerScore}`
   } else if (gameStore.playerScore > gameStore.dealerScore) {
     // Player wins
     resultType = 'win'
@@ -165,6 +171,35 @@ const maxBetAmount = computed(() => userStore.chips)
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rules Summary -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header bg-light">
+            <h5 class="mb-0">
+              <i class="bi bi-info-circle me-2"></i>{{ t('blackjack.rules.title') }}
+            </h5>
+          </div>
+          <div class="card-body">
+            <p class="text-muted mb-3">{{ t('blackjack.rules.summary') }}</p>
+            <ul class="mb-3">
+              <li>{{ t('blackjack.rules.dealerStands') }}</li>
+              <li>{{ t('blackjack.rules.blackjackPays') }}</li>
+              <li>{{ t('blackjack.rules.dealerChecks') }}</li>
+              <li>{{ t('blackjack.rules.tiesPush') }}</li>
+            </ul>
+            <a
+              class="link-primary"
+              href="https://wizardofodds.com/games/blackjack/basics/"
+              target="_blank"
+              rel="noopener noreferrer">
+              {{ t('blackjack.rules.learnMore') }}
+            </a>
           </div>
         </div>
       </div>

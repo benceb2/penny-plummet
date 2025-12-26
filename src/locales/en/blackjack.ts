@@ -36,6 +36,15 @@ export default {
       "stand": "Stand",
       "newGame": "New Game"
     },
+    "rules": {
+      "title": "Rules & Payouts",
+      "summary": "This table uses common casino rules.",
+      "dealerStands": "Dealer stands on all 17 (including soft 17).",
+      "blackjackPays": "Natural blackjack pays 3:2.",
+      "dealerChecks": "Blackjacks are resolved immediately after the deal.",
+      "tiesPush": "Ties are a push and your bet is returned.",
+      "learnMore": "Learn more about blackjack rules"
+    },
     "result": {
       "playerBusted": "You went over 21!",
       "dealerBusted": "Dealer went over 21!"

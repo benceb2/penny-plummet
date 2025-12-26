@@ -18,7 +18,7 @@ const { t } = useI18n()
     <div class="card-body p-3">
 
       <!-- Auto-Clicker -->
-      <div class="bg-light border rounded-3 p-3 mb-3 upgrade-item">
+      <div class="bg-white border rounded-3 p-3 mb-3 upgrade-item">
         <div class="mb-3">
           <div class="fw-semibold mb-1">
             <i class="bi bi-lightning text-primary me-2" aria-hidden="true"></i>{{ t('clicker.upgrades.autoClickers.title') }}
@@ -27,13 +27,13 @@ const { t } = useI18n()
             <small class="text-muted">
               {{ t('clicker.upgrades.autoClickers.owned') }}: {{ clickerStore.autoClickersCount }}
             </small>
-            <small class="text-success">
+            <small class="text-success-emphasis">
               +{{ clickerStore.formattedClickValue }}{{ t('clicker.upgrades.autoClickers.perSecond') }}
             </small>
           </div>
         </div>
         <button
-          class="btn btn-outline-primary w-100 rounded-2 fw-medium upgrade-btn"
+          class="btn btn-primary w-100 rounded-2 fw-medium upgrade-btn"
           @click="clickerStore.buyAutoClicker(userStore)"
           :disabled="userStore.chips < clickerStore.autoClickerCost">
           {{ t('clicker.upgrades.actions.buy', { cost: clickerStore.formattedAutoClickerCost }) }}
@@ -41,7 +41,7 @@ const { t } = useI18n()
       </div>
 
       <!-- Multiplier -->
-      <div class="bg-light border rounded-3 p-3 mb-3 upgrade-item">
+      <div class="bg-white border rounded-3 p-3 mb-3 upgrade-item">
         <div class="mb-3">
           <div class="fw-semibold mb-1">
             <i class="bi bi-stars text-danger me-2" aria-hidden="true"></i>{{ t('clicker.upgrades.multiplier.title') }}
@@ -53,7 +53,7 @@ const { t } = useI18n()
           </div>
         </div>
         <button
-          class="btn btn-outline-danger w-100 rounded-2 fw-medium upgrade-btn"
+          class="btn btn-danger w-100 rounded-2 fw-medium upgrade-btn"
           @click="clickerStore.buyMultiplier(userStore)"
           :disabled="userStore.chips < clickerStore.multiplierCost">
           {{ t('clicker.upgrades.actions.upgrade', { cost: clickerStore.formattedMultiplierCost }) }}
@@ -61,7 +61,7 @@ const { t } = useI18n()
       </div>
 
       <!-- Critical Hit Upgrade -->
-      <div class="bg-light border rounded-3 p-3 mb-3 upgrade-item">
+      <div class="bg-white border rounded-3 p-3 mb-3 upgrade-item">
         <div class="mb-3">
           <div class="fw-semibold mb-1">
             <i class="bi bi-bullseye text-warning me-2" aria-hidden="true"></i>{{ t('clicker.upgrades.critical.title') }}
@@ -70,11 +70,11 @@ const { t } = useI18n()
             <small class="text-muted">
               {{ t('clicker.upgrades.critical.chance', { percent: (clickerStore.criticalChance * 100).toFixed(1) }) }}
             </small>
-            <small class="text-warning">{{ t('clicker.upgrades.critical.damage') }}</small>
+            <small class="text-warning-emphasis">{{ t('clicker.upgrades.critical.damage') }}</small>
           </div>
         </div>
         <button
-          class="btn btn-outline-warning w-100 rounded-2 fw-medium upgrade-btn"
+          class="btn btn-warning w-100 rounded-2 fw-medium upgrade-btn"
           @click="clickerStore.buyCriticalUpgrade(userStore)"
           :disabled="userStore.chips < clickerStore.criticalCost">
           {{ t('clicker.upgrades.actions.upgrade', { cost: clickerStore.formattedCriticalCost }) }}
@@ -82,7 +82,7 @@ const { t } = useI18n()
       </div>
 
       <!-- Auto-Clicker Speed -->
-      <div class="bg-light border rounded-3 p-3 mb-3 upgrade-item" v-if="clickerStore.autoClickersCount > 0">
+      <div class="bg-white border rounded-3 p-3 mb-3 upgrade-item" v-if="clickerStore.autoClickersCount > 0">
         <div class="mb-3">
           <div class="fw-semibold mb-1">
             <i class="bi bi-speedometer2 text-info me-2" aria-hidden="true"></i>{{ t('clicker.upgrades.speed.title') }}
@@ -94,7 +94,7 @@ const { t } = useI18n()
           </div>
         </div>
         <button
-          class="btn btn-outline-info w-100 rounded-2 fw-medium upgrade-btn"
+          class="btn btn-info w-100 rounded-2 fw-medium upgrade-btn"
           @click="clickerStore.buyAutoClickerSpeed(userStore)"
           :disabled="userStore.chips < clickerStore.autoClickerSpeedCost">
           {{ t('clicker.upgrades.actions.upgrade', { cost: clickerStore.formattedAutoClickerSpeedCost }) }}

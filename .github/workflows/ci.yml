@@ -18,6 +18,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Type check
+        run: npm run type-check
+
       - name: Unit tests
         run: npm test
 
@@ -33,6 +36,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Type check
+        run: npm run type-check
 
       - name: Cache Playwright browsers
         uses: actions/cache@v4

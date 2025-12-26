@@ -12,7 +12,8 @@ export default {
         "all": "All",
         "blackjack": "Blackjack",
         "roulette": "Roulette",
-        "clicker": "Clicker"
+        "clicker": "Clicker",
+        "general": "General"
       },
       "type": {
         "all": "All",
@@ -32,10 +33,16 @@ export default {
       "game": {
         "blackjack": "Blackjack",
         "roulette": "Roulette",
-        "clicker": "Clicker"
+        "clicker": "Clicker",
+        "general": "General"
       }
     },
     "details": {
+      "general": {
+        "openingBalance": "Opening balance (+{amount})",
+        "levelUp": "Level {level} reward (+{amount})",
+        "achievementReward": "Achievement reward: {title} (+{amount})"
+      },
       "blackjack": {
         "win": "Won {amount} with {playerScore} versus the dealer's {dealerScore}",
         "push": "Push - bet returned",
@@ -55,6 +62,7 @@ export default {
         "loss": "Lost {amount} on number {number}"
       }
     },
+    "loading": "Loading transactions...",
     "empty": "No transactions to display",
     "pagination": {
       "summary": "Showing {from} to {to} of {total} transactions"

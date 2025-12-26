@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { useUserStore } from '@/stores/userStore'
 import { useClickerStore } from '@/stores/clickerStore'
 import { computed, ref } from 'vue'
 
-const userStore = useUserStore()
 const clickerStore = useClickerStore()
 const { t } = useI18n()
 
@@ -42,7 +40,7 @@ const handleClickWithAnimation = () => {
 }
 
 const handleCollectWithAnimation = () => {
-  clickerStore.collectChips(userStore)
+  clickerStore.collectChips()
 
   // Collect button animation
   collectButtonScale.value = 0.9

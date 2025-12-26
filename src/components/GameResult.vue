@@ -30,7 +30,7 @@ const emit = defineEmits<{
 
 const isVisible = ref(false)
 const isAnimating = ref(false)
-let dismissTimer: number | null = null
+let dismissTimer: ReturnType<typeof setTimeout> | null = null
 
 // Handle showing/hiding of modal with animations
 watch(() => props.show, (newVal) => {

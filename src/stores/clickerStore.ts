@@ -4,7 +4,6 @@ import { ref, computed } from 'vue'
 import { formatIntAsCurrency, formatNumber } from '@/utils/numberFormatUtil'
 import { calculateStorageKey, createGameSerializer } from '@/utils/gameSaveSerializerUtil'
 import { useAchievementStore } from './achievementStore'
-import { useUserStore } from './userStore'
 import type { UserStore } from './userStore'
 import { useTransactionStore } from './transactionStore'
 import * as clickerUtil from '@/utils/clickerUtil'
@@ -142,10 +141,9 @@ export const useClickerStore = defineStore('clicker', () => {
     }, 2000)
   }
 
-  function collectChips(userStore: UserStore) {
+  function collectChips() {
     if (clicks.value >= 10) {
       const amount = clicks.value
-      userStore.updateChips(amount)
       const calculatedXP = Math.floor(amount * 0.2)
       achievementStore.addXP(calculatedXP)
 
@@ -166,7 +164,6 @@ export const useClickerStore = defineStore('clicker', () => {
   function buyAutoClicker(userStore: UserStore) {
     if (userStore.chips >= autoClickerCost.value) {
       const cost = autoClickerCost.value
-      userStore.updateChips(-cost)
       autoClickersCount.value++
 
       // Calculate new cost using utility
@@ -193,7 +190,6 @@ export const useClickerStore = defineStore('clicker', () => {
   function buyMultiplier(userStore: UserStore) {
     if (userStore.chips >= multiplierCost.value) {
       const cost = multiplierCost.value
-      userStore.updateChips(-cost)
       multiplierLevel.value++
 
       // Calculate new cost using utility
@@ -216,7 +212,6 @@ export const useClickerStore = defineStore('clicker', () => {
   function buyCriticalUpgrade(userStore: UserStore) {
     if (userStore.chips >= criticalCost.value) {
       const cost = criticalCost.value
-      userStore.updateChips(-cost)
       criticalLevel.value++
 
       // Calculate new cost using utility
@@ -237,7 +232,6 @@ export const useClickerStore = defineStore('clicker', () => {
   function buyAutoClickerSpeed(userStore: UserStore) {
     if (userStore.chips >= autoClickerSpeedCost.value && autoClickersCount.value > 0) {
       const cost = autoClickerSpeedCost.value
-      userStore.updateChips(-cost)
       autoClickerSpeedLevel.value++
 
       // Calculate new cost using utility
@@ -335,7 +329,6 @@ export const useClickerStore = defineStore('clicker', () => {
   }
 
   function checkOfflineProgress() {
-    const userStore = useUserStore()
     const result = clickerUtil.calculateOfflineEarnings(
       lastOnlineTimestamp.value,
       autoClickersCount.value,
@@ -351,9 +344,6 @@ export const useClickerStore = defineStore('clicker', () => {
       // Automatically collect the chips if there's enough
       if (clicks.value >= 10) {
         const amount = clicks.value
-
-        // Update user's chip balance
-        userStore.updateChips(amount)
 
         // Calculate and add XP
         const calculatedXP = Math.floor(amount * 0.2)

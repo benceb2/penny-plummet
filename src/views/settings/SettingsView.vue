@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { SavePreview } from '@/types/SavePreview';
 import UsernameSettings from '@/views/settings/UsernameSettings.vue';
@@ -9,7 +9,7 @@ import { useAchievementStore } from '@/stores/achievementStore';
 import { useBlackjackStore } from '@/stores/blackjackStore';
 import { useClickerStore } from '@/stores/clickerStore';
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
-import { useTransactionStore } from '@/stores/transactionStore';
+import { useTransactionStore, type BalanceAudit } from '@/stores/transactionStore';
 import { useRouletteStore } from '@/stores/rouletteStore';
 import gameSaveUtil from '@/utils/gameSaveUtil';
 
@@ -32,10 +32,21 @@ const savePreview = ref<SavePreview | null>(null);
 const showImportConfirm = ref(false);
 const showDeleteConfirm = ref(false);
 const pendingImportData = ref<string | null>(null);
+const auditResult = ref<BalanceAudit | null>(null);
+const auditLoading = ref(false);
+const auditError = ref('');
+const recalcLoading = ref(false);
+const recalcError = ref('');
+const recalcSuccess = ref(false);
+
+const auditStatus = computed(() => {
+  if (!auditResult.value) return null;
+  return auditResult.value.delta === 0 ? 'match' : 'mismatch';
+});
 
 const exportSave = async () => {
   try {
-    const saveData = gameSaveUtil.getCurrentGameState();
+    const saveData = await gameSaveUtil.getCurrentGameState();
     const serialized = await gameSaveUtil.exportSave(saveData);
     const blob = await gameSaveUtil.createDownloadBlob(serialized);
 
@@ -90,7 +101,7 @@ const confirmImport = async () => {
     achievementStore.$patch(saveData.achievements);
     blackjackStore.$patch(saveData.blackjack);
     clickerStore.$patch(saveData.clicker);
-    transactionsStore.$patch(saveData.transactions);
+    await transactionsStore.replaceTransactions(saveData.transactions?.transactions ?? []);
     rouletteStore.$patch(saveData.roulette);
 
     showSuccess();
@@ -121,15 +132,52 @@ const deleteSave = () => {
   showDeleteConfirm.value = true;
 };
 
-const confirmDelete = () => {
+const confirmDelete = async () => {
   clickerStore.reset();
   clickerStore.stopAutoClicker();
+  await transactionsStore.clearTransactions();
   localStorage.clear();
   window.location.reload();
 };
 
 const cancelDelete = () => {
   showDeleteConfirm.value = false;
+};
+
+const runAudit = async () => {
+  auditLoading.value = true;
+  auditError.value = '';
+
+  try {
+    auditResult.value = await transactionsStore.auditBalance(0, userStore.chips);
+  } catch (error) {
+    auditError.value = error instanceof Error ? error.message : t('settings.balanceAudit.error');
+  } finally {
+    auditLoading.value = false;
+  }
+};
+
+const recalcBalance = async () => {
+  recalcLoading.value = true;
+  recalcError.value = '';
+  recalcSuccess.value = false;
+
+  try {
+    if (!auditResult.value) {
+      await runAudit();
+    }
+    if (!auditResult.value) return;
+
+    userStore.chips = auditResult.value.expectedBalance;
+    recalcSuccess.value = true;
+    setTimeout(() => {
+      recalcSuccess.value = false;
+    }, 3000);
+  } catch (error) {
+    recalcError.value = error instanceof Error ? error.message : t('settings.balanceAudit.error');
+  } finally {
+    recalcLoading.value = false;
+  }
 };
 </script>
 
@@ -296,6 +344,74 @@ const cancelDelete = () => {
         <div v-if="importSuccess" class="alert alert-success mt-4" role="alert">
           <i class="bi bi-check-circle-fill me-2"></i>
           {{ t('settings.messages.operationSuccess') }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Balance Audit -->
+    <div class="card mt-4">
+      <div class="card-body">
+        <h5 class="card-title d-flex align-items-center mb-3">
+          <i class="bi bi-shield-check me-2"></i>
+          {{ t('settings.balanceAudit.title') }}
+        </h5>
+        <p class="text-muted small mb-3">
+          {{ t('settings.balanceAudit.description') }}
+        </p>
+        <div class="d-flex flex-wrap align-items-center gap-2">
+          <button @click="runAudit" class="btn btn-outline-primary" :disabled="auditLoading">
+            <i class="bi bi-search me-2"></i>
+            {{ auditLoading ? t('settings.balanceAudit.running') : t('settings.balanceAudit.run') }}
+          </button>
+          <button
+            v-if="auditResult"
+            @click="recalcBalance"
+            class="btn btn-sm btn-outline-secondary"
+            :disabled="recalcLoading">
+            <i class="bi bi-arrow-repeat me-2"></i>
+            {{ recalcLoading ? t('settings.balanceAudit.recalculating') : t('settings.balanceAudit.recalculate') }}
+          </button>
+        </div>
+
+        <div v-if="auditResult" class="mt-3">
+          <div
+            class="alert"
+            :class="auditStatus === 'match' ? 'alert-success' : 'alert-warning'"
+            role="alert">
+            {{ auditStatus === 'match'
+              ? t('settings.balanceAudit.match')
+              : t('settings.balanceAudit.mismatch') }}
+          </div>
+          <div class="row g-3">
+            <div class="col-md-3">
+              <div class="text-muted small">{{ t('settings.balanceAudit.expected') }}</div>
+              <div class="fw-bold">{{ formatIntAsCurrency(auditResult.expectedBalance) }}</div>
+            </div>
+            <div class="col-md-3">
+              <div class="text-muted small">{{ t('settings.balanceAudit.actual') }}</div>
+              <div class="fw-bold">{{ formatIntAsCurrency(auditResult.actualBalance) }}</div>
+            </div>
+            <div class="col-md-3">
+              <div class="text-muted small">{{ t('settings.balanceAudit.delta') }}</div>
+              <div class="fw-bold">
+                {{ auditResult.delta > 0 ? '+' : '' }}{{ formatIntAsCurrency(auditResult.delta) }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="text-muted small">{{ t('settings.balanceAudit.transactionCount') }}</div>
+              <div class="fw-bold">{{ auditResult.transactionCount }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="auditError" class="text-danger small mt-2">
+          {{ auditError }}
+        </div>
+        <div v-if="recalcError" class="text-danger small mt-2">
+          {{ recalcError }}
+        </div>
+        <div v-if="recalcSuccess" class="text-success small mt-2">
+          {{ t('settings.balanceAudit.recalculateSuccess') }}
         </div>
       </div>
     </div>

@@ -158,14 +158,6 @@ export const useRouletteStore = defineStore('roulette', () => {
    * Handle the spin result - update chips, log transactions, track achievements
    */
   function handleSpinResult(result: RouletteResult) {
-    // First deduct the bet amount
-    userStore.chips -= result.totalBet
-
-    // Then add any winnings
-    if (result.totalWin > 0) {
-      userStore.chips += result.totalWin
-    }
-
     if (result.totalWin > 0) {
       // Player won something
       sessionStats.value.consecutiveWins++

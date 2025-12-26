@@ -3,11 +3,41 @@ import type { Card } from '@/types/Card'
 defineProps<{
   card: Card
 }>()
+
+const getSuitSymbol = (suit: string): string => {
+  switch (suit) {
+    case 'hearts': return '♥'
+    case 'diamonds': return '♦'
+    case 'clubs': return '♣'
+    case 'spades': return '♠'
+    default: return ''
+  }
+}
+
+const getSuitName = (suit: string): string => {
+  switch (suit) {
+    case 'hearts': return 'hearts'
+    case 'diamonds': return 'diamonds'
+    case 'clubs': return 'clubs'
+    case 'spades': return 'spades'
+    default: return 'unknown suit'
+  }
+}
+
+const getCardLabel = (card: Card): string => {
+  if (!card.faceUp) {
+    return 'Face down card'
+  }
+
+  return `${card.display} of ${getSuitName(card.suit)}`
+}
 </script>
 
 <template>
   <div class="playing-card shadow-sm rounded position-relative bg-white border"
-    :class="{ 'text-danger': card.suit === 'hearts' || card.suit === 'diamonds' }">
+    :class="{ 'text-danger': card.suit === 'hearts' || card.suit === 'diamonds' }"
+    role="img"
+    :aria-label="getCardLabel(card)">
     <div v-if="card.faceUp" class="h-100 p-2">
       <!-- Top left corner -->
       <div class="position-absolute top-0 start-0 p-1 d-flex flex-column align-items-center">
@@ -33,18 +63,6 @@ defineProps<{
     </div>
   </div>
 </template>
-
-<script lang="ts">
-function getSuitSymbol(suit: string): string {
-  switch (suit) {
-    case 'hearts': return '♥'
-    case 'diamonds': return '♦'
-    case 'clubs': return '♣'
-    case 'spades': return '♠'
-    default: return ''
-  }
-}
-</script>
 
 <style scoped>
 /* Only keep styles that can't be handled by Bootstrap */

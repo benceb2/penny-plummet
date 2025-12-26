@@ -1,0 +1,141 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - navigation [ref=e5]:
+      - generic [ref=e6]:
+        - link "Penny Plummet" [ref=e7] [cursor=pointer]:
+          - /url: /
+          - text: Penny Plummet
+        - generic [ref=e8]:
+          - list [ref=e9]:
+            - listitem [ref=e10]:
+              - button " Games" [ref=e11] [cursor=pointer]:
+                - generic [ref=e12]: 
+                - text: Games
+              - text:  
+            - listitem [ref=e13]:
+              - button " Earn" [ref=e14] [cursor=pointer]:
+                - generic [ref=e15]: 
+                - text: Earn
+              - text:  
+            - listitem [ref=e16]:
+              - link " About" [ref=e17] [cursor=pointer]:
+                - /url: /about
+                - generic [ref=e18]: 
+                - text: About
+          - generic [ref=e19]:
+            - generic [ref=e20]:
+              - generic [ref=e21]:
+                - generic [ref=e22]: 
+                - text: $50
+              - generic [ref=e23]:
+                - generic [ref=e24]: 
+                - text: "1"
+            - generic [ref=e26]:
+              - button "en-GB English " [ref=e28] [cursor=pointer]:
+                - img "en-GB" [ref=e29]
+                - generic [ref=e30]: English
+                - generic [ref=e31]: 
+              - generic [ref=e32]:
+                - button " A11yTester " [ref=e33] [cursor=pointer]:
+                  - generic [ref=e34]: 
+                  - generic [ref=e35]: A11yTester
+                  - generic [ref=e36]: 
+                - text:    
+  - main [ref=e37]:
+    - generic [ref=e38]:
+      - heading "Earn Chips" [level=2] [ref=e42]:
+        - generic [ref=e43]: 
+        - text: Earn Chips
+      - generic [ref=e44]:
+        - generic [ref=e45]:
+          - generic [ref=e49]:
+            - generic [ref=e50]: 
+            - generic [ref=e51]:
+              - generic [ref=e52]: $0
+              - text: Available To Collect
+          - generic [ref=e56]:
+            - generic [ref=e57]: 
+            - generic [ref=e58]:
+              - generic [ref=e59]: $0/s
+              - text: Income
+          - generic [ref=e63]:
+            - generic [ref=e64]: 
+            - generic [ref=e65]:
+              - generic [ref=e66]: "0"
+              - text: Manual Lifetime Clicks
+          - generic [ref=e70]:
+            - generic [ref=e71]: 
+            - generic [ref=e72]:
+              - generic [ref=e73]: "0"
+              - text: Passive Earnings
+        - generic [ref=e74]:
+          - generic [ref=e77]:
+            - button "+$1" [ref=e79] [cursor=pointer]:
+              - generic [ref=e80]:
+                - generic [ref=e81]: 
+                - generic [ref=e82]: +$1
+            - generic [ref=e83]:
+              - button "Collect Chips (Min. 10 required)" [disabled]:
+                - generic:
+                  - generic: 
+                  - generic:
+                    - generic: Collect Chips
+                    - text: (Min. 10 required)
+                  - generic:
+                    - generic: ✨
+                    - generic: 💎
+                    - generic: ⭐
+          - generic [ref=e85]:
+            - heading "Upgrades" [level=3] [ref=e87]:
+              - generic [ref=e88]: 
+              - text: Upgrades
+            - generic [ref=e89]:
+              - generic [ref=e90]:
+                - generic [ref=e91]:
+                  - generic [ref=e92]:
+                    - generic [ref=e93]: 
+                    - text: Auto-Clickers
+                  - generic [ref=e94]:
+                    - generic [ref=e95]: "Owned: 0"
+                    - generic [ref=e96]: +$1/sec each
+                - button "Buy $50" [ref=e97] [cursor=pointer]
+              - generic [ref=e98]:
+                - generic [ref=e99]:
+                  - generic [ref=e100]:
+                    - generic [ref=e101]: 
+                    - text: Click Multiplier
+                  - generic [ref=e103]: "Current: 1x"
+                - button "Upgrade $100" [disabled]
+              - generic [ref=e104]:
+                - generic [ref=e105]:
+                  - generic [ref=e106]:
+                    - generic [ref=e107]: 
+                    - text: Critical Hits
+                  - generic [ref=e108]:
+                    - generic [ref=e109]: 10.0% chance
+                    - generic [ref=e110]: 2x damage
+                - button "Upgrade $200" [disabled]
+  - contentinfo [ref=e111]:
+    - generic [ref=e112]:
+      - generic [ref=e113]:
+        - link "" [ref=e114] [cursor=pointer]:
+          - /url: mailto:contact@bence.im
+          - generic [ref=e115]: 
+        - link "" [ref=e116] [cursor=pointer]:
+          - /url: https://www.linkedin.com/in/bence-b-b787751a2/
+          - generic [ref=e117]: 
+        - link "" [ref=e118] [cursor=pointer]:
+          - /url: https://github.com/benceb2
+          - generic [ref=e119]: 
+        - link "" [ref=e120] [cursor=pointer]:
+          - /url: https://bence.im/
+          - generic [ref=e121]: 
+      - generic [ref=e122]:
+        - generic [ref=e123]: Penny Plummet v0.0.6
+        - generic [ref=e124]:
+          - generic [ref=e125]: 
+          - text: 2024 Bence Barkanyi
+```

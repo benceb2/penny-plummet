@@ -1,0 +1,127 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - navigation [ref=e5]:
+      - generic [ref=e6]:
+        - link "Penny Plummet" [ref=e7] [cursor=pointer]:
+          - /url: /
+          - text: Penny Plummet
+        - generic [ref=e8]:
+          - list [ref=e9]:
+            - listitem [ref=e10]:
+              - button " Games" [ref=e11] [cursor=pointer]:
+                - generic [ref=e12]: 
+                - text: Games
+              - text:  
+            - listitem [ref=e13]:
+              - button " Earn" [ref=e14] [cursor=pointer]:
+                - generic [ref=e15]: 
+                - text: Earn
+              - text:  
+            - listitem [ref=e16]:
+              - link " About" [ref=e17] [cursor=pointer]:
+                - /url: /about
+                - generic [ref=e18]: 
+                - text: About
+          - generic [ref=e19]:
+            - generic [ref=e20]:
+              - generic [ref=e21]:
+                - generic [ref=e22]: 
+                - text: $50
+              - generic [ref=e23]:
+                - generic [ref=e24]: 
+                - text: "1"
+            - generic [ref=e26]:
+              - button "en-GB English " [ref=e28] [cursor=pointer]:
+                - img "en-GB" [ref=e29]
+                - generic [ref=e30]: English
+                - generic [ref=e31]: 
+              - generic [ref=e32]:
+                - button " A11yTester " [ref=e33] [cursor=pointer]:
+                  - generic [ref=e34]: 
+                  - generic [ref=e35]: A11yTester
+                  - generic [ref=e36]: 
+                - text:    
+  - main [ref=e37]:
+    - generic [ref=e38]:
+      - heading "Blackjack" [level=2] [ref=e42]:
+        - generic [ref=e43]: 
+        - text: Blackjack
+      - generic [ref=e44]:
+        - heading "Rules & Payouts Show rules" [level=2] [ref=e49]:
+          - button "Rules & Payouts Show rules" [ref=e50] [cursor=pointer]:
+            - generic [ref=e51]:
+              - generic [ref=e52]: 
+              - text: Rules & Payouts
+            - generic [ref=e53]: Show rules
+        - generic [ref=e56]:
+          - heading "Game Controls" [level=5] [ref=e58]:
+            - generic [ref=e59]: 
+            - text: Game Controls
+          - generic [ref=e61]:
+            - generic [ref=e64]:
+              - heading "Place Your Bet" [level=6] [ref=e65]:
+                - generic [ref=e66]: 
+                - text: Place Your Bet
+              - generic [ref=e67]:
+                - generic [ref=e69]:
+                  - spinbutton " Bet Amount" [ref=e70]: "0"
+                  - generic:
+                    - generic: 
+                    - text: Bet Amount
+                - generic [ref=e71]:
+                  - heading " Quick Bet" [level=6] [ref=e73]:
+                    - generic [ref=e74]: 
+                    - text: Quick Bet
+                  - generic [ref=e75]:
+                    - button "$2 4%" [ref=e77] [cursor=pointer]:
+                      - generic [ref=e78]:
+                        - generic [ref=e79]: $2
+                        - generic [ref=e80]: 4%
+                    - button "$5 10%" [ref=e82] [cursor=pointer]:
+                      - generic [ref=e83]:
+                        - generic [ref=e84]: $5
+                        - generic [ref=e85]: 10%
+                    - button "$12 24%" [ref=e87] [cursor=pointer]:
+                      - generic [ref=e88]:
+                        - generic [ref=e89]: $12
+                        - generic [ref=e90]: 24%
+                    - button "$25 50%" [ref=e92] [cursor=pointer]:
+                      - generic [ref=e93]:
+                        - generic [ref=e94]: $25
+                        - generic [ref=e95]: 50%
+                - generic [ref=e97]:
+                  - generic [ref=e98]: 
+                  - strong [ref=e99]: "Selected:"
+                  - text: $0
+            - generic [ref=e102]:
+              - heading "Actions" [level=6] [ref=e103]:
+                - generic [ref=e104]: 
+                - text: Actions
+              - generic [ref=e105]:
+                - button "Deal Cards" [disabled]:
+                  - generic: 
+                  - text: Deal Cards
+  - contentinfo [ref=e106]:
+    - generic [ref=e107]:
+      - generic [ref=e108]:
+        - link "" [ref=e109] [cursor=pointer]:
+          - /url: mailto:contact@bence.im
+          - generic [ref=e110]: 
+        - link "" [ref=e111] [cursor=pointer]:
+          - /url: https://www.linkedin.com/in/bence-b-b787751a2/
+          - generic [ref=e112]: 
+        - link "" [ref=e113] [cursor=pointer]:
+          - /url: https://github.com/benceb2
+          - generic [ref=e114]: 
+        - link "" [ref=e115] [cursor=pointer]:
+          - /url: https://bence.im/
+          - generic [ref=e116]: 
+      - generic [ref=e117]:
+        - generic [ref=e118]: Penny Plummet v0.0.6
+        - generic [ref=e119]:
+          - generic [ref=e120]: 
+          - text: 2024 Bence Barkanyi
+```

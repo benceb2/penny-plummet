@@ -124,7 +124,7 @@ const maxBetAmount = computed(() => userStore.chips)
         class="btn btn-outline-primary"
         type="button"
         @click="showStats = !showStats">
-        <i class="bi" :class="showStats ? 'bi-eye-slash' : 'bi-eye'"></i>
+        <i class="bi" :class="showStats ? 'bi-eye-slash' : 'bi-eye'" aria-hidden="true"></i>
         {{ showStats ? t('blackjack.stats.hideStats') : t('blackjack.stats.viewStats') }}
       </button>
     </template>
@@ -137,7 +137,7 @@ const maxBetAmount = computed(() => userStore.chips)
         <div class="card">
           <div class="card-header bg-light">
             <h5 class="mb-0">
-              <i class="bi bi-graph-up me-2"></i>{{ t('blackjack.stats.title') }}
+              <i class="bi bi-graph-up me-2" aria-hidden="true"></i>{{ t('blackjack.stats.title') }}
             </h5>
           </div>
           <div class="card-body">
@@ -146,7 +146,7 @@ const maxBetAmount = computed(() => userStore.chips)
                 <div class="card text-center h-100">
                   <div class="card-body">
                     <h6 class="text-muted mb-2">
-                      <i class="bi bi-collection me-1"></i>{{ t('blackjack.stats.handsPlayed') }}
+                      <i class="bi bi-collection me-1" aria-hidden="true"></i>{{ t('blackjack.stats.handsPlayed') }}
                     </h6>
                     <span class="h4">{{ userStore.stats.handsPlayed }}</span>
                   </div>
@@ -156,7 +156,7 @@ const maxBetAmount = computed(() => userStore.chips)
                 <div class="card text-center h-100">
                   <div class="card-body">
                     <h6 class="text-muted mb-2">
-                      <i class="bi bi-cash-stack me-1"></i>{{ t('blackjack.stats.totalWinnings') }}
+                      <i class="bi bi-cash-stack me-1" aria-hidden="true"></i>{{ t('blackjack.stats.totalWinnings') }}
                     </h6>
                     <span class="h4"
                       :class="{ 'text-success': userStore.stats.totalWinnings > 0, 'text-danger': userStore.stats.totalWinnings < 0 }">
@@ -169,7 +169,7 @@ const maxBetAmount = computed(() => userStore.chips)
                 <div class="card text-center h-100">
                   <div class="card-body">
                     <h6 class="text-muted mb-2">
-                      <i class="bi bi-trophy me-1"></i>{{ t('blackjack.stats.biggestWin') }}
+                      <i class="bi bi-trophy me-1" aria-hidden="true"></i>{{ t('blackjack.stats.biggestWin') }}
                     </h6>
                     <span class="h4 text-success">
                       {{ formatIntAsCurrency(userStore.stats.biggestWin) }}
@@ -193,7 +193,7 @@ const maxBetAmount = computed(() => userStore.chips)
                 data-bs-target="#blackjackStatsCollapse"
                 aria-expanded="false"
                 aria-controls="blackjackStatsCollapse">
-                <i class="bi bi-graph-up me-2"></i>{{ t('blackjack.stats.title') }}
+                <i class="bi bi-graph-up me-2" aria-hidden="true"></i>{{ t('blackjack.stats.title') }}
               </button>
             </h2>
             <div
@@ -205,13 +205,13 @@ const maxBetAmount = computed(() => userStore.chips)
                 <ul class="list-group list-group-flush">
                   <li class="list-group-item d-flex justify-content-between align-items-center">
                     <span class="text-muted">
-                      <i class="bi bi-collection me-1"></i>{{ t('blackjack.stats.handsPlayed') }}
+                      <i class="bi bi-collection me-1" aria-hidden="true"></i>{{ t('blackjack.stats.handsPlayed') }}
                     </span>
                     <span class="fw-semibold">{{ userStore.stats.handsPlayed }}</span>
                   </li>
                   <li class="list-group-item d-flex justify-content-between align-items-center">
                     <span class="text-muted">
-                      <i class="bi bi-cash-stack me-1"></i>{{ t('blackjack.stats.totalWinnings') }}
+                      <i class="bi bi-cash-stack me-1" aria-hidden="true"></i>{{ t('blackjack.stats.totalWinnings') }}
                     </span>
                     <span
                       class="fw-semibold"
@@ -221,7 +221,7 @@ const maxBetAmount = computed(() => userStore.chips)
                   </li>
                   <li class="list-group-item d-flex justify-content-between align-items-center">
                     <span class="text-muted">
-                      <i class="bi bi-trophy me-1"></i>{{ t('blackjack.stats.biggestWin') }}
+                      <i class="bi bi-trophy me-1" aria-hidden="true"></i>{{ t('blackjack.stats.biggestWin') }}
                     </span>
                     <span class="fw-semibold text-success">
                       {{ formatIntAsCurrency(userStore.stats.biggestWin) }}
@@ -250,7 +250,7 @@ const maxBetAmount = computed(() => userStore.chips)
                 aria-controls="blackjackRulesCollapse"
                 @click="showRules = !showRules">
                 <span>
-                  <i class="bi bi-info-circle me-2"></i>{{ t('blackjack.rules.title') }}
+                  <i class="bi bi-info-circle me-2" aria-hidden="true"></i>{{ t('blackjack.rules.title') }}
                 </span>
                 <span class="ms-2 small text-muted">
                   {{ showRules ? t('blackjack.rules.hide') : t('blackjack.rules.show') }}
@@ -292,7 +292,7 @@ const maxBetAmount = computed(() => userStore.chips)
           <div class="card-header bg-light">
             <div class="d-flex align-items-center">
               <h5 class="mb-0">
-                <i class="bi bi-person-fill me-2"></i>{{ t('blackjack.dealer.hand') }}
+                <i class="bi bi-person-fill me-2" aria-hidden="true"></i>{{ t('blackjack.dealer.hand') }}
               </h5>
               <span class="badge bg-dark ms-2">
                 {{ gameStore.dealerScore }}
@@ -317,7 +317,7 @@ const maxBetAmount = computed(() => userStore.chips)
           <div class="card-header bg-light">
             <div class="d-flex align-items-center">
               <h5 class="mb-0">
-                <i class="bi bi-person-circle me-2"></i>{{ t('blackjack.player.hand') }}
+                <i class="bi bi-person-circle me-2" aria-hidden="true"></i>{{ t('blackjack.player.hand') }}
               </h5>
               <span class="badge bg-dark ms-2">
                 {{ gameStore.playerScore }}
@@ -341,7 +341,7 @@ const maxBetAmount = computed(() => userStore.chips)
         <div class="card shadow-sm">
           <div class="card-header bg-light py-3">
             <h5 class="mb-0">
-              <i class="bi bi-joystick me-2"></i>{{ t('blackjack.controls.title') }}
+              <i class="bi bi-joystick me-2" aria-hidden="true"></i>{{ t('blackjack.controls.title') }}
             </h5>
           </div>
           <div class="card-body">
@@ -351,7 +351,7 @@ const maxBetAmount = computed(() => userStore.chips)
                 <div class="h-100">
                   <div class="bg-light p-4 rounded h-100">
                     <h6 class="d-flex align-items-center mb-4">
-                      <i class="bi bi-lightning-fill me-2"></i>{{ t('blackjack.controls.placeBet') }}
+                      <i class="bi bi-lightning-fill me-2" aria-hidden="true"></i>{{ t('blackjack.controls.placeBet') }}
                     </h6>
 
                     <BetAmountSelector v-model="betAmount" :max-amount="maxBetAmount" :min-amount="1" />
@@ -365,14 +365,14 @@ const maxBetAmount = computed(() => userStore.chips)
                 <div class="h-100">
                   <div class="bg-light p-4 rounded h-100">
                     <h6 class="d-flex align-items-center mb-4">
-                      <i class="bi bi-gear-fill me-2"></i>{{ t('blackjack.controls.actions') }}
+                      <i class="bi bi-gear-fill me-2" aria-hidden="true"></i>{{ t('blackjack.controls.actions') }}
                     </h6>
 
                     <!-- Betting State -->
                     <div v-if="gameStore.gameState === BlackjackState.BETTING" class="d-grid">
                       <button class="btn btn-primary btn-lg mt-3" @click="handleDeal"
                         :disabled="betAmount <= 0 || betAmount > userStore.chips">
-                        <i class="bi bi-play-circle-fill me-2"></i>{{ t('blackjack.controls.dealCards') }}
+                        <i class="bi bi-play-circle-fill me-2" aria-hidden="true"></i>{{ t('blackjack.controls.dealCards') }}
                       </button>
                     </div>
 
@@ -380,10 +380,10 @@ const maxBetAmount = computed(() => userStore.chips)
                     <div v-if="gameStore.gameState === BlackjackState.PLAYER_TURN">
                       <div class="btn-group w-100" role="group" aria-label="Blackjack actions">
                         <button class="btn btn-success btn-lg w-50" @click="handleHit">
-                          <i class="bi bi-plus-circle-fill me-2"></i>{{ t('blackjack.controls.hit') }}
+                          <i class="bi bi-plus-circle-fill me-2" aria-hidden="true"></i>{{ t('blackjack.controls.hit') }}
                         </button>
                         <button class="btn btn-warning btn-lg text-white w-50" @click="handleStand">
-                          <i class="bi bi-hand-thumbs-up-fill me-2"></i>{{ t('blackjack.controls.stand') }}
+                          <i class="bi bi-hand-thumbs-up-fill me-2" aria-hidden="true"></i>{{ t('blackjack.controls.stand') }}
                         </button>
                       </div>
                     </div>
@@ -391,7 +391,7 @@ const maxBetAmount = computed(() => userStore.chips)
                     <!-- Game Over State -->
                     <div v-if="gameStore.gameState === BlackjackState.GAME_OVER" class="d-grid">
                       <button class="btn btn-primary btn-lg" @click="handleNewGame">
-                        <i class="bi bi-arrow-clockwise me-2"></i>{{ t('blackjack.controls.newGame') }}
+                        <i class="bi bi-arrow-clockwise me-2" aria-hidden="true"></i>{{ t('blackjack.controls.newGame') }}
                       </button>
                     </div>
                   </div>

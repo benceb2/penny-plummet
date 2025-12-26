@@ -12,7 +12,7 @@ const { t } = useI18n()
   <div class="card shadow-sm h-100 rounded-4">
     <div class="card-header border-1 rounded-top-4">
       <h6 class="mb-0 text-center fw-bold">
-        <i class="bi bi-arrow-up-circle me-2"></i>{{ t('clicker.upgrades.title') }}
+        <i class="bi bi-arrow-up-circle me-2" aria-hidden="true"></i>{{ t('clicker.upgrades.title') }}
       </h6>
     </div>
     <div class="card-body p-3">
@@ -21,7 +21,7 @@ const { t } = useI18n()
       <div class="bg-light border rounded-3 p-3 mb-3 upgrade-item">
         <div class="mb-3">
           <div class="fw-semibold mb-1">
-            <i class="bi bi-lightning text-primary me-2"></i>{{ t('clicker.upgrades.autoClickers.title') }}
+            <i class="bi bi-lightning text-primary me-2" aria-hidden="true"></i>{{ t('clicker.upgrades.autoClickers.title') }}
           </div>
           <div class="d-flex justify-content-between align-items-center">
             <small class="text-muted">
@@ -44,7 +44,7 @@ const { t } = useI18n()
       <div class="bg-light border rounded-3 p-3 mb-3 upgrade-item">
         <div class="mb-3">
           <div class="fw-semibold mb-1">
-            <i class="bi bi-stars text-danger me-2"></i>{{ t('clicker.upgrades.multiplier.title') }}
+            <i class="bi bi-stars text-danger me-2" aria-hidden="true"></i>{{ t('clicker.upgrades.multiplier.title') }}
           </div>
           <div class="d-flex justify-content-between align-items-center">
             <small class="text-muted">
@@ -64,7 +64,7 @@ const { t } = useI18n()
       <div class="bg-light border rounded-3 p-3 mb-3 upgrade-item">
         <div class="mb-3">
           <div class="fw-semibold mb-1">
-            <i class="bi bi-bullseye text-warning me-2"></i>{{ t('clicker.upgrades.critical.title') }}
+            <i class="bi bi-bullseye text-warning me-2" aria-hidden="true"></i>{{ t('clicker.upgrades.critical.title') }}
           </div>
           <div class="d-flex justify-content-between align-items-center">
             <small class="text-muted">
@@ -85,7 +85,7 @@ const { t } = useI18n()
       <div class="bg-light border rounded-3 p-3 mb-3 upgrade-item" v-if="clickerStore.autoClickersCount > 0">
         <div class="mb-3">
           <div class="fw-semibold mb-1">
-            <i class="bi bi-speedometer2 text-info me-2"></i>{{ t('clicker.upgrades.speed.title') }}
+            <i class="bi bi-speedometer2 text-info me-2" aria-hidden="true"></i>{{ t('clicker.upgrades.speed.title') }}
           </div>
           <div class="d-flex justify-content-between align-items-center">
             <small class="text-muted">

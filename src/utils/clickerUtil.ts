@@ -22,8 +22,8 @@ export const CRITICAL_CHANCE_MAX = 0.5 // 50% max
 export const CRITICAL_MULTIPLIER = 2
 
 export const COMBO_WINDOW_MS = 1000 // 1 second between clicks
-export const COMBO_MULTIPLIER_PER_LEVEL = 0.1 // 10% per combo level
-export const COMBO_MULTIPLIER_MAX = 3 // 3x max combo
+export const COMBO_MULTIPLIER_PER_LEVEL = 0.02 // 2% per combo level
+export const COMBO_MULTIPLIER_MAX = 5 // 5x max combo
 
 export const AUTO_CLICKER_SPEED_BASE = 1000 // 1000ms base interval
 export const AUTO_CLICKER_SPEED_REDUCTION = 50 // 50ms reduction per level

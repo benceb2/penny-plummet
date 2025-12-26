@@ -32,10 +32,10 @@ const achievementProgress = computed(() => {
     <!-- Level Progress Section -->
     <div class="card mb-4">
       <div class="card-body">
-        <h3 class="card-title">
-          <i class="bi bi-stars text-info me-2"></i>
+        <h2 class="card-title">
+          <i class="bi bi-stars text-info me-2" aria-hidden="true"></i>
           {{ t('profile.level.title', { level: currentLevel.level }) }}
-        </h3>
+        </h2>
         <div class="progress mb-3">
           <div
             class="progress-bar"
@@ -52,7 +52,7 @@ const achievementProgress = computed(() => {
           <small>{{ t('profile.level.xpNeeded', { xp: currentLevel.requiredXP }) }}</small>
         </div>
         <div class="mt-3">
-          <h5>{{ t('profile.level.rewardsTitle') }}:</h5>
+          <h3>{{ t('profile.level.rewardsTitle') }}:</h3>
           <ul class="list-unstyled">
             <li>{{ t('profile.level.rewardsChips') }}: {{ formatIntAsCurrency(currentLevel.rewards.chips) }}</li>
           </ul>
@@ -63,44 +63,44 @@ const achievementProgress = computed(() => {
     <!-- Stats Section -->
     <div class="card mb-4">
       <div class="card-body">
-        <h3 class="card-title">
-          <i class="bi bi-graph-up-arrow text-primary me-2"></i>
+        <h2 class="card-title">
+          <i class="bi bi-graph-up-arrow text-primary me-2" aria-hidden="true"></i>
           {{ t('profile.stats.title') }}
-        </h3>
+        </h2>
         <div class="row">
           <div class="col-md-3">
             <div class="text-center p-4 rounded-3 hover-lift">
               <div class="mb-3">
-                <i class="bi bi-joystick text-primary fs-1"></i>
+                <i class="bi bi-joystick text-primary fs-1" aria-hidden="true"></i>
               </div>
-              <h5 class="text-muted">{{ t('profile.stats.handsPlayed') }}</h5>
+              <h3 class="text-muted">{{ t('profile.stats.handsPlayed') }}</h3>
               <p class="fs-4 fw-bold mb-0">{{ userStats.handsPlayed }}</p>
             </div>
           </div>
           <div class="col-md-3">
             <div class="text-center p-4 rounded-3 hover-lift">
               <div class="mb-3">
-                <i class="bi bi-coin text-success fs-1"></i>
+                <i class="bi bi-coin text-success fs-1" aria-hidden="true"></i>
               </div>
-              <h5 class="text-muted">{{ t('profile.stats.totalWinnings') }}</h5>
+              <h3 class="text-muted">{{ t('profile.stats.totalWinnings') }}</h3>
               <p class="fs-4 fw-bold mb-0">{{ formatIntAsCurrency(userStats.totalWinnings) }}</p>
             </div>
           </div>
           <div class="col-md-3">
             <div class="text-center p-4 rounded-3 hover-lift">
               <div class="mb-3">
-                <i class="bi bi-trophy text-warning fs-1"></i>
+                <i class="bi bi-trophy text-warning fs-1" aria-hidden="true"></i>
               </div>
-              <h5 class="text-muted">{{ t('profile.stats.biggestWin') }}</h5>
+              <h3 class="text-muted">{{ t('profile.stats.biggestWin') }}</h3>
               <p class="fs-4 fw-bold mb-0">{{ formatIntAsCurrency(userStats.biggestWin) }}</p>
             </div>
           </div>
           <div class="col-md-3">
             <div class="text-center p-4 rounded-3 hover-lift">
               <div class="mb-3">
-                <i class="bi bi-award text-info fs-1"></i>
+                <i class="bi bi-award text-info fs-1" aria-hidden="true"></i>
               </div>
-              <h5 class="text-muted">{{ t('profile.stats.achievements') }}</h5>
+              <h3 class="text-muted">{{ t('profile.stats.achievements') }}</h3>
               <p class="fs-4 fw-bold mb-0">{{ achievementProgress.percentage }}%</p>
             </div>
           </div>
@@ -112,18 +112,18 @@ const achievementProgress = computed(() => {
     <div class="card">
       <div class="card-body d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
         <div>
-          <h3 class="card-title d-flex align-items-center mb-1">
-            <i class="bi bi-award text-primary me-2"></i>
-            {{ t('profile.achievements.title') }}
-          </h3>
-          <p class="text-muted mb-0">
-            {{ t('profile.achievements.completed', { completed: achievementProgress.completed, total: achievementProgress.total }) }}
-          </p>
-        </div>
-        <RouterLink to="/achievements" class="btn btn-outline-primary">
-          <i class="bi bi-trophy me-2"></i>
-          {{ t('profile.achievements.viewAll') }}
-        </RouterLink>
+        <h2 class="card-title d-flex align-items-center mb-1">
+          <i class="bi bi-award text-primary me-2" aria-hidden="true"></i>
+          {{ t('profile.achievements.title') }}
+        </h2>
+        <p class="text-muted mb-0">
+          {{ t('profile.achievements.completed', { completed: achievementProgress.completed, total: achievementProgress.total }) }}
+        </p>
+      </div>
+      <RouterLink to="/achievements" class="btn btn-outline-primary">
+        <i class="bi bi-trophy me-2" aria-hidden="true"></i>
+        {{ t('profile.achievements.viewAll') }}
+      </RouterLink>
       </div>
     </div>
   </BaseLayout>

@@ -52,7 +52,7 @@ watch([selectedCategory], () => {
       <div class="card-body">
         <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
           <div>
-            <h5 class="text-muted mb-1">{{ t('profile.stats.achievements') }}</h5>
+            <h2 class="text-muted mb-1">{{ t('profile.stats.achievements') }}</h2>
             <p class="fs-4 fw-bold mb-0">{{ achievementProgress.percentage }}%</p>
           </div>
           <div class="text-muted">

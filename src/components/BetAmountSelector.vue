@@ -132,7 +132,7 @@ const buttonSizeClass = computed(() => {
     <!-- Quick Bet Options -->
     <div v-if="!isDisabled" class="mb-3">
       <div class="d-flex align-items-center gap-2 mb-2">
-        <h3 class="mb-0 text-muted h6">
+        <h3 class="mb-0 text-muted">
           <i class="bi bi-lightning-fill me-1" aria-hidden="true"></i>{{ t('betAmountSelector.quickBet') }}
         </h3>
       </div>

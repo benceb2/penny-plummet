@@ -72,10 +72,10 @@ const features = computed(() => [
     :show-balance="false">
     <div class="card mb-4">
       <div class="card-body">
-        <h5 class="card-title d-flex align-items-center">
-          <i class="bi bi-joystick me-2 text-primary" />
+        <h2 class="card-title d-flex align-items-center">
+          <i class="bi bi-joystick me-2 text-primary" aria-hidden="true" />
           {{ t('about.game.title') }}
-        </h5>
+        </h2>
         <p class="card-text">
           {{ t('about.game.description') }}
         </p>
@@ -85,16 +85,16 @@ const features = computed(() => [
     <!-- Technology Stack -->
     <div class="card mb-4">
       <div class="card-body">
-        <h5 class="card-title d-flex align-items-center">
-          <i class="bi bi-stack me-2 text-success" />
+        <h2 class="card-title d-flex align-items-center">
+          <i class="bi bi-stack me-2 text-success" aria-hidden="true" />
           {{ t('about.technology.title') }}
-        </h5>
+        </h2>
         <div class="row g-3">
           <div class="col-md-4 col-sm-6" v-for="tech in technologies" :key="tech.name">
             <div class="tech-item d-flex align-items-center">
-              <i :class="`${tech.icon} me-2 fs-4 text-${tech.color}`" />
+              <i :class="`${tech.icon} me-2 fs-4 text-${tech.color}`" aria-hidden="true" />
               <div>
-                <h6 class="mb-0">{{ tech.name }}</h6>
+                <h3 class="mb-0">{{ tech.name }}</h3>
                 <small class="text-muted">{{ tech.description }}</small>
               </div>
             </div>
@@ -106,17 +106,17 @@ const features = computed(() => [
     <!-- Features -->
     <div class="card mb-4">
       <div class="card-body">
-        <h5 class="card-title d-flex align-items-center">
-          <i class="bi bi-stars me-2 text-warning" />
+        <h2 class="card-title d-flex align-items-center">
+          <i class="bi bi-stars me-2 text-warning" aria-hidden="true" />
           {{ t('about.features.title') }}
-        </h5>
+        </h2>
         <div class="row g-3">
           <div class="col-md-6" v-for="feature in features" :key="feature.title">
             <div class="feature-item">
-              <h6 class="d-flex align-items-center">
-                <i :class="`${feature.icon} me-2`" />
+              <h3 class="d-flex align-items-center">
+                <i :class="`${feature.icon} me-2`" aria-hidden="true" />
                 {{ feature.title }}
-              </h6>
+              </h3>
               <p class="mb-0 text-muted">
                 {{ feature.description }}
               </p>
@@ -134,14 +134,14 @@ const features = computed(() => [
   border: 1px solid #eee;
   border-radius: 8px;
   height: 100%;
-  background-color: #f8f9fa;
+  background-color: #fff;
 }
 
 .feature-item {
   padding: 1rem;
   border: 1px solid #eee;
   border-radius: 8px;
-  background-color: #f8f9fa;
+  background-color: #fff;
 }
 
 .tech-item:hover,

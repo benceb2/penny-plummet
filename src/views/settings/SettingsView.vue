@@ -188,19 +188,19 @@ const recalcBalance = async () => {
     <!-- Local Save Management -->
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title d-flex align-items-center mb-4">
-          <i class="bi bi-save me-2"></i>
+        <h2 class="card-title d-flex align-items-center mb-4">
+          <i class="bi bi-save me-2" aria-hidden="true"></i>
           {{ t('settings.localSave.title') }}
-        </h5>
+        </h2>
 
         <!-- Export Section -->
         <div class="mb-4">
-          <h6 class="mb-3">{{ t('settings.localSave.export.title') }}</h6>
+          <h3 class="mb-3">{{ t('settings.localSave.export.title') }}</h3>
           <p class="text-muted small mb-3">
             {{ t('settings.localSave.export.description') }}
           </p>
           <button @click="exportSave" class="btn btn-primary">
-            <i class="bi bi-download me-2"></i>
+            <i class="bi bi-download me-2" aria-hidden="true"></i>
             {{ t('settings.localSave.export.button') }}
           </button>
         </div>
@@ -209,13 +209,17 @@ const recalcBalance = async () => {
 
         <!-- Import Section -->
         <div class="mb-4">
-          <h6 class="mb-3">{{ t('settings.localSave.import.title') }}</h6>
+          <h3 class="mb-3">{{ t('settings.localSave.import.title') }}</h3>
           <p class="text-muted small mb-3">
             {{ t('settings.localSave.import.description') }}
           </p>
 
           <div class="mb-3">
+            <label class="form-label" for="save-file">
+              {{ t('settings.localSave.import.title') }}
+            </label>
             <input
+              id="save-file"
               type="file"
               class="form-control"
               accept=".save"
@@ -228,21 +232,26 @@ const recalcBalance = async () => {
             v-if="showImportConfirm"
             class="modal d-block"
             tabindex="-1"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="import-save-title"
             style="background-color: rgba(0,0,0,0.5);">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title">{{ t('settings.localSave.import.confirmTitle') }}</h5>
+                  <h3 class="modal-title" id="import-save-title">
+                    {{ t('settings.localSave.import.confirmTitle') }}
+                  </h3>
                 </div>
                 <div class="modal-body">
                   <div
-                    class="save-preview bg-light p-3 rounded mb-3"
+                    class="save-preview bg-white border p-3 rounded mb-3"
                     v-if="savePreview">
-                    <h6 class="mb-3">{{ t('settings.localSave.import.preview.title') }}</h6>
+                    <h4 class="mb-3">{{ t('settings.localSave.import.preview.title') }}</h4>
                     <div class="row g-3">
                       <div class="col-sm-6">
                         <div class="d-flex align-items-center">
-                          <i class="bi bi-person-circle text-primary fs-4 me-2"></i>
+                          <i class="bi bi-person-circle text-primary fs-4 me-2" aria-hidden="true"></i>
                           <div>
                             <div class="text-muted small">{{ t('settings.localSave.import.preview.username') }}</div>
                             <div class="fw-medium">{{ savePreview.username ||
@@ -252,7 +261,7 @@ const recalcBalance = async () => {
                       </div>
                       <div class="col-sm-6">
                         <div class="d-flex align-items-center">
-                          <i class="bi bi-wallet2 text-success fs-4 me-2"></i>
+                          <i class="bi bi-wallet2 text-success fs-4 me-2" aria-hidden="true"></i>
                           <div>
                             <div class="text-muted small">{{ t('settings.localSave.import.preview.balance') }}</div>
                             <div class="fw-medium">{{ formatIntAsCurrency(savePreview.balance) }}</div>
@@ -261,7 +270,7 @@ const recalcBalance = async () => {
                       </div>
                       <div class="col-sm-6">
                         <div class="d-flex align-items-center">
-                          <i class="bi bi-stars text-warning fs-4 me-2"></i>
+                          <i class="bi bi-stars text-warning fs-4 me-2" aria-hidden="true"></i>
                           <div>
                             <div class="text-muted small">{{ t('settings.localSave.import.preview.level') }}</div>
                             <div class="fw-medium">{{ t('settings.localSave.import.preview.level') }} {{
@@ -271,7 +280,7 @@ const recalcBalance = async () => {
                       </div>
                       <div class="col-sm-6">
                         <div class="d-flex align-items-center">
-                          <i class="bi bi-calendar3 text-info fs-4 me-2"></i>
+                          <i class="bi bi-calendar3 text-info fs-4 me-2" aria-hidden="true"></i>
                           <div>
                             <div class="text-muted small">{{ t('settings.localSave.import.preview.saveDate') }}</div>
                             <div class="fw-medium">{{ new Date(savePreview.timestamp).toLocaleDateString() }}</div>
@@ -283,9 +292,11 @@ const recalcBalance = async () => {
                   <p class="mb-0">{{ t('settings.localSave.import.confirmMessage') }}</p>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" @click="cancelImport">{{
+                  <button type="button" class="btn btn-secondary" @click="cancelImport">
+                    {{
                     t('settings.localSave.import.cancel') }}</button>
-                  <button type="button" class="btn btn-primary" @click="confirmImport">{{
+                  <button type="button" class="btn btn-primary" @click="confirmImport">
+                    {{
                     t('settings.localSave.import.confirm') }}</button>
                 </div>
               </div>
@@ -297,12 +308,12 @@ const recalcBalance = async () => {
 
         <!-- Delete Section -->
         <div>
-          <h6 class="mb-3">{{ t('settings.localSave.delete.title') }}</h6>
+          <h3 class="mb-3">{{ t('settings.localSave.delete.title') }}</h3>
           <p class="text-muted small mb-3">
             {{ t('settings.localSave.delete.description') }}
           </p>
           <button @click="deleteSave" class="btn btn-danger">
-            <i class="bi bi-trash me-2"></i>
+            <i class="bi bi-trash me-2" aria-hidden="true"></i>
             {{ t('settings.localSave.delete.button') }}
           </button>
 
@@ -311,23 +322,30 @@ const recalcBalance = async () => {
             v-if="showDeleteConfirm"
             class="modal d-block"
             tabindex="-1"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="delete-save-title"
             style="background-color: rgba(0,0,0,0.5);">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title">{{ t('settings.localSave.delete.confirmTitle') }}</h5>
+                  <h3 class="modal-title" id="delete-save-title">
+                    {{ t('settings.localSave.delete.confirmTitle') }}
+                  </h3>
                 </div>
                 <div class="modal-body">
                   <p class="text-danger">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i>
                     {{ t('settings.localSave.delete.warning') }}
                   </p>
                   <p>{{ t('settings.localSave.delete.confirmMessage') }}</p>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" @click="cancelDelete">{{
+                  <button type="button" class="btn btn-secondary" @click="cancelDelete">
+                    {{
                     t('settings.localSave.delete.cancel') }}</button>
-                  <button type="button" class="btn btn-danger" @click="confirmDelete">{{
+                  <button type="button" class="btn btn-danger" @click="confirmDelete">
+                    {{
                     t('settings.localSave.delete.confirm') }}</button>
                 </div>
               </div>
@@ -337,12 +355,12 @@ const recalcBalance = async () => {
 
         <!-- Status Messages -->
         <div v-if="importError" class="alert alert-danger mt-4" role="alert">
-          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          <i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i>
           {{ importError }}
         </div>
 
         <div v-if="importSuccess" class="alert alert-success mt-4" role="alert">
-          <i class="bi bi-check-circle-fill me-2"></i>
+          <i class="bi bi-check-circle-fill me-2" aria-hidden="true"></i>
           {{ t('settings.messages.operationSuccess') }}
         </div>
       </div>
@@ -351,16 +369,16 @@ const recalcBalance = async () => {
     <!-- Balance Audit -->
     <div class="card mt-4">
       <div class="card-body">
-        <h5 class="card-title d-flex align-items-center mb-3">
-          <i class="bi bi-shield-check me-2"></i>
+        <h2 class="card-title d-flex align-items-center mb-3">
+          <i class="bi bi-shield-check me-2" aria-hidden="true"></i>
           {{ t('settings.balanceAudit.title') }}
-        </h5>
+        </h2>
         <p class="text-muted small mb-3">
           {{ t('settings.balanceAudit.description') }}
         </p>
         <div class="d-flex flex-wrap align-items-center gap-2">
           <button @click="runAudit" class="btn btn-outline-primary" :disabled="auditLoading">
-            <i class="bi bi-search me-2"></i>
+            <i class="bi bi-search me-2" aria-hidden="true"></i>
             {{ auditLoading ? t('settings.balanceAudit.running') : t('settings.balanceAudit.run') }}
           </button>
           <button
@@ -368,7 +386,7 @@ const recalcBalance = async () => {
             @click="recalcBalance"
             class="btn btn-sm btn-outline-secondary"
             :disabled="recalcLoading">
-            <i class="bi bi-arrow-repeat me-2"></i>
+            <i class="bi bi-arrow-repeat me-2" aria-hidden="true"></i>
             {{ recalcLoading ? t('settings.balanceAudit.recalculating') : t('settings.balanceAudit.recalculate') }}
           </button>
         </div>

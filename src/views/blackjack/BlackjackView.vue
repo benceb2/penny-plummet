@@ -136,7 +136,7 @@ const maxBetAmount = computed(() => userStore.chips)
       <div class="col-12 d-none d-md-block">
         <div class="card">
           <div class="card-header bg-light">
-            <h2 class="mb-0 h5">
+            <h2 class="mb-0">
               <i class="bi bi-graph-up me-2" aria-hidden="true"></i>{{ t('blackjack.stats.title') }}
             </h2>
           </div>
@@ -145,7 +145,7 @@ const maxBetAmount = computed(() => userStore.chips)
               <div class="col-md-4">
                 <div class="card text-center h-100">
                   <div class="card-body">
-                    <h3 class="text-muted mb-2 h6">
+                    <h3 class="text-muted mb-2">
                       <i class="bi bi-collection me-1" aria-hidden="true"></i>{{ t('blackjack.stats.handsPlayed') }}
                     </h3>
                     <span class="h4">{{ userStore.stats.handsPlayed }}</span>
@@ -155,7 +155,7 @@ const maxBetAmount = computed(() => userStore.chips)
               <div class="col-md-4">
                 <div class="card text-center h-100">
                   <div class="card-body">
-                    <h3 class="text-muted mb-2 h6">
+                    <h3 class="text-muted mb-2">
                       <i class="bi bi-cash-stack me-1" aria-hidden="true"></i>{{ t('blackjack.stats.totalWinnings') }}
                     </h3>
                     <span class="h4"
@@ -168,7 +168,7 @@ const maxBetAmount = computed(() => userStore.chips)
               <div class="col-md-4">
                 <div class="card text-center h-100">
                   <div class="card-body">
-                    <h3 class="text-muted mb-2 h6">
+                    <h3 class="text-muted mb-2">
                       <i class="bi bi-trophy me-1" aria-hidden="true"></i>{{ t('blackjack.stats.biggestWin') }}
                     </h3>
                     <span class="h4 text-success">
@@ -291,7 +291,7 @@ const maxBetAmount = computed(() => userStore.chips)
         <div class="card shadow-sm">
           <div class="card-header bg-light">
             <div class="d-flex align-items-center">
-              <h2 class="mb-0 h5">
+              <h2 class="mb-0">
                 <i class="bi bi-person-fill me-2" aria-hidden="true"></i>{{ t('blackjack.dealer.hand') }}
               </h2>
               <span class="badge bg-dark ms-2">
@@ -316,7 +316,7 @@ const maxBetAmount = computed(() => userStore.chips)
         <div class="card shadow-sm">
           <div class="card-header bg-light">
             <div class="d-flex align-items-center">
-              <h2 class="mb-0 h5">
+              <h2 class="mb-0">
                 <i class="bi bi-person-circle me-2" aria-hidden="true"></i>{{ t('blackjack.player.hand') }}
               </h2>
               <span class="badge bg-dark ms-2">
@@ -340,7 +340,7 @@ const maxBetAmount = computed(() => userStore.chips)
       <div class="col-12">
         <div class="card shadow-sm">
           <div class="card-header bg-light py-3">
-            <h2 class="mb-0 h5">
+            <h2 class="mb-0">
               <i class="bi bi-joystick me-2" aria-hidden="true"></i>{{ t('blackjack.controls.title') }}
             </h2>
           </div>
@@ -350,7 +350,7 @@ const maxBetAmount = computed(() => userStore.chips)
               <div class="col-md-6" v-if="gameStore.gameState === BlackjackState.BETTING">
                 <div class="h-100">
                   <div class="bg-light p-4 rounded h-100">
-                    <h3 class="d-flex align-items-center mb-4 h6">
+                    <h3 class="d-flex align-items-center mb-4">
                       <i class="bi bi-lightning-fill me-2" aria-hidden="true"></i>{{ t('blackjack.controls.placeBet') }}
                     </h3>
 
@@ -364,7 +364,7 @@ const maxBetAmount = computed(() => userStore.chips)
                 :class="`col-md-${[BlackjackState.PLAYER_TURN, BlackjackState.GAME_OVER].includes(gameStore.gameState) ? '12' : '6'}`">
                 <div class="h-100">
                   <div class="bg-light p-4 rounded h-100">
-                    <h3 class="d-flex align-items-center mb-4 h6">
+                    <h3 class="d-flex align-items-center mb-4">
                       <i class="bi bi-gear-fill me-2" aria-hidden="true"></i>{{ t('blackjack.controls.actions') }}
                     </h3>
 

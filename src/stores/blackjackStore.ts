@@ -109,6 +109,10 @@ export const useBlackjackStore = defineStore('blackjack', () => {
   function handleGameResult(result: BlackjackResult) {
     // Update user stats first
     userStore.updateStats(result)
+    achievementStore.updateAchievementProgress(
+      'profit_hunter',
+      Math.max(userStore.stats.maxTotalWinnings, 0)
+    )
 
     if (result.isWin) {
       const winAmount = result.amount - result.initialBet;
@@ -163,8 +167,13 @@ export const useBlackjackStore = defineStore('blackjack', () => {
         achievementStore.updateAchievementProgress('high_roller', result.amount)
       }
 
+      if (result.amount >= 5000) {
+        achievementStore.updateAchievementProgress('big_win', result.amount)
+      }
+
       // Consecutive wins achievement
       achievementStore.updateAchievementProgress('winning_streak', sessionStats.value.consecutiveWins)
+      achievementStore.updateAchievementProgress('streak_master', sessionStats.value.maxConsecutiveWins)
 
       // Add XP based on win amount (10% of winnings)
       const xpGain = Math.floor((result.amount - result.initialBet) * 0.1)
@@ -175,6 +184,7 @@ export const useBlackjackStore = defineStore('blackjack', () => {
 
     // Track total hands played
     achievementStore.updateAchievementProgress('blackjack_veteran', userStore.stats.handsPlayed)
+    achievementStore.updateAchievementProgress('table_regular', userStore.stats.handsPlayed)
 
     // High stakes achievement
     if (result.initialBet >= 500) {

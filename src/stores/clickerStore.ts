@@ -25,6 +25,10 @@ export const useClickerStore = defineStore('clicker', () => {
   const clicks = ref(0)
   const totalLifetimeClicks = ref(0)
   const passiveLifetimeClicks = ref(0)
+  const totalCriticalHits = ref(0)
+  const maxComboCount = ref(0)
+  const maxCollectionAmount = ref(0)
+  const maxOfflineEarnings = ref(0)
   const baseClickValue = ref(1)
   const autoClickersCount = ref(0)
   const autoClickerCost = ref(50)
@@ -102,6 +106,12 @@ export const useClickerStore = defineStore('clicker', () => {
       comboMultiplier.value = clickerUtil.calculateComboMultiplier(comboCount.value)
     }
 
+    const currentComboLength = comboCount.value + 1
+    if (currentComboLength > maxComboCount.value) {
+      maxComboCount.value = currentComboLength
+      achievementStore.updateAchievementProgress('combo_chain', maxComboCount.value)
+    }
+
     lastClickTime.value = now
 
     // Check for critical hit
@@ -119,6 +129,12 @@ export const useClickerStore = defineStore('clicker', () => {
     // Update achievements
     achievementStore.updateAchievementProgress('click_novice', totalLifetimeClicks.value)
     achievementStore.updateAchievementProgress('click_master', totalLifetimeClicks.value)
+    achievementStore.updateAchievementProgress('click_legend', totalLifetimeClicks.value)
+
+    if (isCritical) {
+      totalCriticalHits.value++
+      achievementStore.updateAchievementProgress('critical_striker', totalCriticalHits.value)
+    }
 
     // Combo decay timer
     setTimeout(() => {
@@ -156,6 +172,10 @@ export const useClickerStore = defineStore('clicker', () => {
       const amount = clicks.value
       const calculatedXP = Math.floor(amount * 0.2)
       achievementStore.addXP(calculatedXP)
+      if (amount > maxCollectionAmount.value) {
+        maxCollectionAmount.value = amount
+        achievementStore.updateAchievementProgress('big_collection', maxCollectionAmount.value)
+      }
 
       transactionStore.addTransaction({
         amount: amount,
@@ -216,6 +236,7 @@ export const useClickerStore = defineStore('clicker', () => {
       })
 
       achievementStore.updateAchievementProgress('multiplier_enthusiast', multiplierLevel.value)
+      achievementStore.updateAchievementProgress('multiplier_master', multiplierLevel.value)
     }
   }
 
@@ -236,6 +257,8 @@ export const useClickerStore = defineStore('clicker', () => {
           level: criticalLevel.value
         }
       })
+
+      achievementStore.updateAchievementProgress('critical_specialist', criticalLevel.value)
     }
   }
 
@@ -256,6 +279,8 @@ export const useClickerStore = defineStore('clicker', () => {
           level: autoClickerSpeedLevel.value
         }
       })
+
+      achievementStore.updateAchievementProgress('speed_demon', autoClickerSpeedLevel.value)
 
       // Restart auto-clicker with new speed
       startAutoClicker()
@@ -289,6 +314,10 @@ export const useClickerStore = defineStore('clicker', () => {
             if (earnings > 0) {
               clicks.value += earnings
               passiveLifetimeClicks.value += earnings
+              totalLifetimeClicks.value += earnings
+              achievementStore.updateAchievementProgress('click_novice', totalLifetimeClicks.value)
+              achievementStore.updateAchievementProgress('click_master', totalLifetimeClicks.value)
+              achievementStore.updateAchievementProgress('click_legend', totalLifetimeClicks.value)
 
               // Add subtle animation for auto-clicks (less frequent)
               if (clickerUtil.shouldShowAutoClickAnimation()) {
@@ -350,10 +379,23 @@ export const useClickerStore = defineStore('clicker', () => {
       // Add earnings to clicks
       clicks.value += result.earnings
       passiveLifetimeClicks.value += result.earnings
+      totalLifetimeClicks.value += result.earnings
+      achievementStore.updateAchievementProgress('click_novice', totalLifetimeClicks.value)
+      achievementStore.updateAchievementProgress('click_master', totalLifetimeClicks.value)
+      achievementStore.updateAchievementProgress('click_legend', totalLifetimeClicks.value)
+
+      if (result.earnings > maxOfflineEarnings.value) {
+        maxOfflineEarnings.value = result.earnings
+        achievementStore.updateAchievementProgress('offline_profits', maxOfflineEarnings.value)
+      }
 
       // Automatically collect the chips if there's enough
       if (clicks.value >= 10) {
         const amount = clicks.value
+        if (amount > maxCollectionAmount.value) {
+          maxCollectionAmount.value = amount
+          achievementStore.updateAchievementProgress('big_collection', maxCollectionAmount.value)
+        }
 
         // Calculate and add XP
         const calculatedXP = Math.floor(amount * 0.2)
@@ -409,6 +451,10 @@ export const useClickerStore = defineStore('clicker', () => {
     clicks.value = 0
     totalLifetimeClicks.value = 0
     passiveLifetimeClicks.value = 0
+    totalCriticalHits.value = 0
+    maxComboCount.value = 0
+    maxCollectionAmount.value = 0
+    maxOfflineEarnings.value = 0
     baseClickValue.value = 1
     autoClickersCount.value = 0
     autoClickerCost.value = 50
@@ -428,6 +474,10 @@ export const useClickerStore = defineStore('clicker', () => {
     clicks,
     totalLifetimeClicks,
     passiveLifetimeClicks,
+    totalCriticalHits,
+    maxComboCount,
+    maxCollectionAmount,
+    maxOfflineEarnings,
     baseClickValue,
     autoClickersCount,
     autoClickerCost,
@@ -484,6 +534,10 @@ export const useClickerStore = defineStore('clicker', () => {
       'clicks',
       'totalLifetimeClicks',
       'passiveLifetimeClicks',
+      'totalCriticalHits',
+      'maxComboCount',
+      'maxCollectionAmount',
+      'maxOfflineEarnings',
       'baseClickValue',
       'autoClickersCount',
       'autoClickerCost',

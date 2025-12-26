@@ -165,6 +165,10 @@ export const useRouletteStore = defineStore('roulette', () => {
         sessionStats.value.maxConsecutiveWins,
         sessionStats.value.consecutiveWins
       )
+      achievementStore.updateAchievementProgress(
+        'roulette_hot_streak',
+        sessionStats.value.maxConsecutiveWins
+      )
 
       if (result.totalWin > result.totalBet) {
         // Net win
@@ -266,6 +270,8 @@ export const useRouletteStore = defineStore('roulette', () => {
     // Update session stats
     sessionStats.value.spins++
     sessionStats.value.totalWagered += totalBet.value
+    achievementStore.updateAchievementProgress('roulette_regular', sessionStats.value.spins)
+    achievementStore.updateAchievementProgress('roulette_marathon', sessionStats.value.totalWagered)
 
     // Store the result for later (don't update chips yet!)
     pendingResult.value = result

@@ -39,6 +39,8 @@ export default {
     "rules": {
       "title": "Rules & Payouts",
       "summary": "This table uses common casino rules.",
+      "show": "Show rules",
+      "hide": "Hide rules",
       "dealerStands": "Dealer stands on all 17 (including soft 17).",
       "blackjackPays": "Natural blackjack pays 3:2.",
       "dealerChecks": "Blackjacks are resolved immediately after the deal.",

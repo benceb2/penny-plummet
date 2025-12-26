@@ -44,7 +44,7 @@ const recentTransactions = computed(() => {
             <div class="d-flex align-items-center mb-3">
               <i class="bi bi-suit-spade-fill fs-2 text-primary me-3" aria-hidden="true"></i>
               <div>
-                <h2 class="mb-1">{{ t('home.games.blackjack.title') }}</h2>
+                <h2 class="mb-1 section-title">{{ t('home.games.blackjack.title') }}</h2>
                 <p class="text-muted mb-0">{{ t('home.games.blackjack.shortDesc') }}</p>
               </div>
             </div>
@@ -61,7 +61,7 @@ const recentTransactions = computed(() => {
             <div class="d-flex align-items-center mb-3">
               <i class="bi bi-mouse fs-2 text-success me-3" aria-hidden="true"></i>
               <div>
-                <h2 class="mb-1">{{ t('home.games.clicker.title') }}</h2>
+                <h2 class="mb-1 section-title">{{ t('home.games.clicker.title') }}</h2>
                 <p class="text-muted mb-0">{{ t('home.games.clicker.shortDesc') }}</p>
               </div>
             </div>
@@ -78,7 +78,7 @@ const recentTransactions = computed(() => {
             <div class="d-flex align-items-center mb-3">
               <i class="bi bi-bullseye fs-2 text-danger me-3" aria-hidden="true"></i>
               <div>
-                <h2 class="mb-1">{{ t('home.games.roulette.title') }}</h2>
+                <h2 class="mb-1 section-title">{{ t('home.games.roulette.title') }}</h2>
                 <p class="text-muted mb-0">{{ t('home.games.roulette.shortDesc') }}</p>
               </div>
             </div>
@@ -94,7 +94,7 @@ const recentTransactions = computed(() => {
       <div class="col-md-6 mb-4 mb-md-0">
         <div class="card h-100">
           <div class="card-header">
-            <h2 class="card-title d-flex align-items-center mb-0">
+            <h2 class="card-title d-flex align-items-center mb-0 section-title">
               <i class="bi bi-award text-primary me-2" aria-hidden="true"></i>
               {{ t('home.achievements.title') }}
             </h2>
@@ -124,7 +124,7 @@ const recentTransactions = computed(() => {
       <div class="col-md-6">
         <div class="card h-100">
           <div class="card-header">
-            <h2 class="card-title d-flex align-items-center mb-0">
+            <h2 class="card-title d-flex align-items-center mb-0 section-title">
               <i class="bi bi-wallet2 text-success me-2" aria-hidden="true"></i>
               {{ t('home.transactions.title') }}
             </h2>

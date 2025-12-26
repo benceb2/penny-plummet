@@ -72,7 +72,7 @@ const features = computed(() => [
     :show-balance="false">
     <div class="card mb-4">
       <div class="card-body">
-        <h2 class="card-title d-flex align-items-center">
+        <h2 class="card-title d-flex align-items-center section-title">
           <i class="bi bi-joystick me-2 text-primary" aria-hidden="true" />
           {{ t('about.game.title') }}
         </h2>
@@ -85,7 +85,7 @@ const features = computed(() => [
     <!-- Technology Stack -->
     <div class="card mb-4">
       <div class="card-body">
-        <h2 class="card-title d-flex align-items-center">
+        <h2 class="card-title d-flex align-items-center section-title">
           <i class="bi bi-stack me-2 text-success" aria-hidden="true" />
           {{ t('about.technology.title') }}
         </h2>
@@ -94,7 +94,7 @@ const features = computed(() => [
             <div class="tech-item d-flex align-items-center">
               <i :class="`${tech.icon} me-2 fs-4 text-${tech.color}`" aria-hidden="true" />
               <div>
-                <h3 class="mb-0">{{ tech.name }}</h3>
+                <h3 class="mb-0 subsection-title">{{ tech.name }}</h3>
                 <small class="text-muted">{{ tech.description }}</small>
               </div>
             </div>
@@ -106,14 +106,14 @@ const features = computed(() => [
     <!-- Features -->
     <div class="card mb-4">
       <div class="card-body">
-        <h2 class="card-title d-flex align-items-center">
+        <h2 class="card-title d-flex align-items-center section-title">
           <i class="bi bi-stars me-2 text-warning" aria-hidden="true" />
           {{ t('about.features.title') }}
         </h2>
         <div class="row g-3">
           <div class="col-md-6" v-for="feature in features" :key="feature.title">
             <div class="feature-item">
-              <h3 class="d-flex align-items-center">
+              <h3 class="d-flex align-items-center subsection-title">
                 <i :class="`${feature.icon} me-2`" aria-hidden="true" />
                 {{ feature.title }}
               </h3>

@@ -188,14 +188,14 @@ const recalcBalance = async () => {
     <!-- Local Save Management -->
     <div class="card">
       <div class="card-body">
-        <h2 class="card-title d-flex align-items-center mb-4">
+        <h2 class="card-title d-flex align-items-center mb-4 section-title">
           <i class="bi bi-save me-2" aria-hidden="true"></i>
           {{ t('settings.localSave.title') }}
         </h2>
 
         <!-- Export Section -->
         <div class="mb-4">
-          <h3 class="mb-3">{{ t('settings.localSave.export.title') }}</h3>
+          <h3 class="mb-3 subsection-title">{{ t('settings.localSave.export.title') }}</h3>
           <p class="text-muted small mb-3">
             {{ t('settings.localSave.export.description') }}
           </p>
@@ -209,7 +209,7 @@ const recalcBalance = async () => {
 
         <!-- Import Section -->
         <div class="mb-4">
-          <h3 class="mb-3">{{ t('settings.localSave.import.title') }}</h3>
+          <h3 class="mb-3 subsection-title">{{ t('settings.localSave.import.title') }}</h3>
           <p class="text-muted small mb-3">
             {{ t('settings.localSave.import.description') }}
           </p>
@@ -239,7 +239,7 @@ const recalcBalance = async () => {
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h3 class="modal-title" id="import-save-title">
+                  <h3 class="modal-title section-title" id="import-save-title">
                     {{ t('settings.localSave.import.confirmTitle') }}
                   </h3>
                 </div>
@@ -247,7 +247,7 @@ const recalcBalance = async () => {
                   <div
                     class="save-preview bg-white border p-3 rounded mb-3"
                     v-if="savePreview">
-                    <h4 class="mb-3">{{ t('settings.localSave.import.preview.title') }}</h4>
+                    <h4 class="mb-3 subsection-title">{{ t('settings.localSave.import.preview.title') }}</h4>
                     <div class="row g-3">
                       <div class="col-sm-6">
                         <div class="d-flex align-items-center">
@@ -308,7 +308,7 @@ const recalcBalance = async () => {
 
         <!-- Delete Section -->
         <div>
-          <h3 class="mb-3">{{ t('settings.localSave.delete.title') }}</h3>
+          <h3 class="mb-3 subsection-title">{{ t('settings.localSave.delete.title') }}</h3>
           <p class="text-muted small mb-3">
             {{ t('settings.localSave.delete.description') }}
           </p>
@@ -329,7 +329,7 @@ const recalcBalance = async () => {
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h3 class="modal-title" id="delete-save-title">
+                  <h3 class="modal-title section-title" id="delete-save-title">
                     {{ t('settings.localSave.delete.confirmTitle') }}
                   </h3>
                 </div>
@@ -369,7 +369,7 @@ const recalcBalance = async () => {
     <!-- Balance Audit -->
     <div class="card mt-4">
       <div class="card-body">
-        <h2 class="card-title d-flex align-items-center mb-3">
+        <h2 class="card-title d-flex align-items-center mb-3 section-title">
           <i class="bi bi-shield-check me-2" aria-hidden="true"></i>
           {{ t('settings.balanceAudit.title') }}
         </h2>

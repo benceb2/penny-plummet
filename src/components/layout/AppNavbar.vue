@@ -182,7 +182,8 @@ watch(locale, (newLocale) => {
               <button
                 class="btn btn-primary btn-sm d-flex align-items-center"
                 type="button"
-                data-bs-toggle="dropdown">
+                data-bs-toggle="dropdown"
+                :aria-label="t('navbar.profile.menu')">
                 <i class="bi bi-person-circle me-1"></i>
                 <span class="d-none d-sm-inline">{{ userStore.username }}</span>
                 <i class="bi bi-chevron-down ms-1"></i>

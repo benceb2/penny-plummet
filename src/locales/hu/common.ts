@@ -21,6 +21,7 @@ export default {
       "transactions": "Tranzakció Előzmények"
     },
     "profile": {
+      "menu": "Felhasználói menü",
       "settings": "Beállítások",
       "viewProfile": "Profil Megtekintése",
       "achievements": "Eredmények"

@@ -66,7 +66,8 @@ watch([selectedCategory], () => {
             :style="{ width: `${achievementProgress.percentage}%` }"
             :aria-valuenow="achievementProgress.percentage"
             aria-valuemin="0"
-            aria-valuemax="100">
+            aria-valuemax="100"
+            :aria-label="t('profile.stats.achievements')">
             {{ achievementProgress.percentage }}%
           </div>
         </div>

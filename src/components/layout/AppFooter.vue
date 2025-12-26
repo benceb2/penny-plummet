@@ -8,7 +8,8 @@ import pkg from '../../../package.json'
         <a
           href="mailto:contact@bence.im"
           class="text-decoration-none mx-2"
-          title="Email">
+          title="Email"
+          aria-label="Email">
           <i class="bi bi-envelope text-dark fs-5 hover-opacity"></i>
         </a>
         <a
@@ -16,7 +17,8 @@ import pkg from '../../../package.json'
           target="_blank"
           rel="noopener noreferrer"
           class="text-decoration-none mx-2"
-          title="LinkedIn">
+          title="LinkedIn"
+          aria-label="LinkedIn">
           <i class="bi bi-linkedin text-dark fs-5 hover-opacity"></i>
         </a>
         <a
@@ -24,7 +26,8 @@ import pkg from '../../../package.json'
           target="_blank"
           rel="noopener noreferrer"
           class="text-decoration-none mx-2"
-          title="GitHub">
+          title="GitHub"
+          aria-label="GitHub">
           <i class="bi bi-github text-dark fs-5 hover-opacity"></i>
         </a>
         <a
@@ -32,7 +35,8 @@ import pkg from '../../../package.json'
           target="_blank"
           rel="noopener noreferrer"
           class="text-decoration-none mx-2"
-          title="Portfolio">
+          title="Portfolio"
+          aria-label="Portfolio">
           <i class="bi bi-globe text-dark fs-5 hover-opacity"></i>
         </a>
       </div>

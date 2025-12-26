@@ -54,7 +54,8 @@ const pages = computed(() => {
         <button
           class="page-link"
           @click="emit('page-change', 1)"
-          :disabled="currentPage === 1">
+          :disabled="currentPage === 1"
+          aria-label="First page">
           <i class="bi bi-chevron-double-left"></i>
         </button>
       </li>
@@ -66,7 +67,8 @@ const pages = computed(() => {
         <button
           class="page-link"
           @click="emit('page-change', currentPage - 1)"
-          :disabled="currentPage === 1">
+          :disabled="currentPage === 1"
+          aria-label="Previous page">
           <i class="bi bi-chevron-left"></i>
         </button>
       </li>
@@ -91,7 +93,8 @@ const pages = computed(() => {
         <button
           class="page-link"
           @click="emit('page-change', currentPage + 1)"
-          :disabled="currentPage === totalPages">
+          :disabled="currentPage === totalPages"
+          aria-label="Next page">
           <i class="bi bi-chevron-right"></i>
         </button>
       </li>
@@ -103,7 +106,8 @@ const pages = computed(() => {
         <button
           class="page-link"
           @click="emit('page-change', totalPages)"
-          :disabled="currentPage === totalPages">
+          :disabled="currentPage === totalPages"
+          aria-label="Last page">
           <i class="bi bi-chevron-double-right"></i>
         </button>
       </li>

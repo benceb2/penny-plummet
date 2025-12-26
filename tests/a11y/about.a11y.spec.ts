@@ -8,7 +8,7 @@ test('about view has no detectable axe violations', async ({ page }) => {
   await acceptConsentIfPresent(page)
   await setUsernameIfPrompted(page)
 
-  await page.getByRole('heading', { name: 'About' }).waitFor({ state: 'visible' })
+  await page.getByRole('heading', { name: 'About', level: 1 }).waitFor({ state: 'visible' })
 
   const results = await new AxeBuilder({ page }).analyze()
   expect(results.violations).toEqual([])

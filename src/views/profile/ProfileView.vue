@@ -43,7 +43,8 @@ const achievementProgress = computed(() => {
             :style="{ width: `${levelProgress}%` }"
             :aria-valuenow="levelProgress"
             aria-valuemin="0"
-            aria-valuemax="100">
+            aria-valuemax="100"
+            :aria-label="t('profile.level.title', { level: currentLevel.level })">
             {{ Math.floor(levelProgress) }}%
           </div>
         </div>

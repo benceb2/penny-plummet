@@ -62,7 +62,7 @@ const handleCollectWithAnimation = () => {
       <div class="position-relative w-100 d-flex justify-content-center mb-3" style="height: 0;">
         <div v-if="clickerStore.comboCount > 1" class="combo-badge position-absolute" style="top: 10px; z-index: 10;">
           <span :class="`badge ${comboColor} fs-6 pulse px-3 py-1`">
-            <i class="bi bi-lightning-fill me-1"></i>
+            <i class="bi bi-lightning-fill me-1" aria-hidden="true"></i>
             {{ t('clicker.combo.label', { count: clickerStore.comboCount }) }}
             <span class="ms-1 opacity-75">
               {{ t('clicker.combo.bonus', { percent: (clickerStore.comboMultiplier * 100 - 100).toFixed(0) }) }}
@@ -74,7 +74,7 @@ const handleCollectWithAnimation = () => {
       <!-- Main Click Area -->
       <div class="position-relative mb-4 p-3 d-flex justify-content-center align-items-center flex-grow-1">
         <button
-          class="main-click-btn btn rounded-circle p-0 position-relative"
+          class="main-click-btn btn btn-warning rounded-circle p-0 position-relative shadow"
           :style="{
             transform: `scale(${buttonScale * clickScale})`,
             boxShadow: glowIntensity > 0 ?
@@ -85,7 +85,7 @@ const handleCollectWithAnimation = () => {
           @click="handleClickWithAnimation">
 
           <div class="click-content text-white">
-            <i class="bi bi-coin click-icon d-block mb-2"></i>
+            <i class="bi bi-coin click-icon d-block mb-2" aria-hidden="true"></i>
             <div class="fw-bold fs-5 mb-1">+{{ clickerStore.formattedClickValue }}</div>
             <div class="small opacity-90" v-if="clickerStore.criticalChance > 0.1">
               {{ t('clicker.combo.critical', { percent: (clickerStore.criticalChance * 100).toFixed(0) }) }}
@@ -93,12 +93,13 @@ const handleCollectWithAnimation = () => {
           </div>
 
           <!-- Click ripple effect -->
-          <div class="click-ripple"></div>
+          <div class="click-ripple" aria-hidden="true"></div>
         </button>
 
         <!-- Floating Click Animations -->
         <div class="floating-animations-container position-absolute"
-          style="top: 50%; left: 50%; pointer-events: none; z-index: 15;">
+          style="top: 50%; left: 50%; pointer-events: none; z-index: 15;"
+          aria-hidden="true">
           <div
             v-for="animation in clickerStore.clickAnimations"
             :key="animation.id"
@@ -114,32 +115,32 @@ const handleCollectWithAnimation = () => {
                 '0 0 10px rgba(40, 167, 69, 0.8), 0 2px 4px rgba(0, 0, 0, 0.8)'
             }">
             +{{ animation.value.toLocaleString() }}
-            <i v-if="animation.isCritical" class="bi bi-exclamation-diamond-fill ms-1"></i>
+            <i v-if="animation.isCritical" class="bi bi-exclamation-diamond-fill ms-1" aria-hidden="true"></i>
           </div>
         </div>
       </div>
 
       <!-- Action Buttons -->
-      <div class="d-flex gap-5 w-75 mx-auto">
+      <div class="d-flex gap-3 w-75 mx-auto">
         <button
-          class="collect-btn btn flex-fill position-relative overflow-hidden"
+          class="collect-btn btn btn-success btn-lg flex-fill position-relative overflow-hidden"
           :style="{ transform: `scale(${collectButtonScale})` }"
           @click="handleCollectWithAnimation"
           :disabled="clickerStore.clicks < 10">
 
           <!-- Animated background gradient -->
-          <div class="collect-bg-animation"></div>
+          <div class="collect-bg-animation" aria-hidden="true"></div>
 
           <!-- Content -->
           <div class="position-relative z-2 d-flex align-items-center justify-content-center">
-            <i class="bi bi-gem me-2 collect-icon"></i>
+            <i class="bi bi-gem me-2 collect-icon" aria-hidden="true"></i>
             <div>
               <div class="fw-bold">{{ t('clicker.collect.button') }}</div>
               <small class="opacity-90">{{ t('clicker.collect.minimum') }}</small>
             </div>
 
             <!-- Sparkle effects -->
-            <div class="sparkles position-absolute">
+            <div class="sparkles position-absolute" aria-hidden="true">
               <div class="sparkle sparkle-1">✨</div>
               <div class="sparkle sparkle-2">💎</div>
               <div class="sparkle sparkle-3">⭐</div>
@@ -190,25 +191,16 @@ const handleCollectWithAnimation = () => {
 .collect-btn {
   border: none !important;
   background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
-  color: white !important;
-  font-size: 1.1rem;
-  padding: 1rem 1.5rem;
-  border-radius: 12px !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+  transition: background 0.3s ease;
   min-height: 80px;
 }
 
 .collect-btn:hover:not(:disabled) {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 12px 35px rgba(40, 167, 69, 0.4);
   background: linear-gradient(135deg, #32d74b 0%, #17a2b8 100%) !important;
 }
 
 .collect-btn:disabled {
   opacity: 0.6;
-  transform: none !important;
-  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
 }
 
 /* Animated background for collect button */
@@ -295,6 +287,8 @@ const handleCollectWithAnimation = () => {
   pointer-events: none;
   font-weight: 700;
   white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .floating-normal {

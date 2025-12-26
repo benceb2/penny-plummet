@@ -19,7 +19,8 @@ export const useUserStore = defineStore('user', () => {
   const stats = ref({
     handsPlayed: 0,
     totalWinnings: 0,
-    biggestWin: 0
+    biggestWin: 0,
+    maxTotalWinnings: 0
   })
 
   function updateChips(amount: number) {
@@ -31,6 +32,7 @@ export const useUserStore = defineStore('user', () => {
       achievementStore.updateAchievementProgress('small_fortune', chips.value)
       achievementStore.updateAchievementProgress('medium_fortune', chips.value)
       achievementStore.updateAchievementProgress('large_fortune', chips.value)
+      achievementStore.updateAchievementProgress('fortune_king', chips.value)
     }
   }
 
@@ -45,6 +47,11 @@ export const useUserStore = defineStore('user', () => {
     } else {
       stats.value.totalWinnings -= gameResult.initialBet;
     }
+
+    stats.value.maxTotalWinnings = Math.max(
+      stats.value.maxTotalWinnings,
+      stats.value.totalWinnings
+    );
   }
 
   function updateConsent(newConsent: boolean) {

@@ -2,8 +2,8 @@
  * Blackjack Game Store
  *
  * This store manages the state and logic for a blackjack game using standard casino rules:
- * - Dealer must hit on 16 and below, stand on 17 and above
- * - Blackjack pays 2:1
+ * - Dealer stands on all 17 (S17), including soft 17
+ * - Blackjack pays 3:2
  * - Dealer's second card remains face down until player's turn is complete
  *
  * @module useGameStore
@@ -68,6 +68,8 @@ export const useBlackjackStore = defineStore('blackjack', () => {
 
     // Achievement tracking for first hand
     achievementStore.updateAchievementProgress('first_hand', 1)
+
+    resolveInitialBlackjack()
   }
 
   /**
@@ -95,6 +97,7 @@ export const useBlackjackStore = defineStore('blackjack', () => {
     gameState.value = BlackjackState.DEALER_TURN
     dealerHand.value[1].faceUp = true
 
+    // S17 rule: dealer stands on all 17 values, including soft 17.
     while (dealerScore.value < 17) {
       dealerHand.value.push(deck.value.pop()!)
     }
@@ -106,6 +109,10 @@ export const useBlackjackStore = defineStore('blackjack', () => {
   function handleGameResult(result: BlackjackResult) {
     // Update user stats first
     userStore.updateStats(result)
+    achievementStore.updateAchievementProgress(
+      'profit_hunter',
+      Math.max(userStore.stats.maxTotalWinnings, 0)
+    )
 
     if (result.isWin) {
       const winAmount = result.amount - result.initialBet;
@@ -160,8 +167,13 @@ export const useBlackjackStore = defineStore('blackjack', () => {
         achievementStore.updateAchievementProgress('high_roller', result.amount)
       }
 
+      if (result.amount >= 5000) {
+        achievementStore.updateAchievementProgress('big_win', result.amount)
+      }
+
       // Consecutive wins achievement
       achievementStore.updateAchievementProgress('winning_streak', sessionStats.value.consecutiveWins)
+      achievementStore.updateAchievementProgress('streak_master', sessionStats.value.maxConsecutiveWins)
 
       // Add XP based on win amount (10% of winnings)
       const xpGain = Math.floor((result.amount - result.initialBet) * 0.1)
@@ -172,11 +184,44 @@ export const useBlackjackStore = defineStore('blackjack', () => {
 
     // Track total hands played
     achievementStore.updateAchievementProgress('blackjack_veteran', userStore.stats.handsPlayed)
+    achievementStore.updateAchievementProgress('table_regular', userStore.stats.handsPlayed)
 
     // High stakes achievement
     if (result.initialBet >= 500) {
       achievementStore.updateAchievementProgress('high_stakes', result.initialBet)
     }
+  }
+
+  function resolveInitialBlackjack() {
+    const playerHasBlackjack = playerHand.value.length === 2 && calculateHandValue(playerHand.value) === 21
+    const dealerHasBlackjack = dealerHand.value.length === 2 && calculateHandValue(dealerHand.value) === 21
+
+    if (!playerHasBlackjack && !dealerHasBlackjack) {
+      return
+    }
+
+    dealerHand.value[1].faceUp = true
+    gameState.value = BlackjackState.GAME_OVER
+
+    const result: BlackjackResult = {
+      isWin: false,
+      isPush: false,
+      amount: 0,
+      playerScore: calculateHandValue(playerHand.value),
+      dealerScore: calculateHandValue(dealerHand.value),
+      initialBet: currentBet.value
+    }
+
+    if (playerHasBlackjack && dealerHasBlackjack) {
+      result.isPush = true
+      result.amount = currentBet.value
+    } else if (playerHasBlackjack) {
+      result.isWin = true
+      // Standard 3:2 blackjack payout (bet returned + 1.5x winnings).
+      result.amount = currentBet.value * 2.5
+    }
+
+    handleGameResult(result)
   }
 
 

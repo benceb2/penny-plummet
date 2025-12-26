@@ -47,6 +47,23 @@ export const useAchievementStore = defineStore('achievements', () => {
     return achievements.value.filter(a => a.completed && !a.claimed);
   });
 
+  const rouletteAchievementIds = new Set([
+    'lucky_number',
+    'roulette_regular',
+    'roulette_marathon',
+    'roulette_hot_streak'
+  ]);
+
+  const normalizeAchievementCategories = () => {
+    achievements.value.forEach((achievement) => {
+      if (rouletteAchievementIds.has(achievement.id)) {
+        achievement.category = 'roulette';
+      }
+    });
+  };
+
+  normalizeAchievementCategories();
+
   // Methods
   function getAchievementKey(achievement: AchievementWithClaim) {
     return `achievements.${achievement.category}.${achievement.id}`;

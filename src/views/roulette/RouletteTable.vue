@@ -89,7 +89,7 @@ const outsideBets = computed(() => {
 </script>
 
 <template>
-  <div class="bg-success p-2 p-md-3 rounded" style="overflow: visible;">
+  <div class="roulette-felt p-2 p-md-3 rounded" style="overflow: visible;">
 
     <!-- Desktop Layout -->
     <div class="d-none d-md-block">
@@ -298,8 +298,12 @@ const outsideBets = computed(() => {
 
 /* Mobile optimizations */
 @media (max-width: 767px) {
-  .bg-success {
+  .roulette-felt {
     padding: 0.5rem !important;
   }
+}
+
+.roulette-felt {
+  background-color: #146c43;
 }
 </style>

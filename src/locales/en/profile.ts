@@ -18,10 +18,12 @@ export default {
     "achievements": {
       "title": "Achievements",
       "completed": "{completed}/{total} completed",
+      "viewAll": "View all achievements",
       "categories": {
         "all": "All",
         "blackjack": "Blackjack",
         "clicker": "Clicker",
+        "roulette": "Roulette",
         "general": "General"
       }
     }

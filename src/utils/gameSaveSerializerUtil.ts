@@ -34,10 +34,25 @@ const decode = (stored: string): StateTree => {
       return {} as StateTree
     }
     const encoded = stored.slice(0, -SIGNATURE.length)
+    if (encoded.length % 4 !== 0) {
+      return {} as StateTree
+    }
     const reversed = encoded.split('').reverse().join('')
     const decoded = atob(reversed)
     const unshifted = unshiftString(decoded, SHIFT)
     const saveData = JSON.parse(unshifted)
+    if (!saveData || typeof saveData !== 'object') {
+      return {} as StateTree
+    }
+    if (!('state' in saveData) || !('timestamp' in saveData) || !('version' in saveData)) {
+      return {} as StateTree
+    }
+    if (typeof saveData.timestamp !== 'number' || typeof saveData.version !== 'string') {
+      return {} as StateTree
+    }
+    if (typeof saveData.state !== 'object' || saveData.state === null) {
+      return {} as StateTree
+    }
     return saveData.state
   } catch {
     return {} as StateTree

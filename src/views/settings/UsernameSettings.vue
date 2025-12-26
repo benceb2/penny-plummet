@@ -78,10 +78,10 @@ const updateUsername = async () => {
 <template>
   <div class="card mb-4">
     <div class="card-body">
-      <h5 class="card-title d-flex align-items-center">
+      <h2 class="card-title d-flex align-items-center h5">
         <i class="bi bi-person-circle me-2"></i>
         {{ t('usernameSettings.title') }}
-      </h5>
+      </h2>
       <div class="mb-3 mt-3">
         <div class="d-flex gap-3">
           <div class="flex-grow-1">

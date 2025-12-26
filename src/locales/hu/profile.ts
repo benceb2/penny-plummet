@@ -18,10 +18,12 @@ export default {
     "achievements": {
       "title": "Eredmények",
       "completed": "{completed}/{total} kész",
+      "viewAll": "Összes eredmény megtekintése",
       "categories": {
         "all": "Összes",
         "blackjack": "Blackjack",
         "clicker": "Kattintós",
+        "roulette": "Rulett",
         "general": "Általános"
       }
     }

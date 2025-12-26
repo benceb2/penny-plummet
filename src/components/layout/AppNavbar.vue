@@ -182,7 +182,8 @@ watch(locale, (newLocale) => {
               <button
                 class="btn btn-primary btn-sm d-flex align-items-center"
                 type="button"
-                data-bs-toggle="dropdown">
+                data-bs-toggle="dropdown"
+                :aria-label="t('navbar.profile.menu')">
                 <i class="bi bi-person-circle me-1"></i>
                 <span class="d-none d-sm-inline">{{ userStore.username }}</span>
                 <i class="bi bi-chevron-down ms-1"></i>
@@ -192,6 +193,12 @@ watch(locale, (newLocale) => {
                   <RouterLink to="/profile" class="dropdown-item">
                     <i class="bi bi-person me-2"></i>
                     {{ t('navbar.profile.viewProfile') }}
+                  </RouterLink>
+                </li>
+                <li>
+                  <RouterLink to="/achievements" class="dropdown-item">
+                    <i class="bi bi-award me-2"></i>
+                    {{ t('navbar.profile.achievements') }}
                   </RouterLink>
                 </li>
                 <li class="d-none d-lg-block">

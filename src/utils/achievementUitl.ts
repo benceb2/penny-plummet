@@ -32,6 +32,20 @@ export const achievements = ref<Achievement[]>([
     category: 'blackjack'
   },
   {
+    id: 'table_regular',
+    title: 'Table Regular',
+    description: 'Play 500 hands of Blackjack',
+    requirement: 500,
+    progress: 0,
+    completed: false,
+    claimed: false,
+    reward: {
+      chips: 2000,
+      xp: 500
+    },
+    category: 'blackjack'
+  },
+  {
     id: 'winning_streak',
     title: 'Hot Streak',
     description: 'Win 5 hands in a row',
@@ -42,6 +56,20 @@ export const achievements = ref<Achievement[]>([
     reward: {
       chips: 250,
       xp: 100
+    },
+    category: 'blackjack'
+  },
+  {
+    id: 'streak_master',
+    title: 'Streak Master',
+    description: 'Win 10 hands in a row',
+    requirement: 10,
+    progress: 0,
+    completed: false,
+    claimed: false,
+    reward: {
+      chips: 1500,
+      xp: 400
     },
     category: 'blackjack'
   },
@@ -60,6 +88,20 @@ export const achievements = ref<Achievement[]>([
     category: 'blackjack'
   },
   {
+    id: 'big_win',
+    title: 'Big Win',
+    description: 'Win $5,000 or more in a single hand',
+    requirement: 5000,
+    progress: 0,
+    completed: false,
+    claimed: false,
+    reward: {
+      chips: 5000,
+      xp: 1000
+    },
+    category: 'blackjack'
+  },
+  {
     id: 'blackjack_master',
     title: 'Natural Talent',
     description: 'Get Blackjack 10 times',
@@ -70,6 +112,20 @@ export const achievements = ref<Achievement[]>([
     reward: {
       chips: 500,
       xp: 200
+    },
+    category: 'blackjack'
+  },
+  {
+    id: 'profit_hunter',
+    title: 'Profit Hunter',
+    description: 'Earn $5,000 total winnings in Blackjack',
+    requirement: 5000,
+    progress: 0,
+    completed: false,
+    claimed: false,
+    reward: {
+      chips: 3000,
+      xp: 800
     },
     category: 'blackjack'
   },
@@ -117,6 +173,20 @@ export const achievements = ref<Achievement[]>([
     category: 'clicker'
   },
   {
+    id: 'click_legend',
+    title: 'Click Legend',
+    description: 'Click 10,000 times',
+    requirement: 10000,
+    progress: 0,
+    completed: false,
+    claimed: false,
+    reward: {
+      chips: 1000,
+      xp: 400
+    },
+    category: 'clicker'
+  },
+  {
     id: 'auto_collector',
     title: 'Automation Beginner',
     description: 'Buy your first auto-clicker',
@@ -145,6 +215,34 @@ export const achievements = ref<Achievement[]>([
     category: 'clicker'
   },
   {
+    id: 'speed_demon',
+    title: 'Speed Demon',
+    description: 'Reach auto-clicker speed level 5',
+    requirement: 5,
+    progress: 0,
+    completed: false,
+    claimed: false,
+    reward: {
+      chips: 700,
+      xp: 300
+    },
+    category: 'clicker'
+  },
+  {
+    id: 'critical_specialist',
+    title: 'Critical Specialist',
+    description: 'Reach critical level 3',
+    requirement: 3,
+    progress: 0,
+    completed: false,
+    claimed: false,
+    reward: {
+      chips: 500,
+      xp: 200
+    },
+    category: 'clicker'
+  },
+  {
     id: 'multiplier_enthusiast',
     title: 'Multiplier Enthusiast',
     description: 'Reach multiplier level 5',
@@ -159,6 +257,77 @@ export const achievements = ref<Achievement[]>([
     category: 'clicker'
   },
   {
+    id: 'multiplier_master',
+    title: 'Multiplier Master',
+    description: 'Reach multiplier level 10',
+    requirement: 10,
+    progress: 0,
+    completed: false,
+    claimed: false,
+    reward: {
+      chips: 1200,
+      xp: 450
+    },
+    category: 'clicker'
+  },
+  {
+    id: 'critical_striker',
+    title: 'Critical Striker',
+    description: 'Land 25 critical hits',
+    requirement: 25,
+    progress: 0,
+    completed: false,
+    claimed: false,
+    reward: {
+      chips: 600,
+      xp: 250
+    },
+    category: 'clicker'
+  },
+  {
+    id: 'combo_chain',
+    title: 'Combo Chain',
+    description: 'Reach a 20-click combo',
+    requirement: 20,
+    progress: 0,
+    completed: false,
+    claimed: false,
+    reward: {
+      chips: 800,
+      xp: 300
+    },
+    category: 'clicker'
+  },
+  {
+    id: 'big_collection',
+    title: 'Big Collection',
+    description: 'Collect 5,000 chips at once',
+    requirement: 5000,
+    progress: 0,
+    completed: false,
+    claimed: false,
+    reward: {
+      chips: 1500,
+      xp: 500
+    },
+    category: 'clicker'
+  },
+  {
+    id: 'offline_profits',
+    title: 'Offline Profits',
+    description: 'Earn 2,000 chips while offline in one session',
+    requirement: 2000,
+    progress: 0,
+    completed: false,
+    claimed: false,
+    reward: {
+      chips: 1000,
+      xp: 400
+    },
+    category: 'clicker'
+  },
+  // Roulette achievements
+  {
     id: 'lucky_number',
     title: 'Lucky Number',
     description: 'Win with a straight bet in Roulette',
@@ -170,7 +339,49 @@ export const achievements = ref<Achievement[]>([
       chips: 250,
       xp: 150
     },
-    category: 'general'
+    category: 'roulette'
+  },
+  {
+    id: 'roulette_regular',
+    title: 'Roulette Regular',
+    description: 'Spin the roulette wheel 25 times',
+    requirement: 25,
+    progress: 0,
+    completed: false,
+    claimed: false,
+    reward: {
+      chips: 500,
+      xp: 200
+    },
+    category: 'roulette'
+  },
+  {
+    id: 'roulette_marathon',
+    title: 'Roulette Marathon',
+    description: 'Wager $10,000 total in Roulette',
+    requirement: 10000,
+    progress: 0,
+    completed: false,
+    claimed: false,
+    reward: {
+      chips: 1500,
+      xp: 500
+    },
+    category: 'roulette'
+  },
+  {
+    id: 'roulette_hot_streak',
+    title: 'Roulette Hot Streak',
+    description: 'Win 3 roulette spins in a row',
+    requirement: 3,
+    progress: 0,
+    completed: false,
+    claimed: false,
+    reward: {
+      chips: 800,
+      xp: 300
+    },
+    category: 'roulette'
   },
   {
     id: 'small_fortune',
@@ -211,6 +422,20 @@ export const achievements = ref<Achievement[]>([
     reward: {
       chips: 10000,
       xp: 1000
+    },
+    category: 'general'
+  },
+  {
+    id: 'fortune_king',
+    title: 'Fortune King',
+    description: 'Accumulate $1,000,000 in chips',
+    requirement: 1000000,
+    progress: 0,
+    completed: false,
+    claimed: false,
+    reward: {
+      chips: 50000,
+      xp: 5000
     },
     category: 'general'
   }

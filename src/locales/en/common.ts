@@ -19,8 +19,10 @@ export default {
       "transactions": "Transaction History"
     },
     "profile": {
+      "menu": "User menu",
       "settings": "Settings",
-      "viewProfile": "View Profile"
+      "viewProfile": "View Profile",
+      "achievements": "Achievements"
     }
   },
   "betAmountSelector": {

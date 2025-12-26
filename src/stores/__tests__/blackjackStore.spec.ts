@@ -1,11 +1,70 @@
 import { setActivePinia, createPinia } from 'pinia'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useBlackjackStore } from '../blackjackStore'
 import { BlackjackState } from '@/types/BlackjackGameState'
+import type { Card } from '@/types/Card'
+
+const updateStats = vi.fn()
+const updateAchievementProgress = vi.fn()
+const addXP = vi.fn()
+const addTransaction = vi.fn()
+let mockDeck: Card[] = []
+
+vi.mock('@/stores/userStore', () => ({
+  useUserStore: () => ({
+    stats: { handsPlayed: 0 },
+    updateStats
+  })
+}))
+
+vi.mock('@/stores/achievementStore', () => ({
+  useAchievementStore: () => ({
+    updateAchievementProgress,
+    addXP
+  })
+}))
+
+vi.mock('@/stores/transactionStore', () => ({
+  useTransactionStore: () => ({
+    addTransaction
+  })
+}))
+
+vi.mock('@/utils/blackjackUtil', async () => {
+  const actual = await vi.importActual<typeof import('@/utils/blackjackUtil')>('@/utils/blackjackUtil')
+  return {
+    ...actual,
+    generateDeck: () => mockDeck,
+    shuffleDeck: (deck: Card[]) => deck
+  }
+})
+
+const makeCard = (suit: Card['suit'], value: number, display: string): Card => ({
+  suit,
+  value,
+  display,
+  faceUp: true
+})
+
+const buildDeckForDeal = (player: [Card, Card], dealer: [Card, Card]) => ([
+  makeCard('clubs', 2, '2'),
+  makeCard('diamonds', 3, '3'),
+  makeCard('spades', 4, '4'),
+  makeCard('hearts', 5, '5'),
+  dealer[1],
+  dealer[0],
+  player[1],
+  player[0]
+])
 
 describe('Blackjack Store', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
+    vi.clearAllMocks()
+    mockDeck = buildDeckForDeal(
+      [makeCard('hearts', 9, '9'), makeCard('spades', 8, '8')],
+      [makeCard('diamonds', 7, '7'), makeCard('clubs', 6, '6')]
+    )
   })
 
   // Initial state tests
@@ -41,6 +100,68 @@ describe('Blackjack Store', () => {
       // Dealer's first card should be face up, second face down
       expect(store.dealerHand[0].faceUp).toBe(true)
       expect(store.dealerHand[1].faceUp).toBe(false)
+    })
+  })
+
+  describe('Initial Blackjack Resolution', () => {
+    it('ends the game when the player has blackjack and dealer does not', () => {
+      mockDeck = buildDeckForDeal(
+        [makeCard('hearts', 1, 'A'), makeCard('spades', 10, 'K')],
+        [makeCard('diamonds', 9, '9'), makeCard('clubs', 7, '7')]
+      )
+      const store = useBlackjackStore()
+      store.currentBet = 10
+
+      store.dealCards()
+
+      expect(store.gameState).toBe(BlackjackState.GAME_OVER)
+      expect(store.dealerHand[1].faceUp).toBe(true)
+      expect(updateStats).toHaveBeenCalledWith(expect.objectContaining({
+        isWin: true,
+        isPush: false,
+        amount: 25,
+        initialBet: 10
+      }))
+    })
+
+    it('ends the game when the dealer has blackjack and player does not', () => {
+      mockDeck = buildDeckForDeal(
+        [makeCard('hearts', 9, '9'), makeCard('spades', 8, '8')],
+        [makeCard('diamonds', 1, 'A'), makeCard('clubs', 10, 'Q')]
+      )
+      const store = useBlackjackStore()
+      store.currentBet = 10
+
+      store.dealCards()
+
+      expect(store.gameState).toBe(BlackjackState.GAME_OVER)
+      expect(store.dealerHand[1].faceUp).toBe(true)
+      expect(updateStats).toHaveBeenCalledWith(expect.objectContaining({
+        isWin: false,
+        isPush: false,
+        amount: 0,
+        initialBet: 10
+      }))
+    })
+
+    it('marks a push when both player and dealer have blackjack', () => {
+      mockDeck = buildDeckForDeal(
+        [makeCard('hearts', 1, 'A'), makeCard('spades', 10, 'K')],
+        [makeCard('diamonds', 1, 'A'), makeCard('clubs', 10, 'Q')]
+      )
+      const store = useBlackjackStore()
+      store.currentBet = 10
+
+      store.dealCards()
+
+      expect(store.gameState).toBe(BlackjackState.GAME_OVER)
+      expect(store.dealerHand[1].faceUp).toBe(true)
+      expect(updateStats).toHaveBeenCalledWith(expect.objectContaining({
+        isWin: false,
+        isPush: true,
+        amount: 10,
+        initialBet: 10
+      }))
     })
   })
 

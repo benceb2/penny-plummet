@@ -44,6 +44,10 @@ export function formatNumber(value: number, options: FormatOptions = {}): string
 
   // Define the suffixes and their values
   const suffixes = [
+    { value: 1e24, suffix: 'Y' }, // Yotta
+    { value: 1e21, suffix: 'Z' }, // Zetta
+    { value: 1e18, suffix: 'E' }, // Exa
+    { value: 1e15, suffix: 'P' }, // Peta
     { value: 1e12, suffix: 'T' }, // Trillion
     { value: 1e9, suffix: 'B' },  // Billion
     { value: 1e6, suffix: 'M' },  // Million
@@ -69,8 +73,9 @@ export function formatNumber(value: number, options: FormatOptions = {}): string
     }
   }
 
-  // Fallback (shouldn't reach here given minAbbreviation logic)
-  return `${isNegative ? '-' : ''}${currency ? currencySymbol : ''}${absValue}`
+  // Fallback (for extremely large values beyond known suffixes)
+  const formatted = absValue.toExponential(decimals)
+  return `${isNegative ? '-' : ''}${currency ? currencySymbol : ''}${formatted}`
 }
 
 /**

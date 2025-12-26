@@ -194,6 +194,12 @@ watch(locale, (newLocale) => {
                     {{ t('navbar.profile.viewProfile') }}
                   </RouterLink>
                 </li>
+                <li>
+                  <RouterLink to="/achievements" class="dropdown-item">
+                    <i class="bi bi-award me-2"></i>
+                    {{ t('navbar.profile.achievements') }}
+                  </RouterLink>
+                </li>
                 <li class="d-none d-lg-block">
                   <RouterLink to="/transactions" class="dropdown-item">
                     <i class="fa fa-history me-2"></i>

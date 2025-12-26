@@ -20,7 +20,8 @@ export default {
     },
     "profile": {
       "settings": "Settings",
-      "viewProfile": "View Profile"
+      "viewProfile": "View Profile",
+      "achievements": "Achievements"
     }
   },
   "betAmountSelector": {

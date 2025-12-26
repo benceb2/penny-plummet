@@ -22,7 +22,8 @@ export default {
     },
     "profile": {
       "settings": "Beállítások",
-      "viewProfile": "Profil Megtekintése"
+      "viewProfile": "Profil Megtekintése",
+      "achievements": "Eredmények"
     }
   },
   "betAmountSelector": {

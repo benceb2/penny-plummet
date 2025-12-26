@@ -49,6 +49,14 @@ const router = createRouter({
       }
     },
     {
+      path: '/achievements',
+      name: 'achievements',
+      component: () => import('../views/achievements/AchievementsView.vue'),
+      meta: {
+        title: 'Achievements'
+      }
+    },
+    {
       path: '/settings',
       name: 'settings',
       component: () => import('../views/settings/SettingsView.vue'),

@@ -111,7 +111,7 @@ const recentTransactions = computed(() => {
           <div class="card-footer bg-transparent">
             <div class="d-flex justify-content-end">
               <RouterLink
-                to="/profile#achievements"
+                to="/achievements"
                 class="btn btn-outline-primary">
                 <i class="fa fa-trophy me-2"></i>
                 {{ t('home.achievements.viewAll') }}

@@ -1,28 +1,17 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useUserStore } from '@/stores/userStore';
-import { usePagination } from '@/composables/usePagination';
 import { useAchievementStore } from '@/stores/achievementStore';
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
 import BaseLayout from '@/components/layout/BaseLayout.vue';
-import BasePagination from '@/components/layout/BasePagination.vue';
-import AchievementCard from '@/components/AchievementCard.vue';
-import { useRoute } from 'vue-router';
-import { filterAndSortAchievements } from '@/utils/achievementUitl';
 
 const userStore = useUserStore();
 const achievementStore = useAchievementStore();
 const { t } = useI18n();
 
-const selectedCategory = ref('all');
-
 const { currentLevel, levelProgress, achievements } = achievementStore;
 const userStats = userStore.stats;
-
-const filteredAchievements = computed(() => {
-  return filterAndSortAchievements(achievements, selectedCategory.value);
-});
 
 const achievementProgress = computed(() => {
   const totalAchievements = achievements.length;
@@ -33,34 +22,6 @@ const achievementProgress = computed(() => {
     percentage: Math.round((completedAchievements / totalAchievements) * 100)
   };
 });
-
-const {
-  goToPage,
-  currentPage,
-  paginatedItems: paginatedAchievements,
-  totalPages
-} = usePagination(filteredAchievements, {
-  itemsPerPage: 8  // Show 6 achievements per page (3x2 grid)
-})
-
-const route = useRoute()
-
-onMounted(() => {
-  // Scroll to achievements section if hash is present
-  if (route.hash === '#achievements') {
-    // Add a small delay to ensure the DOM is fully rendered
-    setTimeout(() => {
-      document.getElementById('achievements')?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      })
-    }, 100)
-  }
-})
-
-watch([selectedCategory], () => {
-  goToPage(1) // Reset to first page when filters change
-})
 </script>
 
 <template>
@@ -147,69 +108,28 @@ watch([selectedCategory], () => {
       </div>
     </div>
 
-    <!-- Achievements Section -->
-    <div class="card" id="achievements">
-      <div class="card-body">
-        <h3 class="card-title d-flex justify-content-between align-items-center mb-4">
-          <div class="d-flex align-items-center">
+    <!-- Achievements Summary -->
+    <div class="card">
+      <div class="card-body d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
+        <div>
+          <h3 class="card-title d-flex align-items-center mb-1">
             <i class="bi bi-award text-primary me-2"></i>
             {{ t('profile.achievements.title') }}
-          </div>
-          <span class="text-muted fs-6">
+          </h3>
+          <p class="text-muted mb-0">
             {{ t('profile.achievements.completed', { completed: achievementProgress.completed, total: achievementProgress.total }) }}
-          </span>
-        </h3>
-
-        <!-- Filters -->
-        <div class="row gy-3 pb-3 mb-4 border-bottom align-items-center">
-          <!-- Filters -->
-          <div class="pb-3 mb-4 border-bottom">
-            <!-- Category Buttons Row -->
-            <div class="d-flex justify-content-center mb-4">
-              <div class="btn-group" role="group">
-                <button
-                  v-for="category in ['all', 'blackjack', 'clicker', 'roulette', 'general']"
-                  :key="category"
-                  class="btn"
-                  :class="selectedCategory === category ? 'btn-primary' : 'btn-outline-primary'"
-                  @click="selectedCategory = category">
-                  {{ t(`profile.achievements.categories.${category}`) }}
-                </button>
-              </div>
-            </div>
-          </div>
+          </p>
         </div>
-
-        <!-- Achievement Grid -->
-        <div class="row g-3">
-          <div
-            v-for="achievement in paginatedAchievements"
-            :key="achievement.id"
-            class="col-md-6">
-            <AchievementCard :achievement="achievement" />
-          </div>
-        </div>
-
-        <BasePagination
-          :current-page="currentPage"
-          :total-pages="totalPages"
-          @page-change="goToPage" />
+        <RouterLink to="/achievements" class="btn btn-outline-primary">
+          <i class="bi bi-trophy me-2"></i>
+          {{ t('profile.achievements.viewAll') }}
+        </RouterLink>
       </div>
     </div>
   </BaseLayout>
 </template>
 
 <style scoped>
-.stat-item {
-  text-align: center;
-  padding: 1rem;
-}
-
-.achievement-filters {
-  display: flex;
-  justify-content: center;
-}
-
 .progress {
   height: 1.5rem;
 }

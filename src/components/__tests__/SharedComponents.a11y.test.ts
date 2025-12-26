@@ -20,6 +20,7 @@ const runAxe = async (wrapper: ReturnType<typeof mount>) => {
 
 describe('Shared components accessibility', () => {
   it('BaseModal has no axe violations', async () => {
+    expect.hasAssertions()
     const wrapper = mount(BaseModal, {
       attachTo: document.body,
       props: {
@@ -38,6 +39,7 @@ describe('Shared components accessibility', () => {
   })
 
   it('AppFooter has no axe violations', async () => {
+    expect.hasAssertions()
     const wrapper = mount(AppFooter, {
       attachTo: document.body,
     })
@@ -46,6 +48,7 @@ describe('Shared components accessibility', () => {
   })
 
   it('BasePagination has no axe violations', async () => {
+    expect.hasAssertions()
     const wrapper = mount(BasePagination, {
       attachTo: document.body,
       props: {
@@ -58,6 +61,7 @@ describe('Shared components accessibility', () => {
   })
 
   it('UnsupportedBrowser has no axe violations', async () => {
+    expect.hasAssertions()
     const wrapper = mount(UnsupportedBrowser, {
       attachTo: document.body,
     })

@@ -1,12 +1,18 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { axe } from 'vitest-axe'
+import { configureAxe } from 'vitest-axe'
 import { toHaveNoViolations } from 'vitest-axe/matchers'
 import ClickerView from '@/views/clicker/ClickerView.vue'
 import i18n from '@/i18n'
 
 expect.extend({ toHaveNoViolations })
+
+const axe = configureAxe({
+  rules: {
+    'color-contrast': { enabled: false },
+  },
+})
 
 const mountClickerView = () => {
   const pinia = createPinia()

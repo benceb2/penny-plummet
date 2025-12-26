@@ -10,7 +10,7 @@ const { t } = useI18n()
 
 <template>
   <div class="card shadow-sm h-100 rounded-4">
-        <div class="card-header border-1 rounded-top-4">
+    <div class="card-header border-1 rounded-top-4">
       <h6 class="mb-0 text-center fw-bold">
         <i class="bi bi-arrow-up-circle me-2"></i>{{ t('clicker.upgrades.title') }}
       </h6>

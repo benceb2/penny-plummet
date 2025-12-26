@@ -4,8 +4,19 @@ import StatsHeader from '@/views/clicker/StatsHeader.vue'
 import ClickArea from '@/views/clicker/ClickArea.vue'
 import UpgradesPanel from '@/views/clicker/UpgradesPanel.vue'
 import { useI18n } from 'vue-i18n'
+import { onBeforeUnmount, onMounted } from 'vue'
+import { useClickerStore } from '@/stores/clickerStore'
 
 const { t } = useI18n()
+const clickerStore = useClickerStore()
+
+onMounted(() => {
+  clickerStore.setClickerActive(true)
+})
+
+onBeforeUnmount(() => {
+  clickerStore.setClickerActive(false)
+})
 </script>
 
 <template>

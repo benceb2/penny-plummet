@@ -24,6 +24,7 @@ export const useClickerStore = defineStore('clicker', () => {
   // Core State
   const clicks = ref(0)
   const totalLifetimeClicks = ref(0)
+  const passiveLifetimeClicks = ref(0)
   const baseClickValue = ref(1)
   const autoClickersCount = ref(0)
   const autoClickerCost = ref(50)
@@ -41,6 +42,7 @@ export const useClickerStore = defineStore('clicker', () => {
   const comboMultiplier = ref(1)
   const comboCount = ref(0)
   const lastClickTime = ref(0)
+  const isClickerActive = ref(false)
 
   // Offline tracking
   const lastOnlineTimestamp = ref(Date.now())
@@ -70,6 +72,10 @@ export const useClickerStore = defineStore('clicker', () => {
   const formattedAutoClickerSpeedCost = computed(() => formatIntAsCurrency(autoClickerSpeedCost.value))
   const formattedClicks = computed(() => formatIntAsCurrency(clicks.value))
   const formattedLifetimeClicks = computed(() => formatNumber(totalLifetimeClicks.value, {
+    currency: false,
+    decimals: 1
+  }))
+  const formattedPassiveLifetimeClicks = computed(() => formatNumber(passiveLifetimeClicks.value, {
     currency: false,
     decimals: 1
   }))
@@ -124,6 +130,10 @@ export const useClickerStore = defineStore('clicker', () => {
   }
 
   function addClickAnimation(value: number, isCritical = false) {
+    if (!isClickerActive.value) {
+      return
+    }
+
     const id = Date.now() + Math.random()
     const position = clickerUtil.generateClickAnimationPosition()
 
@@ -278,7 +288,7 @@ export const useClickerStore = defineStore('clicker', () => {
 
             if (earnings > 0) {
               clicks.value += earnings
-              totalLifetimeClicks.value += earnings
+              passiveLifetimeClicks.value += earnings
 
               // Add subtle animation for auto-clicks (less frequent)
               if (clickerUtil.shouldShowAutoClickAnimation()) {
@@ -339,7 +349,7 @@ export const useClickerStore = defineStore('clicker', () => {
     if (result.earnings > 0) {
       // Add earnings to clicks
       clicks.value += result.earnings
-      totalLifetimeClicks.value += result.earnings
+      passiveLifetimeClicks.value += result.earnings
 
       // Automatically collect the chips if there's enough
       if (clicks.value >= 10) {
@@ -387,10 +397,18 @@ export const useClickerStore = defineStore('clicker', () => {
     offlineSeconds.value = 0
   }
 
+  function setClickerActive(active: boolean) {
+    isClickerActive.value = active
+    if (!active) {
+      clickAnimations.value = []
+    }
+  }
+
   // Reset state
   function reset() {
     clicks.value = 0
     totalLifetimeClicks.value = 0
+    passiveLifetimeClicks.value = 0
     baseClickValue.value = 1
     autoClickersCount.value = 0
     autoClickerCost.value = 50
@@ -409,6 +427,7 @@ export const useClickerStore = defineStore('clicker', () => {
     // State
     clicks,
     totalLifetimeClicks,
+    passiveLifetimeClicks,
     baseClickValue,
     autoClickersCount,
     autoClickerCost,
@@ -425,6 +444,7 @@ export const useClickerStore = defineStore('clicker', () => {
     clickAnimations,
     comboMultiplier,
     comboCount,
+    isClickerActive,
 
     // Computed
     clickValue,
@@ -437,6 +457,7 @@ export const useClickerStore = defineStore('clicker', () => {
     formattedAutoClickerSpeedCost,
     formattedClicks,
     formattedLifetimeClicks,
+    formattedPassiveLifetimeClicks,
     formattedIncome,
 
     // Actions
@@ -452,7 +473,8 @@ export const useClickerStore = defineStore('clicker', () => {
     closeOfflineEarningsModal,
     startAutoClicker,
     stopAutoClicker,
-    addClickAnimation
+    addClickAnimation,
+    setClickerActive
   }
 }, {
   persist: {
@@ -461,6 +483,7 @@ export const useClickerStore = defineStore('clicker', () => {
     paths: [
       'clicks',
       'totalLifetimeClicks',
+      'passiveLifetimeClicks',
       'baseClickValue',
       'autoClickersCount',
       'autoClickerCost',

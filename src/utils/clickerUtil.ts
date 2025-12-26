@@ -27,10 +27,12 @@ export const COMBO_MULTIPLIER_MAX = 3 // 3x max combo
 
 export const AUTO_CLICKER_SPEED_BASE = 1000 // 1000ms base interval
 export const AUTO_CLICKER_SPEED_REDUCTION = 50 // 50ms reduction per level
-export const AUTO_CLICKER_SPEED_MIN = 100 // 100ms minimum interval
+export const AUTO_CLICKER_SPEED_MIN = 150 // 150ms minimum interval
 
 export const OFFLINE_RATE_MULTIPLIER = 0.5 // Half rate when offline
-export const MAX_OFFLINE_DAYS = 3
+export const OFFLINE_FULL_RATE_HOURS = 12
+export const OFFLINE_TAPER_MIN = 0.6
+export const MAX_OFFLINE_DAYS = 2
 export const MAX_OFFLINE_MS = MAX_OFFLINE_DAYS * 24 * 60 * 60 * 1000
 
 // Combo calculations
@@ -89,7 +91,7 @@ export function calculateCriticalCost(currentLevel: number, baseCost: number = 2
 }
 
 export function calculateAutoClickerSpeedCost(currentLevel: number, baseCost: number = 300): number {
-  return Math.floor(baseCost * Math.pow(1.8, currentLevel - 1))
+  return Math.floor(baseCost * Math.pow(2, currentLevel - 1))
 }
 
 // Animation utilities
@@ -130,7 +132,18 @@ export function calculateOfflineEarnings(
 
   const seconds = Math.floor(cappedOfflineTime / 1000)
   const clicksPerSecond = autoClickersCount * clickValue * (1000 / autoClickerSpeed)
-  const earnings = Math.floor(seconds * clicksPerSecond * OFFLINE_RATE_MULTIPLIER)
+  const maxSeconds = Math.max(MAX_OFFLINE_MS / 1000, 1)
+  const fullRateSeconds = Math.min(OFFLINE_FULL_RATE_HOURS * 3600, maxSeconds)
+  let rateMultiplier = OFFLINE_RATE_MULTIPLIER
+
+  if (seconds > fullRateSeconds) {
+    const taperWindow = Math.max(maxSeconds - fullRateSeconds, 1)
+    const taperProgress = Math.min((seconds - fullRateSeconds) / taperWindow, 1)
+    const taperFactor = 1 - taperProgress * (1 - OFFLINE_TAPER_MIN)
+    rateMultiplier = OFFLINE_RATE_MULTIPLIER * taperFactor
+  }
+
+  const earnings = Math.floor(seconds * clicksPerSecond * rateMultiplier)
 
   return { earnings, seconds }
 }

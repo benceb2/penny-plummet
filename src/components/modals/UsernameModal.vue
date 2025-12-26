@@ -100,7 +100,7 @@ watch(
         class="btn btn-primary"
         :disabled="isLoading || !!error">
         <template v-if="isLoading">
-          <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+          <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
           {{ t('usernameSettings.saving') }}
         </template>
         <template v-else>

@@ -2,86 +2,54 @@ name: CI
 
 on:
   push:
-    branches: [master]
   pull_request:
-    branches: ["**"]
 
 jobs:
-  test:
+  unit-tests:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [20.11.1]
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
+          node-version: 20
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Run tests
+      - name: Type check
+        run: npm run type-check
+
+      - name: Unit tests
         run: npm test
 
-      - name: Upload test results
-        if: success() || failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: |
-            coverage/
-            test-results/
-          retention-days: 30
-
-  release:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    needs: test
+  a11y-tests:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Read package version
-        id: version
-        run: |
-          VERSION="$(node -p "require('./package.json').version")"
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-
-      - name: Check if release exists
-        id: release_check
-        uses: actions/github-script@v7
+      - uses: actions/setup-node@v4
         with:
-          script: |
-            const tag = `v${{ steps.version.outputs.version }}`;
-            try {
-              await github.rest.repos.getReleaseByTag({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                tag,
-              });
-              core.setOutput("exists", "true");
-            } catch (error) {
-              if (error.status === 404) {
-                core.setOutput("exists", "false");
-                return;
-              }
-              throw error;
-            }
+          node-version: 20
+          cache: npm
 
-      - name: Create GitHub release
-        if: steps.release_check.outputs.exists != 'true'
-        uses: softprops/action-gh-release@v2
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npm run type-check
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
         with:
-          tag_name: v${{ steps.version.outputs.version }}
-          name: v${{ steps.version.outputs.version }}
-          generate_release_notes: true
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: A11y tests
+        run: npm run test:a11y

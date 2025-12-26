@@ -64,9 +64,9 @@ const goToPage = (page: number) => {
           <div class="col-md-3">
             <div class="text-center p-3 rounded-3 hover-lift">
               <div class="mb-2">
-                <i class="bi bi-graph-up text-success fs-1"></i>
+                <i class="bi bi-graph-up text-success fs-1" aria-hidden="true"></i>
               </div>
-              <h5 class="text-muted">{{ t('transactions.stats.netAmount') }}</h5>
+              <h2 class="text-muted section-title">{{ t('transactions.stats.netAmount') }}</h2>
               <p
                 class="fs-4 fw-bold mb-0"
                 :class="{ 'text-success': stats.netAmount > 0, 'text-danger': stats.netAmount < 0 }">
@@ -77,27 +77,27 @@ const goToPage = (page: number) => {
           <div class="col-md-3">
             <div class="text-center p-3 rounded-3 hover-lift">
               <div class="mb-2">
-                <i class="bi bi-trophy text-success fs-1"></i>
+                <i class="bi bi-trophy text-success fs-1" aria-hidden="true"></i>
               </div>
-              <h5 class="text-muted">{{ t('transactions.stats.wins') }}</h5>
+              <h2 class="text-muted section-title">{{ t('transactions.stats.wins') }}</h2>
               <p class="fs-4 fw-bold mb-0">{{ stats.totalWins }}</p>
             </div>
           </div>
           <div class="col-md-3">
             <div class="text-center p-3 rounded-3 hover-lift">
               <div class="mb-2">
-                <i class="bi bi-x-circle text-danger fs-1"></i>
+                <i class="bi bi-x-circle text-danger fs-1" aria-hidden="true"></i>
               </div>
-              <h5 class="text-muted">{{ t('transactions.stats.losses') }}</h5>
+              <h2 class="text-muted section-title">{{ t('transactions.stats.losses') }}</h2>
               <p class="fs-4 fw-bold mb-0">{{ stats.totalLosses }}</p>
             </div>
           </div>
           <div class="col-md-3">
             <div class="text-center p-3 rounded-3 hover-lift">
               <div class="mb-2">
-                <i class="bi bi-arrow-repeat text-info fs-1"></i>
+                <i class="bi bi-arrow-repeat text-info fs-1" aria-hidden="true"></i>
               </div>
-              <h5 class="text-muted">{{ t('transactions.stats.pushes') }}</h5>
+              <h2 class="text-muted section-title">{{ t('transactions.stats.pushes') }}</h2>
               <p class="fs-4 fw-bold mb-0">{{ stats.totalPushes }}</p>
             </div>
           </div>

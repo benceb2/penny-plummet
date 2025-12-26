@@ -104,7 +104,7 @@ const buttonSizeClass = computed(() => {
   <div class="bet-amount-selector">
     <!-- Insufficient Funds Alert -->
     <div v-if="isDisabled" class="alert alert-danger d-flex align-items-center mb-3">
-      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      <i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i>
       <div>
         <strong>{{ t('betAmountSelector.insufficientFunds.title') }}</strong><br>
         <small>{{ t('betAmountSelector.insufficientFunds.description') }}</small>
@@ -124,7 +124,7 @@ const buttonSizeClass = computed(() => {
           :disabled="isDisabled"
           :placeholder="minAmount.toString()">
         <label for="betAmount" class="d-flex align-items-center">
-          <i class="bi bi-cash me-2"></i>{{ label ?? t('betAmountSelector.label') }}
+          <i class="bi bi-cash me-2" aria-hidden="true"></i>{{ label ?? t('betAmountSelector.label') }}
         </label>
       </div>
     </div>
@@ -132,9 +132,9 @@ const buttonSizeClass = computed(() => {
     <!-- Quick Bet Options -->
     <div v-if="!isDisabled" class="mb-3">
       <div class="d-flex align-items-center gap-2 mb-2">
-        <h6 class="mb-0 text-muted">
-          <i class="bi bi-lightning-fill me-1"></i>{{ t('betAmountSelector.quickBet') }}
-        </h6>
+        <h3 class="mb-0 text-muted subsection-title">
+          <i class="bi bi-lightning-fill me-1" aria-hidden="true"></i>{{ t('betAmountSelector.quickBet') }}
+        </h3>
       </div>
       <div class="row g-2">
         <div
@@ -143,15 +143,15 @@ const buttonSizeClass = computed(() => {
           class="col-6 col-lg-3">
           <button
             :class="[
-              'btn btn-outline-primary w-100 text-start',
+              'btn w-100 text-start',
               buttonSizeClass,
-              { 'active': localValue === amount }
+              { 'btn-primary': localValue === amount, 'btn-outline-dark': localValue !== amount }
             ]"
             :disabled="amount > maxAmount"
             @click="setPresetBet(amount)">
             <div class="d-flex justify-content-between align-items-center">
               <span class="fw-semibold">{{ formatIntAsCurrency(amount) }}</span>
-              <small v-if="getPercentage(amount)" class="text-muted">
+              <small v-if="getPercentage(amount)" class="text-body">
                 {{ getPercentage(amount) }}
               </small>
             </div>
@@ -163,7 +163,7 @@ const buttonSizeClass = computed(() => {
     <!-- Current Selection Display -->
     <div v-if="!isDisabled" class="alert alert-info d-flex justify-content-between align-items-center mb-0">
       <span>
-        <i class="bi bi-info-circle-fill me-2"></i>
+        <i class="bi bi-info-circle-fill me-2" aria-hidden="true"></i>
         <strong>{{ t('betAmountSelector.selected') }}:</strong> {{ formatIntAsCurrency(localValue) }}
       </span>
       <small v-if="getPercentage(localValue)" class="text-muted">

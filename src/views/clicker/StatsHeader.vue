@@ -12,7 +12,7 @@ const { t } = useI18n()
       <div class="card shadow-sm h-100">
         <div class="card-body text-center py-2">
           <div class="d-flex align-items-center justify-content-center">
-            <i class="bi bi-piggy-bank text-primary me-4 fs-5"></i>
+            <i class="bi bi-piggy-bank text-primary me-4 fs-5" aria-hidden="true"></i>
             <div>
               <div class="h5 mb-0 text-primary">{{ clickerStore.formattedClicks }}</div>
               <small class="text-muted">{{ t('clicker.stats.availableToCollect') }}</small>
@@ -25,7 +25,7 @@ const { t } = useI18n()
       <div class="card shadow-sm h-100">
         <div class="card-body text-center py-2">
           <div class="d-flex align-items-center justify-content-center">
-            <i class="bi bi-clock text-success me-4 fs-5"></i>
+            <i class="bi bi-clock text-success me-4 fs-5" aria-hidden="true"></i>
             <div>
               <div class="h5 mb-0 text-success">
                 {{ clickerStore.formattedIncome }}{{ t('clicker.stats.perSecondSuffix') }}
@@ -40,7 +40,7 @@ const { t } = useI18n()
       <div class="card shadow-sm h-100">
         <div class="card-body text-center py-2">
           <div class="d-flex align-items-center justify-content-center">
-            <i class="bi bi-infinity text-info me-4 fs-5"></i>
+            <i class="bi bi-infinity text-info me-4 fs-5" aria-hidden="true"></i>
             <div>
               <div class="h5 mb-0 text-info">{{ clickerStore.formattedLifetimeClicks }}</div>
               <small class="text-muted">{{ t('clicker.stats.manualLifetimeClicks') }}</small>
@@ -53,7 +53,7 @@ const { t } = useI18n()
       <div class="card shadow-sm h-100">
         <div class="card-body text-center py-2">
           <div class="d-flex align-items-center justify-content-center">
-            <i class="bi bi-robot text-secondary me-4 fs-5"></i>
+            <i class="bi bi-robot text-secondary me-4 fs-5" aria-hidden="true"></i>
             <div>
               <div class="h5 mb-0 text-secondary">{{ clickerStore.formattedPassiveLifetimeClicks }}</div>
               <small class="text-muted">{{ t('clicker.stats.passiveEarnings') }}</small>

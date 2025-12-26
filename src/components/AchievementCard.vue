@@ -18,6 +18,12 @@ const achievementKey = computed(() => {
   return `achievements.${props.achievement.category}.${props.achievement.id}`;
 });
 
+const progressPercent = computed(() => {
+  const requirement = props.achievement.requirement ?? 0;
+  if (requirement <= 0) return 0;
+  return Math.min(Math.round((props.achievement.progress / requirement) * 100), 100);
+});
+
 function claimReward() {
   achievementStore.claimAchievement(props.achievement.id);
 }
@@ -34,18 +40,18 @@ function claimReward() {
       <!-- Rewards in top right -->
       <div
         class="position-absolute top-0 end-0 mt-2 me-2 d-flex align-items-center gap-2">
-        <small class=" text-success d-flex align-items-center me-2 mt-1">
+        <small class="text-success-emphasis d-flex align-items-center me-2 mt-1">
           <i class="bi bi-coin me-1"></i>
           {{ formatIntAsCurrency(achievement.reward.chips) }}
         </small>
-        <small class="text-info d-flex align-items-center me-2 mt-1">
+        <small class="text-info-emphasis d-flex align-items-center me-2 mt-1">
           <i class="bi bi-star me-1"></i>
           {{ achievement.reward.xp }} XP
         </small>
       </div>
 
       <!-- Header -->
-      <h5 class="card-title d-flex align-items-center">
+      <h3 class="card-title d-flex align-items-center h5">
         {{ t(`${achievementKey}.title`) }}
         <span v-if="achievement.completed && achievement.claimed" class="text-success ms-2">
           <i class="bi bi-check-circle-fill"></i>
@@ -53,7 +59,7 @@ function claimReward() {
         <span v-else-if="achievement.completed && !achievement.claimed" class="text-warning ms-2">
           <i class="bi bi-gift-fill"></i>
         </span>
-      </h5>
+      </h3>
 
       <!-- Description -->
       <p class="card-text text-muted">{{ t(`${achievementKey}.description`) }}</p>
@@ -65,7 +71,11 @@ function claimReward() {
             <div
               class="progress-bar bg-primary"
               role="progressbar"
-              :style="{ width: `${(achievement.progress / achievement.requirement) * 100}%` }">
+              :style="{ width: `${progressPercent}%` }"
+              :aria-valuenow="progressPercent"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              :aria-label="t(`${achievementKey}.title`)">
             </div>
           </div>
           <small class="ms-2 text-muted" style="min-width: 45px;">

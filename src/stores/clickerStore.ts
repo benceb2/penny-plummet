@@ -24,6 +24,7 @@ export const useClickerStore = defineStore('clicker', () => {
   // Core State
   const clicks = ref(0)
   const totalLifetimeClicks = ref(0)
+  const manualLifetimeClicks = ref(0)
   const passiveLifetimeClicks = ref(0)
   const totalCriticalHits = ref(0)
   const maxComboCount = ref(0)
@@ -79,6 +80,10 @@ export const useClickerStore = defineStore('clicker', () => {
     currency: false,
     decimals: 0
   }))
+  const formattedManualLifetimeClicks = computed(() => formatNumber(manualLifetimeClicks.value, {
+    currency: false,
+    decimals: 0
+  }))
   const formattedPassiveLifetimeClicks = computed(() => formatNumber(passiveLifetimeClicks.value, {
     currency: false,
     decimals: 1
@@ -122,14 +127,15 @@ export const useClickerStore = defineStore('clicker', () => {
 
     clicks.value += finalValue
     totalLifetimeClicks.value += 1
+    manualLifetimeClicks.value += 1
 
     // Add floating animation
     addClickAnimation(finalValue, isCritical)
 
     // Update achievements
-    achievementStore.updateAchievementProgress('click_novice', totalLifetimeClicks.value)
-    achievementStore.updateAchievementProgress('click_master', totalLifetimeClicks.value)
-    achievementStore.updateAchievementProgress('click_legend', totalLifetimeClicks.value)
+    achievementStore.updateAchievementProgress('click_novice', manualLifetimeClicks.value)
+    achievementStore.updateAchievementProgress('click_master', manualLifetimeClicks.value)
+    achievementStore.updateAchievementProgress('click_legend', manualLifetimeClicks.value)
 
     if (isCritical) {
       totalCriticalHits.value++
@@ -315,9 +321,6 @@ export const useClickerStore = defineStore('clicker', () => {
               clicks.value += earnings
               passiveLifetimeClicks.value += earnings
               totalLifetimeClicks.value += earnings
-              achievementStore.updateAchievementProgress('click_novice', totalLifetimeClicks.value)
-              achievementStore.updateAchievementProgress('click_master', totalLifetimeClicks.value)
-              achievementStore.updateAchievementProgress('click_legend', totalLifetimeClicks.value)
 
               // Add subtle animation for auto-clicks (less frequent)
               if (clickerUtil.shouldShowAutoClickAnimation()) {
@@ -380,9 +383,6 @@ export const useClickerStore = defineStore('clicker', () => {
       clicks.value += result.earnings
       passiveLifetimeClicks.value += result.earnings
       totalLifetimeClicks.value += result.earnings
-      achievementStore.updateAchievementProgress('click_novice', totalLifetimeClicks.value)
-      achievementStore.updateAchievementProgress('click_master', totalLifetimeClicks.value)
-      achievementStore.updateAchievementProgress('click_legend', totalLifetimeClicks.value)
 
       if (result.earnings > maxOfflineEarnings.value) {
         maxOfflineEarnings.value = result.earnings
@@ -450,6 +450,7 @@ export const useClickerStore = defineStore('clicker', () => {
   function reset() {
     clicks.value = 0
     totalLifetimeClicks.value = 0
+    manualLifetimeClicks.value = 0
     passiveLifetimeClicks.value = 0
     totalCriticalHits.value = 0
     maxComboCount.value = 0
@@ -473,6 +474,7 @@ export const useClickerStore = defineStore('clicker', () => {
     // State
     clicks,
     totalLifetimeClicks,
+    manualLifetimeClicks,
     passiveLifetimeClicks,
     totalCriticalHits,
     maxComboCount,
@@ -507,6 +509,7 @@ export const useClickerStore = defineStore('clicker', () => {
     formattedAutoClickerSpeedCost,
     formattedClicks,
     formattedLifetimeClicks,
+    formattedManualLifetimeClicks,
     formattedPassiveLifetimeClicks,
     formattedIncome,
 
@@ -533,6 +536,7 @@ export const useClickerStore = defineStore('clicker', () => {
     paths: [
       'clicks',
       'totalLifetimeClicks',
+      'manualLifetimeClicks',
       'passiveLifetimeClicks',
       'totalCriticalHits',
       'maxComboCount',

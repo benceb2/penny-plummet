@@ -44,6 +44,7 @@ const runAxe = async (wrapper: ReturnType<typeof mount>) => {
 
 describe('Interactive components accessibility', () => {
   it('AppNavbar has no axe violations', async () => {
+    expect.hasAssertions()
     const wrapper = mountWithStores(AppNavbar)
     const userStore = useUserStore()
     const achievementStore = useAchievementStore()
@@ -57,6 +58,7 @@ describe('Interactive components accessibility', () => {
   })
 
   it('ToastContainer has no axe violations with active toasts', async () => {
+    expect.hasAssertions()
     const wrapper = mountWithStores(ToastContainer)
     const toastStore = useToastStore()
 
@@ -77,6 +79,7 @@ describe('Interactive components accessibility', () => {
   })
 
   it('ClickArea has no axe violations', async () => {
+    expect.hasAssertions()
     const wrapper = mountWithStores(ClickArea)
     const clickerStore = useClickerStore()
 
@@ -86,6 +89,7 @@ describe('Interactive components accessibility', () => {
   })
 
   it('UpgradesPanel has no axe violations', async () => {
+    expect.hasAssertions()
     const wrapper = mountWithStores(UpgradesPanel)
     const userStore = useUserStore()
     const clickerStore = useClickerStore()

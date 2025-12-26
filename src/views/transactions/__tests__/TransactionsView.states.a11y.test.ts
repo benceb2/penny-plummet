@@ -49,6 +49,7 @@ const runAxe = async (wrapper: ReturnType<typeof mount>) => {
 
 describe('TransactionsView state accessibility', () => {
   it('loading state has no axe violations', async () => {
+    expect.hasAssertions()
     const wrapper = mountTransactionsView({
       isListLoading: true,
       transactions: [],
@@ -58,6 +59,7 @@ describe('TransactionsView state accessibility', () => {
   })
 
   it('empty state has no axe violations', async () => {
+    expect.hasAssertions()
     const wrapper = mountTransactionsView({
       isListLoading: false,
       transactions: [],

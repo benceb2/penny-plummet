@@ -16,12 +16,12 @@ export default {
     },
     "about": "About",
     "wallet": {
-      "transactions": "Transaction History"
+      "transactions": "Transactions"
     },
     "profile": {
       "menu": "User menu",
       "settings": "Settings",
-      "viewProfile": "View Profile",
+      "viewProfile": "Profile",
       "achievements": "Achievements"
     }
   },

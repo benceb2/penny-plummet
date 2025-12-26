@@ -18,12 +18,12 @@ export default {
     "wallet": {
       "title": "Több zseton kell?",
       "clicker": "Kattintós Játék",
-      "transactions": "Tranzakció Előzmények"
+      "transactions": "Tranzakciók"
     },
     "profile": {
       "menu": "Felhasználói menü",
       "settings": "Beállítások",
-      "viewProfile": "Profil Megtekintése",
+      "viewProfile": "Profil",
       "achievements": "Eredmények"
     }
   },

@@ -24,6 +24,7 @@ export const useClickerStore = defineStore('clicker', () => {
   // Core State
   const clicks = ref(0)
   const totalLifetimeClicks = ref(0)
+  const passiveLifetimeClicks = ref(0)
   const totalCriticalHits = ref(0)
   const maxComboCount = ref(0)
   const maxCollectionAmount = ref(0)
@@ -45,6 +46,7 @@ export const useClickerStore = defineStore('clicker', () => {
   const comboMultiplier = ref(1)
   const comboCount = ref(0)
   const lastClickTime = ref(0)
+  const isClickerActive = ref(false)
 
   // Offline tracking
   const lastOnlineTimestamp = ref(Date.now())
@@ -74,6 +76,10 @@ export const useClickerStore = defineStore('clicker', () => {
   const formattedAutoClickerSpeedCost = computed(() => formatIntAsCurrency(autoClickerSpeedCost.value))
   const formattedClicks = computed(() => formatIntAsCurrency(clicks.value))
   const formattedLifetimeClicks = computed(() => formatNumber(totalLifetimeClicks.value, {
+    currency: false,
+    decimals: 0
+  }))
+  const formattedPassiveLifetimeClicks = computed(() => formatNumber(passiveLifetimeClicks.value, {
     currency: false,
     decimals: 1
   }))
@@ -115,7 +121,7 @@ export const useClickerStore = defineStore('clicker', () => {
       clickValue.value
 
     clicks.value += finalValue
-    totalLifetimeClicks.value += finalValue
+    totalLifetimeClicks.value += 1
 
     // Add floating animation
     addClickAnimation(finalValue, isCritical)
@@ -140,6 +146,10 @@ export const useClickerStore = defineStore('clicker', () => {
   }
 
   function addClickAnimation(value: number, isCritical = false) {
+    if (!isClickerActive.value) {
+      return
+    }
+
     const id = Date.now() + Math.random()
     const position = clickerUtil.generateClickAnimationPosition()
 
@@ -303,6 +313,7 @@ export const useClickerStore = defineStore('clicker', () => {
 
             if (earnings > 0) {
               clicks.value += earnings
+              passiveLifetimeClicks.value += earnings
               totalLifetimeClicks.value += earnings
               achievementStore.updateAchievementProgress('click_novice', totalLifetimeClicks.value)
               achievementStore.updateAchievementProgress('click_master', totalLifetimeClicks.value)
@@ -367,6 +378,7 @@ export const useClickerStore = defineStore('clicker', () => {
     if (result.earnings > 0) {
       // Add earnings to clicks
       clicks.value += result.earnings
+      passiveLifetimeClicks.value += result.earnings
       totalLifetimeClicks.value += result.earnings
       achievementStore.updateAchievementProgress('click_novice', totalLifetimeClicks.value)
       achievementStore.updateAchievementProgress('click_master', totalLifetimeClicks.value)
@@ -427,10 +439,18 @@ export const useClickerStore = defineStore('clicker', () => {
     offlineSeconds.value = 0
   }
 
+  function setClickerActive(active: boolean) {
+    isClickerActive.value = active
+    if (!active) {
+      clickAnimations.value = []
+    }
+  }
+
   // Reset state
   function reset() {
     clicks.value = 0
     totalLifetimeClicks.value = 0
+    passiveLifetimeClicks.value = 0
     totalCriticalHits.value = 0
     maxComboCount.value = 0
     maxCollectionAmount.value = 0
@@ -453,6 +473,7 @@ export const useClickerStore = defineStore('clicker', () => {
     // State
     clicks,
     totalLifetimeClicks,
+    passiveLifetimeClicks,
     totalCriticalHits,
     maxComboCount,
     maxCollectionAmount,
@@ -473,6 +494,7 @@ export const useClickerStore = defineStore('clicker', () => {
     clickAnimations,
     comboMultiplier,
     comboCount,
+    isClickerActive,
 
     // Computed
     clickValue,
@@ -485,6 +507,7 @@ export const useClickerStore = defineStore('clicker', () => {
     formattedAutoClickerSpeedCost,
     formattedClicks,
     formattedLifetimeClicks,
+    formattedPassiveLifetimeClicks,
     formattedIncome,
 
     // Actions
@@ -500,7 +523,8 @@ export const useClickerStore = defineStore('clicker', () => {
     closeOfflineEarningsModal,
     startAutoClicker,
     stopAutoClicker,
-    addClickAnimation
+    addClickAnimation,
+    setClickerActive
   }
 }, {
   persist: {
@@ -509,6 +533,7 @@ export const useClickerStore = defineStore('clicker', () => {
     paths: [
       'clicks',
       'totalLifetimeClicks',
+      'passiveLifetimeClicks',
       'totalCriticalHits',
       'maxComboCount',
       'maxCollectionAmount',

@@ -74,7 +74,7 @@ const handleCollectWithAnimation = () => {
       <!-- Main Click Area -->
       <div class="position-relative mb-4 p-3 d-flex justify-content-center align-items-center flex-grow-1">
         <button
-          class="main-click-btn btn rounded-circle p-0 position-relative"
+          class="main-click-btn btn btn-warning rounded-circle p-0 position-relative shadow"
           :style="{
             transform: `scale(${buttonScale * clickScale})`,
             boxShadow: glowIntensity > 0 ?
@@ -120,9 +120,9 @@ const handleCollectWithAnimation = () => {
       </div>
 
       <!-- Action Buttons -->
-      <div class="d-flex gap-5 w-75 mx-auto">
+      <div class="d-flex gap-3 w-75 mx-auto">
         <button
-          class="collect-btn btn flex-fill position-relative overflow-hidden"
+          class="collect-btn btn btn-success btn-lg flex-fill position-relative overflow-hidden"
           :style="{ transform: `scale(${collectButtonScale})` }"
           @click="handleCollectWithAnimation"
           :disabled="clickerStore.clicks < 10">
@@ -190,25 +190,16 @@ const handleCollectWithAnimation = () => {
 .collect-btn {
   border: none !important;
   background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
-  color: white !important;
-  font-size: 1.1rem;
-  padding: 1rem 1.5rem;
-  border-radius: 12px !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+  transition: background 0.3s ease;
   min-height: 80px;
 }
 
 .collect-btn:hover:not(:disabled) {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 12px 35px rgba(40, 167, 69, 0.4);
   background: linear-gradient(135deg, #32d74b 0%, #17a2b8 100%) !important;
 }
 
 .collect-btn:disabled {
   opacity: 0.6;
-  transform: none !important;
-  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
 }
 
 /* Animated background for collect button */
@@ -295,6 +286,8 @@ const handleCollectWithAnimation = () => {
   pointer-events: none;
   font-weight: 700;
   white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .floating-normal {

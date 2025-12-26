@@ -73,7 +73,7 @@ export const useClickerStore = defineStore('clicker', () => {
   const formattedClicks = computed(() => formatIntAsCurrency(clicks.value))
   const formattedLifetimeClicks = computed(() => formatNumber(totalLifetimeClicks.value, {
     currency: false,
-    decimals: 1
+    decimals: 0
   }))
   const formattedPassiveLifetimeClicks = computed(() => formatNumber(passiveLifetimeClicks.value, {
     currency: false,
@@ -111,7 +111,7 @@ export const useClickerStore = defineStore('clicker', () => {
       clickValue.value
 
     clicks.value += finalValue
-    totalLifetimeClicks.value += finalValue
+    totalLifetimeClicks.value += 1
 
     // Add floating animation
     addClickAnimation(finalValue, isCritical)

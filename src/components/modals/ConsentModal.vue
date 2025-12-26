@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/stores/userStore'
 import BaseModal from './BaseModal.vue'
 
 const userStore = useUserStore()
 const showModal = ref(!userStore.consented)
+const { t } = useI18n()
 
 const acceptConsent = () => {
   userStore.updateConsent(true)
@@ -15,18 +17,14 @@ const acceptConsent = () => {
 <template>
   <BaseModal
     :show="showModal"
-    title="Local Storage Notice"
+    :title="t('consentModal.title')"
     :centered="true"
     :static="true">
-    <p>
-      This game uses local storage to save your progress and settings.
-      No personal data is collected or shared with third parties.
-      By clicking "Accept", you agree to the use of local storage.
-    </p>
+    <p>{{ t('consentModal.description') }}</p>
 
     <template #footer>
       <button type="button" class="btn btn-primary" @click="acceptConsent">
-        Accept
+        {{ t('consentModal.accept') }}
       </button>
     </template>
   </BaseModal>

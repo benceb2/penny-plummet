@@ -141,10 +141,9 @@ export const useClickerStore = defineStore('clicker', () => {
     }, 2000)
   }
 
-  function collectChips(userStore: UserStore) {
+  function collectChips() {
     if (clicks.value >= 10) {
       const amount = clicks.value
-      userStore.updateChips(amount)
       const calculatedXP = Math.floor(amount * 0.2)
       achievementStore.addXP(calculatedXP)
 
@@ -152,7 +151,10 @@ export const useClickerStore = defineStore('clicker', () => {
         amount: amount,
         type: 'income',
         game: 'clicker',
-        details: `Collected ${formatIntAsCurrency(amount)} chips from clicking`
+        detailsKey: 'transactions.details.clicker.collect',
+        detailsParams: {
+          amount: formatIntAsCurrency(amount)
+        }
       })
 
       clicks.value = 0
@@ -162,7 +164,6 @@ export const useClickerStore = defineStore('clicker', () => {
   function buyAutoClicker(userStore: UserStore) {
     if (userStore.chips >= autoClickerCost.value) {
       const cost = autoClickerCost.value
-      userStore.updateChips(-cost)
       autoClickersCount.value++
 
       // Calculate new cost using utility
@@ -172,7 +173,10 @@ export const useClickerStore = defineStore('clicker', () => {
         amount: -cost,
         type: 'purchase',
         game: 'clicker',
-        details: `Purchased Auto-Clicker (Level ${autoClickersCount.value})`
+        detailsKey: 'transactions.details.clicker.autoClicker',
+        detailsParams: {
+          level: autoClickersCount.value
+        }
       })
 
       achievementStore.updateAchievementProgress('auto_collector', autoClickersCount.value)
@@ -186,7 +190,6 @@ export const useClickerStore = defineStore('clicker', () => {
   function buyMultiplier(userStore: UserStore) {
     if (userStore.chips >= multiplierCost.value) {
       const cost = multiplierCost.value
-      userStore.updateChips(-cost)
       multiplierLevel.value++
 
       // Calculate new cost using utility
@@ -196,7 +199,10 @@ export const useClickerStore = defineStore('clicker', () => {
         amount: -cost,
         type: 'purchase',
         game: 'clicker',
-        details: `Purchased Multiplier (Level ${multiplierLevel.value})`
+        detailsKey: 'transactions.details.clicker.multiplier',
+        detailsParams: {
+          level: multiplierLevel.value
+        }
       })
 
       achievementStore.updateAchievementProgress('multiplier_enthusiast', multiplierLevel.value)
@@ -206,7 +212,6 @@ export const useClickerStore = defineStore('clicker', () => {
   function buyCriticalUpgrade(userStore: UserStore) {
     if (userStore.chips >= criticalCost.value) {
       const cost = criticalCost.value
-      userStore.updateChips(-cost)
       criticalLevel.value++
 
       // Calculate new cost using utility
@@ -216,7 +221,10 @@ export const useClickerStore = defineStore('clicker', () => {
         amount: -cost,
         type: 'purchase',
         game: 'clicker',
-        details: `Purchased Critical Hit Upgrade (Level ${criticalLevel.value})`
+        detailsKey: 'transactions.details.clicker.critical',
+        detailsParams: {
+          level: criticalLevel.value
+        }
       })
     }
   }
@@ -224,7 +232,6 @@ export const useClickerStore = defineStore('clicker', () => {
   function buyAutoClickerSpeed(userStore: UserStore) {
     if (userStore.chips >= autoClickerSpeedCost.value && autoClickersCount.value > 0) {
       const cost = autoClickerSpeedCost.value
-      userStore.updateChips(-cost)
       autoClickerSpeedLevel.value++
 
       // Calculate new cost using utility
@@ -234,7 +241,10 @@ export const useClickerStore = defineStore('clicker', () => {
         amount: -cost,
         type: 'purchase',
         game: 'clicker',
-        details: `Purchased Auto-Clicker Speed (Level ${autoClickerSpeedLevel.value})`
+        detailsKey: 'transactions.details.clicker.speed',
+        detailsParams: {
+          level: autoClickerSpeedLevel.value
+        }
       })
 
       // Restart auto-clicker with new speed
@@ -327,11 +337,45 @@ export const useClickerStore = defineStore('clicker', () => {
     )
 
     if (result.earnings > 0) {
-      showOfflineEarnings.value = true
-      offlineEarnings.value = result.earnings
-      offlineSeconds.value = result.seconds
+      // Add earnings to clicks
       clicks.value += result.earnings
       totalLifetimeClicks.value += result.earnings
+
+      // Automatically collect the chips if there's enough
+      if (clicks.value >= 10) {
+        const amount = clicks.value
+
+        // Calculate and add XP
+        const calculatedXP = Math.floor(amount * 0.2)
+        achievementStore.addXP(calculatedXP)
+
+        // Add transaction for transparency
+        const timeAwayText = result.seconds >= 3600
+          ? `${Math.floor(result.seconds / 3600)}h ${Math.floor((result.seconds % 3600) / 60)}m`
+          : `${Math.floor(result.seconds / 60)}m`
+
+        transactionStore.addTransaction({
+          amount: amount,
+          type: 'income',
+          game: 'clicker',
+          detailsKey: 'transactions.details.clicker.offlineEarnings',
+          detailsParams: {
+            timeAway: timeAwayText
+          }
+        })
+
+        // Set up modal data with the collected amount
+        offlineEarnings.value = amount
+        offlineSeconds.value = result.seconds
+        showOfflineEarnings.value = true
+
+        // Reset clicks since we collected them
+        clicks.value = 0
+      } else {
+        // If earnings are too small, don't show modal
+        // The earnings remain in clicks for when they manually collect
+        console.log(`Small offline earnings (${result.earnings} clicks) added to balance`)
+      }
     }
 
     lastOnlineTimestamp.value = Date.now()
@@ -413,7 +457,21 @@ export const useClickerStore = defineStore('clicker', () => {
 }, {
   persist: {
     key: calculateStorageKey("clicker-store"),
-    serializer: createGameSerializer()
+    serializer: createGameSerializer(),
+    paths: [
+      'clicks',
+      'totalLifetimeClicks',
+      'baseClickValue',
+      'autoClickersCount',
+      'autoClickerCost',
+      'multiplierLevel',
+      'multiplierCost',
+      'criticalLevel',
+      'criticalCost',
+      'autoClickerSpeedLevel',
+      'autoClickerSpeedCost',
+      'lastOnlineTimestamp'
+    ]
   }
 } as any)
 

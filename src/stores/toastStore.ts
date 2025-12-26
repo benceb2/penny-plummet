@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import i18n from '@/i18n';
+import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
 
 export interface Toast {
   id: number;
@@ -34,8 +36,8 @@ export const useToastStore = defineStore('toast', () => {
   function achievementUnlocked(title: string, description: string) {
     addToast({
       type: 'achievement',
-      title: 'Achievement Unlocked!',
-      message: `${title} - ${description}`,
+      title: i18n.global.t('toast.achievementUnlocked.title'),
+      message: i18n.global.t('toast.achievementUnlocked.message', { title, description }),
       icon: 'bi-trophy-fill'
     });
   }
@@ -43,8 +45,11 @@ export const useToastStore = defineStore('toast', () => {
   function levelUp(newLevel: number, rewards: { chips: number; multiplier: number }) {
     addToast({
       type: 'level-up',
-      title: 'Level Up!',
-      message: `You've reached level ${newLevel}! Rewards: $${rewards.chips} chips`,
+      title: i18n.global.t('toast.levelUp.title'),
+      message: i18n.global.t('toast.levelUp.message', {
+        level: newLevel,
+        chips: formatIntAsCurrency(rewards.chips)
+      }),
       icon: 'bi-stars'
     });
   }

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import BaseModal from './BaseModal.vue'
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil'
 
@@ -12,31 +13,36 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'close'): void
 }>()
+const { t } = useI18n()
 
 // Convert seconds to readable format
 const formattedTime = computed(() => {
   const hours = Math.floor(props.timeAway / 3600)
   const minutes = Math.floor((props.timeAway % 3600) / 60)
-
+  const hourUnit = t('time.units.hourShort')
+  const minuteUnit = t('time.units.minuteShort')
   return hours > 0
-    ? `${hours}h ${minutes}m`
-    : `${minutes}m`
+    ? `${hours}${hourUnit} ${minutes}${minuteUnit}`
+    : `${minutes}${minuteUnit}`
 })
 </script>
 
 <template>
   <BaseModal
     :show="show"
-    title="Welcome Back!"
+    :title="t('offlineEarningsModal.title')"
     centered
     static>
     <div class="text-center">
-      <p>While you were away for {{ formattedTime }}:</p>
+      <div class="mb-3">
+        <i class="bi bi-piggy-bank-fill text-success" style="font-size: 48px;"></i>
+      </div>
+      <p>{{ t('offlineEarningsModal.intro', { time: formattedTime }) }}</p>
       <p class="text-success font-bold mt-3 text-xl">
-        +{{ formatIntAsCurrency(earnings) }} clicks earned
+        {{ t('offlineEarningsModal.collected', { amount: formatIntAsCurrency(earnings) }) }}
       </p>
       <p class="text-muted">
-        You can collect your earnings from the Clicker mini-game.
+        {{ t('offlineEarningsModal.description') }}
       </p>
     </div>
 
@@ -44,12 +50,8 @@ const formattedTime = computed(() => {
       <button
         @click="emit('close')"
         class="btn btn-primary w-100">
-        Awesome!
+        {{ t('offlineEarningsModal.confirm') }}
       </button>
-      <RouterLink @click.prevent="emit('close')" to="/clicker" class="btn btn-outline-secondary w-100">
-        Collect earnings
-        <i class="bi bi-arrow-right ms-2"></i>
-      </RouterLink>
     </template>
   </BaseModal>
 </template>

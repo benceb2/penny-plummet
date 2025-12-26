@@ -7,7 +7,7 @@ import type { AchievementStore } from '@/stores/achievementStore';
 import type { UserStore } from '@/stores/userStore';
 import type { BlackjackStore } from '@/stores/blackjackStore';
 import type { ClickerStore } from '@/stores/clickerStore';
-import type { TransactionStore } from '@/stores/transactionStore';
+import type { TransactionSaveData } from '@/types/TransactionSaveData';
 import type { RouletteStore } from '@/stores/rouletteStore';
 
 describe('gameSaveUtil', () => {
@@ -26,7 +26,7 @@ describe('gameSaveUtil', () => {
       } as AchievementStore,
       blackjack: {} as BlackjackStore,
       clicker: {} as ClickerStore,
-      transactions: {} as TransactionStore,
+      transactions: { transactions: [] } as TransactionSaveData,
       roulette: {} as RouletteStore,
       timestamp: Date.now()
     };

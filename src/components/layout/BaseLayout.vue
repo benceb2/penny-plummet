@@ -1,14 +1,14 @@
 <script setup lang="ts">
 
 defineProps<{
-  title: string
+  title?: string
   bootstrapIcon?: string
   fontawesomeIcon?: string
 }>()
 </script>
 
 <template>
-  <main class="container py-4">
+  <main class="container py-2 pt-4">
     <div class="row mb-4">
       <div class="col-12">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">

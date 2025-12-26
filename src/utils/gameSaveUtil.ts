@@ -10,20 +10,21 @@ import { useAchievementStore } from '@/stores/achievementStore';
 
 const serializer = createGameSerializer();
 
-function getCurrentGameState(): GameSaveData {
+async function getCurrentGameState(): Promise<GameSaveData> {
   const userStore = useUserStore();
   const achievementStore = useAchievementStore();
   const blackjackStore = useBlackjackStore();
   const clickerStore = useClickerStore();
   const transactionStore = useTransactionStore();
   const rouletteStore = useRouletteStore();
+  const transactions = await transactionStore.getAllSavedTransactions();
 
   return {
     user: userStore.$state,
     achievements: achievementStore.$state,
     blackjack: blackjackStore.$state,
     clicker: clickerStore.$state,
-    transactions: transactionStore.$state,
+    transactions: { transactions },
     roulette: rouletteStore.$state,
     timestamp: Date.now()
   } as GameSaveData;

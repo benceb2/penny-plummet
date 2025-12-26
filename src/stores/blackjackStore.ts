@@ -18,11 +18,14 @@ import { generateDeck, shuffleDeck, calculateHandValue } from '@/utils/blackjack
 import { calculateStorageKey, createGameSerializer } from '../utils/gameSaveSerializerUtil';
 import { useAchievementStore } from './achievementStore';
 import { useUserStore } from './userStore';
+import { useTransactionStore } from './transactionStore';
+import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
 
 export const useBlackjackStore = defineStore('blackjack', () => {
   // Game state references
   const achievementStore = useAchievementStore()
   const userStore = useUserStore()
+  const transactionStore = useTransactionStore()
   const deck = ref<Card[]>([])
   const playerHand = ref<Card[]>([])
   const dealerHand = ref<Card[]>([])
@@ -103,6 +106,40 @@ export const useBlackjackStore = defineStore('blackjack', () => {
   function handleGameResult(result: BlackjackResult) {
     // Update user stats first
     userStore.updateStats(result)
+
+    if (result.isWin) {
+      const winAmount = result.amount - result.initialBet;
+      transactionStore.addTransaction({
+        amount: winAmount,
+        type: 'win',
+        game: 'blackjack',
+        detailsKey: 'transactions.details.blackjack.win',
+        detailsParams: {
+          amount: formatIntAsCurrency(winAmount),
+          playerScore: result.playerScore,
+          dealerScore: result.dealerScore
+        }
+      });
+    } else if (result.isPush) {
+      transactionStore.addTransaction({
+        amount: 0,
+        type: 'push',
+        game: 'blackjack',
+        detailsKey: 'transactions.details.blackjack.push'
+      });
+    } else {
+      transactionStore.addTransaction({
+        amount: -result.initialBet,
+        type: 'loss',
+        game: 'blackjack',
+        detailsKey: 'transactions.details.blackjack.loss',
+        detailsParams: {
+          amount: formatIntAsCurrency(result.initialBet),
+          playerScore: result.playerScore,
+          dealerScore: result.dealerScore
+        }
+      });
+    }
 
     // Only handle win-related updates if it's a win (not a push)
     if (result.isWin) {

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Transaction } from '@/types/Transaction';
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
+import { useI18n } from 'vue-i18n';
 
 interface Props {
   transaction: Transaction;
@@ -13,14 +14,43 @@ const props = withDefaults(defineProps<Props>(), {
   showDetails: true
 });
 
+import type { Locale } from 'date-fns';
 import { formatDistanceToNow, format } from 'date-fns';
+import { enGB, hu } from 'date-fns/locale';
+
+const { locale, t } = useI18n();
+
+const dateLocaleMap: Record<string, Locale> = {
+  'en-GB': enGB,
+  'hu-HU': hu
+};
+
+function getDateLocale() {
+  return dateLocaleMap[locale.value] ?? enGB;
+}
 
 function formatDate(timestamp: number): string {
+  const dateLocale = getDateLocale();
   if (props.compact) {
-    return formatDistanceToNow(timestamp, { addSuffix: true });
+    return formatDistanceToNow(timestamp, { addSuffix: true, locale: dateLocale });
   } else {
-    return format(timestamp, 'EEE, MMM d, h:mm a');
+    return format(timestamp, 'EEE, MMM d, h:mm a', { locale: dateLocale });
   }
+}
+
+function getTypeLabel(type: Transaction['type']): string {
+  return t(`transactions.badges.type.${type}`);
+}
+
+function getGameLabel(game: Transaction['game']): string {
+  return t(`transactions.badges.game.${game}`);
+}
+
+function getDetails(): string | undefined {
+  if (props.transaction.detailsKey) {
+    return t(props.transaction.detailsKey, props.transaction.detailsParams ?? {});
+  }
+  return props.transaction.details;
 }
 </script>
 
@@ -38,18 +68,18 @@ function formatDate(timestamp: number): string {
               'bg-danger': ['loss', 'purchase'].includes(transaction.type),
               'bg-secondary': transaction.type === 'push'
             }">
-            {{ transaction.type.toUpperCase() }}
+            {{ getTypeLabel(transaction.type) }}
           </span>
           <span class="badge bg-primary me-2">
-            {{ transaction.game.toUpperCase() }}
+            {{ getGameLabel(transaction.game) }}
           </span>
           <small class="text-muted">{{ formatDate(transaction.timestamp) }}</small>
         </div>
 
         <div
-          v-if="showDetails && transaction.details"
+          v-if="showDetails && getDetails()"
           class="text-muted small">
-          {{ transaction.details }}
+          {{ getDetails() }}
         </div>
       </div>
 

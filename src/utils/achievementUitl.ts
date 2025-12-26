@@ -159,6 +159,20 @@ export const achievements = ref<Achievement[]>([
     category: 'clicker'
   },
   {
+    id: 'lucky_number',
+    title: 'Lucky Number',
+    description: 'Win with a straight bet in Roulette',
+    requirement: 1,
+    progress: 0,
+    completed: false,
+    claimed: false,
+    reward: {
+      chips: 250,
+      xp: 150
+    },
+    category: 'general'
+  },
+  {
     id: 'small_fortune',
     title: 'Small Fortune',
     description: 'Accumulate $1,000 in chips',

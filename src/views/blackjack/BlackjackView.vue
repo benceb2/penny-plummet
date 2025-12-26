@@ -81,7 +81,6 @@ watch(() => gameStore.gameState, (newState) => {
 
 function handleDeal() {
   if (betAmount.value > 0 && betAmount.value <= userStore.chips) {
-    userStore.updateChips(-betAmount.value) // Deduct bet amount
     gameStore.currentBet = betAmount.value
     gameStore.dealCards()
   }

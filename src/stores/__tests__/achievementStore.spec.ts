@@ -3,9 +3,7 @@ import { createPinia, setActivePinia } from 'pinia';
 import { useAchievementStore } from '../achievementStore';
 import { achievements as achievementsRef } from '@/utils/achievementUitl';
 
-const userStoreMock = {
-  updateChips: vi.fn()
-};
+const userStoreMock = {};
 
 const toastStoreMock = {
   levelUp: vi.fn(),
@@ -43,7 +41,6 @@ describe('Achievement Store', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
     achievementsRef.value = JSON.parse(JSON.stringify(originalAchievements));
-    userStoreMock.updateChips.mockClear();
     toastStoreMock.levelUp.mockClear();
     toastStoreMock.achievementUnlocked.mockClear();
     toastStoreMock.addToast.mockClear();

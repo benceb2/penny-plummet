@@ -3,8 +3,6 @@ import { shallowMount } from '@vue/test-utils';
 import BlackjackView from '../BlackjackView.vue';
 import { BlackjackState } from '@/types/BlackjackGameState';
 
-const updateChipsMock = vi.fn();
-
 vi.mock('@/stores/userStore', () => ({
   useUserStore: () => ({
     chips: 100,
@@ -12,8 +10,7 @@ vi.mock('@/stores/userStore', () => ({
       handsPlayed: 0,
       totalWinnings: 0,
       biggestWin: 0
-    },
-    updateChips: updateChipsMock
+    }
   })
 }));
 
@@ -47,23 +44,22 @@ vi.mock('vue-i18n', () => ({
 }));
 
 describe('BlackjackView', () => {
-  it('does not award chips on result close (chips already handled in stores)', async () => {
-    updateChipsMock.mockClear();
-
+  it('hides the result modal when close is emitted', async () => {
     const wrapper = shallowMount(BlackjackView, {
       global: {
         stubs: {
           BaseLayout: { template: '<div><slot /></div>' },
           BetAmountSelector: true,
           PlayingCard: true,
-          GameResult: { name: 'GameResult', template: '<div></div>', emits: ['close'] }
+          GameResult: { name: 'GameResult', props: ['show'], template: '<div></div>', emits: ['close'] }
         }
       }
     });
 
     const gameResult = wrapper.findComponent({ name: 'GameResult' });
     gameResult.vm.$emit('close');
+    await wrapper.vm.$nextTick();
 
-    expect(updateChipsMock).not.toHaveBeenCalled();
+    expect(gameResult.props('show')).toBe(false);
   });
 });

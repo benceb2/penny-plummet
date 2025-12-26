@@ -5,7 +5,6 @@ import { type BlackjackResult } from '@/types/BlackjackResult';
 import { calculateStorageKey, createGameSerializer } from '@/utils/gameSaveSerializerUtil';
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
 import { useAchievementStore } from './achievementStore';
-import { useTransactionStore } from './transactionStore';
 
 export const STARTING_CHIPS = 50;
 
@@ -37,53 +36,14 @@ export const useUserStore = defineStore('user', () => {
 
   function updateStats(gameResult: BlackjackResult) {
     stats.value.handsPlayed++;
-    const transactionStore = useTransactionStore();
 
     if (gameResult.isWin) {
       const winAmount = gameResult.amount - gameResult.initialBet;
       stats.value.totalWinnings += winAmount;
       stats.value.biggestWin = Math.max(stats.value.biggestWin, winAmount);
-      updateChips(gameResult.amount);
-
-      // Add win transaction
-      transactionStore.addTransaction({
-        amount: winAmount,
-        type: 'win',
-        game: 'blackjack',
-        detailsKey: 'transactions.details.blackjack.win',
-        detailsParams: {
-          amount: formatIntAsCurrency(winAmount),
-          playerScore: gameResult.playerScore,
-          dealerScore: gameResult.dealerScore
-        }
-      });
-
     } else if (gameResult.isPush) {
-      updateChips(gameResult.initialBet);
-
-      // Add push transaction
-      transactionStore.addTransaction({
-        amount: 0,
-        type: 'push',
-        game: 'blackjack',
-        detailsKey: 'transactions.details.blackjack.push'
-      });
-
     } else {
       stats.value.totalWinnings -= gameResult.initialBet;
-
-      // Add loss transaction
-      transactionStore.addTransaction({
-        amount: -gameResult.initialBet,
-        type: 'loss',
-        game: 'blackjack',
-        detailsKey: 'transactions.details.blackjack.loss',
-        detailsParams: {
-          amount: formatIntAsCurrency(gameResult.initialBet),
-          playerScore: gameResult.playerScore,
-          dealerScore: gameResult.dealerScore
-        }
-      });
     }
   }
 

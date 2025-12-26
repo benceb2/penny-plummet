@@ -13,6 +13,7 @@ import {
 } from '@/utils/transactionDb';
 import { STARTING_CHIPS } from '@/stores/userStore';
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
+import { useUserStore } from '@/stores/userStore';
 
 const LATEST_TRANSACTIONS_LIMIT = 6;
 
@@ -42,6 +43,7 @@ export type BalanceAudit = {
 };
 
 export const useTransactionStore = defineStore('transactions', () => {
+  const userStore = useUserStore();
   const transactions = ref<Transaction[]>([]);
   const latestTransactions = ref<Transaction[]>([]);
   const totalCount = ref(0);
@@ -125,14 +127,16 @@ export const useTransactionStore = defineStore('transactions', () => {
   void loadLatestTransactions();
 
   async function addTransaction(transaction: Omit<Transaction, 'id' | 'timestamp'>) {
-    if (!hasIndexedDb) return;
-    await ensureDbReady();
     const next = {
       ...transaction,
       id: crypto.randomUUID(),
       timestamp: Date.now()
     };
 
+    userStore.updateChips(next.amount);
+
+    if (!hasIndexedDb) return;
+    await ensureDbReady();
     await putTransaction(next);
 
     latestTransactions.value.unshift(next);

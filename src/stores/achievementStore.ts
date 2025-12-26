@@ -5,7 +5,6 @@ import { achievements } from '@/utils/achievementUitl';
 import type { Achievement } from '@/types/Achievement';
 import type { Level } from '@/types/Level';
 import i18n from '@/i18n';
-import { useUserStore } from './userStore';
 import { useToastStore } from './toastStore';
 import { useTransactionStore } from './transactionStore';
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
@@ -18,7 +17,6 @@ interface AchievementWithClaim extends Achievement {
 }
 
 export const useAchievementStore = defineStore('achievements', () => {
-  const userStore = useUserStore();
   const toastStore = useToastStore();
   const transactionStore = useTransactionStore();
 
@@ -117,7 +115,6 @@ export const useAchievementStore = defineStore('achievements', () => {
 
     // Apply level up rewards
     const reward = calculateLevelReward(currentLevel.value.level);
-    userStore.updateChips(reward.chips);
     transactionStore.addTransaction({
       amount: reward.chips,
       type: 'income',
@@ -165,7 +162,6 @@ export const useAchievementStore = defineStore('achievements', () => {
     const achievement = achievements.value.find(a => a.id === achievementId) as AchievementWithClaim;
     if (achievement && achievement.completed && !achievement.claimed) {
       achievement.claimed = true;
-      userStore.updateChips(achievement.reward.chips);
       addXP(achievement.reward.xp);
       const { title } = getAchievementTexts(achievement);
       transactionStore.addTransaction({

@@ -136,18 +136,18 @@ const maxBetAmount = computed(() => userStore.chips)
       <div class="col-12 d-none d-md-block">
         <div class="card">
           <div class="card-header bg-light">
-            <h5 class="mb-0">
+            <h2 class="mb-0 h5">
               <i class="bi bi-graph-up me-2" aria-hidden="true"></i>{{ t('blackjack.stats.title') }}
-            </h5>
+            </h2>
           </div>
           <div class="card-body">
             <div class="row g-3">
               <div class="col-md-4">
                 <div class="card text-center h-100">
                   <div class="card-body">
-                    <h6 class="text-muted mb-2">
+                    <h3 class="text-muted mb-2 h6">
                       <i class="bi bi-collection me-1" aria-hidden="true"></i>{{ t('blackjack.stats.handsPlayed') }}
-                    </h6>
+                    </h3>
                     <span class="h4">{{ userStore.stats.handsPlayed }}</span>
                   </div>
                 </div>
@@ -155,9 +155,9 @@ const maxBetAmount = computed(() => userStore.chips)
               <div class="col-md-4">
                 <div class="card text-center h-100">
                   <div class="card-body">
-                    <h6 class="text-muted mb-2">
+                    <h3 class="text-muted mb-2 h6">
                       <i class="bi bi-cash-stack me-1" aria-hidden="true"></i>{{ t('blackjack.stats.totalWinnings') }}
-                    </h6>
+                    </h3>
                     <span class="h4"
                       :class="{ 'text-success': userStore.stats.totalWinnings > 0, 'text-danger': userStore.stats.totalWinnings < 0 }">
                       {{ formatIntAsCurrency(userStore.stats.totalWinnings) }}
@@ -168,9 +168,9 @@ const maxBetAmount = computed(() => userStore.chips)
               <div class="col-md-4">
                 <div class="card text-center h-100">
                   <div class="card-body">
-                    <h6 class="text-muted mb-2">
+                    <h3 class="text-muted mb-2 h6">
                       <i class="bi bi-trophy me-1" aria-hidden="true"></i>{{ t('blackjack.stats.biggestWin') }}
-                    </h6>
+                    </h3>
                     <span class="h4 text-success">
                       {{ formatIntAsCurrency(userStore.stats.biggestWin) }}
                     </span>
@@ -291,9 +291,9 @@ const maxBetAmount = computed(() => userStore.chips)
         <div class="card shadow-sm">
           <div class="card-header bg-light">
             <div class="d-flex align-items-center">
-              <h5 class="mb-0">
+              <h2 class="mb-0 h5">
                 <i class="bi bi-person-fill me-2" aria-hidden="true"></i>{{ t('blackjack.dealer.hand') }}
-              </h5>
+              </h2>
               <span class="badge bg-dark ms-2">
                 {{ gameStore.dealerScore }}
               </span>
@@ -316,9 +316,9 @@ const maxBetAmount = computed(() => userStore.chips)
         <div class="card shadow-sm">
           <div class="card-header bg-light">
             <div class="d-flex align-items-center">
-              <h5 class="mb-0">
+              <h2 class="mb-0 h5">
                 <i class="bi bi-person-circle me-2" aria-hidden="true"></i>{{ t('blackjack.player.hand') }}
-              </h5>
+              </h2>
               <span class="badge bg-dark ms-2">
                 {{ gameStore.playerScore }}
               </span>
@@ -340,9 +340,9 @@ const maxBetAmount = computed(() => userStore.chips)
       <div class="col-12">
         <div class="card shadow-sm">
           <div class="card-header bg-light py-3">
-            <h5 class="mb-0">
+            <h2 class="mb-0 h5">
               <i class="bi bi-joystick me-2" aria-hidden="true"></i>{{ t('blackjack.controls.title') }}
-            </h5>
+            </h2>
           </div>
           <div class="card-body">
             <div class="row g-4">
@@ -350,9 +350,9 @@ const maxBetAmount = computed(() => userStore.chips)
               <div class="col-md-6" v-if="gameStore.gameState === BlackjackState.BETTING">
                 <div class="h-100">
                   <div class="bg-light p-4 rounded h-100">
-                    <h6 class="d-flex align-items-center mb-4">
+                    <h3 class="d-flex align-items-center mb-4 h6">
                       <i class="bi bi-lightning-fill me-2" aria-hidden="true"></i>{{ t('blackjack.controls.placeBet') }}
-                    </h6>
+                    </h3>
 
                     <BetAmountSelector v-model="betAmount" :max-amount="maxBetAmount" :min-amount="1" />
                   </div>
@@ -364,9 +364,9 @@ const maxBetAmount = computed(() => userStore.chips)
                 :class="`col-md-${[BlackjackState.PLAYER_TURN, BlackjackState.GAME_OVER].includes(gameStore.gameState) ? '12' : '6'}`">
                 <div class="h-100">
                   <div class="bg-light p-4 rounded h-100">
-                    <h6 class="d-flex align-items-center mb-4">
+                    <h3 class="d-flex align-items-center mb-4 h6">
                       <i class="bi bi-gear-fill me-2" aria-hidden="true"></i>{{ t('blackjack.controls.actions') }}
-                    </h6>
+                    </h3>
 
                     <!-- Betting State -->
                     <div v-if="gameStore.gameState === BlackjackState.BETTING" class="d-grid">

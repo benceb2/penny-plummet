@@ -11,9 +11,9 @@ const { t } = useI18n()
 <template>
   <div class="card shadow-sm h-100 rounded-4">
     <div class="card-header border-1 rounded-top-4">
-      <h3 class="mb-0 text-center fw-bold h6">
+      <h2 class="mb-0 text-center fw-bold h6">
         <i class="bi bi-arrow-up-circle me-2" aria-hidden="true"></i>{{ t('clicker.upgrades.title') }}
-      </h3>
+      </h2>
     </div>
     <div class="card-body p-3">
 

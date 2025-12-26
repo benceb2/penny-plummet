@@ -286,6 +286,8 @@ const handleCollectWithAnimation = () => {
   pointer-events: none;
   font-weight: 700;
   white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .floating-normal {

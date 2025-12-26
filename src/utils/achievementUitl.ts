@@ -326,6 +326,7 @@ export const achievements = ref<Achievement[]>([
     },
     category: 'clicker'
   },
+  // Roulette achievements
   {
     id: 'lucky_number',
     title: 'Lucky Number',
@@ -338,7 +339,7 @@ export const achievements = ref<Achievement[]>([
       chips: 250,
       xp: 150
     },
-    category: 'general'
+    category: 'roulette'
   },
   {
     id: 'roulette_regular',
@@ -352,7 +353,7 @@ export const achievements = ref<Achievement[]>([
       chips: 500,
       xp: 200
     },
-    category: 'general'
+    category: 'roulette'
   },
   {
     id: 'roulette_marathon',
@@ -366,7 +367,7 @@ export const achievements = ref<Achievement[]>([
       chips: 1500,
       xp: 500
     },
-    category: 'general'
+    category: 'roulette'
   },
   {
     id: 'roulette_hot_streak',
@@ -380,7 +381,7 @@ export const achievements = ref<Achievement[]>([
       chips: 800,
       xp: 300
     },
-    category: 'general'
+    category: 'roulette'
   },
   {
     id: 'small_fortune',

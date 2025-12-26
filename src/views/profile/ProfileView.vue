@@ -168,7 +168,7 @@ watch([selectedCategory], () => {
             <div class="d-flex justify-content-center mb-4">
               <div class="btn-group" role="group">
                 <button
-                  v-for="category in ['all', 'blackjack', 'clicker', 'general']"
+                  v-for="category in ['all', 'blackjack', 'clicker', 'roulette', 'general']"
                   :key="category"
                   class="btn"
                   :class="selectedCategory === category ? 'btn-primary' : 'btn-outline-primary'"

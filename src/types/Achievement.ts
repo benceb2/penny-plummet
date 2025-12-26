@@ -10,5 +10,5 @@ export interface Achievement {
     chips: number;
     xp: number;
   }; // Chips or XP reward
-  category: 'blackjack' | 'clicker' | 'general';
+  category: 'blackjack' | 'clicker' | 'roulette' | 'general';
 }

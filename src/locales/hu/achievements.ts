@@ -96,7 +96,7 @@ export default {
         "description": "Szerezzen 2000 zsetont offline egy alkalommal"
       }
     },
-    "general": {
+    "roulette": {
       "lucky_number": {
         "title": "Szerencsés szám",
         "description": "Nyerj egyenes téttel a rulettben"
@@ -112,7 +112,9 @@ export default {
       "roulette_hot_streak": {
         "title": "Rulett Széria",
         "description": "Nyerjen 3 rulett pörgetést egymás után"
-      },
+      }
+    },
+    "general": {
       "small_fortune": {
         "title": "Kis Vagyon",
         "description": "Gyűjtsön össze 1000$ zsetont"

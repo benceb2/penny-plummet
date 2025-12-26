@@ -22,6 +22,7 @@ export default {
         "all": "All",
         "blackjack": "Blackjack",
         "clicker": "Clicker",
+        "roulette": "Roulette",
         "general": "General"
       }
     }

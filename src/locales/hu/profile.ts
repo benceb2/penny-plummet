@@ -22,6 +22,7 @@ export default {
         "all": "Összes",
         "blackjack": "Blackjack",
         "clicker": "Kattintós",
+        "roulette": "Rulett",
         "general": "Általános"
       }
     }

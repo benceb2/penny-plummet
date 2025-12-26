@@ -96,7 +96,7 @@ export default {
         "description": "Earn 2,000 chips while offline in one session"
       }
     },
-    "general": {
+    "roulette": {
       "lucky_number": {
         "title": "Lucky Number",
         "description": "Win with a straight bet in Roulette"
@@ -112,7 +112,9 @@ export default {
       "roulette_hot_streak": {
         "title": "Roulette Hot Streak",
         "description": "Win 3 roulette spins in a row"
-      },
+      }
+    },
+    "general": {
       "small_fortune": {
         "title": "Small Fortune",
         "description": "Accumulate $1,000 in chips"

@@ -76,7 +76,7 @@ export const useClickerStore = defineStore('clicker', () => {
   const formattedCriticalCost = computed(() => formatIntAsCurrency(criticalCost.value))
   const formattedAutoClickerSpeedCost = computed(() => formatIntAsCurrency(autoClickerSpeedCost.value))
   const formattedClicks = computed(() => formatIntAsCurrency(clicks.value))
-  const formattedLifetimeClicks = computed(() => formatNumber(totalLifetimeClicks.value, {
+  const formattedLifetimeClicks = computed(() => formatNumber(manualLifetimeClicks.value, {
     currency: false,
     decimals: 0
   }))
@@ -359,10 +359,23 @@ export const useClickerStore = defineStore('clicker', () => {
 
   function initialise() {
     if (typeof window !== 'undefined') {
+      if (manualLifetimeClicks.value === 0 && totalLifetimeClicks.value > 0) {
+        manualLifetimeClicks.value = Math.max(
+          totalLifetimeClicks.value - passiveLifetimeClicks.value,
+          0
+        )
+      }
+      const sessionKey = calculateStorageKey('clicker-session-active')
+      const hasSession = sessionStorage.getItem(sessionKey) === 'true'
+      if (hasSession) {
+        lastOnlineTimestamp.value = Date.now()
+      } else {
+        checkOfflineProgress()
+      }
+      sessionStorage.setItem(sessionKey, 'true')
       window.addEventListener('beforeunload', () => {
         lastOnlineTimestamp.value = Date.now()
       })
-      checkOfflineProgress()
     }
 
     if (autoClickersCount.value > 0) {

@@ -55,6 +55,18 @@ export default {
         "title": "Click Legend",
         "description": "Click 10,000 times"
       },
+      "passive_novice": {
+        "title": "Passive Novice",
+        "description": "Generate 1,000 passive clicks"
+      },
+      "passive_master": {
+        "title": "Passive Master",
+        "description": "Generate 10,000 passive clicks"
+      },
+      "passive_legend": {
+        "title": "Passive Legend",
+        "description": "Generate 100,000 passive clicks"
+      },
       "auto_collector": {
         "title": "Automation Beginner",
         "description": "Buy your first auto-clicker"

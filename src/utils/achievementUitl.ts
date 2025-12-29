@@ -187,6 +187,48 @@ export const achievements = ref<Achievement[]>([
     category: 'clicker'
   },
   {
+    id: 'passive_novice',
+    title: 'Passive Novice',
+    description: 'Generate 1,000 passive clicks',
+    requirement: 1000,
+    progress: 0,
+    completed: false,
+    claimed: false,
+    reward: {
+      chips: 50,
+      xp: 25
+    },
+    category: 'clicker'
+  },
+  {
+    id: 'passive_master',
+    title: 'Passive Master',
+    description: 'Generate 10,000 passive clicks',
+    requirement: 10000,
+    progress: 0,
+    completed: false,
+    claimed: false,
+    reward: {
+      chips: 200,
+      xp: 100
+    },
+    category: 'clicker'
+  },
+  {
+    id: 'passive_legend',
+    title: 'Passive Legend',
+    description: 'Generate 100,000 passive clicks',
+    requirement: 100000,
+    progress: 0,
+    completed: false,
+    claimed: false,
+    reward: {
+      chips: 1000,
+      xp: 400
+    },
+    category: 'clicker'
+  },
+  {
     id: 'auto_collector',
     title: 'Automation Beginner',
     description: 'Buy your first auto-clicker',

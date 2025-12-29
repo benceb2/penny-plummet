@@ -86,7 +86,7 @@ export const useClickerStore = defineStore('clicker', () => {
   }))
   const formattedPassiveLifetimeClicks = computed(() => formatNumber(passiveLifetimeClicks.value, {
     currency: false,
-    decimals: 1
+    decimals: 0
   }))
 
   const formattedIncome = computed(() => {
@@ -310,17 +310,20 @@ export const useClickerStore = defineStore('clicker', () => {
           const updateInterval = clickerUtil.getAutoClickerUpdateInterval(autoClickerSpeed.value)
 
           if (deltaTime >= updateInterval) {
-            const earnings = clickerUtil.calculateAutoClickerUpdate(
+            const autoClicks = clickerUtil.calculateAutoClickerClicks(
               deltaTime,
               autoClickersCount.value,
-              clickValue.value,
               autoClickerSpeed.value
             )
+            const earnings = autoClicks * clickValue.value
 
             if (earnings > 0) {
               clicks.value += earnings
-              passiveLifetimeClicks.value += earnings
-              totalLifetimeClicks.value += earnings
+              passiveLifetimeClicks.value += autoClicks
+              totalLifetimeClicks.value += autoClicks
+              achievementStore.updateAchievementProgress('passive_novice', passiveLifetimeClicks.value)
+              achievementStore.updateAchievementProgress('passive_master', passiveLifetimeClicks.value)
+              achievementStore.updateAchievementProgress('passive_legend', passiveLifetimeClicks.value)
 
               // Add subtle animation for auto-clicks (less frequent)
               if (clickerUtil.shouldShowAutoClickAnimation()) {
@@ -363,6 +366,9 @@ export const useClickerStore = defineStore('clicker', () => {
         lastOnlineTimestamp.value = Date.now()
       })
       checkOfflineProgress()
+      achievementStore.updateAchievementProgress('passive_novice', passiveLifetimeClicks.value)
+      achievementStore.updateAchievementProgress('passive_master', passiveLifetimeClicks.value)
+      achievementStore.updateAchievementProgress('passive_legend', passiveLifetimeClicks.value)
     }
 
     if (autoClickersCount.value > 0) {
@@ -381,8 +387,11 @@ export const useClickerStore = defineStore('clicker', () => {
     if (result.earnings > 0) {
       // Add earnings to clicks
       clicks.value += result.earnings
-      passiveLifetimeClicks.value += result.earnings
-      totalLifetimeClicks.value += result.earnings
+      passiveLifetimeClicks.value += result.clicks
+      totalLifetimeClicks.value += result.clicks
+      achievementStore.updateAchievementProgress('passive_novice', passiveLifetimeClicks.value)
+      achievementStore.updateAchievementProgress('passive_master', passiveLifetimeClicks.value)
+      achievementStore.updateAchievementProgress('passive_legend', passiveLifetimeClicks.value)
 
       if (result.earnings > maxOfflineEarnings.value) {
         maxOfflineEarnings.value = result.earnings

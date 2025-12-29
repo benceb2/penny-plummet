@@ -2,7 +2,7 @@
 import pkg from '../../../package.json'
 </script>
 <template>
-  <footer class="mt-auto py-3 bg-light border-top">
+  <footer class="mt-auto py-2 py-md-3 bg-light border-top app-footer">
     <div class="container text-center">
       <div class="mb-3">
         <a
@@ -56,5 +56,15 @@ import pkg from '../../../package.json'
 
 .hover-opacity:hover {
   opacity: 0.7;
+}
+
+@media (max-width: 767px) {
+  .app-footer .mb-3 {
+    margin-bottom: 0.5rem !important;
+  }
+
+  .app-footer .fs-5 {
+    font-size: 1rem !important;
+  }
 }
 </style>

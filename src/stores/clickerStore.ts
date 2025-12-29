@@ -82,11 +82,11 @@ export const useClickerStore = defineStore('clicker', () => {
   }))
   const formattedManualLifetimeClicks = computed(() => formatNumber(manualLifetimeClicks.value, {
     currency: false,
-    decimals: 0
+    decimals: 1
   }))
   const formattedPassiveLifetimeClicks = computed(() => formatNumber(passiveLifetimeClicks.value, {
     currency: false,
-    decimals: 0
+    decimals: 1
   }))
 
   const formattedIncome = computed(() => {

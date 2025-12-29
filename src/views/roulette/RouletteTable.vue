@@ -170,11 +170,11 @@ const outsideBets = computed(() => {
     <!-- Mobile Layout -->
     <div class="d-md-none">
       <!-- Zero and Dozens in one row -->
-      <div class="row g-1 mb-2" style="padding-top: 10px;">
+      <div class="row g-1 mb-2" style="padding-top: 6px;">
         <div class="col-3">
           <button
             :class="`btn btn-outline-light w-100 ${getBetAmount(0) > 0 ? 'active position-relative' : ''}`"
-            style="height: 50px; font-size: 1.25rem; font-weight: bold;"
+            style="height: 40px; font-size: 1.1rem; font-weight: bold;"
             @click="onPlaceBet('straight', [0], currentBetAmount)">
             0
             <span
@@ -187,7 +187,7 @@ const outsideBets = computed(() => {
         <div v-for="bet in outsideBets.dozens" :key="bet.label" class="col-3">
           <button
             :class="`btn btn-outline-light w-100 ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
-            style="height: 50px; font-size: 0.75rem;"
+            style="height: 40px; font-size: 0.7rem;"
             @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
             {{ bet.label }}
             <span
@@ -200,7 +200,7 @@ const outsideBets = computed(() => {
       </div>
 
       <!-- Mobile Number Grid (4 columns) -->
-      <div class="mb-2" style="padding-top: 10px;">
+      <div class="mb-2" style="padding-top: 6px;">
         <div class="row g-1">
           <div v-for="row in mobileGrid" :key="row[0]" class="col-12 mb-1">
             <div class="d-flex gap-1">
@@ -223,11 +223,11 @@ const outsideBets = computed(() => {
       </div>
 
       <!-- Mobile Even Money Bets (2x3 grid) -->
-      <div class="row g-1" style="padding-top: 10px;">
+      <div class="row g-1" style="padding-top: 6px;">
         <div v-for="bet in outsideBets.even_money" :key="bet.label" class="col-4">
           <button
             :class="`btn w-100 ${bet.btnClass || 'btn-outline-light'} ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
-            style="font-size: 0.75rem; padding: 0.5rem 0.25rem;"
+            style="font-size: 0.7rem; padding: 0.4rem 0.2rem;"
             @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
             {{ bet.label }}
             <span
@@ -264,11 +264,11 @@ const outsideBets = computed(() => {
 }
 
 .mobile-number-btn {
-  height: 45px;
+  height: 34px;
   font-weight: bold;
   position: relative;
   overflow: visible !important;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 /* Badge styles */
@@ -299,7 +299,7 @@ const outsideBets = computed(() => {
 /* Mobile optimizations */
 @media (max-width: 767px) {
   .roulette-felt {
-    padding: 0.5rem !important;
+    padding: 0.25rem !important;
   }
 }
 

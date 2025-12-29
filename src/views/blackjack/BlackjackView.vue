@@ -132,7 +132,7 @@ const maxBetAmount = computed(() => userStore.chips)
     <!-- Main Content -->
 
     <!-- Stats Section -->
-    <div v-if="showStats" class="row mb-4">
+    <div v-if="showStats" class="row mb-3 mb-md-4">
       <div class="col-12 d-none d-md-block">
         <div class="card">
           <div class="card-header bg-light">
@@ -237,7 +237,7 @@ const maxBetAmount = computed(() => userStore.chips)
 
     <div class="blackjack-view">
     <!-- Rules Summary -->
-    <div class="row mb-4">
+    <div class="row mb-3 mb-md-4">
       <div class="col-12">
         <div class="accordion" id="blackjackRulesAccordion">
           <div class="accordion-item">
@@ -286,10 +286,10 @@ const maxBetAmount = computed(() => userStore.chips)
     </div>
 
     <!-- Dealer's Hand -->
-    <div v-if="gameStore.dealerHand.length" class="row mb-4">
+    <div v-if="gameStore.dealerHand.length" class="row mb-3 mb-md-4">
       <div class="col-12">
         <div class="card shadow-sm">
-          <div class="card-header bg-light">
+          <div class="card-header bg-light blackjack-card-header">
             <div class="d-flex align-items-center">
               <h2 class="mb-0 section-title">
                 <i class="bi bi-person-fill me-2" aria-hidden="true"></i>{{ t('blackjack.dealer.hand') }}
@@ -299,7 +299,7 @@ const maxBetAmount = computed(() => userStore.chips)
               </span>
             </div>
           </div>
-          <div class="card-body">
+          <div class="card-body blackjack-card-body">
             <div class="d-flex justify-content-center">
               <div class="d-flex flex-wrap gap-2 gap-sm-3 justify-content-center p-2 p-sm-3">
                 <PlayingCard v-for="(card, index) in gameStore.dealerHand" :key="index" :card="card" />
@@ -311,10 +311,10 @@ const maxBetAmount = computed(() => userStore.chips)
     </div>
 
     <!-- Player's Hand -->
-    <div v-if="gameStore.playerHand.length" class="row mb-4">
+    <div v-if="gameStore.playerHand.length" class="row mb-3 mb-md-4">
       <div class="col-12">
         <div class="card shadow-sm">
-          <div class="card-header bg-light">
+          <div class="card-header bg-light blackjack-card-header">
             <div class="d-flex align-items-center">
               <h2 class="mb-0 section-title">
                 <i class="bi bi-person-circle me-2" aria-hidden="true"></i>{{ t('blackjack.player.hand') }}
@@ -324,7 +324,7 @@ const maxBetAmount = computed(() => userStore.chips)
               </span>
             </div>
           </div>
-          <div class="card-body">
+          <div class="card-body blackjack-card-body">
             <div class="d-flex justify-content-center">
               <div class="d-flex flex-wrap gap-2 gap-sm-3 justify-content-center p-2 p-sm-3">
                 <PlayingCard v-for="(card, index) in gameStore.playerHand" :key="index" :card="card" />
@@ -339,18 +339,18 @@ const maxBetAmount = computed(() => userStore.chips)
     <div class="row">
       <div class="col-12">
         <div class="card shadow-sm">
-          <div class="card-header bg-light py-3">
+          <div class="card-header bg-light py-2 py-md-3 blackjack-card-header">
             <h2 class="mb-0 section-title">
               <i class="bi bi-joystick me-2" aria-hidden="true"></i>{{ t('blackjack.controls.title') }}
             </h2>
           </div>
-          <div class="card-body">
-            <div class="row g-4">
+          <div class="card-body blackjack-card-body">
+            <div class="row g-3 g-md-4">
               <!-- Betting Section -->
               <div class="col-md-6" v-if="gameStore.gameState === BlackjackState.BETTING">
                 <div class="h-100">
-                  <div class="bg-light p-4 rounded h-100">
-                    <h3 class="d-flex align-items-center mb-4 subsection-title">
+                  <div class="bg-light p-3 p-md-4 rounded h-100">
+                    <h3 class="d-flex align-items-center mb-3 mb-md-4 subsection-title">
                       <i class="bi bi-lightning-fill me-2" aria-hidden="true"></i>{{ t('blackjack.controls.placeBet') }}
                     </h3>
 
@@ -363,8 +363,8 @@ const maxBetAmount = computed(() => userStore.chips)
               <div
                 :class="`col-md-${[BlackjackState.PLAYER_TURN, BlackjackState.GAME_OVER].includes(gameStore.gameState) ? '12' : '6'}`">
                 <div class="h-100">
-                  <div class="bg-light p-4 rounded h-100">
-                    <h3 class="d-flex align-items-center mb-4 subsection-title">
+                  <div class="bg-light p-3 p-md-4 rounded h-100">
+                    <h3 class="d-flex align-items-center mb-3 mb-md-4 subsection-title">
                       <i class="bi bi-gear-fill me-2" aria-hidden="true"></i>{{ t('blackjack.controls.actions') }}
                     </h3>
 
@@ -408,3 +408,29 @@ const maxBetAmount = computed(() => userStore.chips)
     </div>
   </BaseLayout>
 </template>
+
+<style scoped>
+@media (max-width: 767px) {
+  .blackjack-card-header {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .blackjack-card-body {
+    padding: 0.75rem;
+  }
+
+  .blackjack-view .accordion-button {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .blackjack-view .list-group-item {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .blackjack-view .btn-lg {
+    padding: 0.45rem 0.75rem;
+    font-size: 0.95rem;
+  }
+}
+</style>

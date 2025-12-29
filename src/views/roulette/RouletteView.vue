@@ -101,7 +101,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
   <BaseLayout :title="t('roulette.title')" bootstrapIcon="dice-5">
 
     <!-- Betting Bar -->
-    <div class="card bg-white border-0 mb-3">
+    <div class="card bg-white border-0 mb-2 mb-md-3">
       <div class="card-body py-2">
         <div class="row align-items-center g-2">
 
@@ -187,7 +187,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
       @close="handleNewGame" />
 
     <!-- Spinner and Betting Info During Spin -->
-    <div v-if="gameStore.gameState === RouletteState.SPINNING" class="mb-3">
+    <div v-if="gameStore.gameState === RouletteState.SPINNING" class="mb-2 mb-md-3">
       <RouletteSpinner
         :is-spinning="gameStore.gameState === RouletteState.SPINNING"
         :winning-number="gameStore.winningNumber"
@@ -229,7 +229,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
     </div>
 
     <!-- Main Game Area -->
-    <div class="card mb-3" v-if="gameStore.gameState === RouletteState.BETTING">
+    <div class="card mb-2 mb-md-3" v-if="gameStore.gameState === RouletteState.BETTING">
       <div class="card-header bg-white">
         <ul class="nav nav-tabs card-header-tabs">
           <li class="nav-item">
@@ -333,5 +333,16 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
 .all-in-btn:hover {
   background-color: #842029;
   border-color: #661d28;
+}
+
+@media (max-width: 767px) {
+  .card-body {
+    padding: 0.75rem;
+  }
+
+  .nav-tabs .nav-link {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+  }
 }
 </style>

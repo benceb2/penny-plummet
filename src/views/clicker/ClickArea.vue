@@ -55,8 +55,7 @@ const handleCollectWithAnimation = () => {
 
 <template>
   <div class="card shadow-sm h-100 rounded-4">
-    <div class="card-body d-flex flex-column justify-content-center align-items-center p-3"
-      style="min-height: 600px;">
+    <div class="card-body d-flex flex-column justify-content-center align-items-center p-3 click-area-body">
 
       <!-- Combo Display -->
       <div class="position-relative w-100 d-flex justify-content-center mb-3" style="height: 0;">
@@ -201,6 +200,10 @@ const handleCollectWithAnimation = () => {
 
 .collect-btn:disabled {
   opacity: 0.6;
+}
+
+.click-area-body {
+  min-height: 600px;
 }
 
 /* Animated background for collect button */
@@ -435,6 +438,10 @@ const handleCollectWithAnimation = () => {
 
 /* Responsive adjustments */
 @media (max-width: 991px) {
+  .click-area-body {
+    min-height: 520px;
+  }
+
   .main-click-btn {
     width: 200px;
     height: 200px;
@@ -446,6 +453,10 @@ const handleCollectWithAnimation = () => {
 }
 
 @media (max-width: 768px) {
+  .click-area-body {
+    min-height: 420px;
+  }
+
   .main-click-btn {
     width: 180px;
     height: 180px;
@@ -453,6 +464,20 @@ const handleCollectWithAnimation = () => {
 
   .click-icon {
     font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 575px) {
+  .click-area-body {
+    min-height: 340px;
+  }
+
+  .collect-btn {
+    min-height: 64px;
+  }
+
+  .click-icon {
+    font-size: 2.2rem;
   }
 }
 </style>

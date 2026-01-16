@@ -1,4 +1,5 @@
 import type { Transaction } from '@/types/Transaction';
+import type { TransactionFilters } from '@/types/TransactionFilters';
 
 const DB_NAME = 'penny-plummet';
 const DB_VERSION = 2;
@@ -111,11 +112,6 @@ export const getAllTransactions = async (): Promise<Transaction[]> => {
 
     request.onerror = () => reject(request.error);
   });
-};
-
-type TransactionFilters = {
-  game?: Transaction['game'] | 'all';
-  type?: Transaction['type'] | 'all';
 };
 
 type TransactionSummary = {

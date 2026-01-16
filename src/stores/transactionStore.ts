@@ -14,18 +14,9 @@ import {
 import { STARTING_CHIPS } from '@/stores/userStore';
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
 import { useUserStore } from '@/stores/userStore';
+import type { TransactionQuery } from '@/types/TransactionFilters';
 
 const LATEST_TRANSACTIONS_LIMIT = 6;
-
-type TransactionFilters = {
-  game: Transaction['game'] | 'all';
-  type: Transaction['type'] | 'all';
-};
-
-type TransactionQuery = TransactionFilters & {
-  page: number;
-  pageSize: number;
-};
 
 export type BalanceAudit = {
   expectedBalance: number;

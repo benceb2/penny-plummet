@@ -89,12 +89,12 @@ const outsideBets = computed(() => {
 </script>
 
 <template>
-  <div class="roulette-felt p-2 p-md-3 rounded" style="overflow: visible;">
+  <div class="roulette-felt p-1 p-md-3 rounded overflow-visible">
 
     <!-- Desktop Layout -->
     <div class="d-none d-md-block">
       <!-- Dozens -->
-      <div class="row g-2 mb-2" style="padding-top: 10px;">
+      <div class="row g-2 mb-2 pt-2">
         <div v-for="bet in outsideBets.dozens" :key="bet.label" class="col-4">
           <button
             :class="`btn btn-outline-light w-100 ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
@@ -114,8 +114,7 @@ const outsideBets = computed(() => {
         <!-- Zero -->
         <div class="d-flex align-items-center">
           <button
-            :class="`btn btn-outline-light ${getBetAmount(0) > 0 ? 'active position-relative' : ''}`"
-            style="width: 50px; height: 120px; font-size: 1.5rem; font-weight: bold; writing-mode: vertical-lr; display: flex; align-items: center; justify-content: center;"
+            :class="`btn btn-outline-light d-flex align-items-center justify-content-center fw-bold fs-4 zero-btn ${getBetAmount(0) > 0 ? 'active position-relative' : ''}`"
             @click="onPlaceBet('straight', [0], currentBetAmount)">
             0
             <span
@@ -127,14 +126,14 @@ const outsideBets = computed(() => {
         </div>
 
         <!-- Number Grid -->
-        <div class="flex-grow-1" style="padding-top: 10px;">
-          <table class="table table-borderless mb-0 roulette-table">
+        <div class="flex-grow-1 pt-2">
+          <table class="table table-borderless mb-0">
             <tbody>
               <tr v-for="(row, rowIndex) in numberGrid" :key="rowIndex">
                 <td v-for="num in row" :key="num" class="p-1">
                   <button
                     :class="getNumberButtonClass(num)"
-                    class="number-btn"
+                    class="number-btn w-100 fw-bold"
                     @click="onPlaceBet('straight', [num], currentBetAmount)">
                     {{ num }}
                     <span
@@ -151,7 +150,7 @@ const outsideBets = computed(() => {
       </div>
 
       <!-- Even Money Bets -->
-      <div class="row g-2 mt-2" style="padding-top: 10px;">
+      <div class="row g-2 mt-2 pt-2">
         <div v-for="bet in outsideBets.even_money" :key="bet.label" class="col-2">
           <button
             :class="`btn w-100 ${bet.btnClass || 'btn-outline-light'} ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
@@ -170,11 +169,10 @@ const outsideBets = computed(() => {
     <!-- Mobile Layout -->
     <div class="d-md-none">
       <!-- Zero and Dozens in one row -->
-      <div class="row g-1 mb-2" style="padding-top: 6px;">
+      <div class="row g-1 mb-2 pt-1">
         <div class="col-3">
           <button
-            :class="`btn btn-outline-light w-100 ${getBetAmount(0) > 0 ? 'active position-relative' : ''}`"
-            style="height: 40px; font-size: 1.1rem; font-weight: bold;"
+            :class="`btn btn-outline-light w-100 fw-bold zero-btn-sm ${getBetAmount(0) > 0 ? 'active position-relative' : ''}`"
             @click="onPlaceBet('straight', [0], currentBetAmount)">
             0
             <span
@@ -186,8 +184,7 @@ const outsideBets = computed(() => {
         </div>
         <div v-for="bet in outsideBets.dozens" :key="bet.label" class="col-3">
           <button
-            :class="`btn btn-outline-light w-100 ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
-            style="height: 40px; font-size: 0.7rem;"
+            :class="`btn btn-outline-light w-100 mobile-dozen-btn ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
             @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
             {{ bet.label }}
             <span
@@ -200,7 +197,7 @@ const outsideBets = computed(() => {
       </div>
 
       <!-- Mobile Number Grid (4 columns) -->
-      <div class="mb-2" style="padding-top: 6px;">
+      <div class="mb-2 pt-1">
         <div class="row g-1">
           <div v-for="row in mobileGrid" :key="row[0]" class="col-12 mb-1">
             <div class="d-flex gap-1">
@@ -208,7 +205,7 @@ const outsideBets = computed(() => {
                 v-for="num in row"
                 :key="num"
                 :class="getNumberButtonClass(num)"
-                class="flex-fill mobile-number-btn"
+                class="flex-fill mobile-number-btn fw-bold"
                 @click="onPlaceBet('straight', [num], currentBetAmount)">
                 {{ num }}
                 <span
@@ -223,11 +220,10 @@ const outsideBets = computed(() => {
       </div>
 
       <!-- Mobile Even Money Bets (2x3 grid) -->
-      <div class="row g-1" style="padding-top: 6px;">
+      <div class="row g-1 pt-1">
         <div v-for="bet in outsideBets.even_money" :key="bet.label" class="col-4">
           <button
-            :class="`btn w-100 ${bet.btnClass || 'btn-outline-light'} ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
-            style="font-size: 0.7rem; padding: 0.4rem 0.2rem;"
+            :class="`btn w-100 mobile-even-btn ${bet.btnClass || 'btn-outline-light'} ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
             @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
             {{ bet.label }}
             <span
@@ -243,35 +239,38 @@ const outsideBets = computed(() => {
 </template>
 
 <style scoped>
-/* Table styles */
-.roulette-table {
-  background-color: transparent !important;
-}
-
-.roulette-table td {
-  background-color: transparent !important;
-  border: none !important;
-  overflow: visible;
-}
-
-/* Number button styles */
 .number-btn {
-  width: 100%;
   height: 40px;
-  font-weight: bold;
-  position: relative;
   overflow: visible !important;
 }
 
 .mobile-number-btn {
   height: 34px;
-  font-weight: bold;
-  position: relative;
   overflow: visible !important;
   font-size: 0.8rem;
 }
 
-/* Badge styles */
+.zero-btn {
+  width: 50px;
+  height: 120px;
+  writing-mode: vertical-lr;
+}
+
+.zero-btn-sm {
+  height: 40px;
+  font-size: 1.1rem;
+}
+
+.mobile-dozen-btn {
+  height: 40px;
+  font-size: 0.7rem;
+}
+
+.mobile-even-btn {
+  font-size: 0.7rem;
+  padding: 0.4rem 0.2rem;
+}
+
 .bet-badge {
   font-size: 0.65rem;
   z-index: 1000;
@@ -287,20 +286,13 @@ const outsideBets = computed(() => {
   padding: 0.125rem 0.25rem;
 }
 
-/* Ensure overflow is visible */
+
 .btn {
   overflow: visible !important;
 }
 
 .position-relative {
   overflow: visible !important;
-}
-
-/* Mobile optimizations */
-@media (max-width: 767px) {
-  .roulette-felt {
-    padding: 0.25rem !important;
-  }
 }
 
 .roulette-felt {

@@ -22,14 +22,6 @@ type TransactionFilters = {
   type: Transaction['type'] | 'all';
 };
 
-type TransactionSummary = {
-  total: number;
-  totalWins: number;
-  totalLosses: number;
-  totalPushes: number;
-  netAmount: number;
-};
-
 type TransactionQuery = TransactionFilters & {
   page: number;
   pageSize: number;
@@ -47,13 +39,7 @@ export const useTransactionStore = defineStore('transactions', () => {
   const transactions = ref<Transaction[]>([]);
   const latestTransactions = ref<Transaction[]>([]);
   const totalCount = ref(0);
-  const stats = ref<TransactionSummary>({
-    total: 0,
-    totalWins: 0,
-    totalLosses: 0,
-    totalPushes: 0,
-    netAmount: 0
-  });
+
   const isListLoading = ref(true);
   const listError = ref<string | null>(null);
   const hasIndexedDb = typeof indexedDB !== 'undefined';
@@ -114,7 +100,6 @@ export const useTransactionStore = defineStore('transactions', () => {
       ]);
 
       transactions.value = pageItems;
-      stats.value = summary;
       totalCount.value = summary.total;
     } catch (error) {
       console.error('Failed to load transactions from IndexedDB:', error);
@@ -150,14 +135,6 @@ export const useTransactionStore = defineStore('transactions', () => {
       const matchesType = type === 'all' || type === next.type;
       if (matchesGame && matchesType) {
         totalCount.value += 1;
-        stats.value = {
-          ...stats.value,
-          total: stats.value.total + 1,
-          totalWins: stats.value.totalWins + (next.type === 'win' ? 1 : 0),
-          totalLosses: stats.value.totalLosses + (next.type === 'loss' ? 1 : 0),
-          totalPushes: stats.value.totalPushes + (next.type === 'push' ? 1 : 0),
-          netAmount: stats.value.netAmount + next.amount
-        };
 
         if (page === 1) {
           transactions.value.unshift(next);
@@ -180,13 +157,6 @@ export const useTransactionStore = defineStore('transactions', () => {
     transactions.value = [];
     latestTransactions.value = [];
     totalCount.value = 0;
-    stats.value = {
-      total: 0,
-      totalWins: 0,
-      totalLosses: 0,
-      totalPushes: 0,
-      netAmount: 0
-    };
     if (!hasIndexedDb) return;
     await clearTransactionsDb();
     await ensureOpeningBalance();
@@ -222,7 +192,6 @@ export const useTransactionStore = defineStore('transactions', () => {
     transactions,
     latestTransactions,
     totalCount,
-    stats,
     isListLoading,
     listError,
     loadLatestTransactions,

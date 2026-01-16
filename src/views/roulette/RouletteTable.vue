@@ -169,7 +169,7 @@ const outsideBets = computed(() => {
     <!-- Mobile Layout -->
     <div class="d-md-none">
       <!-- Zero and Dozens in one row -->
-      <div class="row g-1 mb-2 pt-1">
+      <div class="row g-0 mb-1 pt-0">
         <div class="col-3">
           <button
             :class="`btn btn-outline-light w-100 fw-bold zero-btn-sm ${getBetAmount(0) > 0 ? 'active position-relative' : ''}`"
@@ -197,10 +197,10 @@ const outsideBets = computed(() => {
       </div>
 
       <!-- Mobile Number Grid (4 columns) -->
-      <div class="mb-2 pt-1">
-        <div class="row g-1">
-          <div v-for="row in mobileGrid" :key="row[0]" class="col-12 mb-1">
-            <div class="d-flex gap-1">
+      <div class="mb-1 pt-0">
+        <div class="row g-0">
+          <div v-for="row in mobileGrid" :key="row[0]" class="col-12 mb-0">
+            <div class="d-flex gap-0">
               <button
                 v-for="num in row"
                 :key="num"
@@ -220,7 +220,7 @@ const outsideBets = computed(() => {
       </div>
 
       <!-- Mobile Even Money Bets (2x3 grid) -->
-      <div class="row g-1 pt-1">
+      <div class="row g-0 pt-0">
         <div v-for="bet in outsideBets.even_money" :key="bet.label" class="col-4">
           <button
             :class="`btn w-100 mobile-even-btn ${bet.btnClass || 'btn-outline-light'} ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
@@ -245,9 +245,9 @@ const outsideBets = computed(() => {
 }
 
 .mobile-number-btn {
-  height: 34px;
+  height: 26px;
   overflow: visible !important;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
 }
 
 .zero-btn {
@@ -257,18 +257,18 @@ const outsideBets = computed(() => {
 }
 
 .zero-btn-sm {
-  height: 40px;
-  font-size: 1.1rem;
+  height: 30px;
+  font-size: 0.9rem;
 }
 
 .mobile-dozen-btn {
-  height: 40px;
-  font-size: 0.7rem;
+  height: 30px;
+  font-size: 0.6rem;
 }
 
 .mobile-even-btn {
-  font-size: 0.7rem;
-  padding: 0.4rem 0.2rem;
+  font-size: 0.6rem;
+  padding: 0.25rem 0.1rem;
 }
 
 .bet-badge {
@@ -279,7 +279,7 @@ const outsideBets = computed(() => {
 }
 
 .bet-badge-sm {
-  font-size: 0.5rem;
+  font-size: 0.45rem;
   z-index: 1000;
   top: -6px;
   right: -6px;

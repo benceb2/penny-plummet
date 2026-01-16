@@ -131,7 +131,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
 
           <!-- Quick Bet Buttons -->
           <div class="col">
-            <div class="d-flex gap-1 flex-wrap">
+            <div class="d-flex gap-1 flex-nowrap flex-md-wrap quick-bets">
               <button
                 v-for="bet in quickBets"
                 :key="bet.amount"
@@ -337,12 +337,30 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
 
 @media (max-width: 767px) {
   .card-body {
-    padding: 0.75rem;
+    padding: 0.35rem;
   }
 
   .nav-tabs .nav-link {
-    padding: 0.4rem 0.6rem;
-    font-size: 0.85rem;
+    padding: 0.35rem 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .quick-bets {
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+  }
+
+  .quick-bets .btn {
+    flex: 0 0 auto;
+  }
+
+  :deep(.base-layout) {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  :deep(.base-layout > .row) {
+    margin-bottom: 0.5rem;
   }
 }
 </style>

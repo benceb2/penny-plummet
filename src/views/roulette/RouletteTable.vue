@@ -91,9 +91,9 @@ const outsideBets = computed(() => {
 <template>
   <div class="roulette-felt p-1 p-md-3 rounded overflow-visible">
 
-    <!-- Desktop Layout -->
+    
     <div class="d-none d-md-block">
-      <!-- Dozens -->
+      
       <div class="row g-2 mb-2 pt-2">
         <div v-for="bet in outsideBets.dozens" :key="bet.label" class="col-4">
           <button
@@ -109,9 +109,9 @@ const outsideBets = computed(() => {
         </div>
       </div>
 
-      <!-- Numbers with Zero on the side -->
+      
       <div class="d-flex gap-2">
-        <!-- Zero -->
+        
         <div class="d-flex align-items-center">
           <button
             :class="`btn btn-outline-light d-flex align-items-center justify-content-center fw-bold fs-4 zero-btn ${getBetAmount(0) > 0 ? 'active position-relative' : ''}`"
@@ -125,7 +125,7 @@ const outsideBets = computed(() => {
           </button>
         </div>
 
-        <!-- Number Grid -->
+        
         <div class="flex-grow-1 pt-2">
           <table class="table table-borderless mb-0">
             <tbody>
@@ -149,7 +149,7 @@ const outsideBets = computed(() => {
         </div>
       </div>
 
-      <!-- Even Money Bets -->
+      
       <div class="row g-2 mt-2 pt-2">
         <div v-for="bet in outsideBets.even_money" :key="bet.label" class="col-2">
           <button
@@ -166,9 +166,9 @@ const outsideBets = computed(() => {
       </div>
     </div>
 
-    <!-- Mobile Layout -->
+    
     <div class="d-md-none">
-      <!-- Zero and Dozens in one row -->
+      
       <div class="row g-0 mb-1 pt-0">
         <div class="col-3">
           <button
@@ -196,7 +196,7 @@ const outsideBets = computed(() => {
         </div>
       </div>
 
-      <!-- Mobile Number Grid (4 columns) -->
+      
       <div class="mb-1 pt-0">
         <div class="row g-0">
           <div v-for="row in mobileGrid" :key="row[0]" class="col-12 mb-0">
@@ -219,7 +219,7 @@ const outsideBets = computed(() => {
         </div>
       </div>
 
-      <!-- Mobile Even Money Bets (2x3 grid) -->
+      
       <div class="row g-0 pt-0">
         <div v-for="bet in outsideBets.even_money" :key="bet.label" class="col-4">
           <button

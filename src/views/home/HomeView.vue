@@ -36,7 +36,7 @@ const recentTransactions = computed(() => {
 <template>
   <BaseLayout :title="t('home.welcome')">
 
-    <!-- Game Selection Cards -->
+    
     <div class="row g-3 mb-3">
       <div class="col-6 col-md-4">
         <div class="card h-100 shadow-sm home-game-card">

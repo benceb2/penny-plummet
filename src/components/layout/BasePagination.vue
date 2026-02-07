@@ -47,7 +47,7 @@ const pages = computed(() => {
 <template>
   <nav aria-label="Page navigation" class="mt-4">
     <ul class="pagination justify-content-center">
-      <!-- First Page -->
+      
       <li
         class="page-item"
         :class="{ disabled: currentPage === 1 }">
@@ -60,7 +60,7 @@ const pages = computed(() => {
         </button>
       </li>
 
-      <!-- Previous -->
+      
       <li
         class="page-item"
         :class="{ disabled: currentPage === 1 }">
@@ -73,7 +73,7 @@ const pages = computed(() => {
         </button>
       </li>
 
-      <!-- Page Numbers -->
+      
       <li
         v-for="page in pages"
         :key="page"
@@ -86,7 +86,7 @@ const pages = computed(() => {
         </button>
       </li>
 
-      <!-- Next -->
+      
       <li
         class="page-item"
         :class="{ disabled: currentPage === totalPages }">
@@ -99,7 +99,7 @@ const pages = computed(() => {
         </button>
       </li>
 
-      <!-- Last Page -->
+      
       <li
         class="page-item"
         :class="{ disabled: currentPage === totalPages }">

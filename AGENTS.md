@@ -21,3 +21,4 @@
 ## Workflow
 - Use the project’s existing tooling and scripts.
 - Ask when requirements are ambiguous or when changes could be high-impact.
+- This repo expects the Node version from `.nvmrc`. If tests/lint/a11y fail with Node version errors, run `nvm use` (or your local script that does so).

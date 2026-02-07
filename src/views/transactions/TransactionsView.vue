@@ -57,10 +57,10 @@ const goToPage = (page: number) => {
     :title="t('transactions.title')"
     bootstrapIcon="clock-history">
 
-    <!-- Transactions Card -->
+    
     <div class="card">
       <div class="card-body">
-        <!-- Filters -->
+        
         <div class="row gy-3 pb-3 mb-4 border-bottom align-items-center">
           <div class="col-12 col-md-auto">
             <div class="btn-group">
@@ -88,7 +88,7 @@ const goToPage = (page: number) => {
           </div>
         </div>
 
-        <!-- Transaction List -->
+        
         <div class="transaction-list">
           <div
             v-if="isInitialLoading"
@@ -107,7 +107,7 @@ const goToPage = (page: number) => {
               {{ t('transactions.empty') }}
             </div>
 
-            <!-- Page Info -->
+            
             <div class="text-center text-muted mt-2">
               {{ t('transactions.pagination.summary', {
                 from: transactionStore.totalCount === 0 ? 0 : ((currentPage - 1) * pageSize) + 1,
@@ -116,7 +116,7 @@ const goToPage = (page: number) => {
               }) }}
             </div>
 
-            <!-- Pagination -->
+            
             <BasePagination
               v-if="totalPages > 1"
               :current-page="currentPage"

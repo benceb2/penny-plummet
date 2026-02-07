@@ -100,12 +100,12 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
 <template>
   <BaseLayout :title="t('roulette.title')" bootstrapIcon="dice-5">
 
-    <!-- Betting Bar -->
+    
     <div class="card bg-white border-0 mb-2 mb-md-3">
       <div class="card-body py-2">
         <div class="row align-items-center g-2">
 
-          <!-- Bet Input -->
+          
           <div class="col-auto">
             <div class="input-group input-group-sm">
               <label class="visually-hidden" for="roulette-bet-amount">
@@ -129,7 +129,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
             </div>
           </div>
 
-          <!-- Quick Bet Buttons -->
+          
           <div class="col">
             <div class="d-flex gap-1 flex-nowrap flex-md-wrap quick-bets">
               <button
@@ -160,7 +160,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
             </div>
           </div>
 
-          <!-- Total Bet Display -->
+          
           <div class="col-auto ms-auto">
             <div v-if="gameStore.totalBet > 0" class="text-end">
               <small class="text-muted d-block" style="font-size: 0.7rem;">{{ t('roulette.ui.totalBet') }}</small>
@@ -171,7 +171,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
       </div>
     </div>
 
-    <!-- Result Alert -->
+    
     <GameResult
       :show="gameStore.lastResult !== null && gameStore.gameState === RouletteState.COMPLETE"
       :auto-dismiss="false"
@@ -186,14 +186,14 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
       } : { type: 'loss', amount: 0 }"
       @close="handleNewGame" />
 
-    <!-- Spinner and Betting Info During Spin -->
+    
     <div v-if="gameStore.gameState === RouletteState.SPINNING" class="mb-2 mb-md-3">
       <RouletteSpinner
         :is-spinning="gameStore.gameState === RouletteState.SPINNING"
         :winning-number="gameStore.winningNumber"
         @spin-complete="gameStore.completeGame" />
 
-      <!-- Show current bets while spinning -->
+      
       <div class="row g-2 mt-2">
         <div class="col-md-6">
           <div class="card bg-light">
@@ -228,7 +228,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
       </div>
     </div>
 
-    <!-- Main Game Area -->
+    
     <div class="card mb-2 mb-md-3" v-if="gameStore.gameState === RouletteState.BETTING">
       <div class="card-header bg-white">
         <ul class="nav nav-tabs card-header-tabs">
@@ -260,7 +260,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
       </div>
 
       <div class="card-body">
-        <!-- Table View -->
+        
         <div v-show="activeView === 'table'">
           <RouletteTable
             :current-bets="gameStore.currentBets"
@@ -269,7 +269,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
             :format-currency="formatIntAsCurrency" />
         </div>
 
-        <!-- Bets View -->
+        
         <div v-show="activeView === 'bets'">
           <div v-if="gameStore.currentBets.length > 0">
             <div class="list-group mb-3">
@@ -306,7 +306,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
       </div>
     </div>
 
-    <!-- Action Buttons -->
+    
     <div class="d-grid gap-2 d-md-flex justify-content-md-center">
       <button
         class="btn btn-success"

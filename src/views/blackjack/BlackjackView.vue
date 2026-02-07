@@ -118,7 +118,7 @@ const maxBetAmount = computed(() => userStore.chips)
   <BaseLayout
     :title="t('blackjack.title')"
     bootstrapIcon="suit-spade-fill">
-    <!-- Header Actions Slot -->
+    
     <template #header-actions>
       <button
         class="btn btn-outline-primary"
@@ -129,9 +129,9 @@ const maxBetAmount = computed(() => userStore.chips)
       </button>
     </template>
 
-    <!-- Main Content -->
+    
 
-    <!-- Stats Section -->
+    
     <div v-if="showStats" class="row mb-3 mb-md-4">
       <div class="col-12 d-none d-md-block">
         <div class="card">
@@ -236,7 +236,7 @@ const maxBetAmount = computed(() => userStore.chips)
     </div>
 
     <div class="blackjack-view">
-    <!-- Rules Summary -->
+    
     <div class="row mb-3 mb-md-4">
       <div class="col-12">
         <div class="accordion" id="blackjackRulesAccordion">
@@ -285,7 +285,7 @@ const maxBetAmount = computed(() => userStore.chips)
       </div>
     </div>
 
-    <!-- Dealer's Hand -->
+    
     <div v-if="gameStore.dealerHand.length" class="row mb-3 mb-md-4">
       <div class="col-12">
         <div class="card shadow-sm">
@@ -310,7 +310,7 @@ const maxBetAmount = computed(() => userStore.chips)
       </div>
     </div>
 
-    <!-- Player's Hand -->
+    
     <div v-if="gameStore.playerHand.length" class="row mb-3 mb-md-4">
       <div class="col-12">
         <div class="card shadow-sm">
@@ -335,7 +335,7 @@ const maxBetAmount = computed(() => userStore.chips)
       </div>
     </div>
 
-    <!-- Game Controls -->
+    
     <div class="row">
       <div class="col-12">
         <div class="card shadow-sm">
@@ -346,7 +346,7 @@ const maxBetAmount = computed(() => userStore.chips)
           </div>
           <div class="card-body blackjack-card-body">
             <div class="row g-3 g-md-4">
-              <!-- Betting Section -->
+              
               <div class="col-md-6" v-if="gameStore.gameState === BlackjackState.BETTING">
                 <div class="h-100">
                   <div class="bg-light p-3 p-md-4 rounded h-100">
@@ -359,7 +359,7 @@ const maxBetAmount = computed(() => userStore.chips)
                 </div>
               </div>
 
-              <!-- Action Controls -->
+              
               <div
                 :class="`col-md-${[BlackjackState.PLAYER_TURN, BlackjackState.GAME_OVER].includes(gameStore.gameState) ? '12' : '6'}`">
                 <div class="h-100">
@@ -368,7 +368,7 @@ const maxBetAmount = computed(() => userStore.chips)
                       <i class="bi bi-gear-fill me-2" aria-hidden="true"></i>{{ t('blackjack.controls.actions') }}
                     </h3>
 
-                    <!-- Betting State -->
+                    
                     <div v-if="gameStore.gameState === BlackjackState.BETTING" class="d-grid">
                       <button class="btn btn-primary btn-lg mt-3" @click="handleDeal"
                         :disabled="betAmount <= 0 || betAmount > userStore.chips">
@@ -376,7 +376,7 @@ const maxBetAmount = computed(() => userStore.chips)
                       </button>
                     </div>
 
-                    <!-- Player Turn State -->
+                    
                     <div v-if="gameStore.gameState === BlackjackState.PLAYER_TURN">
                       <div class="btn-group w-100" role="group" aria-label="Blackjack actions">
                         <button class="btn btn-success btn-lg w-50" @click="handleHit">
@@ -388,7 +388,7 @@ const maxBetAmount = computed(() => userStore.chips)
                       </div>
                     </div>
 
-                    <!-- Game Over State -->
+                    
                     <div v-if="gameStore.gameState === BlackjackState.GAME_OVER" class="d-grid">
                       <button class="btn btn-primary btn-lg" @click="handleNewGame">
                         <i class="bi bi-arrow-clockwise me-2" aria-hidden="true"></i>{{ t('blackjack.controls.newGame') }}
@@ -403,7 +403,7 @@ const maxBetAmount = computed(() => userStore.chips)
       </div>
     </div>
 
-    <!-- Game Result Modal -->
+    
     <GameResult :show="showGameResult" :result="gameResult" :auto-dismiss="false" @close="handleResultClose" />
     </div>
   </BaseLayout>

@@ -83,7 +83,7 @@ const startSpin = async () => {
   requestAnimationFrame(() => {
     if (!numbersStrip.value) return
 
-    const SPIN_DURATION = 4000 // Reduced from 10 seconds to 4 seconds
+    const SPIN_DURATION = 4000
     numbersStrip.value.style.transition = `transform ${SPIN_DURATION}ms cubic-bezier(0.17, 0.67, 0.12, 0.99)`
     numbersStrip.value.style.transform = `translateX(${finalPosition}px)`
 

@@ -17,7 +17,7 @@ const { t } = useI18n()
     </div>
     <div class="card-body p-3 upgrades-body">
 
-      <!-- Auto-Clicker -->
+      
       <div class="bg-white border rounded-3 p-3 mb-3 upgrade-item">
         <div class="mb-3">
           <div class="fw-semibold mb-1">
@@ -40,7 +40,7 @@ const { t } = useI18n()
         </button>
       </div>
 
-      <!-- Multiplier -->
+      
       <div class="bg-white border rounded-3 p-3 mb-3 upgrade-item">
         <div class="mb-3">
           <div class="fw-semibold mb-1">
@@ -60,7 +60,7 @@ const { t } = useI18n()
         </button>
       </div>
 
-      <!-- Critical Hit Upgrade -->
+      
       <div class="bg-white border rounded-3 p-3 mb-3 upgrade-item">
         <div class="mb-3">
           <div class="fw-semibold mb-1">
@@ -81,7 +81,7 @@ const { t } = useI18n()
         </button>
       </div>
 
-      <!-- Auto-Clicker Speed -->
+      
       <div class="bg-white border rounded-3 p-3 mb-3 upgrade-item" v-if="clickerStore.autoClickersCount > 0">
         <div class="mb-3">
           <div class="fw-semibold mb-1">

@@ -50,7 +50,7 @@ onBeforeUnmount(() => {
     :showBalance="true">
 
     <div class="container-fluid px-0">
-      <!-- Stats Header -->
+      
       <StatsHeader />
 
       <div v-if="isCompact" class="d-flex justify-content-center mb-3">
@@ -72,14 +72,14 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
-      <!-- Main Game Area -->
+      
       <div class="row">
-        <!-- Left Side - Click Area -->
+        
         <div class="col-lg-8" v-show="!isCompact || activePanel === 'play'">
           <ClickArea />
         </div>
 
-        <!-- Right Side - Upgrades -->
+        
         <div class="col-lg-4" v-show="!isCompact || activePanel === 'upgrades'">
           <UpgradesPanel />
         </div>

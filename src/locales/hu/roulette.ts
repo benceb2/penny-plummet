@@ -78,7 +78,14 @@ export default {
       "quickBets": "Gyors tétek",
       "numberGrid": "Számok",
       "betSlip": "Tétszelvény",
-      "balance": "Egyenleg"
+      "balance": "Egyenleg",
+      "mobilePanel": "Rulett mobil panel",
+      "viewBets": "Tétek megtekintése",
+      "stepAmount": "Állítsd be a tétet",
+      "stepAmountHint": "Tét módosítása",
+      "stepQuick": "Gyors zseton választása",
+      "stepPlace": "Tétek elhelyezése az asztalon",
+      "stepSpin": "Pörgesd meg a kereket"
     },
     "results": {
       "win": "Nyertél {amount}-t!",

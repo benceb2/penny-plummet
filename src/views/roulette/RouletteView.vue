@@ -157,12 +157,9 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
     
     <div class="row g-3 roulette-layout" v-if="gameStore.gameState === RouletteState.BETTING">
       <div class="col-12 col-lg-8 order-2 order-lg-1">
-        <div class="card roulette-table-card">
+        <div class="card shadow-sm">
           <div class="card-header bg-white d-flex align-items-center justify-content-between">
             <h6 class="mb-0">{{ t('roulette.table.title') }}</h6>
-            <span v-if="gameStore.totalBet > 0" class="badge bg-light text-dark">
-              {{ t('roulette.ui.totalBet') }}: {{ formatIntAsCurrency(gameStore.totalBet) }}
-            </span>
           </div>
           <div class="card-body">
             <RouletteTable
@@ -175,20 +172,22 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
       </div>
 
       <div class="col-12 col-lg-4 order-1 order-lg-2">
-        <div class="card bet-slip-card h-100">
+        <div class="card bet-slip-card h-100 shadow-sm">
           <div class="card-header bg-white">
             <div class="d-flex align-items-center justify-content-between">
               <h6 class="mb-0">{{ t('roulette.ui.betSlip') }}</h6>
-              <div class="text-muted small">
-                {{ t('roulette.ui.balance') }}: <strong>{{ formatIntAsCurrency(userStore.chips) }}</strong>
-              </div>
+              <span class="badge bg-light text-dark">{{ formatIntAsCurrency(userStore.chips) }}</span>
             </div>
           </div>
           <div class="card-body">
             <div class="mb-3">
-              <label class="form-label small text-muted mb-1" for="roulette-bet-amount">
-                {{ t('roulette.gameControls.betting.betAmount') }}
-              </label>
+              <div class="d-flex align-items-center justify-content-between mb-1">
+                <div class="step-label">
+                  <span class="badge bg-secondary me-2">1</span>
+                  <span class="text-muted">{{ t('roulette.ui.stepAmount') }}</span>
+                </div>
+                <small class="text-muted">{{ t('roulette.ui.stepAmountHint') }}</small>
+              </div>
               <div class="input-group input-group-sm">
                 <span class="input-group-text">
                   <i class="bi bi-coin text-warning" aria-hidden="true"></i>
@@ -209,7 +208,10 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
 
             <div class="mb-3">
               <div class="d-flex align-items-center justify-content-between mb-2">
-                <small class="text-muted">{{ t('roulette.ui.quickBets') }}</small>
+                <div class="step-label">
+                  <span class="badge bg-secondary me-2">2</span>
+                  <span class="text-muted">{{ t('roulette.ui.stepQuick') }}</span>
+                </div>
                 <button
                   class="btn btn-outline-danger btn-sm"
                   @click="gameStore.clearBets()"
@@ -220,7 +222,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
               <div class="row g-2 quick-bets">
                 <div v-for="bet in quickBets" :key="bet.amount" class="col-4 col-sm-3 col-lg-6">
                   <button
-                    class="btn btn-sm w-100 text-nowrap"
+                    class="btn btn-sm w-100 text-nowrap rounded-pill"
                     :class="[
                       bet.isAllIn ? 'btn-danger all-in-btn fw-bold' : '',
                       !bet.isAllIn && currentBetAmount === bet.amount ? 'btn-primary' : '',
@@ -240,27 +242,37 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
             </div>
 
             <div class="mb-3">
-              <div class="d-flex align-items-center justify-content-between">
-                <small class="text-muted">{{ t('roulette.ui.yourBets') }}</small>
-                <span v-if="gameStore.currentBets.length > 0" class="badge bg-primary rounded-pill">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <div class="step-label">
+                  <span class="badge bg-secondary me-2">3</span>
+                  <span class="text-muted">{{ t('roulette.ui.stepPlace') }}</span>
+                </div>
+                <span class="badge bg-primary rounded-pill">
                   {{ gameStore.currentBets.length }}
                 </span>
               </div>
-              <div v-if="gameStore.currentBets.length > 0" class="list-group bet-list mt-2">
-                <div
-                  v-for="(bet, index) in gameStore.currentBets"
-                  :key="index"
-                  class="list-group-item d-flex justify-content-between align-items-center">
-                  <div class="bet-list-label">
-                    <strong>{{ getBetTypeLabel(bet.type) }}</strong>
-                    <small class="text-muted ms-2">
-                      [{{ bet.numbers.join(', ') }}]
-                    </small>
+              <div v-if="gameStore.currentBets.length > 0" class="mt-2">
+                <details class="bet-details">
+                  <summary class="text-primary">
+                    {{ t('roulette.ui.viewBets') }}
+                  </summary>
+                  <div class="list-group bet-list mt-2">
+                    <div
+                      v-for="(bet, index) in gameStore.currentBets"
+                      :key="index"
+                      class="list-group-item d-flex justify-content-between align-items-center">
+                      <div class="bet-list-label">
+                        <strong>{{ getBetTypeLabel(bet.type) }}</strong>
+                        <small class="text-muted ms-2">
+                          [{{ bet.numbers.join(', ') }}]
+                        </small>
+                      </div>
+                      <span class="badge bg-primary rounded-pill">
+                        {{ formatIntAsCurrency(bet.amount) }}
+                      </span>
+                    </div>
                   </div>
-                  <span class="badge bg-primary rounded-pill">
-                    {{ formatIntAsCurrency(bet.amount) }}
-                  </span>
-                </div>
+                </details>
               </div>
               <div v-else class="text-center py-3 text-muted small">
                 <i class="bi bi-inbox d-block mb-2" aria-hidden="true"></i>
@@ -275,6 +287,10 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
             </div>
           </div>
           <div class="card-footer bg-white border-0">
+            <div class="step-label mb-2">
+              <span class="badge bg-secondary me-2">4</span>
+              <span class="text-muted">{{ t('roulette.ui.stepSpin') }}</span>
+            </div>
             <button
               class="btn btn-success w-100"
               @click="handleSpin"
@@ -303,6 +319,11 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
 .all-in-btn:hover {
   background-color: #842029;
   border-color: #661d28;
+}
+
+.bet-slip-card {
+  position: sticky;
+  top: 1rem;
 }
 
 .quick-bets .btn {
@@ -336,6 +357,20 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
   border-top: 1px dashed #dfe3e8;
 }
 
+.bet-details summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.bet-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.step-label {
+  display: inline-flex;
+  align-items: center;
+}
+
 @media (max-width: 767px) {
   .card-body {
     padding: 0.5rem;
@@ -347,6 +382,10 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
 
   .bet-list {
     max-height: 180px;
+  }
+
+  .bet-slip-card {
+    position: static;
   }
 
   :deep(.base-layout) {

@@ -163,22 +163,28 @@ const outsideBets = computed(() => {
 
     
     <div class="d-md-none">
-      <div class="btn-group w-100 mb-2 mobile-panel-switch" role="group" aria-label="Roulette mobile panel">
-        <button
-          type="button"
-          class="btn btn-sm"
-          :class="activeMobilePanel === 'quick' ? 'btn-light text-success fw-semibold' : 'btn-outline-light'"
-          @click="activeMobilePanel = 'quick'">
-          {{ t('roulette.ui.quickBets') }}
-        </button>
-        <button
-          type="button"
-          class="btn btn-sm"
-          :class="activeMobilePanel === 'numbers' ? 'btn-light text-success fw-semibold' : 'btn-outline-light'"
-          @click="activeMobilePanel = 'numbers'">
-          {{ t('roulette.ui.numberGrid') }}
-        </button>
-      </div>
+      <ul class="nav nav-pills nav-fill mb-2" role="tablist" :aria-label="t('roulette.ui.mobilePanel')">
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            :class="{ active: activeMobilePanel === 'quick' }"
+            type="button"
+            role="tab"
+            @click="activeMobilePanel = 'quick'">
+            {{ t('roulette.ui.quickBets') }}
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            :class="{ active: activeMobilePanel === 'numbers' }"
+            type="button"
+            role="tab"
+            @click="activeMobilePanel = 'numbers'">
+            {{ t('roulette.ui.numberGrid') }}
+          </button>
+        </li>
+      </ul>
 
       <div v-show="activeMobilePanel === 'quick'">
         <div class="row g-1 mb-1 pt-0">
@@ -294,7 +300,6 @@ const outsideBets = computed(() => {
   right: -6px;
   padding: 0.125rem 0.25rem;
 }
-
 
 .btn {
   overflow: visible !important;

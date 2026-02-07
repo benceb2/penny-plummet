@@ -78,7 +78,14 @@ export default {
       "quickBets": "Quick Bets",
       "numberGrid": "Numbers",
       "betSlip": "Bet Slip",
-      "balance": "Balance"
+      "balance": "Balance",
+      "mobilePanel": "Roulette mobile panel",
+      "viewBets": "View bets",
+      "stepAmount": "Set your bet amount",
+      "stepAmountHint": "Adjust stake",
+      "stepQuick": "Pick a quick chip",
+      "stepPlace": "Place your bets on the table",
+      "stepSpin": "Spin the wheel"
     },
     "results": {
       "win": "You win {amount}!",

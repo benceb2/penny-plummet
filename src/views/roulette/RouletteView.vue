@@ -106,7 +106,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
         <div class="row align-items-center g-2">
 
           
-          <div class="col-auto">
+          <div class="col-12 col-sm-auto">
             <div class="input-group input-group-sm">
               <label class="visually-hidden" for="roulette-bet-amount">
                 {{ t('roulette.gameControls.betting.betAmount') }}
@@ -130,33 +130,34 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
           </div>
 
           
-          <div class="col">
-            <div class="d-flex gap-1 flex-nowrap flex-md-wrap quick-bets">
-              <button
-                v-for="bet in quickBets"
-                :key="bet.amount"
-                class="btn btn-sm"
-                :class="[
-                  bet.isAllIn ? 'btn-danger all-in-btn fw-bold' : '',
-                  !bet.isAllIn && currentBetAmount === bet.amount ? 'btn-primary' : '',
-                  !bet.isAllIn && currentBetAmount !== bet.amount ? 'btn-outline-dark' : ''
-                ]"
-                @click="currentBetAmount = bet.amount"
-                :disabled="gameStore.gameState !== RouletteState.BETTING"
-                :title="t('roulette.ui.quickBetTitle', { amount: formatIntAsCurrency(bet.amount), label: bet.label })">
-                <span class="text-white" v-if="bet.isAllIn">{{ bet.label }}</span>
-                <span v-else>
-                  {{ formatIntAsCurrency(bet.amount) }}
-                  <small class="ms-1 text-body">({{ bet.label }})</small>
-                </span>
-              </button>
-              <button
-                class="btn btn-danger"
-                @click="gameStore.clearBets()"
-                :disabled="gameStore.currentBets.length === 0 || gameStore.gameState !== RouletteState.BETTING">
-                <i class="bi bi-x-circle me-2" aria-hidden="true"></i>{{ t('roulette.ui.clearBets') }}
-              </button>
-
+          <div class="col-12 col-md">
+            <div class="row g-2 align-items-stretch quick-bets">
+              <div v-for="bet in quickBets" :key="bet.amount" class="col-4 col-sm-3 col-md-auto">
+                <button
+                  class="btn btn-sm w-100 text-nowrap"
+                  :class="[
+                    bet.isAllIn ? 'btn-danger all-in-btn fw-bold' : '',
+                    !bet.isAllIn && currentBetAmount === bet.amount ? 'btn-primary' : '',
+                    !bet.isAllIn && currentBetAmount !== bet.amount ? 'btn-outline-dark' : ''
+                  ]"
+                  @click="currentBetAmount = bet.amount"
+                  :disabled="gameStore.gameState !== RouletteState.BETTING"
+                  :title="t('roulette.ui.quickBetTitle', { amount: formatIntAsCurrency(bet.amount), label: bet.label })">
+                  <span class="text-white" v-if="bet.isAllIn">{{ bet.label }}</span>
+                  <span v-else>
+                    {{ formatIntAsCurrency(bet.amount) }}
+                    <small class="ms-1 text-body">({{ bet.label }})</small>
+                  </span>
+                </button>
+              </div>
+              <div class="col-12 col-sm-6 col-md-auto">
+                <button
+                  class="btn btn-danger btn-sm w-100"
+                  @click="gameStore.clearBets()"
+                  :disabled="gameStore.currentBets.length === 0 || gameStore.gameState !== RouletteState.BETTING">
+                  <i class="bi bi-x-circle me-2" aria-hidden="true"></i>{{ t('roulette.ui.clearBets') }}
+                </button>
+              </div>
             </div>
           </div>
 
@@ -335,23 +336,28 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
   border-color: #661d28;
 }
 
+.quick-bets .btn {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .quick-bets .btn {
+    width: auto;
+  }
+}
+
 @media (max-width: 767px) {
   .card-body {
-    padding: 0.35rem;
+    padding: 0.5rem;
   }
 
   .nav-tabs .nav-link {
-    padding: 0.35rem 0.5rem;
-    font-size: 0.8rem;
-  }
-
-  .quick-bets {
-    overflow-x: auto;
-    padding-bottom: 0.25rem;
+    padding: 0.4rem 0.55rem;
+    font-size: 0.85rem;
   }
 
   .quick-bets .btn {
-    flex: 0 0 auto;
+    font-size: 0.8rem;
   }
 
   :deep(.base-layout) {

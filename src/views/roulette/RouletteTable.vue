@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { BetType } from '@/stores/rouletteStore'
 
@@ -18,6 +18,7 @@ interface Props {
 
 const props = defineProps<Props>()
 const { t } = useI18n()
+const activeMobilePanel = ref<'quick' | 'numbers'>('quick')
 
 // Utility functions
 const redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
@@ -60,14 +61,8 @@ const numberGrid = computed(() => {
   return grid
 })
 
-// Mobile-friendly grid (4 columns x 9 rows)
-const mobileGrid = computed(() => {
-  const grid = []
-  for (let i = 1; i <= 36; i += 4) {
-    grid.push([i, i + 1, i + 2, i + 3].filter(n => n <= 36))
-  }
-  return grid
-})
+// Mobile-friendly grid (3 columns x 12 rows)
+const mobileNumbers = computed(() => Array.from({ length: 36 }, (_, i) => i + 1))
 
 const outsideBets = computed(() => {
   return {
@@ -127,10 +122,10 @@ const outsideBets = computed(() => {
 
         
         <div class="flex-grow-1 pt-2">
-          <table class="table table-borderless mb-0">
+          <table class="table table-borderless mb-0 number-grid">
             <tbody>
               <tr v-for="(row, rowIndex) in numberGrid" :key="rowIndex">
-                <td v-for="num in row" :key="num" class="p-1">
+                <td v-for="num in row" :key="num">
                   <button
                     :class="getNumberButtonClass(num)"
                     class="number-btn w-100 fw-bold"
@@ -168,70 +163,82 @@ const outsideBets = computed(() => {
 
     
     <div class="d-md-none">
-      
-      <div class="row g-0 mb-1 pt-0">
-        <div class="col-3">
-          <button
-            :class="`btn btn-outline-light w-100 fw-bold zero-btn-sm ${getBetAmount(0) > 0 ? 'active position-relative' : ''}`"
-            @click="onPlaceBet('straight', [0], currentBetAmount)">
-            0
-            <span
-              v-if="getBetAmount(0) > 0"
-              class="position-absolute badge rounded-pill bg-warning text-dark bet-badge-sm">
-              {{ formatCurrency(getBetAmount(0)) }}
-            </span>
-          </button>
-        </div>
-        <div v-for="bet in outsideBets.dozens" :key="bet.label" class="col-3">
-          <button
-            :class="`btn btn-outline-light w-100 mobile-dozen-btn ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
-            @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
-            {{ bet.label }}
-            <span
-              v-if="getOutsideBetAmount(bet.numbers) > 0"
-              class="position-absolute badge rounded-pill bg-warning text-dark bet-badge-sm">
-              {{ formatCurrency(getOutsideBetAmount(bet.numbers)) }}
-            </span>
-          </button>
-        </div>
+      <div class="btn-group w-100 mb-2 mobile-panel-switch" role="group" aria-label="Roulette mobile panel">
+        <button
+          type="button"
+          class="btn btn-sm"
+          :class="activeMobilePanel === 'quick' ? 'btn-light text-success fw-semibold' : 'btn-outline-light'"
+          @click="activeMobilePanel = 'quick'">
+          {{ t('roulette.ui.quickBets') }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm"
+          :class="activeMobilePanel === 'numbers' ? 'btn-light text-success fw-semibold' : 'btn-outline-light'"
+          @click="activeMobilePanel = 'numbers'">
+          {{ t('roulette.ui.numberGrid') }}
+        </button>
       </div>
 
-      
-      <div class="mb-1 pt-0">
-        <div class="row g-0">
-          <div v-for="row in mobileGrid" :key="row[0]" class="col-12 mb-0">
-            <div class="d-flex gap-0">
-              <button
-                v-for="num in row"
-                :key="num"
-                :class="getNumberButtonClass(num)"
-                class="flex-fill mobile-number-btn fw-bold"
-                @click="onPlaceBet('straight', [num], currentBetAmount)">
-                {{ num }}
-                <span
-                  v-if="getBetAmount(num) > 0"
-                  class="position-absolute badge rounded-pill bg-warning text-dark bet-badge-sm">
-                  {{ formatCurrency(getBetAmount(num)) }}
-                </span>
-              </button>
-            </div>
+      <div v-show="activeMobilePanel === 'quick'">
+        <div class="row g-1 mb-1 pt-0">
+          <div class="col-3">
+            <button
+              :class="`btn btn-sm btn-outline-light w-100 fw-bold zero-btn-sm ${getBetAmount(0) > 0 ? 'active position-relative' : ''}`"
+              @click="onPlaceBet('straight', [0], currentBetAmount)">
+              0
+              <span
+                v-if="getBetAmount(0) > 0"
+                class="position-absolute badge rounded-pill bg-warning text-dark bet-badge-sm">
+                {{ formatCurrency(getBetAmount(0)) }}
+              </span>
+            </button>
+          </div>
+          <div v-for="bet in outsideBets.dozens" :key="bet.label" class="col-3">
+            <button
+              :class="`btn btn-sm btn-outline-light w-100 text-nowrap mobile-dozen-btn ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
+              @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
+              {{ bet.label }}
+              <span
+                v-if="getOutsideBetAmount(bet.numbers) > 0"
+                class="position-absolute badge rounded-pill bg-warning text-dark bet-badge-sm">
+                {{ formatCurrency(getOutsideBetAmount(bet.numbers)) }}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="row g-1 pt-0">
+          <div v-for="bet in outsideBets.even_money" :key="bet.label" class="col-4">
+            <button
+              :class="`btn btn-sm w-100 text-nowrap mobile-even-btn ${bet.btnClass || 'btn-outline-light'} ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
+              @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
+              {{ bet.label }}
+              <span
+                v-if="getOutsideBetAmount(bet.numbers) > 0"
+                class="position-absolute badge rounded-pill bg-warning text-dark bet-badge-sm">
+                {{ formatCurrency(getOutsideBetAmount(bet.numbers)) }}
+              </span>
+            </button>
           </div>
         </div>
       </div>
 
-      
-      <div class="row g-0 pt-0">
-        <div v-for="bet in outsideBets.even_money" :key="bet.label" class="col-4">
-          <button
-            :class="`btn w-100 mobile-even-btn ${bet.btnClass || 'btn-outline-light'} ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
-            @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
-            {{ bet.label }}
-            <span
-              v-if="getOutsideBetAmount(bet.numbers) > 0"
-              class="position-absolute badge rounded-pill bg-warning text-dark bet-badge-sm">
-              {{ formatCurrency(getOutsideBetAmount(bet.numbers)) }}
-            </span>
-          </button>
+      <div v-show="activeMobilePanel === 'numbers'" class="pt-0">
+        <div class="row g-1 mobile-number-grid">
+          <div v-for="num in mobileNumbers" :key="num" class="col-4">
+            <button
+              :class="getNumberButtonClass(num)"
+              class="w-100 btn-sm mobile-number-btn fw-bold"
+              @click="onPlaceBet('straight', [num], currentBetAmount)">
+              {{ num }}
+              <span
+                v-if="getBetAmount(num) > 0"
+                class="position-absolute badge rounded-pill bg-warning text-dark bet-badge-sm">
+                {{ formatCurrency(getBetAmount(num)) }}
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -242,12 +249,14 @@ const outsideBets = computed(() => {
 .number-btn {
   height: 40px;
   overflow: visible !important;
+  border: 2px solid #0f5a38;
 }
 
 .mobile-number-btn {
-  height: 26px;
+  height: 36px;
   overflow: visible !important;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
+  padding: 0;
 }
 
 .zero-btn {
@@ -262,13 +271,13 @@ const outsideBets = computed(() => {
 }
 
 .mobile-dozen-btn {
-  height: 30px;
-  font-size: 0.6rem;
+  height: 34px;
+  font-size: 0.7rem;
 }
 
 .mobile-even-btn {
-  font-size: 0.6rem;
-  padding: 0.25rem 0.1rem;
+  font-size: 0.7rem;
+  padding: 0.3rem 0.1rem;
 }
 
 .bet-badge {
@@ -297,5 +306,21 @@ const outsideBets = computed(() => {
 
 .roulette-felt {
   background-color: #146c43;
+  border: 1px solid #0f5a38;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.roulette-felt .table {
+  background-color: #146c43;
+}
+
+.number-grid {
+  border-collapse: separate;
+  border-spacing: 0.35rem;
+}
+
+.number-grid td {
+  background-color: #146c43;
+  padding: 0;
 }
 </style>

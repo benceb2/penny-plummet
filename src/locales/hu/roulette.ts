@@ -74,7 +74,9 @@ export default {
       "allIn": "MINDENT FEL",
       "ofBalance": "az egyenlegből",
       "quickBetTitle": "{amount} ({label} az egyenlegből)",
-      "moreBets": "...és még {count}"
+      "moreBets": "...és még {count}",
+      "quickBets": "Gyors tétek",
+      "numberGrid": "Számok"
     },
     "results": {
       "win": "Nyertél {amount}-t!",

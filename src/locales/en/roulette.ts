@@ -74,7 +74,9 @@ export default {
       "allIn": "ALL IN",
       "ofBalance": "of balance",
       "quickBetTitle": "{amount} ({label} of balance)",
-      "moreBets": "...and {count} more"
+      "moreBets": "...and {count} more",
+      "quickBets": "Quick Bets",
+      "numberGrid": "Numbers"
     },
     "results": {
       "win": "You win {amount}!",

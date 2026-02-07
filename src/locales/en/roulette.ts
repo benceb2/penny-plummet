@@ -76,7 +76,9 @@ export default {
       "quickBetTitle": "{amount} ({label} of balance)",
       "moreBets": "...and {count} more",
       "quickBets": "Quick Bets",
-      "numberGrid": "Numbers"
+      "numberGrid": "Numbers",
+      "betSlip": "Bet Slip",
+      "balance": "Balance"
     },
     "results": {
       "win": "You win {amount}!",

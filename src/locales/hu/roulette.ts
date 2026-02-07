@@ -76,7 +76,9 @@ export default {
       "quickBetTitle": "{amount} ({label} az egyenlegből)",
       "moreBets": "...és még {count}",
       "quickBets": "Gyors tétek",
-      "numberGrid": "Számok"
+      "numberGrid": "Számok",
+      "betSlip": "Tétszelvény",
+      "balance": "Egyenleg"
     },
     "results": {
       "win": "Nyertél {amount}-t!",

@@ -29,7 +29,7 @@ const achievementProgress = computed(() => {
     :title="t('profile.title')"
     bootstrapIcon="person-circle">
 
-    <!-- Level Progress Section -->
+    
     <div class="card mb-4">
       <div class="card-body">
         <h2 class="card-title section-title">
@@ -61,7 +61,7 @@ const achievementProgress = computed(() => {
       </div>
     </div>
 
-    <!-- Stats Section -->
+    
     <div class="card mb-4">
       <div class="card-body">
         <h2 class="card-title section-title">
@@ -109,7 +109,7 @@ const achievementProgress = computed(() => {
       </div>
     </div>
 
-    <!-- Achievements Summary -->
+    
     <div class="card">
       <div class="card-body d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
         <div>

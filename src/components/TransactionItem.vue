@@ -58,7 +58,7 @@ function getDetails(): string | undefined {
   <div
     class="transaction-item border-bottom p-3">
     <div class="d-flex align-items-start justify-content-between">
-      <!-- Left side: Game info and details -->
+      
       <div class="flex-grow-1 me-3">
         <div class="d-flex align-items-center mb-1">
           <span
@@ -83,7 +83,7 @@ function getDetails(): string | undefined {
         </div>
       </div>
 
-      <!-- Right side: Amount -->
+      
       <div class="text-end">
         <span
           class="fs-5"

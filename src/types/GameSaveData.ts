@@ -6,11 +6,11 @@ import type { TransactionSaveData } from "@/types/TransactionSaveData";
 import type { UserStore } from "@/stores/userStore";
 
 export interface GameSaveData {
-  user: UserStore;
-  achievements: AchievementStore;
-  blackjack: BlackjackStore;
-  clicker: ClickerStore;
+  user: UserStore["$state"];
+  achievements: AchievementStore["$state"];
+  blackjack: BlackjackStore["$state"];
+  clicker: ClickerStore["$state"];
   transactions: TransactionSaveData;
-  roulette: RouletteStore;
+  roulette: RouletteStore["$state"];
   timestamp: number;
 }

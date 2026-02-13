@@ -55,6 +55,18 @@ export default {
         "title": "Kattintás Legenda",
         "description": "Kattintson 10000-szer"
       },
+      "passive_novice": {
+        "title": "Passzív Újonc",
+        "description": "Szerezzen 1000 passzív kattintást"
+      },
+      "passive_master": {
+        "title": "Passzív Mester",
+        "description": "Szerezzen 10000 passzív kattintást"
+      },
+      "passive_legend": {
+        "title": "Passzív Legenda",
+        "description": "Szerezzen 100000 passzív kattintást"
+      },
       "auto_collector": {
         "title": "Automatizálás Kezdő",
         "description": "Vásárolja meg első auto-kattintóját"

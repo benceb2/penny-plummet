@@ -1,9 +1,9 @@
-import type { RouletteBet } from "./RouletteBet";
+import type { RouletteBet } from './RouletteBet';
 
 export interface RouletteResult {
-  isWin: boolean;
-  winningNumber: number;
-  totalWinAmount: number;
-  initialBets: RouletteBet[];
-  winningBets: RouletteBet[];
+  winningNumber: number
+  totalWin: number
+  totalBet: number
+  winningBets: RouletteBet[]
+  losingBets: RouletteBet[]
 }

@@ -8,8 +8,8 @@ export default {
     "stats": {
       "availableToCollect": "Begyűjthető",
       "income": "Bevétel",
-      "manualLifetimeClicks": "Kézi összes kattintás",
-      "passiveEarnings": "Passzív bevétel",
+      "manualLifetimeClicks": "Kézi kattintások",
+      "passiveEarnings": "Passzív kattintások",
       "perSecondSuffix": "/mp"
     },
     "collect": {

@@ -36,10 +36,10 @@ const recentTransactions = computed(() => {
 <template>
   <BaseLayout :title="t('home.welcome')">
 
-    <!-- Game Selection Cards -->
-    <div class="row g-4 mb-4">
-      <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
+    
+    <div class="row g-3 mb-3">
+      <div class="col-6 col-md-4">
+        <div class="card h-100 shadow-sm home-game-card">
           <div class="card-body d-flex flex-column">
             <div class="d-flex align-items-center mb-3">
               <i class="bi bi-suit-spade-fill fs-2 text-primary me-3" aria-hidden="true"></i>
@@ -55,8 +55,8 @@ const recentTransactions = computed(() => {
         </div>
       </div>
 
-      <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
+      <div class="col-6 col-md-4">
+        <div class="card h-100 shadow-sm home-game-card">
           <div class="card-body d-flex flex-column">
             <div class="d-flex align-items-center mb-3">
               <i class="bi bi-mouse fs-2 text-success me-3" aria-hidden="true"></i>
@@ -72,8 +72,8 @@ const recentTransactions = computed(() => {
         </div>
       </div>
 
-      <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
+      <div class="col-6 col-md-4">
+        <div class="card h-100 shadow-sm home-game-card">
           <div class="card-body d-flex flex-column">
             <div class="d-flex align-items-center mb-3">
               <i class="bi bi-bullseye fs-2 text-danger me-3" aria-hidden="true"></i>
@@ -90,7 +90,7 @@ const recentTransactions = computed(() => {
       </div>
     </div>
 
-    <div class="row">
+    <div class="row home-secondary d-none d-md-flex">
       <div class="col-md-6 mb-4 mb-md-0">
         <div class="card h-100">
           <div class="card-header">
@@ -159,5 +159,36 @@ const recentTransactions = computed(() => {
       </div>
     </div>
 
+    <div class="row d-md-none g-2">
+      <div class="col-6">
+        <RouterLink to="/achievements" class="btn btn-outline-primary w-100">
+          <i class="fa fa-trophy me-2" aria-hidden="true"></i>
+          {{ t('home.achievements.viewAll') }}
+        </RouterLink>
+      </div>
+      <div class="col-6">
+        <RouterLink to="/transactions" class="btn btn-outline-success w-100">
+          <i class="fa fa-money-bill-wave me-2" aria-hidden="true"></i>
+          {{ t('home.transactions.viewAll') }}
+        </RouterLink>
+      </div>
+    </div>
+
   </BaseLayout>
 </template>
+
+<style scoped>
+@media (max-width: 767px) {
+  .home-game-card .card-body {
+    padding: 0.75rem;
+  }
+
+  .home-game-card .section-title {
+    font-size: 0.95rem;
+  }
+
+  .home-game-card .text-muted {
+    font-size: 0.8rem;
+  }
+}
+</style>

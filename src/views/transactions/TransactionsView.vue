@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+
 import { useTransactionStore } from '@/stores/transactionStore';
-import type { Transaction } from '@/types/Transaction';
-import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
+import type { TransactionQuery } from '@/types/TransactionFilters';
 import BaseLayout from '@/components/layout/BaseLayout.vue';
 import BasePagination from '@/components/layout/BasePagination.vue';
 import TransactionItem from '@/components/TransactionItem.vue';
+
 const transactionStore = useTransactionStore();
 
-type GameFilter = Transaction['game'] | 'all';
-type TypeFilter = Transaction['type'] | 'all';
+type GameFilter = TransactionQuery['game'];
+type TypeFilter = TransactionQuery['type'];
 
 const gameOptions = ['all', 'blackjack', 'roulette', 'clicker', 'general'] as const;
 const typeOptions = ['all', 'win', 'loss', 'push'] as const;
@@ -22,7 +23,6 @@ const currentPage = ref(1);
 const { t } = useI18n();
 
 const paginatedTransactions = computed(() => transactionStore.transactions);
-const stats = computed(() => transactionStore.stats);
 const isInitialLoading = computed(() => transactionStore.isListLoading && paginatedTransactions.value.length === 0);
 const totalPages = computed(() => {
   const total = transactionStore.totalCount;
@@ -57,58 +57,10 @@ const goToPage = (page: number) => {
     :title="t('transactions.title')"
     bootstrapIcon="clock-history">
 
-    <!-- Stats Summary Card -->
-    <div class="card mb-4">
-      <div class="card-body">
-        <div class="row g-4">
-          <div class="col-md-3">
-            <div class="text-center p-3 rounded-3 hover-lift">
-              <div class="mb-2">
-                <i class="bi bi-graph-up text-success fs-1" aria-hidden="true"></i>
-              </div>
-              <h2 class="text-muted section-title">{{ t('transactions.stats.netAmount') }}</h2>
-              <p
-                class="fs-4 fw-bold mb-0"
-                :class="{ 'text-success': stats.netAmount > 0, 'text-danger': stats.netAmount < 0 }">
-                {{ stats.netAmount > 0 ? '+' : '' }}{{ formatIntAsCurrency(stats.netAmount) }}
-              </p>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="text-center p-3 rounded-3 hover-lift">
-              <div class="mb-2">
-                <i class="bi bi-trophy text-success fs-1" aria-hidden="true"></i>
-              </div>
-              <h2 class="text-muted section-title">{{ t('transactions.stats.wins') }}</h2>
-              <p class="fs-4 fw-bold mb-0">{{ stats.totalWins }}</p>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="text-center p-3 rounded-3 hover-lift">
-              <div class="mb-2">
-                <i class="bi bi-x-circle text-danger fs-1" aria-hidden="true"></i>
-              </div>
-              <h2 class="text-muted section-title">{{ t('transactions.stats.losses') }}</h2>
-              <p class="fs-4 fw-bold mb-0">{{ stats.totalLosses }}</p>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="text-center p-3 rounded-3 hover-lift">
-              <div class="mb-2">
-                <i class="bi bi-arrow-repeat text-info fs-1" aria-hidden="true"></i>
-              </div>
-              <h2 class="text-muted section-title">{{ t('transactions.stats.pushes') }}</h2>
-              <p class="fs-4 fw-bold mb-0">{{ stats.totalPushes }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Transactions Card -->
+    
     <div class="card">
       <div class="card-body">
-        <!-- Filters -->
+        
         <div class="row gy-3 pb-3 mb-4 border-bottom align-items-center">
           <div class="col-12 col-md-auto">
             <div class="btn-group">
@@ -136,7 +88,7 @@ const goToPage = (page: number) => {
           </div>
         </div>
 
-        <!-- Transaction List -->
+        
         <div class="transaction-list">
           <div
             v-if="isInitialLoading"
@@ -155,7 +107,7 @@ const goToPage = (page: number) => {
               {{ t('transactions.empty') }}
             </div>
 
-            <!-- Page Info -->
+            
             <div class="text-center text-muted mt-2">
               {{ t('transactions.pagination.summary', {
                 from: transactionStore.totalCount === 0 ? 0 : ((currentPage - 1) * pageSize) + 1,
@@ -164,7 +116,7 @@ const goToPage = (page: number) => {
               }) }}
             </div>
 
-            <!-- Pagination -->
+            
             <BasePagination
               v-if="totalPages > 1"
               :current-page="currentPage"

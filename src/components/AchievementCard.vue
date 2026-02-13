@@ -37,7 +37,7 @@ function claimReward() {
       'border-warning': achievement.completed && !achievement.claimed
     }">
     <div class="card-body d-flex flex-column position-relative">
-      <!-- Rewards in top right -->
+      
       <div
         class="position-absolute top-0 end-0 mt-2 me-2 d-flex align-items-center gap-2">
         <small class="text-success-emphasis d-flex align-items-center me-2 mt-1">
@@ -50,7 +50,7 @@ function claimReward() {
         </small>
       </div>
 
-      <!-- Header -->
+      
       <h3 class="card-title d-flex align-items-center h5">
         {{ t(`${achievementKey}.title`) }}
         <span v-if="achievement.completed && achievement.claimed" class="text-success ms-2">
@@ -61,10 +61,10 @@ function claimReward() {
         </span>
       </h3>
 
-      <!-- Description -->
+      
       <p class="card-text text-muted">{{ t(`${achievementKey}.description`) }}</p>
 
-      <!-- Progress Section -->
+      
       <div v-if="!achievement.completed" class="mb-3">
         <div class="d-flex align-items-center mb-2">
           <div class="progress flex-grow-1" style="height: 8px;">
@@ -84,7 +84,7 @@ function claimReward() {
         </div>
       </div>
 
-      <!-- Claim Button -->
+      
       <button
         v-if="achievement.completed && !achievement.claimed"
         @click="claimReward"

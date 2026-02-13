@@ -102,7 +102,7 @@ const buttonSizeClass = computed(() => {
 
 <template>
   <div class="bet-amount-selector">
-    <!-- Insufficient Funds Alert -->
+    
     <div v-if="isDisabled" class="alert alert-danger d-flex align-items-center mb-3">
       <i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i>
       <div>
@@ -111,7 +111,7 @@ const buttonSizeClass = computed(() => {
       </div>
     </div>
 
-    <!-- Custom Bet Input -->
+    
     <div class="mb-3">
       <div class="form-floating">
         <input
@@ -129,7 +129,7 @@ const buttonSizeClass = computed(() => {
       </div>
     </div>
 
-    <!-- Quick Bet Options -->
+    
     <div v-if="!isDisabled" class="mb-3">
       <div class="d-flex align-items-center gap-2 mb-2">
         <h3 class="mb-0 text-muted subsection-title">
@@ -160,7 +160,7 @@ const buttonSizeClass = computed(() => {
       </div>
     </div>
 
-    <!-- Current Selection Display -->
+    
     <div v-if="!isDisabled" class="alert alert-info d-flex justify-content-between align-items-center mb-0">
       <span>
         <i class="bi bi-info-circle-fill me-2" aria-hidden="true"></i>

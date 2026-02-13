@@ -12,6 +12,14 @@ export default {
     },
     "table": {
       "title": "Roulette Table",
+      "eyebrow": "Place Your Bets",
+      "subtitle": "Choose a quick bet or tap a number to place a straight bet.",
+      "quickBetsTitle": "Quick Bets",
+      "quickBetsHint": "Tap a group to spread your bet across its numbers.",
+      "numberGridTitle": "Number Grid",
+      "numberGridHint": "Tap any number to place a straight bet on it.",
+      "straightBetLabel": "Straight Bet",
+      "zero": "0",
       "bets": {
         "dozen1": "1st 12",
         "dozen2": "2nd 12",
@@ -74,7 +82,20 @@ export default {
       "allIn": "ALL IN",
       "ofBalance": "of balance",
       "quickBetTitle": "{amount} ({label} of balance)",
-      "moreBets": "...and {count} more"
+      "moreBets": "...and {count} more",
+      "quickBets": "Quick Bets",
+      "numberGrid": "Numbers",
+      "betSlip": "Bet Slip",
+      "balance": "Balance",
+      "mobilePanel": "Roulette mobile panel",
+      "viewBets": "View bets",
+      "stepAmount": "Set your bet amount",
+      "stepAmountHint": "Adjust stake",
+      "stepQuick": "Choose a quick bet",
+      "stepPlace": "Place your bets on the table",
+      "stepSpin": "Spin the wheel",
+      "placeBetOnNumber": "Place bet on number {number}",
+      "placeBetOnGroup": "Place bet on {label}"
     },
     "results": {
       "win": "You win {amount}!",

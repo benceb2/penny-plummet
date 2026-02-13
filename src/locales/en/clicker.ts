@@ -8,8 +8,8 @@ export default {
     "stats": {
       "availableToCollect": "Available To Collect",
       "income": "Income",
-      "manualLifetimeClicks": "Manual Lifetime Clicks",
-      "passiveEarnings": "Passive Earnings",
+      "manualLifetimeClicks": "Manual Clicks",
+      "passiveEarnings": "Passive Clicks",
       "perSecondSuffix": "/s"
     },
     "collect": {

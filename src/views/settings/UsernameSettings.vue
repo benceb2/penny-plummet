@@ -127,7 +127,7 @@ const updateUsername = async () => {
           </button>
         </div>
       </div>
-      <!-- Success Alert -->
+      
       <div v-if="showSuccess" class="alert alert-success d-flex align-items-center" role="alert">
         <i class="bi bi-check-circle-fill me-2"></i>
         {{ t('usernameSettings.updateSuccess') }}

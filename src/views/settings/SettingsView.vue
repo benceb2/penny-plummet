@@ -185,7 +185,7 @@ const recalcBalance = async () => {
   <BaseLayout :title="t('settings.title')" bootstrapIcon="gear-fill" :show-balance="false">
     <UsernameSettings />
 
-    <!-- Local Save Management -->
+    
     <div class="card">
       <div class="card-body">
         <h2 class="card-title d-flex align-items-center mb-4 section-title">
@@ -193,7 +193,7 @@ const recalcBalance = async () => {
           {{ t('settings.localSave.title') }}
         </h2>
 
-        <!-- Export Section -->
+        
         <div class="mb-4">
           <h3 class="mb-3 subsection-title">{{ t('settings.localSave.export.title') }}</h3>
           <p class="text-muted small mb-3">
@@ -207,7 +207,7 @@ const recalcBalance = async () => {
 
         <hr class="my-4">
 
-        <!-- Import Section -->
+        
         <div class="mb-4">
           <h3 class="mb-3 subsection-title">{{ t('settings.localSave.import.title') }}</h3>
           <p class="text-muted small mb-3">
@@ -227,7 +227,7 @@ const recalcBalance = async () => {
               ref="fileInput">
           </div>
 
-          <!-- Import Preview & Confirmation Modal -->
+          
           <div
             v-if="showImportConfirm"
             class="modal d-block"
@@ -306,7 +306,7 @@ const recalcBalance = async () => {
 
         <hr class="my-4">
 
-        <!-- Delete Section -->
+        
         <div>
           <h3 class="mb-3 subsection-title">{{ t('settings.localSave.delete.title') }}</h3>
           <p class="text-muted small mb-3">
@@ -317,7 +317,7 @@ const recalcBalance = async () => {
             {{ t('settings.localSave.delete.button') }}
           </button>
 
-          <!-- Delete Confirmation Modal -->
+          
           <div
             v-if="showDeleteConfirm"
             class="modal d-block"
@@ -353,7 +353,7 @@ const recalcBalance = async () => {
           </div>
         </div>
 
-        <!-- Status Messages -->
+        
         <div v-if="importError" class="alert alert-danger mt-4" role="alert">
           <i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i>
           {{ importError }}
@@ -366,7 +366,7 @@ const recalcBalance = async () => {
       </div>
     </div>
 
-    <!-- Balance Audit -->
+    
     <div class="card mt-4">
       <div class="card-body">
         <h2 class="card-title d-flex align-items-center mb-3 section-title">

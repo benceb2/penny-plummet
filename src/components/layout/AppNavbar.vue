@@ -32,13 +32,13 @@ watch(locale, (newLocale) => {
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-      <!-- Brand -->
+      
       <RouterLink class="navbar-brand fw-bold" to="/">
         <i class="bi bi-coin-fill text-warning me-2"></i>
         {{ t('navbar.brand') }}
       </RouterLink>
 
-      <!-- Mobile Toggle -->
+      
       <button
         class="navbar-toggler"
         type="button"
@@ -49,15 +49,15 @@ watch(locale, (newLocale) => {
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <!-- Main Navigation Content -->
+      
       <div
         class="navbar-collapse"
         :class="{ 'show': isNavOpen, 'collapse': !isNavOpen }"
         id="navbarNav">
 
-        <!-- Left Side - Navigation -->
+        
         <ul class="navbar-nav me-auto">
-          <!-- Games Dropdown -->
+          
           <li class="nav-item dropdown me-3">
             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
               data-bs-toggle="dropdown">
@@ -80,7 +80,7 @@ watch(locale, (newLocale) => {
             </ul>
           </li>
 
-          <!-- Earn Dropdown -->
+          
           <li class="nav-item dropdown me-3">
             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
               data-bs-toggle="dropdown">
@@ -103,7 +103,7 @@ watch(locale, (newLocale) => {
             </ul>
           </li>
 
-          <!-- About -->
+          
           <li class="nav-item">
             <RouterLink
               class="nav-link"
@@ -115,21 +115,21 @@ watch(locale, (newLocale) => {
           </li>
         </ul>
 
-        <!-- Mobile Separator -->
+        
         <hr class="d-lg-none text-white-50 my-3">
 
-        <!-- Right Side - User Info -->
+        
         <div class="d-flex align-items-center flex-column flex-lg-row gap-3">
 
-          <!-- Stats Row -->
+          
           <div class="d-flex align-items-center gap-2">
-            <!-- Chips -->
+            
             <span class="badge bg-success fs-6 px-3 py-2 me-2">
               <i class="bi bi-wallet2 me-1"></i>
               {{ userStore.formattedChips }}
             </span>
 
-            <!-- Level with Progress -->
+            
             <span class="badge bg-info fs-6 px-3 py-2 d-flex align-items-center">
               <i class="bi bi-stars me-2"></i>
               {{ achievementStore.currentLevel.level }}
@@ -142,9 +142,9 @@ watch(locale, (newLocale) => {
             </span>
           </div>
 
-          <!-- Controls Row -->
+          
           <div class="d-flex align-items-center gap-3">
-            <!-- Language Selector -->
+            
             <div class="dropdown">
               <button
                 class="btn btn-secondary btn-sm d-flex align-items-center"
@@ -177,7 +177,7 @@ watch(locale, (newLocale) => {
               </ul>
             </div>
 
-            <!-- User Menu -->
+            
             <div class="dropdown">
               <button
                 class="btn btn-primary btn-sm d-flex align-items-center"

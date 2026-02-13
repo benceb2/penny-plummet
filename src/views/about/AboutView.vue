@@ -82,7 +82,7 @@ const features = computed(() => [
       </div>
     </div>
 
-    <!-- Technology Stack -->
+    
     <div class="card mb-4">
       <div class="card-body">
         <h2 class="card-title d-flex align-items-center section-title">
@@ -103,7 +103,7 @@ const features = computed(() => [
       </div>
     </div>
 
-    <!-- Features -->
+    
     <div class="card mb-4">
       <div class="card-body">
         <h2 class="card-title d-flex align-items-center section-title">

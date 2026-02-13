@@ -55,10 +55,9 @@ const handleCollectWithAnimation = () => {
 
 <template>
   <div class="card shadow-sm h-100 rounded-4">
-    <div class="card-body d-flex flex-column justify-content-center align-items-center p-3"
-      style="min-height: 600px;">
+    <div class="card-body d-flex flex-column justify-content-center align-items-center p-3 click-area-body">
 
-      <!-- Combo Display -->
+      
       <div class="position-relative w-100 d-flex justify-content-center mb-3" style="height: 0;">
         <div v-if="clickerStore.comboCount > 1" class="combo-badge position-absolute" style="top: 10px; z-index: 10;">
           <span :class="`badge ${comboColor} fs-6 pulse px-3 py-1`">
@@ -71,7 +70,7 @@ const handleCollectWithAnimation = () => {
         </div>
       </div>
 
-      <!-- Main Click Area -->
+      
       <div class="position-relative mb-4 p-3 d-flex justify-content-center align-items-center flex-grow-1">
         <button
           class="main-click-btn btn btn-warning rounded-circle p-0 position-relative shadow"
@@ -92,11 +91,11 @@ const handleCollectWithAnimation = () => {
             </div>
           </div>
 
-          <!-- Click ripple effect -->
+          
           <div class="click-ripple" aria-hidden="true"></div>
         </button>
 
-        <!-- Floating Click Animations -->
+        
         <div class="floating-animations-container position-absolute"
           style="top: 50%; left: 50%; pointer-events: none; z-index: 15;"
           aria-hidden="true">
@@ -120,7 +119,7 @@ const handleCollectWithAnimation = () => {
         </div>
       </div>
 
-      <!-- Action Buttons -->
+      
       <div class="d-flex gap-3 w-75 mx-auto">
         <button
           class="collect-btn btn btn-success btn-lg flex-fill position-relative overflow-hidden"
@@ -128,10 +127,10 @@ const handleCollectWithAnimation = () => {
           @click="handleCollectWithAnimation"
           :disabled="clickerStore.clicks < 10">
 
-          <!-- Animated background gradient -->
+          
           <div class="collect-bg-animation" aria-hidden="true"></div>
 
-          <!-- Content -->
+          
           <div class="position-relative z-2 d-flex align-items-center justify-content-center">
             <i class="bi bi-gem me-2 collect-icon" aria-hidden="true"></i>
             <div>
@@ -139,7 +138,7 @@ const handleCollectWithAnimation = () => {
               <small class="opacity-90">{{ t('clicker.collect.minimum') }}</small>
             </div>
 
-            <!-- Sparkle effects -->
+            
             <div class="sparkles position-absolute" aria-hidden="true">
               <div class="sparkle sparkle-1">✨</div>
               <div class="sparkle sparkle-2">💎</div>
@@ -201,6 +200,10 @@ const handleCollectWithAnimation = () => {
 
 .collect-btn:disabled {
   opacity: 0.6;
+}
+
+.click-area-body {
+  min-height: 600px;
 }
 
 /* Animated background for collect button */
@@ -435,6 +438,10 @@ const handleCollectWithAnimation = () => {
 
 /* Responsive adjustments */
 @media (max-width: 991px) {
+  .click-area-body {
+    min-height: 520px;
+  }
+
   .main-click-btn {
     width: 200px;
     height: 200px;
@@ -446,6 +453,10 @@ const handleCollectWithAnimation = () => {
 }
 
 @media (max-width: 768px) {
+  .click-area-body {
+    min-height: 420px;
+  }
+
   .main-click-btn {
     width: 180px;
     height: 180px;
@@ -453,6 +464,20 @@ const handleCollectWithAnimation = () => {
 
   .click-icon {
     font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 575px) {
+  .click-area-body {
+    min-height: 340px;
+  }
+
+  .collect-btn {
+    min-height: 64px;
+  }
+
+  .click-icon {
+    font-size: 2.2rem;
   }
 }
 </style>

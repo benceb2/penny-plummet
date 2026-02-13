@@ -6,6 +6,7 @@ export interface ClickAnimationPosition {
 export interface OfflineEarningsResult {
   earnings: number
   seconds: number
+  clicks: number
 }
 
 export interface UpgradeCosts {
@@ -127,11 +128,11 @@ export function calculateOfflineEarnings(
   const cappedOfflineTime = Math.min(offlineTime, MAX_OFFLINE_MS)
 
   if (cappedOfflineTime <= 0 || autoClickersCount === 0) {
-    return { earnings: 0, seconds: 0 }
+    return { earnings: 0, seconds: 0, clicks: 0 }
   }
 
   const seconds = Math.floor(cappedOfflineTime / 1000)
-  const clicksPerSecond = autoClickersCount * clickValue * (1000 / autoClickerSpeed)
+  const clicksPerSecond = autoClickersCount * (1000 / autoClickerSpeed)
   const maxSeconds = Math.max(MAX_OFFLINE_MS / 1000, 1)
   const fullRateSeconds = Math.min(OFFLINE_FULL_RATE_HOURS * 3600, maxSeconds)
   let rateMultiplier = OFFLINE_RATE_MULTIPLIER
@@ -143,9 +144,10 @@ export function calculateOfflineEarnings(
     rateMultiplier = OFFLINE_RATE_MULTIPLIER * taperFactor
   }
 
-  const earnings = Math.floor(seconds * clicksPerSecond * rateMultiplier)
+  const clicks = Math.floor(seconds * clicksPerSecond * rateMultiplier)
+  const earnings = clicks * clickValue
 
-  return { earnings, seconds }
+  return { earnings, seconds, clicks }
 }
 
 // Auto-clicker loop calculations
@@ -158,6 +160,17 @@ export function calculateAutoClickerUpdate(
   if (autoClickersCount === 0) return 0
 
   const clicksPerSecond = autoClickersCount * clickValue * (1000 / autoClickerSpeed)
+  return Math.floor((deltaTime / 1000) * clicksPerSecond)
+}
+
+export function calculateAutoClickerClicks(
+  deltaTime: number,
+  autoClickersCount: number,
+  autoClickerSpeed: number
+): number {
+  if (autoClickersCount === 0) return 0
+
+  const clicksPerSecond = autoClickersCount * (1000 / autoClickerSpeed)
   return Math.floor((deltaTime / 1000) * clicksPerSecond)
 }
 

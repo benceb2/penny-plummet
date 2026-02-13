@@ -12,6 +12,14 @@ export default {
     },
     "table": {
       "title": "Rulett Asztal",
+      "eyebrow": "Tedd meg a téteket",
+      "subtitle": "Válassz gyors tétet, vagy koppints egy számra az egyenes tétért.",
+      "quickBetsTitle": "Gyors tétek",
+      "quickBetsHint": "Koppints egy csoportra, hogy a tétet a számokra oszd.",
+      "numberGridTitle": "Számrács",
+      "numberGridHint": "Koppints egy számra az egyenes tét elhelyezéséhez.",
+      "straightBetLabel": "Egyenes tét",
+      "zero": "0",
       "bets": {
         "dozen1": "1. 12",
         "dozen2": "2. 12",
@@ -74,7 +82,20 @@ export default {
       "allIn": "MINDENT FEL",
       "ofBalance": "az egyenlegből",
       "quickBetTitle": "{amount} ({label} az egyenlegből)",
-      "moreBets": "...és még {count}"
+      "moreBets": "...és még {count}",
+      "quickBets": "Gyors tétek",
+      "numberGrid": "Számok",
+      "betSlip": "Tétszelvény",
+      "balance": "Egyenleg",
+      "mobilePanel": "Rulett mobil panel",
+      "viewBets": "Tétek megtekintése",
+      "stepAmount": "Állítsd be a tétet",
+      "stepAmountHint": "Tét módosítása",
+      "stepQuick": "Gyors tét kiválasztása",
+      "stepPlace": "Tétek elhelyezése az asztalon",
+      "stepSpin": "Pörgesd meg a kereket",
+      "placeBetOnNumber": "Tét elhelyezése a(z) {number} számra",
+      "placeBetOnGroup": "Tét elhelyezése: {label}"
     },
     "results": {
       "win": "Nyertél {amount}-t!",

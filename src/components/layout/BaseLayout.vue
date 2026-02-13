@@ -8,7 +8,7 @@ defineProps<{
 </script>
 
 <template>
-  <section class="container py-2 pt-4">
+  <section class="container py-2 pt-4 base-layout">
     <div class="row mb-4">
       <div class="col-12">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
@@ -31,5 +31,16 @@ defineProps<{
 
 :slotted(.row:last-child) {
   margin-bottom: 0;
+}
+
+@media (max-width: 767px) {
+  .base-layout {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+  }
+
+  :slotted(.row) {
+    margin-bottom: 1rem;
+  }
 }
 </style>

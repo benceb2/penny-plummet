@@ -17,18 +17,11 @@ const mountTransactionsView = (overrides: Partial<ReturnType<typeof useTransacti
   setActivePinia(pinia)
   const transactionStore = useTransactionStore()
 
-  transactionStore.loadTransactionsPage = async () => {}
+  transactionStore.loadTransactionsPage = async () => { }
   transactionStore.$patch({
     transactions: [],
     latestTransactions: [],
     totalCount: 0,
-    stats: {
-      total: 0,
-      totalWins: 0,
-      totalLosses: 0,
-      totalPushes: 0,
-      netAmount: 0,
-    },
     isListLoading: false,
   })
   Object.assign(transactionStore, overrides)

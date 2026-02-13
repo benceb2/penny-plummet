@@ -39,25 +39,25 @@ const getCardLabel = (card: Card): string => {
     role="img"
     :aria-label="getCardLabel(card)">
     <div v-if="card.faceUp" class="h-100 p-2">
-      <!-- Top left corner -->
+      
       <div class="position-absolute top-0 start-0 p-1 d-flex flex-column align-items-center">
         <span class="fw-bold card-value">{{ card.display }}</span>
         <span class="card-suit">{{ getSuitSymbol(card.suit) }}</span>
       </div>
 
-      <!-- Center suit -->
+      
       <div class="position-absolute top-50 start-50 translate-middle">
         <span class="suit-large">{{ getSuitSymbol(card.suit) }}</span>
       </div>
 
-      <!-- Bottom right corner -->
+      
       <div class="position-absolute bottom-0 end-0 p-1 d-flex flex-column align-items-center rotate-180">
         <span class="fw-bold card-value">{{ card.display }}</span>
         <span class="card-suit">{{ getSuitSymbol(card.suit) }}</span>
       </div>
     </div>
 
-    <!-- Card back -->
+    
     <div v-else class="card-back h-100 d-flex align-items-center justify-content-center">
       <div class="back-pattern"></div>
     </div>

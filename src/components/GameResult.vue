@@ -62,7 +62,7 @@ const dismiss = () => {
   setTimeout(() => {
     isVisible.value = false
     emit('close')
-  }, 300) // Shorter exit animation
+  }, 300)
 }
 
 // Handle backdrop click
@@ -134,16 +134,16 @@ const resultText = computed(() => {
 
 <template>
   <div v-if="isVisible" class="game-result-overlay" @click="handleBackdropClick">
-    <!-- Semi-transparent backdrop -->
+    
     <div class="game-result-backdrop" @click="dismiss"></div>
 
-    <!-- Result Card -->
+    
     <div
       class="game-result-card"
       :class="[resultClass, { 'animate-result': isAnimating }]"
       @click.stop>
 
-      <!-- Close button -->
+      
       <button
         class="close-button"
         @click="dismiss"
@@ -151,12 +151,12 @@ const resultText = computed(() => {
         <i class="bi bi-x-lg"></i>
       </button>
 
-      <!-- Result Icon -->
+      
       <div class="game-result-icon">
         <i :class="['bi', resultIcon, { 'animate-icon': isAnimating }]"></i>
       </div>
 
-      <!-- Result Content -->
+      
       <div class="game-result-content">
         <h2 class="result-title">{{ resultText }}</h2>
         <p class="result-amount">
@@ -169,7 +169,7 @@ const resultText = computed(() => {
           {{ props.result.details }}
         </p>
 
-        <!-- Dismiss hint -->
+        
         <p class="dismiss-hint">
           {{ t('gameResult.dismissHint') }}
         </p>

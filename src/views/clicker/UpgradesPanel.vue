@@ -9,15 +9,15 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="card shadow-sm h-100 rounded-4">
+  <div class="card shadow-sm h-100 rounded-4 upgrades-card">
     <div class="card-header border-1 rounded-top-4">
       <h2 class="mb-0 text-center fw-bold section-title">
         <i class="bi bi-arrow-up-circle me-2" aria-hidden="true"></i>{{ t('clicker.upgrades.title') }}
       </h2>
     </div>
-    <div class="card-body p-3">
+    <div class="card-body p-3 upgrades-body">
 
-      <!-- Auto-Clicker -->
+      
       <div class="bg-white border rounded-3 p-3 mb-3 upgrade-item">
         <div class="mb-3">
           <div class="fw-semibold mb-1">
@@ -40,7 +40,7 @@ const { t } = useI18n()
         </button>
       </div>
 
-      <!-- Multiplier -->
+      
       <div class="bg-white border rounded-3 p-3 mb-3 upgrade-item">
         <div class="mb-3">
           <div class="fw-semibold mb-1">
@@ -60,7 +60,7 @@ const { t } = useI18n()
         </button>
       </div>
 
-      <!-- Critical Hit Upgrade -->
+      
       <div class="bg-white border rounded-3 p-3 mb-3 upgrade-item">
         <div class="mb-3">
           <div class="fw-semibold mb-1">
@@ -81,7 +81,7 @@ const { t } = useI18n()
         </button>
       </div>
 
-      <!-- Auto-Clicker Speed -->
+      
       <div class="bg-white border rounded-3 p-3 mb-3 upgrade-item" v-if="clickerStore.autoClickersCount > 0">
         <div class="mb-3">
           <div class="fw-semibold mb-1">
@@ -103,3 +103,20 @@ const { t } = useI18n()
     </div>
   </div>
 </template>
+
+<style scoped>
+@media (max-width: 991px) {
+  .upgrades-card {
+    max-height: calc(100vh - 260px);
+  }
+
+  .upgrades-body {
+    overflow-y: auto;
+    padding: 0.75rem;
+  }
+
+  .upgrade-item {
+    padding: 0.75rem;
+  }
+}
+</style>

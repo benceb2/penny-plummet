@@ -56,7 +56,7 @@ onUnmounted(() => {
           </i>
           <strong class="me-auto flex-grow-1">{{ toast.title }}</strong>
 
-          <!-- Desktop close button -->
+          
           <button
             v-if="!isMobile"
             type="button"
@@ -65,7 +65,7 @@ onUnmounted(() => {
             @click.stop="toastStore.removeToast(toast.id)">
           </button>
 
-          <!-- Mobile: show swipe hint for first toast -->
+          
           <small
             v-if="isMobile && index === 0"
             class="text-muted opacity-75 ms-2"
@@ -78,7 +78,7 @@ onUnmounted(() => {
           {{ toast.message }}
         </div>
 
-        <!-- Mobile swipe indicator -->
+        
         <div
           v-if="isMobile"
           class="swipe-indicator">

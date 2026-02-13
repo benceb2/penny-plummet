@@ -212,12 +212,6 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
                   <span class="badge bg-secondary me-2">2</span>
                   <span class="text-muted">{{ t('roulette.ui.stepQuick') }}</span>
                 </div>
-                <button
-                  class="btn btn-outline-danger btn-sm"
-                  @click="gameStore.clearBets()"
-                  :disabled="gameStore.currentBets.length === 0 || gameStore.gameState !== RouletteState.BETTING">
-                  <i class="bi bi-x-circle me-2" aria-hidden="true"></i>{{ t('roulette.ui.clearBets') }}
-                </button>
               </div>
               <div class="row g-2 quick-bets">
                 <div v-for="bet in quickBets" :key="bet.amount" class="col-4 col-sm-3 col-lg-6">
@@ -281,9 +275,17 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
               </div>
             </div>
 
-            <div class="d-flex justify-content-between align-items-center bet-total">
-              <span class="text-muted">{{ t('roulette.ui.totalBet') }}</span>
-              <strong class="text-primary">{{ formatIntAsCurrency(gameStore.totalBet) }}</strong>
+            <div class="d-flex justify-content-between align-items-center bet-total gap-2">
+              <div class="d-flex align-items-center gap-2">
+                <span class="text-muted">{{ t('roulette.ui.totalBet') }}</span>
+                <strong class="text-primary">{{ formatIntAsCurrency(gameStore.totalBet) }}</strong>
+              </div>
+              <button
+                class="btn btn-outline-danger btn-sm"
+                @click="gameStore.clearBets()"
+                :disabled="gameStore.currentBets.length === 0 || gameStore.gameState !== RouletteState.BETTING">
+                <i class="bi bi-x-circle me-2" aria-hidden="true"></i>{{ t('roulette.ui.clearBets') }}
+              </button>
             </div>
           </div>
           <div class="card-footer bg-white border-0">

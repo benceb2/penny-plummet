@@ -91,7 +91,7 @@ export default {
       "viewBets": "Tétek megtekintése",
       "stepAmount": "Állítsd be a tétet",
       "stepAmountHint": "Tét módosítása",
-      "stepQuick": "Gyors zseton választása",
+      "stepQuick": "Gyors tét kiválasztása",
       "stepPlace": "Tétek elhelyezése az asztalon",
       "stepSpin": "Pörgesd meg a kereket",
       "placeBetOnNumber": "Tét elhelyezése a(z) {number} számra",

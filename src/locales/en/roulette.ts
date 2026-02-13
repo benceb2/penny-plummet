@@ -91,7 +91,7 @@ export default {
       "viewBets": "View bets",
       "stepAmount": "Set your bet amount",
       "stepAmountHint": "Adjust stake",
-      "stepQuick": "Pick a quick chip",
+      "stepQuick": "Choose a quick bet",
       "stepPlace": "Place your bets on the table",
       "stepSpin": "Spin the wheel",
       "placeBetOnNumber": "Place bet on number {number}",

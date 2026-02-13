@@ -74,7 +74,7 @@ const outsideBets = computed(() => ({
 </script>
 
 <template>
-  <div class="roulette-surface p-2 p-md-4 rounded-4">
+  <div class="roulette-surface p-3 p-md-4 rounded-4">
     <h2 class="section-title mb-3">{{ t('roulette.table.title') }}</h2>
     <div class="d-flex flex-column gap-3 gap-md-4">
       <div class="roulette-card">
@@ -84,7 +84,7 @@ const outsideBets = computed(() => ({
           </div>
         </div>
         <div class="roulette-card-body">
-          <div class="row g-2">
+          <div class="row g-3">
             <div v-for="bet in outsideBets.dozens" :key="bet.label" class="col-4">
               <button
                 :class="`btn roulette-btn w-100 ${bet.btnClass} ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
@@ -100,7 +100,7 @@ const outsideBets = computed(() => ({
             </div>
           </div>
 
-          <div class="row g-2 mt-2">
+          <div class="row g-3 mt-3">
             <div v-for="bet in outsideBets.evenMoney" :key="bet.label" class="col-4 col-md-2">
               <button
                 :class="`btn roulette-btn w-100 ${bet.btnClass} ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
@@ -209,7 +209,7 @@ const outsideBets = computed(() => ({
   background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
   border: 1px solid #e2e8f0;
   border-radius: 0.75rem;
-  padding: 1rem;
+  padding: 1.15rem;
 }
 
 .roulette-card-header {
@@ -223,7 +223,7 @@ const outsideBets = computed(() => ({
 .roulette-card-body {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 .roulette-section-title {
@@ -262,7 +262,7 @@ const outsideBets = computed(() => ({
 }
 
 .roulette-grid-wrap {
-  --roulette-grid-gap: 0.5rem;
+  --roulette-grid-gap: 0.6rem;
   --roulette-row-height: 46px;
   display: grid;
   grid-template-columns: 70px 1fr;

@@ -58,6 +58,7 @@ const quickBets = computed(() => {
   if (chips <= 0) return []
 
   const bets = [
+    { amount: Math.max(1, Math.floor(chips * 0.01)), label: '1%' },
     { amount: Math.max(1, Math.floor(chips * 0.05)), label: '5%' },
     { amount: Math.max(1, Math.floor(chips * 0.10)), label: '10%' },
     { amount: Math.max(1, Math.floor(chips * 0.25)), label: '25%' },
@@ -154,27 +155,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
             @spin-complete="gameStore.completeGame" />
 
           <div class="row g-2 mt-2">
-            <div class="col-md-6">
-              <div class="card bg-light border-0 h-100">
-                <div class="card-body">
-                  <p class="card-title h6">{{ t('roulette.ui.yourBets') }}</p>
-                  <div class="small">
-                    <div
-                      v-for="(bet, idx) in gameStore.currentBets.slice(0, 5)"
-                      :key="idx"
-                      class="d-flex justify-content-between mb-1">
-                      <span>{{ getBetTypeLabel(bet.type) }} [{{ bet.numbers.slice(0, 3).join(', ') }}{{ bet.numbers.length > 3 ? '...' : '' }}]</span>
-                      <strong>{{ formatIntAsCurrency(bet.amount) }}</strong>
-                    </div>
-                    <div v-if="gameStore.currentBets.length > 5" class="text-muted">
-                      {{ t('roulette.ui.moreBets', { count: gameStore.currentBets.length - 5 }) }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
+            <div class="col-12">
               <div class="card bg-light border-0 h-100">
                 <div class="card-body">
                   <p class="card-title h6">{{ t('roulette.ui.waitingForResult') }}</p>
@@ -256,23 +237,25 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
               <span class="badge bg-primary rounded-pill">{{ gameStore.currentBets.length }}</span>
             </div>
 
-            <div v-if="gameStore.currentBets.length > 0" class="bet-list">
-              <div
-                v-for="(bet, index) in gameStore.currentBets"
-                :key="index"
-                class="list-group-item d-flex justify-content-between align-items-center">
-                <div class="bet-list-label">
-                  <strong>{{ getBetTypeLabel(bet.type) }}</strong>
-                  <small class="text-muted ms-2">[{{ bet.numbers.join(', ') }}]</small>
+            <div class="placed-bets-panel">
+              <div v-if="gameStore.currentBets.length > 0" class="bet-list h-100">
+                <div
+                  v-for="(bet, index) in gameStore.currentBets"
+                  :key="index"
+                  class="list-group-item d-flex justify-content-between align-items-center">
+                  <div class="bet-list-label">
+                    <strong>{{ getBetTypeLabel(bet.type) }}</strong>
+                    <small class="text-muted ms-2">[{{ bet.numbers.join(', ') }}]</small>
+                  </div>
+                  <span class="badge bg-primary rounded-pill">{{ formatIntAsCurrency(bet.amount) }}</span>
                 </div>
-                <span class="badge bg-primary rounded-pill">{{ formatIntAsCurrency(bet.amount) }}</span>
               </div>
-            </div>
 
-            <div v-else class="text-center py-3 text-muted small">
-              <i class="bi bi-inbox d-block mb-2" aria-hidden="true"></i>
-              <div>{{ t('roulette.ui.noBetsTitle') }}</div>
-              <div class="text-muted">{{ t('roulette.ui.noBetsHint') }}</div>
+              <div v-else class="h-100 d-flex flex-column justify-content-center text-center text-muted small">
+                <i class="bi bi-inbox d-block mb-2" aria-hidden="true"></i>
+                <div>{{ t('roulette.ui.noBetsTitle') }}</div>
+                <div class="text-muted">{{ t('roulette.ui.noBetsHint') }}</div>
+              </div>
             </div>
           </div>
 
@@ -324,10 +307,15 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
 }
 
 .bet-list {
-  max-height: 240px;
   overflow-y: auto;
+}
+
+.placed-bets-panel {
+  height: 150px;
   border: 1px solid #e2e8f0;
   border-radius: 0.75rem;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  overflow: hidden;
 }
 
 .bet-list .list-group-item {
@@ -358,6 +346,10 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
 @media (max-width: 991.98px) {
   .roulette-control-panel {
     position: static;
+  }
+
+  .placed-bets-panel {
+    height: 220px;
   }
 }
 

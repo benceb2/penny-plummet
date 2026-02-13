@@ -1,16 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { BetType } from '@/stores/rouletteStore'
-
-interface Bet {
-  type: BetType
-  numbers: number[]
-  amount: number
-}
+import type { BetType, RouletteBet } from '@/types/RouletteBet'
 
 interface Props {
-  currentBets: Bet[]
+  currentBets: RouletteBet[]
   currentBetAmount: number
   onPlaceBet: (type: BetType, numbers: number[], amount: number) => void
   formatCurrency: (amount: number) => string

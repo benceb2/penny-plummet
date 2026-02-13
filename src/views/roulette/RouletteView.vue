@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRouletteStore, type RouletteResult, type BetType } from '@/stores/rouletteStore'
+import { useRouletteStore } from '@/stores/rouletteStore'
 import { useUserStore } from '@/stores/userStore'
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil'
 import RouletteSpinner from '@/views/roulette/RouletteSpinner.vue'
@@ -9,6 +9,8 @@ import RouletteTable from '@/views/roulette/RouletteTable.vue'
 import BaseLayout from '@/components/layout/BaseLayout.vue'
 import GameResult from '@/components/GameResult.vue'
 import { RouletteState } from '@/types/RouletteState'
+import type { BetType } from '@/types/RouletteBet'
+import type { RouletteResult } from '@/types/RouletteResult'
 
 const { t } = useI18n()
 
@@ -296,14 +298,9 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
             <button
               class="btn btn-success w-100"
               @click="handleSpin"
-              :disabled="!gameStore.isSpinAllowed || gameStore.gameState === RouletteState.SPINNING">
+              :disabled="!gameStore.isSpinAllowed">
               <i class="bi bi-play-circle-fill me-2" aria-hidden="true"></i>
-              <span v-if="gameStore.gameState === RouletteState.SPINNING">
-                {{ t('roulette.ui.spinning') }}
-              </span>
-              <span v-else>
-                {{ t('roulette.ui.spinTheWheel') }}
-              </span>
+              <span>{{ t('roulette.ui.spinTheWheel') }}</span>
             </button>
           </div>
         </div>

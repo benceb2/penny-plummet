@@ -27,7 +27,7 @@ async function getCurrentGameState(): Promise<GameSaveData> {
     transactions: { transactions },
     roulette: rouletteStore.$state,
     timestamp: Date.now()
-  } as GameSaveData;
+  };
 }
 
 

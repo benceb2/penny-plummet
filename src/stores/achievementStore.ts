@@ -9,13 +9,6 @@ import { useToastStore } from './toastStore';
 import { useTransactionStore } from './transactionStore';
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
 
-// Extend Achievement type to include claim status
-interface AchievementWithClaim extends Achievement {
-  completed: boolean;
-  claimed: boolean;
-  progress: number;
-}
-
 export const useAchievementStore = defineStore('achievements', () => {
   const toastStore = useToastStore();
   const transactionStore = useTransactionStore();
@@ -65,11 +58,11 @@ export const useAchievementStore = defineStore('achievements', () => {
   normalizeAchievementCategories();
 
   // Methods
-  function getAchievementKey(achievement: AchievementWithClaim) {
+  function getAchievementKey(achievement: Achievement) {
     return `achievements.${achievement.category}.${achievement.id}`;
   }
 
-  function getAchievementTexts(achievement: AchievementWithClaim) {
+  function getAchievementTexts(achievement: Achievement) {
     const key = getAchievementKey(achievement);
     return {
       title: i18n.global.t(`${key}.title`),
@@ -166,7 +159,7 @@ export const useAchievementStore = defineStore('achievements', () => {
     }
   }
 
-  function completeAchievement(achievement: AchievementWithClaim) {
+  function completeAchievement(achievement: Achievement) {
     if (!achievement.completed) {
       achievement.completed = true;
       achievement.claimed = false; // Mark as unclaimed initially
@@ -176,7 +169,7 @@ export const useAchievementStore = defineStore('achievements', () => {
   }
 
   function claimAchievement(achievementId: string) {
-    const achievement = achievements.value.find(a => a.id === achievementId) as AchievementWithClaim;
+    const achievement = achievements.value.find(a => a.id === achievementId);
     if (achievement && achievement.completed && !achievement.claimed) {
       achievement.claimed = true;
       addXP(achievement.reward.xp);

@@ -74,7 +74,7 @@ for (const viewport of viewports) {
         await acceptConsentIfPresent(page)
         await setUsernameIfPrompted(page)
 
-        await page.getByRole('heading', { name: route.readyHeading }).waitFor({ state: 'visible' })
+        await page.getByRole('heading', { name: route.readyHeading, exact: true }).waitFor({ state: 'visible' })
 
         await assertNoPageScroll(`${route.name} @ ${viewport.name}`, page)
       })

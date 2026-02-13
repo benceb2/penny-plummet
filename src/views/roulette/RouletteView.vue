@@ -126,7 +126,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
         <div class="col-md-6">
           <div class="card bg-light">
             <div class="card-body">
-              <h6 class="card-title">{{ t('roulette.ui.yourBets') }}</h6>
+              <p class="card-title h6">{{ t('roulette.ui.yourBets') }}</p>
               <div class="small">
                 <div v-for="(bet, idx) in gameStore.currentBets.slice(0, 5)" :key="idx"
                   class="d-flex justify-content-between mb-1">
@@ -145,10 +145,10 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
         <div class="col-md-6">
           <div class="card bg-light">
             <div class="card-body">
-              <h6 class="card-title">{{ t('roulette.ui.waitingForResult') }}</h6>
+              <p class="card-title h6">{{ t('roulette.ui.waitingForResult') }}</p>
               <div class="d-flex justify-content-between align-items-center">
                 <span>{{ t('roulette.ui.totalAtRisk') }}:</span>
-                <h4 class="mb-0 text-danger">{{ formatIntAsCurrency(gameStore.totalBet) }}</h4>
+                <p class="h4 mb-0 text-danger">{{ formatIntAsCurrency(gameStore.totalBet) }}</p>
               </div>
             </div>
           </div>
@@ -161,7 +161,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
       <div class="col-12 col-lg-8 order-2 order-lg-1">
         <div class="card shadow-sm">
           <div class="card-header bg-white d-flex align-items-center justify-content-between">
-            <h6 class="mb-0">{{ t('roulette.table.title') }}</h6>
+            <p class="h6 mb-0">{{ t('roulette.table.title') }}</p>
           </div>
           <div class="card-body">
             <RouletteTable
@@ -177,7 +177,7 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
         <div class="card bet-slip-card h-100 shadow-sm">
           <div class="card-header bg-white">
             <div class="d-flex align-items-center justify-content-between">
-              <h6 class="mb-0">{{ t('roulette.ui.betSlip') }}</h6>
+              <p class="h6 mb-0">{{ t('roulette.ui.betSlip') }}</p>
               <span class="badge bg-light text-dark">{{ formatIntAsCurrency(userStore.chips) }}</span>
             </div>
           </div>
@@ -190,6 +190,9 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
                 </div>
                 <small class="text-muted">{{ t('roulette.ui.stepAmountHint') }}</small>
               </div>
+              <label for="roulette-bet-amount" class="visually-hidden">
+                {{ t('roulette.gameControls.betting.betAmount') }}
+              </label>
               <div class="input-group input-group-sm">
                 <span class="input-group-text">
                   <i class="bi bi-coin text-warning" aria-hidden="true"></i>

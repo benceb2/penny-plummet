@@ -3,15 +3,15 @@ import { ref, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useTransactionStore } from '@/stores/transactionStore';
-import type { Transaction } from '@/types/Transaction';
+import type { TransactionQuery } from '@/types/TransactionFilters';
 import BaseLayout from '@/components/layout/BaseLayout.vue';
 import BasePagination from '@/components/layout/BasePagination.vue';
 import TransactionItem from '@/components/TransactionItem.vue';
 
 const transactionStore = useTransactionStore();
 
-type GameFilter = Transaction['game'] | 'all';
-type TypeFilter = Transaction['type'] | 'all';
+type GameFilter = TransactionQuery['game'];
+type TypeFilter = TransactionQuery['type'];
 
 const gameOptions = ['all', 'blackjack', 'roulette', 'clicker', 'general'] as const;
 const typeOptions = ['all', 'win', 'loss', 'push'] as const;

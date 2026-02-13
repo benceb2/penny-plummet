@@ -16,8 +16,6 @@ export default {
     },
     "about": "Rólunk",
     "wallet": {
-      "title": "Több zseton kell?",
-      "clicker": "Kattintós Játék",
       "transactions": "Tranzakciók"
     },
     "profile": {

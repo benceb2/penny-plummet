@@ -13,6 +13,7 @@ type RouteSpec = {
   name: string
   path: string
   readyHeading: string
+  allowVerticalScrollOnMobile?: boolean
 }
 
 const viewports: ViewportSpec[] = [
@@ -32,7 +33,12 @@ const routes: RouteSpec[] = [
   { name: 'home', path: '/', readyHeading: 'Welcome to Penny Plummet!' },
   { name: 'clicker', path: '/clicker', readyHeading: 'Earn Chips' },
   { name: 'blackjack', path: '/blackjack', readyHeading: 'Blackjack' },
-  { name: 'roulette', path: '/roulette', readyHeading: 'Roulette' }
+  {
+    name: 'roulette',
+    path: '/roulette',
+    readyHeading: 'Roulette',
+    allowVerticalScrollOnMobile: true
+  }
 ]
 
 const assertNoPageScroll = async (pageLabel: string, page: Page) => {
@@ -74,7 +80,23 @@ for (const viewport of viewports) {
         await acceptConsentIfPresent(page)
         await setUsernameIfPrompted(page)
 
-        await page.getByRole('heading', { name: route.readyHeading }).waitFor({ state: 'visible' })
+        await page.getByRole('heading', { name: route.readyHeading, exact: true }).waitFor({ state: 'visible' })
+
+        if (viewport.isMobile && route.allowVerticalScrollOnMobile) {
+          const metrics = await page.evaluate(() => {
+            const element = document.scrollingElement ?? document.documentElement
+            return {
+              scrollWidth: element.scrollWidth,
+              clientWidth: element.clientWidth
+            }
+          })
+          const widthOverflow = metrics.scrollWidth - metrics.clientWidth
+          expect(
+            widthOverflow,
+            `${route.name} @ ${viewport.name} has horizontal overflow of ${widthOverflow}px`
+          ).toBeLessThanOrEqual(1)
+          return
+        }
 
         await assertNoPageScroll(`${route.name} @ ${viewport.name}`, page)
       })

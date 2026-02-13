@@ -8,7 +8,7 @@ test('roulette view has no detectable axe violations', async ({ page }) => {
   await acceptConsentIfPresent(page)
   await setUsernameIfPrompted(page)
 
-  await page.getByRole('heading', { name: 'Roulette' }).waitFor({ state: 'visible' })
+  await page.getByRole('heading', { name: 'Roulette', exact: true }).waitFor({ state: 'visible' })
 
   const results = await new AxeBuilder({ page }).analyze()
   expect(results.violations).toEqual([])

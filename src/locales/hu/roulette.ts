@@ -68,6 +68,12 @@ export default {
       "high": "Magas"
     },
     "ui": {
+      "sessionTitle": "Kör áttekintés",
+      "controlPanelTitle": "Tét vezérlők",
+      "spinPanelTitle": "Kerék mozgásban",
+      "betAmountLabel": "Tét összege",
+      "quickBetLabel": "Gyors tét opciók",
+      "placedBetsLabel": "Elhelyezett tétek",
       "clearBets": "Tétek törlése",
       "totalBet": "Összes tét",
       "yourBets": "Téteid",
@@ -76,7 +82,7 @@ export default {
       "tableTab": "Asztal",
       "myBetsTab": "Téteim",
       "noBetsTitle": "Még nincs tét",
-      "noBetsHint": "Válts az asztal nézetre a tétek megtételéhez",
+      "noBetsHint": "Válassz mezőket az asztalon a tétszelvény építéséhez.",
       "spinning": "Pörgetés...",
       "spinTheWheel": "Pörgesd meg",
       "allIn": "MINDENT FEL",
@@ -95,7 +101,23 @@ export default {
       "stepPlace": "Tétek elhelyezése az asztalon",
       "stepSpin": "Pörgesd meg a kereket",
       "placeBetOnNumber": "Tét elhelyezése a(z) {number} számra",
-      "placeBetOnGroup": "Tét elhelyezése: {label}"
+      "placeBetOnGroup": "Tét elhelyezése: {label}",
+      "metrics": {
+        "totalBet": "Aktuális összes tét",
+        "activeBets": "Aktív tét elemek",
+        "currentStake": "Kiválasztott tét"
+      },
+      "state": {
+        "betting": "Tételés",
+        "spinning": "Pörgetés",
+        "complete": "Eredmény kész"
+      },
+      "aria": {
+        "metrics": "Rulett mutatók",
+        "main": "Rulett játékterület",
+        "sidebar": "Rulett vezérlők",
+        "mobileActions": "Rulett gyors műveletek"
+      }
     },
     "results": {
       "win": "Nyertél {amount}-t!",

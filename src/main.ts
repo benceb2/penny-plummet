@@ -3,6 +3,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import '@fortawesome/fontawesome-free/css/all.css'
 import '@/styles/typography.css'
+import '@/styles/game-ui.css'
 
 import { registerSW } from 'virtual:pwa-register'
 import { createApp } from 'vue'

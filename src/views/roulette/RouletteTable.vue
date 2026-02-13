@@ -75,20 +75,12 @@ const outsideBets = computed(() => ({
 
 <template>
   <div class="roulette-surface p-2 p-md-4 rounded-4">
+    <h2 class="section-title mb-3">{{ t('roulette.table.title') }}</h2>
     <div class="d-flex flex-column gap-3 gap-md-4">
-      <div class="roulette-header">
-        <div>
-          <p class="roulette-eyebrow mb-1">{{ t('roulette.table.eyebrow') }}</p>
-          <h2 class="roulette-title mb-1">{{ t('roulette.table.title') }}</h2>
-          <p class="roulette-hint mb-0">{{ t('roulette.table.subtitle') }}</p>
-        </div>
-      </div>
-
       <div class="roulette-card">
         <div class="roulette-card-header">
           <div>
             <h3 class="roulette-section-title mb-1">{{ t('roulette.table.quickBetsTitle') }}</h3>
-            <p class="roulette-hint mb-0">{{ t('roulette.table.quickBetsHint') }}</p>
           </div>
         </div>
         <div class="roulette-card-body">
@@ -130,7 +122,6 @@ const outsideBets = computed(() => ({
         <div class="roulette-card-header">
           <div>
             <h3 class="roulette-section-title mb-1">{{ t('roulette.table.numberGridTitle') }}</h3>
-            <p class="roulette-hint mb-0">{{ t('roulette.table.numberGridHint') }}</p>
           </div>
           <div class="roulette-chip d-none d-md-inline-flex">
             {{ t('roulette.table.straightBetLabel') }}
@@ -207,43 +198,17 @@ const outsideBets = computed(() => ({
 </template>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700;800&display=swap');
-
 .roulette-surface {
-  background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+  height: 100%;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
   border: 1px solid #e2e8f0;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
-  font-family: "Atkinson Hyperlegible", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-}
-
-.roulette-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.roulette-eyebrow {
-  color: #64748b;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-weight: 700;
-}
-
-.roulette-title {
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-
-.roulette-hint {
-  color: #475569;
-  font-size: 0.95rem;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.14);
 }
 
 .roulette-card {
-  background: #ffffff;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
   border: 1px solid #e2e8f0;
-  border-radius: 18px;
+  border-radius: 0.75rem;
   padding: 1rem;
 }
 

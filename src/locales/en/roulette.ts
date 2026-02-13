@@ -68,6 +68,12 @@ export default {
       "high": "High"
     },
     "ui": {
+      "sessionTitle": "Round Overview",
+      "controlPanelTitle": "Bet Controls",
+      "spinPanelTitle": "Wheel In Motion",
+      "betAmountLabel": "Bet amount",
+      "quickBetLabel": "Quick bet presets",
+      "placedBetsLabel": "Placed bets",
       "clearBets": "Clear Bets",
       "totalBet": "Total Bet",
       "yourBets": "Your Bets",
@@ -76,7 +82,7 @@ export default {
       "tableTab": "Table",
       "myBetsTab": "My Bets",
       "noBetsTitle": "No bets placed yet",
-      "noBetsHint": "Switch to the table view to place your bets",
+      "noBetsHint": "Pick bet spots on the table to build your slip.",
       "spinning": "Spinning...",
       "spinTheWheel": "Spin the Wheel",
       "allIn": "ALL IN",
@@ -95,7 +101,23 @@ export default {
       "stepPlace": "Place your bets on the table",
       "stepSpin": "Spin the wheel",
       "placeBetOnNumber": "Place bet on number {number}",
-      "placeBetOnGroup": "Place bet on {label}"
+      "placeBetOnGroup": "Place bet on {label}",
+      "metrics": {
+        "totalBet": "Current total bet",
+        "activeBets": "Active bet entries",
+        "currentStake": "Selected stake"
+      },
+      "state": {
+        "betting": "Betting",
+        "spinning": "Spinning",
+        "complete": "Result Ready"
+      },
+      "aria": {
+        "metrics": "Roulette metrics",
+        "main": "Roulette play area",
+        "sidebar": "Roulette controls",
+        "mobileActions": "Roulette quick actions"
+      }
     },
     "results": {
       "win": "You win {amount}!",

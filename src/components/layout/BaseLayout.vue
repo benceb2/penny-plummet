@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 defineProps<{
   title?: string
   bootstrapIcon?: string
@@ -17,6 +16,10 @@ defineProps<{
             <i v-else-if="fontawesomeIcon" :class="`fa ${fontawesomeIcon} me-2`" aria-hidden="true"></i>
             {{ title }}
           </h1>
+
+          <div v-if="$slots['header-actions']" class="d-flex align-items-center gap-2">
+            <slot name="header-actions"></slot>
+          </div>
         </div>
       </div>
     </div>

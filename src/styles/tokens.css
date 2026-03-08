@@ -1,0 +1,70 @@
+:root {
+  /* Spacing Tokens - Aggressive Whitespace (UI/UX Pro Max) */
+  --space-hero: 160px;
+  --space-section: 112px;
+  --space-group: 64px;
+  --space-element: 32px;
+  --space-item: 16px;
+  --space-detail: 8px;
+
+  /* Typography Tokens - High Contrast & Bold Hierarchy */
+  --font-hero: clamp(48px, 10vw, 96px);      /* Main Page/Game Titles */
+  --font-section: clamp(32px, 6vw, 48px);    /* Section Headers */
+  --font-headline: clamp(24px, 4vw, 32px);   /* Component Titles */
+  --font-subhead: clamp(18px, 3vw, 24px);    /* Tags/Lead Text */
+  --font-body: 16px;                          /* Standard Text */
+  --font-caption: 14px;                       /* Small Details */
+
+  /* Font Weights */
+  --weight-bold: 800;
+  --weight-medium: 600;
+  --weight-normal: 400;
+
+  /* Elevation Tokens - Premium Shadows (Avoid Generic Bootstrap) */
+  --shadow-premium: 0 32px 64px rgba(0, 0, 0, 0.25);
+  --shadow-elevated: 0 16px 32px rgba(0, 0, 0, 0.15);
+  --shadow-subtle: 0 8px 16px rgba(0, 0, 0, 0.1);
+
+  /* Radius Tokens - Consistent Polish */
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 8px;
+
+  /* Colors - High Contrast, Solid Focus */
+  --color-bg-deep: #000000;
+  --color-bg-card: #0f0f0f;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: rgba(255, 255, 255, 0.7);
+  --color-text-muted: rgba(255, 255, 255, 0.5);
+  --color-accent: #ffffff; /* Premium white-on-black focus */
+}
+
+/* Base Body Styles for Premium Reset */
+body {
+  background-color: var(--color-bg-deep);
+  color: var(--color-text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.text-hero { font-size: var(--font-hero); font-weight: var(--weight-bold); line-height: 1.1; letter-spacing: -0.04em; }
+.text-section { font-size: var(--font-section); font-weight: var(--weight-bold); line-height: 1.2; letter-spacing: -0.02em; }
+.text-headline { font-size: var(--font-headline); font-weight: var(--weight-medium); line-height: 1.3; }
+.text-subhead { font-size: var(--font-subhead); font-weight: var(--weight-medium); line-height: 1.4; }
+.text-muted { color: var(--color-text-muted); }
+
+/* Premium Card Base */
+.premium-card {
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-element);
+  box-shadow: var(--shadow-elevated);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.premium-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-premium);
+}

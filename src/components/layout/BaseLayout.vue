@@ -7,43 +7,69 @@ defineProps<{
 </script>
 
 <template>
-  <section class="container py-2 pt-4 base-layout">
-    <div class="row mb-4">
-      <div class="col-12">
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-          <h1 class="text-dark mb-0 page-title">
-            <i v-if="bootstrapIcon && !fontawesomeIcon" :class="`bi bi-${bootstrapIcon} me-2`" aria-hidden="true"></i>
-            <i v-else-if="fontawesomeIcon" :class="`fa ${fontawesomeIcon} me-2`" aria-hidden="true"></i>
-            {{ title }}
-          </h1>
-
-          <div v-if="$slots['header-actions']" class="d-flex align-items-center gap-2">
-            <slot name="header-actions"></slot>
-          </div>
-        </div>
+  <section class="premium-layout">
+    <header class="premium-header">
+      <div class="title-group">
+        <h1 class="text-hero">
+          <i v-if="bootstrapIcon && !fontawesomeIcon" :class="`bi bi-${bootstrapIcon}`" aria-hidden="true"></i>
+          <i v-else-if="fontawesomeIcon" :class="`fa ${fontawesomeIcon}`" aria-hidden="true"></i>
+          {{ title }}
+        </h1>
       </div>
-    </div>
-    <slot></slot>
+
+      <div v-if="$slots['header-actions']" class="actions-group">
+        <slot name="header-actions"></slot>
+      </div>
+    </header>
+
+    <main class="premium-content">
+      <slot></slot>
+    </main>
   </section>
 </template>
 
 <style scoped>
-:slotted(.row) {
-  margin-bottom: 1.5rem;
+.premium-layout {
+  padding: var(--space-element) var(--space-item);
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-group);
 }
 
-:slotted(.row:last-child) {
-  margin-bottom: 0;
+.premium-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: var(--space-item);
+}
+
+.title-group h1 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-item);
+}
+
+.premium-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-group);
 }
 
 @media (max-width: 767px) {
-  .base-layout {
-    padding-top: 0.75rem !important;
-    padding-bottom: 0.75rem !important;
+  .premium-layout {
+    padding: var(--space-item);
+    gap: var(--space-element);
   }
 
-  :slotted(.row) {
-    margin-bottom: 1rem;
+  .premium-header {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 </style>

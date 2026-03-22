@@ -74,118 +74,76 @@ const outsideBets = computed(() => ({
 </script>
 
 <template>
-  <div class="roulette-surface p-2 p-md-4 rounded-4">
-    <div class="d-flex flex-column gap-3 gap-md-4">
-      <div class="roulette-header">
+  <div class="d-flex flex-column gap-3 gap-md-4">
+    <div class="roulette-card">
+      <div class="roulette-card-header">
         <div>
-          <p class="roulette-eyebrow mb-1">{{ t('roulette.table.eyebrow') }}</p>
-          <h2 class="roulette-title mb-1">{{ t('roulette.table.title') }}</h2>
-          <p class="roulette-hint mb-0">{{ t('roulette.table.subtitle') }}</p>
+          <h3 class="roulette-section-title mb-1">{{ t('roulette.table.quickBetsTitle') }}</h3>
+          <p class="roulette-hint mb-0">{{ t('roulette.table.quickBetsHint') }}</p>
         </div>
       </div>
-
-      <div class="roulette-card">
-        <div class="roulette-card-header">
-          <div>
-            <h3 class="roulette-section-title mb-1">{{ t('roulette.table.quickBetsTitle') }}</h3>
-            <p class="roulette-hint mb-0">{{ t('roulette.table.quickBetsHint') }}</p>
-          </div>
-        </div>
-        <div class="roulette-card-body">
-          <div class="row g-2">
-            <div v-for="bet in outsideBets.dozens" :key="bet.label" class="col-4">
-              <button
-                :class="`btn roulette-btn w-100 ${bet.btnClass} ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
-                :aria-label="t('roulette.ui.placeBetOnGroup', { label: bet.label })"
-                @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
-                {{ bet.label }}
-                <span
-                  v-if="getOutsideBetAmount(bet.numbers) > 0"
-                  class="position-absolute badge rounded-pill bg-warning text-dark roulette-bet-badge">
-                  {{ formatCurrency(getOutsideBetAmount(bet.numbers)) }}
-                </span>
-              </button>
-            </div>
-          </div>
-
-          <div class="row g-2 mt-2">
-            <div v-for="bet in outsideBets.evenMoney" :key="bet.label" class="col-4 col-md-2">
-              <button
-                :class="`btn roulette-btn w-100 ${bet.btnClass} ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
-                :aria-label="t('roulette.ui.placeBetOnGroup', { label: bet.label })"
-                @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
-                {{ bet.label }}
-                <span
-                  v-if="getOutsideBetAmount(bet.numbers) > 0"
-                  class="position-absolute badge rounded-pill bg-warning text-dark roulette-bet-badge">
-                  {{ formatCurrency(getOutsideBetAmount(bet.numbers)) }}
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="roulette-card">
-        <div class="roulette-card-header">
-          <div>
-            <h3 class="roulette-section-title mb-1">{{ t('roulette.table.numberGridTitle') }}</h3>
-            <p class="roulette-hint mb-0">{{ t('roulette.table.numberGridHint') }}</p>
-          </div>
-          <div class="roulette-chip d-none d-md-inline-flex">
-            {{ t('roulette.table.straightBetLabel') }}
-          </div>
-        </div>
-        <div class="roulette-card-body">
-          <div class="roulette-grid-wrap d-none d-md-grid">
+      <div class="roulette-card-body">
+        <div class="row g-2">
+          <div v-for="bet in outsideBets.dozens" :key="bet.label" class="col-4">
             <button
-              :class="`btn btn-success roulette-zero-btn roulette-btn ${getBetAmount(0) > 0 ? 'active position-relative' : ''}`"
-              :aria-label="t('roulette.ui.placeBetOnNumber', { number: 0 })"
-              @click="onPlaceBet('straight', [0], currentBetAmount)">
-              {{ t('roulette.table.zero') }}
+              :class="`btn roulette-btn w-100 ${bet.btnClass} ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
+              :aria-label="t('roulette.ui.placeBetOnGroup', { label: bet.label })"
+              @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
+              {{ bet.label }}
               <span
-                v-if="getBetAmount(0) > 0"
+                v-if="getOutsideBetAmount(bet.numbers) > 0"
                 class="position-absolute badge rounded-pill bg-warning text-dark roulette-bet-badge">
-                {{ formatCurrency(getBetAmount(0)) }}
+                {{ formatCurrency(getOutsideBetAmount(bet.numbers)) }}
               </span>
             </button>
-            <div class="roulette-number-grid roulette-number-grid-desktop">
-              <template v-for="(row, rowIndex) in numberGrid" :key="rowIndex">
-                <button
-                  v-for="num in row"
-                  :key="num"
-                  :class="getNumberButtonClass(num)"
-                  :aria-label="t('roulette.ui.placeBetOnNumber', { number: num })"
-                  class="roulette-number-btn roulette-btn fw-bold"
-                  @click="onPlaceBet('straight', [num], currentBetAmount)">
-                  {{ num }}
-                  <span
-                    v-if="getBetAmount(num) > 0"
-                    class="position-absolute badge rounded-pill bg-warning text-dark roulette-bet-badge">
-                    {{ formatCurrency(getBetAmount(num)) }}
-                  </span>
-                </button>
-              </template>
-            </div>
           </div>
+        </div>
 
-          <div class="d-md-none">
-            <div class="mb-2">
+        <div class="row g-2 mt-2">
+          <div v-for="bet in outsideBets.evenMoney" :key="bet.label" class="col-4 col-md-2">
+            <button
+              :class="`btn roulette-btn w-100 ${bet.btnClass} ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
+              :aria-label="t('roulette.ui.placeBetOnGroup', { label: bet.label })"
+              @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
+              {{ bet.label }}
+              <span
+                v-if="getOutsideBetAmount(bet.numbers) > 0"
+                class="position-absolute badge rounded-pill bg-warning text-dark roulette-bet-badge">
+                {{ formatCurrency(getOutsideBetAmount(bet.numbers)) }}
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="roulette-card">
+      <div class="roulette-card-header">
+        <div>
+          <h3 class="roulette-section-title mb-1">{{ t('roulette.table.numberGridTitle') }}</h3>
+          <p class="roulette-hint mb-0">{{ t('roulette.table.numberGridHint') }}</p>
+        </div>
+        <div class="roulette-chip d-none d-md-inline-flex">
+          {{ t('roulette.table.straightBetLabel') }}
+        </div>
+      </div>
+      <div class="roulette-card-body">
+        <div class="roulette-grid-wrap d-none d-md-grid">
+          <button
+            :class="`btn btn-success roulette-zero-btn roulette-btn ${getBetAmount(0) > 0 ? 'active position-relative' : ''}`"
+            :aria-label="t('roulette.ui.placeBetOnNumber', { number: 0 })"
+            @click="onPlaceBet('straight', [0], currentBetAmount)">
+            {{ t('roulette.table.zero') }}
+            <span
+              v-if="getBetAmount(0) > 0"
+              class="position-absolute badge rounded-pill bg-warning text-dark roulette-bet-badge">
+              {{ formatCurrency(getBetAmount(0)) }}
+            </span>
+          </button>
+          <div class="roulette-number-grid roulette-number-grid-desktop">
+            <template v-for="(row, rowIndex) in numberGrid" :key="rowIndex">
               <button
-                :class="`btn btn-success roulette-zero-btn roulette-btn w-100 ${getBetAmount(0) > 0 ? 'active position-relative' : ''}`"
-                :aria-label="t('roulette.ui.placeBetOnNumber', { number: 0 })"
-                @click="onPlaceBet('straight', [0], currentBetAmount)">
-                {{ t('roulette.table.zero') }}
-                <span
-                  v-if="getBetAmount(0) > 0"
-                  class="position-absolute badge rounded-pill bg-warning text-dark roulette-bet-badge">
-                  {{ formatCurrency(getBetAmount(0)) }}
-                </span>
-              </button>
-            </div>
-            <div class="roulette-number-grid roulette-number-grid-mobile">
-              <button
-                v-for="num in mobileNumbers"
+                v-for="num in row"
                 :key="num"
                 :class="getNumberButtonClass(num)"
                 :aria-label="t('roulette.ui.placeBetOnNumber', { number: num })"
@@ -198,7 +156,39 @@ const outsideBets = computed(() => ({
                   {{ formatCurrency(getBetAmount(num)) }}
                 </span>
               </button>
-            </div>
+            </template>
+          </div>
+        </div>
+
+        <div class="d-md-none">
+          <div class="mb-2">
+            <button
+              :class="`btn btn-success roulette-zero-btn roulette-btn w-100 ${getBetAmount(0) > 0 ? 'active position-relative' : ''}`"
+              :aria-label="t('roulette.ui.placeBetOnNumber', { number: 0 })"
+              @click="onPlaceBet('straight', [0], currentBetAmount)">
+              {{ t('roulette.table.zero') }}
+              <span
+                v-if="getBetAmount(0) > 0"
+                class="position-absolute badge rounded-pill bg-warning text-dark roulette-bet-badge">
+                {{ formatCurrency(getBetAmount(0)) }}
+              </span>
+            </button>
+          </div>
+          <div class="roulette-number-grid roulette-number-grid-mobile">
+            <button
+              v-for="num in mobileNumbers"
+              :key="num"
+              :class="getNumberButtonClass(num)"
+              :aria-label="t('roulette.ui.placeBetOnNumber', { number: num })"
+              class="roulette-number-btn roulette-btn fw-bold"
+              @click="onPlaceBet('straight', [num], currentBetAmount)">
+              {{ num }}
+              <span
+                v-if="getBetAmount(num) > 0"
+                class="position-absolute badge rounded-pill bg-warning text-dark roulette-bet-badge">
+                {{ formatCurrency(getBetAmount(num)) }}
+              </span>
+            </button>
           </div>
         </div>
       </div>
@@ -208,32 +198,6 @@ const outsideBets = computed(() => ({
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700;800&display=swap');
-
-.roulette-surface {
-  background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
-  font-family: "Atkinson Hyperlegible", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-}
-
-.roulette-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.roulette-eyebrow {
-  color: #64748b;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-weight: 700;
-}
-
-.roulette-title {
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
 
 .roulette-hint {
   color: #475569;
@@ -245,6 +209,7 @@ const outsideBets = computed(() => ({
   border: 1px solid #e2e8f0;
   border-radius: 18px;
   padding: 1rem;
+  font-family: "Atkinson Hyperlegible", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 }
 
 .roulette-card-header {

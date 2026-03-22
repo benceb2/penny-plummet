@@ -39,22 +39,6 @@ export default {
         "confirm": "Delete"
       }
     },
-    "balanceAudit": {
-      "title": "Balance Audit",
-      "description": "Recalculate balance from your transaction history (includes the opening balance transaction).",
-      "run": "Run Balance Audit",
-      "running": "Auditing...",
-      "recalculate": "Recalculate Balance",
-      "recalculating": "Recalculating...",
-      "recalculateSuccess": "Balance updated from transaction history.",
-      "match": "Balance matches transaction history.",
-      "mismatch": "Balance does not match transaction history.",
-      "expected": "Expected Balance",
-      "actual": "Actual Balance",
-      "delta": "Difference",
-      "transactionCount": "Transactions",
-      "error": "Failed to audit balance"
-    },
     "messages": {
       "operationSuccess": "Operation completed successfully!",
       "genericError": "An error occurred during the operation"

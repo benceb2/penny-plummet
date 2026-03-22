@@ -18,13 +18,6 @@ import type { TransactionQuery } from '@/types/TransactionFilters';
 
 const LATEST_TRANSACTIONS_LIMIT = 6;
 
-export type BalanceAudit = {
-  expectedBalance: number;
-  actualBalance: number;
-  delta: number;
-  transactionCount: number;
-};
-
 export const useTransactionStore = defineStore('transactions', () => {
   const userStore = useUserStore();
   const transactions = ref<Transaction[]>([]);
@@ -159,26 +152,6 @@ export const useTransactionStore = defineStore('transactions', () => {
     return getAllTransactions();
   };
 
-  const auditBalance = async (baseBalance: number, actualBalance: number): Promise<BalanceAudit> => {
-    if (!hasIndexedDb) {
-      return {
-        expectedBalance: baseBalance,
-        actualBalance,
-        delta: actualBalance - baseBalance,
-        transactionCount: 0
-      };
-    }
-    await ensureDbReady();
-    const summary = await getTransactionSummary({ game: 'all', type: 'all' });
-    const expectedBalance = baseBalance + summary.netAmount;
-    return {
-      expectedBalance,
-      actualBalance,
-      delta: actualBalance - expectedBalance,
-      transactionCount: summary.total
-    };
-  };
-
   return {
     transactions,
     latestTransactions,
@@ -190,7 +163,6 @@ export const useTransactionStore = defineStore('transactions', () => {
     addTransaction,
     replaceTransactions,
     getAllSavedTransactions,
-    auditBalance,
     clearTransactions
   };
 });

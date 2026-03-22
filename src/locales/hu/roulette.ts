@@ -12,8 +12,6 @@ export default {
     },
     "table": {
       "title": "Rulett Asztal",
-      "eyebrow": "Tedd meg a téteket",
-      "subtitle": "Válassz gyors tétet, vagy koppints egy számra az egyenes tétért.",
       "quickBetsTitle": "Gyors tétek",
       "quickBetsHint": "Koppints egy csoportra, hogy a tétet a számokra oszd.",
       "numberGridTitle": "Számrács",

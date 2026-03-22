@@ -159,9 +159,9 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
     
     <div class="row g-3 roulette-layout" v-if="gameStore.gameState === RouletteState.BETTING">
       <div class="col-12 col-lg-8 order-2 order-lg-1">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm h-100">
           <div class="card-header bg-white d-flex align-items-center justify-content-between">
-            <p class="h6 mb-0">{{ t('roulette.table.title') }}</p>
+            <h2 class="h6 mb-0">{{ t('roulette.table.title') }}</h2>
           </div>
           <div class="card-body">
             <RouletteTable

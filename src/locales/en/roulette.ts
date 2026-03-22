@@ -12,8 +12,6 @@ export default {
     },
     "table": {
       "title": "Roulette Table",
-      "eyebrow": "Place Your Bets",
-      "subtitle": "Choose a quick bet or tap a number to place a straight bet.",
       "quickBetsTitle": "Quick Bets",
       "quickBetsHint": "Tap a group to spread your bet across its numbers.",
       "numberGridTitle": "Number Grid",

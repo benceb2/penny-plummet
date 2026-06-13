@@ -4,9 +4,7 @@ import { useToastStore } from '@/stores/toastStore'
 export function usePwaUpdate() {
   const toastStore = useToastStore()
 
-  let updateSW: ((reloadPage?: boolean) => Promise<void>) | undefined
-
-  updateSW = registerSW({
+  const updateSW = registerSW({
     immediate: true,
     onNeedRefresh() {
       toastStore.addToast({

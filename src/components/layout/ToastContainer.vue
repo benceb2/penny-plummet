@@ -74,8 +74,16 @@ onUnmounted(() => {
           </small>
         </div>
 
-        <div class="toast-body" :class="{ 'pb-3': isMobile }">
+        <div class="toast-body" :class="{ 'pb-3': isMobile && !toast.action }">
           {{ toast.message }}
+          <div v-if="toast.action" class="mt-2">
+            <button
+              type="button"
+              class="btn btn-sm btn-light"
+              @click.stop="() => { toast.action!.handler(); toastStore.removeToast(toast.id) }">
+              {{ toast.action.label }}
+            </button>
+          </div>
         </div>
 
         

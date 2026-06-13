@@ -3,12 +3,19 @@ import { ref } from 'vue';
 import i18n from '@/i18n';
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil';
 
+export interface ToastAction {
+  label: string;
+  handler: () => void;
+}
+
 export interface Toast {
   id: number;
   type: 'achievement' | 'level-up' | 'success' | 'error';
   title: string;
   message: string;
   icon?: string;
+  action?: ToastAction;
+  persist?: boolean;
 }
 
 export const useToastStore = defineStore('toast', () => {
@@ -19,10 +26,11 @@ export const useToastStore = defineStore('toast', () => {
     const id = nextId++;
     toasts.value.push({ ...toast, id });
 
-    // Remove toast after 5 seconds
-    setTimeout(() => {
-      removeToast(id);
-    }, 5000);
+    if (!toast.persist) {
+      setTimeout(() => {
+        removeToast(id);
+      }, 5000);
+    }
   }
 
   function removeToast(id: number) {

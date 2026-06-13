@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
 import { useAchievementStore } from '../achievementStore';
-import { achievements as achievementsRef } from '@/utils/achievementUitl';
+import { achievements as achievementsRef } from '@/utils/achievementUtil';
 
 const userStoreMock = {};
 

@@ -449,7 +449,6 @@ export const useClickerStore = defineStore('clicker', () => {
       } else {
         // If earnings are too small, don't show modal
         // The earnings remain in clicks for when they manually collect
-        console.log(`Small offline earnings (${result.earnings} clicks) added to balance`)
       }
     }
 

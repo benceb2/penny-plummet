@@ -20,6 +20,13 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+      testMatch: /tests\/(a11y|layout)\/.+\.spec\.ts/,
+    },
+    {
+      name: 'screenshots',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: /tests\/screenshots\/.+\.spec\.ts/,
+      snapshotPathTemplate: '{testDir}/__screenshots__/{arg}{ext}',
     },
   ],
 })

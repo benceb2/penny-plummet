@@ -9,14 +9,16 @@ import AppNavbar from '@/components/layout/AppNavbar.vue';
 import AppFooter from '@/components/layout/AppFooter.vue';
 import { useClickerStore } from '@/stores/clickerStore';
 import { useIndexedDbSupport } from '@/composables/useIndexedDbSupport';
+import { usePwaUpdate } from '@/composables/usePwaUpdate';
 
 const clickerStore = useClickerStore();
 const { status: indexedDbStatus, runCheck } = useIndexedDbSupport();
 
+usePwaUpdate();
+
 onMounted(async () => {
   const supported = await runCheck();
   if (supported) {
-    // Initialize offline tracking for clicker game
     clickerStore.initializeOfflineTracking();
   }
 });

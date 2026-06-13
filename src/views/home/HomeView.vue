@@ -7,7 +7,7 @@ import TransactionItem from '@/components/TransactionItem.vue';
 
 import { useAchievementStore } from '@/stores/achievementStore';
 import { useTransactionStore } from '@/stores/transactionStore';
-import { sortAchievementsByPriority } from '@/utils/achievementUitl';
+import { sortAchievementsByPriority } from '@/utils/achievementUtil';
 
 const { t } = useI18n();
 const achievementStore = useAchievementStore();

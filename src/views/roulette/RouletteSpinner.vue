@@ -32,12 +32,6 @@ const generateSpinSequence = () => {
 
 const startSpin = async () => {
   if (!spinnerRef.value || !numbersStrip.value || isAnimating.value || props.winningNumber === null) {
-    console.log('Cannot start spin:', {
-      spinner: !!spinnerRef.value,
-      strip: !!numbersStrip.value,
-      animating: isAnimating.value,
-      winningNumber: props.winningNumber
-    })
     return
   }
 
@@ -70,7 +64,6 @@ const startSpin = async () => {
   }
 
   if (targetIndex === -1) {
-    console.error('Could not find winning number in sequence:', props.winningNumber)
     isAnimating.value = false
     return
   }

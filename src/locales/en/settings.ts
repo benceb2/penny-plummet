@@ -1,6 +1,10 @@
 export default {
   "settings": {
     "title": "Settings",
+    "language": {
+      "title": "Language",
+      "label": "Choose language"
+    },
     "localSave": {
       "title": "Local Save Management",
       "export": {

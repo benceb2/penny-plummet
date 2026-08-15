@@ -22,6 +22,18 @@ const achievementProgress = computed(() => {
     percentage: Math.round((completedAchievements / totalAchievements) * 100)
   };
 });
+
+const ringProgress = computed(() => Math.min(100, Math.max(0, levelProgress)));
+const ringStyle = computed(() => ({
+  background: `conic-gradient(var(--pp-gold) ${ringProgress.value}%, rgba(255, 255, 255, .1) 0)`
+}));
+
+const hubTiles = [
+  { to: '/achievements', icon: 'bi-trophy-fill', labelKey: 'profile.hub.tiles.achievements' },
+  { to: '/transactions', icon: 'bi-clock-history', labelKey: 'profile.hub.tiles.transactions' },
+  { to: '/settings', icon: 'bi-gear-fill', labelKey: 'profile.hub.tiles.settings' },
+  { to: '/about', icon: 'bi-info-circle-fill', labelKey: 'profile.hub.tiles.about' },
+];
 </script>
 
 <template>
@@ -29,7 +41,36 @@ const achievementProgress = computed(() => {
     :title="t('profile.title')"
     bootstrapIcon="person-circle">
 
-    
+
+    <div class="card mb-4 profile-summary">
+      <div class="card-body d-flex align-items-center gap-3">
+        <div class="profile-ring" :style="ringStyle" :aria-label="t('profile.level.title', { level: currentLevel.level })">
+          <b>{{ currentLevel.level }}</b>
+        </div>
+        <div class="flex-grow-1 min-w-0">
+          <h2 class="profile-username mb-1 section-title text-truncate">{{ userStore.username }}</h2>
+          <div class="profile-chips">
+            <i class="bi bi-coin" aria-hidden="true"></i>
+            {{ userStore.formattedChips }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <h2 class="visually-hidden">{{ t('profile.hub.linksTitle') }}</h2>
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-md-3" v-for="tile in hubTiles" :key="tile.to">
+        <RouterLink :to="tile.to" class="profile-tile card h-100 text-decoration-none">
+          <div class="card-body text-center d-flex flex-column align-items-center justify-content-center gap-2">
+            <i :class="['bi', tile.icon, 'fs-2']" aria-hidden="true"></i>
+            <span class="subsection-title">{{ t(tile.labelKey) }}</span>
+          </div>
+        </RouterLink>
+      </div>
+    </div>
+
+
     <div class="card mb-4">
       <div class="card-body">
         <h2 class="card-title section-title">
@@ -142,5 +183,58 @@ const achievementProgress = computed(() => {
 .hover-lift:hover {
   transform: translateY(-2px);
   transition: transform 0.2s;
+}
+
+.profile-ring {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+}
+
+.profile-ring b {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--pp-surface);
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--pp-cream);
+}
+
+.profile-username {
+  font-family: var(--pp-font-display);
+}
+
+.profile-chips {
+  display: flex;
+  align-items: center;
+  gap: .375rem;
+  color: var(--pp-gold-bright);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.profile-tile {
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.profile-tile i {
+  color: var(--pp-gold);
+}
+
+.profile-tile span {
+  color: var(--pp-cream);
+}
+
+@media (hover: hover) {
+  .profile-tile:hover {
+    border-color: rgba(225, 178, 90, .4);
+    transform: translateY(-2px);
+  }
 }
 </style>

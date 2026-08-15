@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { SavePreview } from '@/types/SavePreview';
 import UsernameSettings from '@/views/settings/UsernameSettings.vue';
@@ -14,7 +14,13 @@ import { useRouletteStore } from '@/stores/rouletteStore';
 import gameSaveUtil from '@/utils/gameSaveUtil';
 
 // i18n
-const { t } = useI18n();
+const { t, locale } = useI18n();
+
+const availableLocales = ['en-GB', 'hu-HU'] as const;
+
+watch(locale, (newLocale) => {
+  localStorage.setItem('userLocale', newLocale);
+});
 
 // Stores
 const userStore = useUserStore();
@@ -138,7 +144,23 @@ const cancelDelete = () => {
   <BaseLayout :title="t('settings.title')" bootstrapIcon="gear-fill" :show-balance="false">
     <UsernameSettings />
 
-    
+
+    <div class="card mb-4">
+      <div class="card-body">
+        <h2 class="card-title d-flex align-items-center mb-3 section-title">
+          <i class="bi bi-translate me-2" aria-hidden="true"></i>
+          {{ t('settings.language.title') }}
+        </h2>
+        <label class="form-label" for="language-select">{{ t('settings.language.label') }}</label>
+        <select id="language-select" class="form-select" style="max-width: 20rem;" v-model="locale">
+          <option v-for="loc in availableLocales" :key="loc" :value="loc">
+            {{ t(`languages.${loc}`) }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+
     <div class="card">
       <div class="card-body">
         <h2 class="card-title d-flex align-items-center mb-4 section-title">

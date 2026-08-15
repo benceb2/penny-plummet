@@ -1,6 +1,10 @@
 export default {
   "settings": {
     "title": "Beállítások",
+    "language": {
+      "title": "Nyelv",
+      "label": "Nyelv kiválasztása"
+    },
     "localSave": {
       "title": "Helyi Mentés Kezelés",
       "export": {

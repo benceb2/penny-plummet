@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useToastStore } from '@/stores/toastStore';
 import { ref, onMounted, onUnmounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const toastStore = useToastStore();
 const isMobile = ref(false);
 
@@ -61,6 +63,7 @@ onUnmounted(() => {
             type="button"
             class="btn-close"
             :class="{ 'btn-close-white': toast.type === 'achievement' || toast.type === 'level-up' }"
+            :aria-label="t('game.close')"
             @click.stop="toastStore.removeToast(toast.id)">
           </button>
 

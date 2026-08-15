@@ -20,14 +20,10 @@ export default {
     }
   },
   "betAmountSelector": {
-    "label": "Bet Amount",
     "insufficientFunds": {
       "title": "Insufficient Funds",
       "description": "You need chips to place bets!"
-    },
-    "quickBet": "Quick Bet",
-    "selected": "Selected",
-    "ofChips": "of chips"
+    }
   },
   "consentModal": {
     "title": "Local Storage Notice",
@@ -80,13 +76,6 @@ export default {
       "title": "Rewards Claimed!",
       "message": "Received {chips} chips and {xp} XP"
     }
-  },
-  "gameResult": {
-    "win": "WIN!",
-    "loss": "LOSS",
-    "push": "PUSH",
-    "unknown": "UNKNOWN",
-    "dismissHint": "Click to dismiss or press ESC"
   },
   "game": {
     "betAmount": "Bet {amount}",

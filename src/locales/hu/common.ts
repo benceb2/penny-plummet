@@ -20,14 +20,10 @@ export default {
     }
   },
   "betAmountSelector": {
-    "label": "Tét összege",
     "insufficientFunds": {
       "title": "Nincs elég zseton",
       "description": "Téthez zsetonokra van szükséged!"
-    },
-    "quickBet": "Gyors tét",
-    "selected": "Kiválasztva",
-    "ofChips": "a zsetonokból"
+    }
   },
   "consentModal": {
     "title": "Helyi tárhely tájékoztató",
@@ -80,13 +76,6 @@ export default {
       "title": "Jutalom igényelve!",
       "message": "Kaptál {chips} zsetont és {xp} XP-t"
     }
-  },
-  "gameResult": {
-    "win": "NYERTÉL!",
-    "loss": "VESZTETTÉL",
-    "push": "DÖNTETLEN",
-    "unknown": "ISMERETLEN",
-    "dismissHint": "Kattints a bezáráshoz vagy nyomd meg az ESC-et"
   },
   "game": {
     "betAmount": "{amount} tét",

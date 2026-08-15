@@ -1,7 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
-import '@fortawesome/fontawesome-free/css/all.css'
+import '@fontsource-variable/bodoni-moda'
+import '@/styles/tokens.css'
 import '@/styles/typography.css'
 
 import { registerSW } from 'virtual:pwa-register'

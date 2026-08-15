@@ -1,7 +1,10 @@
 .page-title {
-  font-size: 1.75rem;
+  font-family: var(--pp-font-display);
+  font-size: 2rem;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.15;
+  letter-spacing: .01em;
+  color: var(--pp-cream);
 }
 
 .section-title {

@@ -1,6 +1,15 @@
 export default {
   "profile": {
     "title": "Profile",
+    "hub": {
+      "linksTitle": "Quick Links",
+      "tiles": {
+        "achievements": "Achievements",
+        "transactions": "Transactions",
+        "settings": "Settings",
+        "about": "About"
+      }
+    },
     "level": {
       "title": "Level {level}",
       "currentXp": "{xp} XP",

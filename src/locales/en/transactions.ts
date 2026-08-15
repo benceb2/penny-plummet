@@ -1,12 +1,6 @@
 export default {
   "transactions": {
     "title": "Transaction History",
-    "stats": {
-      "netAmount": "Net Amount",
-      "wins": "Wins",
-      "losses": "Losses",
-      "pushes": "Pushes"
-    },
     "filters": {
       "game": {
         "all": "All",

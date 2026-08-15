@@ -1,22 +1,9 @@
 export default {
   "roulette": {
     "title": "Rulett",
-    "stats": {
-      "show": "Statisztikák Megtekintése",
-      "hide": "Statisztikák Elrejtése",
-      "title": "Statisztikák",
-      "totalSpins": "Összes Pörgetés",
-      "totalWagered": "Összes Tét",
-      "biggestWin": "Legnagyobb Nyeremény",
-      "winStreak": "Nyerési Sorozat"
-    },
     "table": {
-      "title": "Rulett Asztal",
-      "quickBetsTitle": "Gyors tétek",
-      "quickBetsHint": "Koppints egy csoportra, hogy a tétet a számokra oszd.",
-      "numberGridTitle": "Számrács",
-      "numberGridHint": "Koppints egy számra az egyenes tét elhelyezéséhez.",
-      "straightBetLabel": "Egyenes tét",
+      "legend": "Tétasztal",
+      "outsideBets": "Külső tétek",
       "zero": "0",
       "bets": {
         "dozen1": "1. 12",
@@ -28,26 +15,6 @@ export default {
         "black": "FEKETE",
         "odd": "PÁRATLAN",
         "high": "19-36"
-      }
-    },
-    "gameControls": {
-      "title": "Játék Vezérlők",
-      "betting": {
-        "title": "Tét Vezérlők",
-        "currentBets": "Jelenlegi Tétek",
-        "betAmount": "Tét Összege",
-        "clearAllBets": "Összes Tét Törlése",
-        "table": {
-          "type": "Típus",
-          "numbers": "Számok",
-          "amount": "Összeg",
-          "total": "Összesen:"
-        }
-      },
-      "actions": {
-        "title": "Műveletek",
-        "spin": "Pörgetés",
-        "newGame": "Új Játék"
       }
     },
     "betTypes": {
@@ -65,41 +32,46 @@ export default {
       "low": "Alacsony",
       "high": "Magas"
     },
-    "ui": {
-      "clearBets": "Tétek törlése",
-      "totalBet": "Összes tét",
-      "yourBets": "Téteid",
-      "waitingForResult": "Eredményre várunk...",
-      "totalAtRisk": "Kockáztatott összeg",
-      "tableTab": "Asztal",
-      "myBetsTab": "Téteim",
-      "noBetsTitle": "Még nincs tét",
-      "noBetsHint": "Válts az asztal nézetre a tétek megtételéhez",
-      "spinning": "Pörgetés...",
-      "spinTheWheel": "Pörgesd meg",
-      "allIn": "MINDENT FEL",
-      "ofBalance": "az egyenlegből",
-      "quickBetTitle": "{amount} ({label} az egyenlegből)",
-      "moreBets": "...és még {count}",
-      "quickBets": "Gyors tétek",
-      "numberGrid": "Számok",
-      "betSlip": "Tétszelvény",
-      "balance": "Egyenleg",
-      "mobilePanel": "Rulett mobil panel",
-      "viewBets": "Tétek megtekintése",
-      "stepAmount": "Állítsd be a tétet",
-      "stepAmountHint": "Tét módosítása",
-      "stepQuick": "Gyors tét kiválasztása",
-      "stepPlace": "Tétek elhelyezése az asztalon",
-      "stepSpin": "Pörgesd meg a kereket",
+    "aria": {
       "placeBetOnNumber": "Tét elhelyezése a(z) {number} számra",
       "placeBetOnGroup": "Tét elhelyezése: {label}"
     },
-    "results": {
-      "win": "Nyertél {amount}-t!",
-      "loss": "Vesztettél {amount}-t",
-      "push": "Döntetlenül értél és {amount} visszatérítve!",
-      "winningNumber": "Nyerő Szám: {number}"
+    "history": {
+      "label": "Legutóbbi nyerőszámok",
+      "empty": "Még nem volt pörgetés"
+    },
+    "rules": {
+      "title": "Szabályok és kifizetések",
+      "summary": "Ez az asztal a hagyományos európai rulett szabályait használja, egyetlen nullával.",
+      "singleZero": "A mezők 0-tól 36-ig számozottak; a 0 zöld.",
+      "straightBets": "Az egyenes tétek egy számra szólnak, és a legmagasabb nyereményt fizetik.",
+      "outsideBets": "A külső tétek (tucatok, piros/fekete, páros/páratlan, alacsony/magas) több számot fednek le, alacsonyabb kifizetésért.",
+      "zeroLoses": "Ha a 0 jön ki, csak a 0-ra tett egyenes tétek nyernek; minden külső tét veszít.",
+      "payoutsTitle": "Kifizetések",
+      "payoutStraight": "Egyenes (egy szám)",
+      "payoutDozen": "Tucat",
+      "payoutEvenMoney": "Egyenlő esélyű tétek (piros, fekete, páratlan, páros, 1-18, 19-36)",
+      "payoutRatio": "{multiplier}:1"
+    },
+    "tray": {
+      "undoLastBet": "Utolsó tét visszavonása",
+      "clear": "Törlés",
+      "spinFor": "Pörgetés · {amount}",
+      "spinning": "Pörgetés…",
+      "betsSummary": "Összes tét {amount} · {count} tét",
+      "betsSummaryOne": "Összes tét {amount} · 1 tét",
+      "noBets": "Nincs elhelyezett tét"
+    },
+    "bets": {
+      "title": "Téteid",
+      "viewBets": "Tétek megtekintése",
+      "empty": "Még nincs elhelyezett tét."
+    },
+    "result": {
+      "win": "Nyertél",
+      "loss": "Vesztettél",
+      "push": "Döntetlen",
+      "winningNumber": "Nyerő szám: {number}"
     }
   }
 }

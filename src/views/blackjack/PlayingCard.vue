@@ -1,132 +1,178 @@
 <script setup lang="ts">
+/**
+ * Playing card face/back. `md` (72x102) is the felt size, `sm` (46x64) is
+ * the deck-corner size. Pass `dealIndex` to play the deal-in animation with
+ * a 130ms stagger (disabled under prefers-reduced-motion via the global
+ * animation-duration override in tokens.css).
+ */
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import type { Card } from '@/types/Card'
-defineProps<{
+
+const props = withDefaults(defineProps<{
   card: Card
-}>()
+  size?: 'sm' | 'md'
+  dealIndex?: number
+}>(), {
+  size: 'md'
+})
 
-const getSuitSymbol = (suit: string): string => {
-  switch (suit) {
-    case 'hearts': return '♥'
-    case 'diamonds': return '♦'
-    case 'clubs': return '♣'
-    case 'spades': return '♠'
-    default: return ''
-  }
+const { t } = useI18n()
+
+const SUIT_SYMBOLS: Record<Card['suit'], string> = {
+  hearts: '♥',
+  diamonds: '♦',
+  clubs: '♣',
+  spades: '♠'
 }
 
-const getSuitName = (suit: string): string => {
-  switch (suit) {
-    case 'hearts': return 'hearts'
-    case 'diamonds': return 'diamonds'
-    case 'clubs': return 'clubs'
-    case 'spades': return 'spades'
-    default: return 'unknown suit'
-  }
-}
+const isRed = computed(() => props.card.suit === 'hearts' || props.card.suit === 'diamonds')
+const suitSymbol = computed(() => SUIT_SYMBOLS[props.card.suit])
 
-const getCardLabel = (card: Card): string => {
-  if (!card.faceUp) {
-    return 'Face down card'
-  }
-
-  return `${card.display} of ${getSuitName(card.suit)}`
-}
+const label = computed(() => {
+  if (!props.card.faceUp) return t('blackjack.card.faceDown')
+  return t('blackjack.card.faceUp', {
+    rank: props.card.display,
+    suit: t(`blackjack.card.suits.${props.card.suit}`)
+  })
+})
 </script>
 
 <template>
-  <div class="playing-card shadow-sm rounded position-relative bg-white border"
-    :class="{ 'text-danger': card.suit === 'hearts' || card.suit === 'diamonds' }"
+  <div
+    class="playing-card"
+    :class="[`playing-card--${size}`, {
+      'playing-card--red': isRed,
+      'playing-card--dealt': dealIndex !== undefined
+    }]"
+    :style="dealIndex !== undefined ? { '--pp-deal-index': dealIndex } : undefined"
     role="img"
-    :aria-label="getCardLabel(card)">
-    <div v-if="card.faceUp" class="h-100 p-2">
-      
-      <div class="position-absolute top-0 start-0 p-1 d-flex flex-column align-items-center">
-        <span class="fw-bold card-value">{{ card.display }}</span>
-        <span class="card-suit">{{ getSuitSymbol(card.suit) }}</span>
-      </div>
-
-      
-      <div class="position-absolute top-50 start-50 translate-middle">
-        <span class="suit-large">{{ getSuitSymbol(card.suit) }}</span>
-      </div>
-
-      
-      <div class="position-absolute bottom-0 end-0 p-1 d-flex flex-column align-items-center rotate-180">
-        <span class="fw-bold card-value">{{ card.display }}</span>
-        <span class="card-suit">{{ getSuitSymbol(card.suit) }}</span>
-      </div>
-    </div>
-
-    
-    <div v-else class="card-back h-100 d-flex align-items-center justify-content-center">
-      <div class="back-pattern"></div>
-    </div>
+    :aria-label="label">
+    <template v-if="card.faceUp">
+      <span class="playing-card-index playing-card-index--tl">
+        <b>{{ card.display }}</b>
+        <i>{{ suitSymbol }}</i>
+      </span>
+      <span class="playing-card-pip">{{ suitSymbol }}</span>
+      <span class="playing-card-index playing-card-index--br">
+        <b>{{ card.display }}</b>
+        <i>{{ suitSymbol }}</i>
+      </span>
+    </template>
+    <span v-else class="playing-card-back" aria-hidden="true"></span>
   </div>
 </template>
 
 <style scoped>
-/* Only keep styles that can't be handled by Bootstrap */
 .playing-card {
-  width: 100px;
-  height: 140px;
-  transition: transform 0.2s ease;
-  cursor: default;
+  position: relative;
+  width: 72px;
+  height: 102px;
+  border-radius: 7px;
+  background: var(--pp-card-face);
+  color: var(--pp-card-black);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, .4), 0 0 0 1px rgba(0, 0, 0, .18);
+  flex: 0 0 auto;
 }
 
-.playing-card:hover {
-  transform: translateY(-5px);
+.playing-card--red {
+  color: var(--pp-card-red);
 }
 
-.suit-large {
-  font-size: 2.5rem;
+.playing-card--sm {
+  width: 46px;
+  height: 64px;
+  border-radius: 5px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, .4), 0 0 0 1px rgba(0, 0, 0, .18);
 }
 
-.card-value {
-  font-size: 1.2rem;
+.playing-card-index {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   line-height: 1;
 }
 
-.card-suit {
-  font-size: 1rem;
-  line-height: 1;
+.playing-card-index b {
+  font-family: var(--pp-font-display);
+  font-weight: 700;
+  font-size: 1.1875rem;
 }
 
-.rotate-180 {
+.playing-card-index i {
+  font-style: normal;
+  font-size: .75rem;
+  margin-top: 2px;
+}
+
+.playing-card-index--tl {
+  top: 6px;
+  left: 7px;
+}
+
+.playing-card-index--br {
+  bottom: 6px;
+  right: 7px;
   transform: rotate(180deg);
 }
 
-.card-back {
-  background: #2962ff;
+.playing-card--sm .playing-card-index b {
+  font-size: .8125rem;
 }
 
-.back-pattern {
-  width: 90%;
-  height: 90%;
-  border: 2px solid #1e88e5;
+.playing-card--sm .playing-card-index i {
+  font-size: .5625rem;
+}
+
+.playing-card--sm .playing-card-index--tl {
+  top: 4px;
+  left: 4px;
+}
+
+.playing-card--sm .playing-card-index--br {
+  bottom: 4px;
+  right: 4px;
+}
+
+.playing-card-pip {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 2.25rem;
+  line-height: 1;
+}
+
+.playing-card--sm .playing-card-pip {
+  font-size: 1.5rem;
+}
+
+.playing-card-back {
+  position: absolute;
+  inset: 5px;
   border-radius: 4px;
-  background-image: repeating-linear-gradient(45deg,
-      #1e88e5 0,
-      #1e88e5 5px,
-      #2962ff 5px,
-      #2962ff 10px);
+  background-color: var(--pp-card-back);
+  background-image:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, .12) 0 2px, transparent 2px 9px),
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, .12) 0 2px, transparent 2px 9px);
+  box-shadow: inset 0 0 0 1px rgba(251, 246, 234, .55);
 }
 
-@media (max-width: 768px) {
-  .playing-card {
-    width: 80px;
-    height: 112px;
-  }
+.playing-card--sm .playing-card-back {
+  inset: 3px;
+  border-radius: 3px;
+}
 
-  .card-value {
-    font-size: 1rem;
-  }
+.playing-card--dealt {
+  animation: playing-card-deal .55s cubic-bezier(.2, .7, .2, 1) both;
+  animation-delay: calc(var(--pp-deal-index, 0) * 130ms);
+}
 
-  .card-suit {
-    font-size: 0.9rem;
-  }
-
-  .suit-large {
-    font-size: 2rem;
+@keyframes playing-card-deal {
+  from {
+    transform: translate(120px, -160px) rotate(16deg);
+    opacity: 0;
   }
 }
 </style>

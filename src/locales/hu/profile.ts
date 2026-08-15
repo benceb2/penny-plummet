@@ -1,6 +1,15 @@
 export default {
   "profile": {
     "title": "Profil",
+    "hub": {
+      "linksTitle": "Gyors elérés",
+      "tiles": {
+        "achievements": "Eredmények",
+        "transactions": "Tranzakciók",
+        "settings": "Beállítások",
+        "about": "Rólunk"
+      }
+    },
     "level": {
       "title": "Szint {level}",
       "currentXp": "{xp} XP",

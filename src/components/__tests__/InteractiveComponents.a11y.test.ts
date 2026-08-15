@@ -2,13 +2,11 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { configureAxe } from 'vitest-axe'
-import AppNavbar from '@/components/layout/AppNavbar.vue'
 import ToastContainer from '@/components/layout/ToastContainer.vue'
 import ClickArea from '@/views/clicker/ClickArea.vue'
 import UpgradesPanel from '@/views/clicker/UpgradesPanel.vue'
 import i18n from '@/i18n'
 import { useUserStore } from '@/stores/userStore'
-import { useAchievementStore } from '@/stores/achievementStore'
 import { useToastStore } from '@/stores/toastStore'
 import { useClickerStore } from '@/stores/clickerStore'
 
@@ -43,20 +41,6 @@ const runAxe = async (wrapper: ReturnType<typeof mount>) => {
 }
 
 describe('Interactive components accessibility', () => {
-  it('AppNavbar has no axe violations', async () => {
-    expect.hasAssertions()
-    const wrapper = mountWithStores(AppNavbar)
-    const userStore = useUserStore()
-    const achievementStore = useAchievementStore()
-
-    userStore.updateUsername('A11yTester')
-    userStore.updateConsent(true)
-    achievementStore.currentLevel.currentXP = 200
-    achievementStore.currentLevel.requiredXP = 500
-
-    await runAxe(wrapper)
-  })
-
   it('ToastContainer has no axe violations with active toasts', async () => {
     expect.hasAssertions()
     const wrapper = mountWithStores(ToastContainer)

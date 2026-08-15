@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { SavePreview } from '@/types/SavePreview';
 import UsernameSettings from '@/views/settings/UsernameSettings.vue';
@@ -14,7 +14,13 @@ import { useRouletteStore } from '@/stores/rouletteStore';
 import gameSaveUtil from '@/utils/gameSaveUtil';
 
 // i18n
-const { t } = useI18n();
+const { t, locale } = useI18n();
+
+const availableLocales = ['en-GB', 'hu-HU'] as const;
+
+watch(locale, (newLocale) => {
+  localStorage.setItem('userLocale', newLocale);
+});
 
 // Stores
 const userStore = useUserStore();
@@ -138,7 +144,23 @@ const cancelDelete = () => {
   <BaseLayout :title="t('settings.title')" bootstrapIcon="gear-fill" :show-balance="false">
     <UsernameSettings />
 
-    
+
+    <div class="card mb-4">
+      <div class="card-body">
+        <h2 class="card-title d-flex align-items-center mb-3 section-title">
+          <i class="bi bi-translate me-2" aria-hidden="true"></i>
+          {{ t('settings.language.title') }}
+        </h2>
+        <label class="form-label" for="language-select">{{ t('settings.language.label') }}</label>
+        <select id="language-select" class="form-select" style="max-width: 20rem;" v-model="locale">
+          <option v-for="loc in availableLocales" :key="loc" :value="loc">
+            {{ t(`languages.${loc}`) }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+
     <div class="card">
       <div class="card-body">
         <h2 class="card-title d-flex align-items-center mb-4 section-title">
@@ -198,7 +220,7 @@ const cancelDelete = () => {
                 </div>
                 <div class="modal-body">
                   <div
-                    class="save-preview bg-white border p-3 rounded mb-3"
+                    class="save-preview border p-3 rounded mb-3"
                     v-if="savePreview">
                     <h4 class="mb-3 subsection-title">{{ t('settings.localSave.import.preview.title') }}</h4>
                     <div class="row g-3">
@@ -214,7 +236,7 @@ const cancelDelete = () => {
                       </div>
                       <div class="col-sm-6">
                         <div class="d-flex align-items-center">
-                          <i class="bi bi-wallet2 text-success fs-4 me-2" aria-hidden="true"></i>
+                          <i class="bi bi-wallet2 text-primary fs-4 me-2" aria-hidden="true"></i>
                           <div>
                             <div class="text-muted small">{{ t('settings.localSave.import.preview.balance') }}</div>
                             <div class="fw-medium">{{ formatIntAsCurrency(savePreview.balance) }}</div>
@@ -245,7 +267,7 @@ const cancelDelete = () => {
                   <p class="mb-0">{{ t('settings.localSave.import.confirmMessage') }}</p>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" @click="cancelImport">
+                  <button type="button" class="btn btn-outline-light" @click="cancelImport">
                     {{
                     t('settings.localSave.import.cancel') }}</button>
                   <button type="button" class="btn btn-primary" @click="confirmImport">
@@ -294,7 +316,7 @@ const cancelDelete = () => {
                   <p>{{ t('settings.localSave.delete.confirmMessage') }}</p>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" @click="cancelDelete">
+                  <button type="button" class="btn btn-outline-light" @click="cancelDelete">
                     {{
                     t('settings.localSave.delete.cancel') }}</button>
                   <button type="button" class="btn btn-danger" @click="confirmDelete">
@@ -320,3 +342,9 @@ const cancelDelete = () => {
     </div>
   </BaseLayout>
 </template>
+
+<style scoped>
+.save-preview {
+  background: var(--pp-surface-2);
+}
+</style>

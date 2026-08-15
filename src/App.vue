@@ -5,8 +5,9 @@ import UsernameModal from '@/components/modals/UsernameModal.vue';
 import ConsentModal from '@/components/modals/ConsentModal.vue';
 import OfflineEarningsModal from '@/components/modals/OfflineEarningsModal.vue';
 import UnsupportedBrowser from '@/components/UnsupportedBrowser.vue';
-import AppNavbar from '@/components/layout/AppNavbar.vue';
-import AppFooter from '@/components/layout/AppFooter.vue';
+import AppHud from '@/components/layout/AppHud.vue';
+import AppTabBar from '@/components/layout/AppTabBar.vue';
+import ToastContainer from '@/components/layout/ToastContainer.vue';
 import { useClickerStore } from '@/stores/clickerStore';
 import { useIndexedDbSupport } from '@/composables/useIndexedDbSupport';
 
@@ -23,7 +24,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="d-flex flex-column min-vh-100">
+  <div class="app-shell d-flex flex-column">
     <div
       v-if="indexedDbStatus === 'checking'"
       class="d-flex align-items-center justify-content-center flex-grow-1 text-muted">
@@ -43,15 +44,28 @@ onMounted(async () => {
         :earnings="clickerStore.offlineEarnings"
         :timeAway="clickerStore.offlineSeconds"
         @close="clickerStore.closeOfflineEarningsModal" />
-      <header>
-        <AppNavbar />
-      </header>
 
-      <main class="flex-grow-1 pb-3">
+      <AppHud />
+
+      <main class="app-main flex-grow-1 d-flex flex-column">
         <RouterView />
       </main>
 
-      <AppFooter />
+      <AppTabBar />
+      <ToastContainer />
     </template>
   </div>
 </template>
+
+<style scoped>
+.app-shell {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+@media (max-width: 991.98px) {
+  .app-main {
+    padding-bottom: calc(var(--pp-tabbar-height) + env(safe-area-inset-bottom, 0px));
+  }
+}
+</style>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { pocketColor } from '@/utils/rouletteUtil'
 
 const props = defineProps<{
   isSpinning: boolean
@@ -19,12 +20,6 @@ const BASE_SEQUENCE = [
   0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26
 ]
 
-const getNumberColor = (num: number): string => {
-  if (num === 0) return 'bg-success text-white'
-  const redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
-  return redNumbers.includes(num) ? 'bg-danger text-white' : 'bg-dark text-white'
-}
-
 const generateSpinSequence = () => {
   // Create multiple copies for smooth scrolling
   return [...BASE_SEQUENCE, ...BASE_SEQUENCE, ...BASE_SEQUENCE, ...BASE_SEQUENCE, ...BASE_SEQUENCE]
@@ -32,12 +27,6 @@ const generateSpinSequence = () => {
 
 const startSpin = async () => {
   if (!spinnerRef.value || !numbersStrip.value || isAnimating.value || props.winningNumber === null) {
-    console.log('Cannot start spin:', {
-      spinner: !!spinnerRef.value,
-      strip: !!numbersStrip.value,
-      animating: isAnimating.value,
-      winningNumber: props.winningNumber
-    })
     return
   }
 
@@ -50,7 +39,7 @@ const startSpin = async () => {
   // Force browser to apply the reset
   void numbersStrip.value.offsetWidth
 
-  const numberWidth = 64
+  const numberWidth = 48
   const sequence = generateSpinSequence()
 
   // Find winning number in middle sequences (for better animation)
@@ -106,22 +95,19 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="card mb-3">
-    <div class="card-body p-2">
-      <div class="roulette-spinner-container">
-        <div ref="spinnerRef" class="roulette-spinner">
-          <div ref="numbersStrip" class="numbers-strip">
-            <div
-              v-for="(number, index) in generateSpinSequence()"
-              :key="`${index}-${number}`"
-              :class="['number-block', getNumberColor(number)]">
-              {{ number }}
-            </div>
-          </div>
+  <div class="roulette-spinner-container">
+    <div ref="spinnerRef" class="roulette-spinner">
+      <div ref="numbersStrip" class="numbers-strip">
+        <div
+          v-for="(number, index) in generateSpinSequence()"
+          :key="`${index}-${number}`"
+          class="number-block"
+          :class="`number-block--${pocketColor(number)}`">
+          {{ number }}
         </div>
-        <div class="pointer"></div>
       </div>
     </div>
+    <div class="pointer" aria-hidden="true"></div>
   </div>
 </template>
 
@@ -129,10 +115,10 @@ onMounted(() => {
 .roulette-spinner-container {
   position: relative;
   overflow: hidden;
-  height: 80px;
-  background: linear-gradient(to right, #0d5a2e, #0a4122);
-  border-radius: 0.5rem;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+  height: 64px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, .28);
+  box-shadow: inset 0 0 0 1px var(--pp-line), inset 0 2px 10px rgba(0, 0, 0, .4);
 }
 
 .roulette-spinner {
@@ -149,52 +135,56 @@ onMounted(() => {
 }
 
 .number-block {
-  flex: 0 0 60px;
-  height: 50px;
+  flex: 0 0 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
-  font-size: 1.25rem;
+  font-family: var(--pp-font-ui);
+  font-weight: 800;
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--pp-cream);
   margin: 0 2px;
-  border-radius: 0.25rem;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border: 1px solid rgba(244, 238, 223, .18);
+}
+
+.number-block--red {
+  background: var(--pp-card-red);
+}
+
+.number-block--black {
+  background: var(--pp-card-black);
+}
+
+.number-block--green {
+  background: #1C8A54;
 }
 
 .pointer {
   position: absolute;
-  top: 50%;
+  top: 0;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   width: 0;
   height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 20px solid #ffc107;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-  z-index: 10;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 10px solid var(--pp-gold);
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .4));
+  z-index: 1;
 }
 
-.pointer::before {
-  content: '';
-  position: absolute;
-  bottom: 20px;
-  left: -2px;
-  width: 4px;
-  height: 30px;
-  background: #ffc107;
-}
-
-/* Mobile adjustments */
-@media (max-width: 768px) {
+@media (max-width: 767.98px) {
   .roulette-spinner-container {
-    height: 60px;
+    height: 56px;
   }
 
   .number-block {
-    flex: 0 0 45px;
-    height: 40px;
-    font-size: 1rem;
+    flex: 0 0 38px;
+    height: 38px;
+    font-size: .9rem;
   }
 }
 </style>

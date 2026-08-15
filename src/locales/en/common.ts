@@ -3,37 +3,27 @@ export default {
     "en-GB": "English",
     "hu-HU": "Magyar"
   },
-  "navbar": {
+  "appShell": {
     "brand": "Penny Plummet",
-    "games": {
-      "title": "Games",
+    "chipsLabel": "Chips balance",
+    "levelLabel": "Level {level}, {progress}% to next level",
+    "nav": {
+      "label": "Main navigation",
+      "lobby": "Lobby",
       "blackjack": "Blackjack",
-      "roulette": "Roulette"
+      "roulette": "Roulette",
+      "earn": "Earn",
+      "profile": "Profile"
     },
-    "earn": {
-      "title": "Earn",
-      "clicker": "Clicker Game"
-    },
-    "about": "About",
-    "wallet": {
-      "transactions": "Transactions"
-    },
-    "profile": {
-      "menu": "User menu",
-      "settings": "Settings",
-      "viewProfile": "Profile",
-      "achievements": "Achievements"
+    "tabBar": {
+      "label": "Tab bar"
     }
   },
   "betAmountSelector": {
-    "label": "Bet Amount",
     "insufficientFunds": {
       "title": "Insufficient Funds",
       "description": "You need chips to place bets!"
-    },
-    "quickBet": "Quick Bet",
-    "selected": "Selected",
-    "ofChips": "of chips"
+    }
   },
   "consentModal": {
     "title": "Local Storage Notice",
@@ -74,6 +64,7 @@ export default {
     }
   },
   "toast": {
+    "tapToDismiss": "Tap to dismiss",
     "achievementUnlocked": {
       "title": "Achievement Unlocked!",
       "message": "{title} - {description}"
@@ -87,11 +78,21 @@ export default {
       "message": "Received {chips} chips and {xp} XP"
     }
   },
-  "gameResult": {
-    "win": "WIN!",
-    "loss": "LOSS",
-    "push": "PUSH",
-    "unknown": "UNKNOWN",
-    "dismissHint": "Click to dismiss or press ESC"
+  "game": {
+    "betAmount": "Bet {amount}",
+    "undoLastChip": "Undo last chip",
+    "dealFor": "Deal · {amount}",
+    "hit": "Hit",
+    "stand": "Stand",
+    "changeBet": "Change bet",
+    "dealAgainFor": "Deal again · {amount}",
+    "tapToContinue": "Tap anywhere to continue",
+    "rulesAndPayouts": "Rules and payouts",
+    "you": "You",
+    "dealer": "Dealer",
+    "bust": "Bust",
+    "blackjackPays": "Blackjack pays 3 to 2",
+    "dealerStands": "Dealer stands on all 17s",
+    "close": "Close"
   }
 }

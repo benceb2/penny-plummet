@@ -3,37 +3,27 @@ export default {
     "en-GB": "English",
     "hu-HU": "Magyar"
   },
-  "navbar": {
+  "appShell": {
     "brand": "Penny Plummet",
-    "games": {
-      "title": "Játékok",
+    "chipsLabel": "Zseton egyenleg",
+    "levelLabel": "{level}. szint, {progress}% a következő szintig",
+    "nav": {
+      "label": "Fő navigáció",
+      "lobby": "Előtér",
       "blackjack": "Blackjack",
-      "roulette": "Rulett"
+      "roulette": "Rulett",
+      "earn": "Pénzt keres",
+      "profile": "Profil"
     },
-    "earn": {
-      "title": "Pénzt keres",
-      "clicker": "Kattintós Játék"
-    },
-    "about": "Rólunk",
-    "wallet": {
-      "transactions": "Tranzakciók"
-    },
-    "profile": {
-      "menu": "Felhasználói menü",
-      "settings": "Beállítások",
-      "viewProfile": "Profil",
-      "achievements": "Eredmények"
+    "tabBar": {
+      "label": "Lapsáv"
     }
   },
   "betAmountSelector": {
-    "label": "Tét összege",
     "insufficientFunds": {
       "title": "Nincs elég zseton",
       "description": "Téthez zsetonokra van szükséged!"
-    },
-    "quickBet": "Gyors tét",
-    "selected": "Kiválasztva",
-    "ofChips": "a zsetonokból"
+    }
   },
   "consentModal": {
     "title": "Helyi tárhely tájékoztató",
@@ -74,6 +64,7 @@ export default {
     }
   },
   "toast": {
+    "tapToDismiss": "Koppints a bezáráshoz",
     "achievementUnlocked": {
       "title": "Eredmény feloldva!",
       "message": "{title} - {description}"
@@ -87,11 +78,21 @@ export default {
       "message": "Kaptál {chips} zsetont és {xp} XP-t"
     }
   },
-  "gameResult": {
-    "win": "NYERTÉL!",
-    "loss": "VESZTETTÉL",
-    "push": "DÖNTETLEN",
-    "unknown": "ISMERETLEN",
-    "dismissHint": "Kattints a bezáráshoz vagy nyomd meg az ESC-et"
+  "game": {
+    "betAmount": "{amount} tét",
+    "undoLastChip": "Utolsó zseton visszavonása",
+    "dealFor": "Osztás · {amount}",
+    "hit": "Lapot kérek",
+    "stand": "Megállok",
+    "changeBet": "Tét módosítása",
+    "dealAgainFor": "Új kör · {amount}",
+    "tapToContinue": "Koppints bárhová a folytatáshoz",
+    "rulesAndPayouts": "Szabályok és kifizetések",
+    "you": "Ön",
+    "dealer": "Osztó",
+    "bust": "Túllépés",
+    "blackjackPays": "A blackjack 3:2 arányban fizet",
+    "dealerStands": "Az osztó minden 17-nél megáll",
+    "close": "Bezárás"
   }
 }

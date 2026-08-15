@@ -23,7 +23,7 @@ import type { RouletteResult } from '@/types/RouletteResult'
 export type { BetType, RouletteBet, RouletteResult }
 
 // Payout multipliers for different bet types
-const PAYOUT_MULTIPLIERS = {
+export const PAYOUT_MULTIPLIERS = {
   straight: 35,
   split: 17,
   street: 11,
@@ -104,6 +104,14 @@ export const useRouletteStore = defineStore('roulette', () => {
   function clearBets() {
     if (gameState.value !== RouletteState.BETTING) return
     currentBets.value = []
+  }
+
+  /**
+   * Removes the most recently placed bet from the table
+   */
+  function undoLastBet() {
+    if (gameState.value !== RouletteState.BETTING) return
+    currentBets.value.pop()
   }
 
   /**
@@ -287,6 +295,7 @@ export const useRouletteStore = defineStore('roulette', () => {
     // Actions
     placeBet,
     clearBets,
+    undoLastBet,
     spin,
     reset,
     completeGame

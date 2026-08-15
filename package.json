@@ -10,7 +10,9 @@
     "test:unit": "vitest run",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:a11y": "playwright test",
+    "test:a11y": "playwright test --project=chromium",
+    "test:screenshots": "./scripts/screenshots.sh",
+    "test:screenshots:update": "./scripts/screenshots.sh --update-snapshots",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix"

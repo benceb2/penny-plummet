@@ -14,9 +14,14 @@
 - Use existing scripts in `package.json`:
   - `npm run test` (Vitest)
   - `npm run test:a11y` (Playwright + axe)
+  - `npm run test:screenshots` (Playwright visual comparison, needs Docker)
   - `npm run type-check`
   - `npm run lint`
 - Ensure any new UI is covered by a11y tests.
+- Screenshot baselines live in `tests/screenshots/__screenshots__` and are rendered
+  inside the Playwright container image so local runs match CI. Run them through
+  `npm run test:screenshots`, never a bare `npx playwright test`, and review the
+  diff before accepting new baselines with `npm run test:screenshots:update`.
 
 ## Workflow
 - Use the project’s existing tooling and scripts.

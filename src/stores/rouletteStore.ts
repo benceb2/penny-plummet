@@ -141,8 +141,8 @@ export const useRouletteStore = defineStore('roulette', () => {
    * Handle the spin result - update chips, log transactions, track achievements
    */
   function handleSpinResult(result: RouletteResult) {
-    if (result.totalWin > 0) {
-      // Player won something
+    if (result.totalWin > 0 && result.totalWin >= result.totalBet) {
+      // Player won something (net win or push)
       sessionStats.value.consecutiveWins++
       sessionStats.value.maxConsecutiveWins = Math.max(
         sessionStats.value.maxConsecutiveWins,
@@ -165,7 +165,7 @@ export const useRouletteStore = defineStore('roulette', () => {
             number: result.winningNumber
           }
         })
-      } else if (result.totalWin === result.totalBet) {
+      } else {
         // Push/break even
         transactionStore.addTransaction({
           amount: 0,
@@ -177,6 +177,22 @@ export const useRouletteStore = defineStore('roulette', () => {
           }
         })
       }
+    } else if (result.totalWin > 0) {
+      // Partial loss: some bets won, but the payout doesn't cover the total stake.
+      // Still a losing round overall, so it breaks a win streak like a complete loss.
+      sessionStats.value.consecutiveWins = 0
+
+      const netLoss = result.totalBet - result.totalWin
+      transactionStore.addTransaction({
+        amount: -netLoss,
+        type: 'loss',
+        game: 'roulette',
+        detailsKey: 'transactions.details.roulette.loss',
+        detailsParams: {
+          amount: formatIntAsCurrency(netLoss),
+          number: result.winningNumber
+        }
+      })
     } else {
       // Complete loss
       sessionStats.value.consecutiveWins = 0

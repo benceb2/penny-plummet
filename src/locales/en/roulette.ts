@@ -1,22 +1,9 @@
 export default {
   "roulette": {
     "title": "Roulette",
-    "stats": {
-      "show": "View Stats",
-      "hide": "Hide Stats",
-      "title": "Statistics",
-      "totalSpins": "Total Spins",
-      "totalWagered": "Total Wagered",
-      "biggestWin": "Biggest Win",
-      "winStreak": "Win Streak"
-    },
     "table": {
-      "title": "Roulette Table",
-      "quickBetsTitle": "Quick Bets",
-      "quickBetsHint": "Tap a group to spread your bet across its numbers.",
-      "numberGridTitle": "Number Grid",
-      "numberGridHint": "Tap any number to place a straight bet on it.",
-      "straightBetLabel": "Straight Bet",
+      "legend": "Betting table",
+      "outsideBets": "Outside bets",
       "zero": "0",
       "bets": {
         "dozen1": "1st 12",
@@ -28,26 +15,6 @@ export default {
         "black": "BLACK",
         "odd": "ODD",
         "high": "19-36"
-      }
-    },
-    "gameControls": {
-      "title": "Game Controls",
-      "betting": {
-        "title": "Betting Controls",
-        "currentBets": "Current Bets",
-        "betAmount": "Bet Amount",
-        "clearAllBets": "Clear All Bets",
-        "table": {
-          "type": "Type",
-          "numbers": "Numbers",
-          "amount": "Amount",
-          "total": "Total:"
-        }
-      },
-      "actions": {
-        "title": "Actions",
-        "spin": "Spin",
-        "newGame": "New Game"
       }
     },
     "betTypes": {
@@ -65,41 +32,46 @@ export default {
       "low": "Low",
       "high": "High"
     },
-    "ui": {
-      "clearBets": "Clear Bets",
-      "totalBet": "Total Bet",
-      "yourBets": "Your Bets",
-      "waitingForResult": "Waiting for Result...",
-      "totalAtRisk": "Total at Risk",
-      "tableTab": "Table",
-      "myBetsTab": "My Bets",
-      "noBetsTitle": "No bets placed yet",
-      "noBetsHint": "Switch to the table view to place your bets",
-      "spinning": "Spinning...",
-      "spinTheWheel": "Spin the Wheel",
-      "allIn": "ALL IN",
-      "ofBalance": "of balance",
-      "quickBetTitle": "{amount} ({label} of balance)",
-      "moreBets": "...and {count} more",
-      "quickBets": "Quick Bets",
-      "numberGrid": "Numbers",
-      "betSlip": "Bet Slip",
-      "balance": "Balance",
-      "mobilePanel": "Roulette mobile panel",
-      "viewBets": "View bets",
-      "stepAmount": "Set your bet amount",
-      "stepAmountHint": "Adjust stake",
-      "stepQuick": "Choose a quick bet",
-      "stepPlace": "Place your bets on the table",
-      "stepSpin": "Spin the wheel",
+    "aria": {
       "placeBetOnNumber": "Place bet on number {number}",
       "placeBetOnGroup": "Place bet on {label}"
     },
-    "results": {
-      "win": "You win {amount}!",
-      "loss": "You lose {amount}",
-      "push": "You broke even and {amount} was returned!",
-      "winningNumber": "Winning Number: {number}"
+    "history": {
+      "label": "Recent winning numbers",
+      "empty": "No spins yet"
+    },
+    "rules": {
+      "title": "Rules & payouts",
+      "summary": "This table uses standard European roulette rules with a single zero.",
+      "singleZero": "Pockets are numbered 0 to 36; 0 is green.",
+      "straightBets": "Straight bets cover one number and pay the highest odds.",
+      "outsideBets": "Outside bets (dozens, red/black, odd/even, low/high) cover more numbers for lower payouts.",
+      "zeroLoses": "A spin of 0 only pays straight bets on 0; every outside bet loses.",
+      "payoutsTitle": "Payouts",
+      "payoutStraight": "Straight (single number)",
+      "payoutDozen": "Dozen",
+      "payoutEvenMoney": "Even money (red, black, odd, even, 1-18, 19-36)",
+      "payoutRatio": "{multiplier}:1"
+    },
+    "tray": {
+      "undoLastBet": "Undo last bet",
+      "clear": "Clear",
+      "spinFor": "Spin · {amount}",
+      "spinning": "Spinning…",
+      "betsSummary": "Total bet {amount} · {count} bets",
+      "betsSummaryOne": "Total bet {amount} · 1 bet",
+      "noBets": "No bets placed"
+    },
+    "bets": {
+      "title": "Your bets",
+      "viewBets": "View bets",
+      "empty": "No bets placed yet."
+    },
+    "result": {
+      "win": "You win",
+      "loss": "You lose",
+      "push": "Push",
+      "winningNumber": "Winning number: {number}"
     }
   }
 }

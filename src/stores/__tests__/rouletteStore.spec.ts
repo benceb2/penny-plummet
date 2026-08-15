@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { useRouletteStore } from '../rouletteStore'
 import { RouletteState } from '@/types/RouletteState'
@@ -34,6 +34,15 @@ describe('Roulette Store', () => {
     store = useRouletteStore()
     // Reset mocks
     vi.clearAllMocks()
+  })
+
+  // Several tests below spy on Math.random via vi.spyOn, which (unlike
+  // vi.clearAllMocks() above) leaves the mocked implementation in place
+  // until explicitly restored. Without this, a leftover fixed return value
+  // leaks into whichever test file runs next in the same worker, breaking
+  // unrelated randomness (e.g. blackjackUtil's deck shuffle).
+  afterEach(() => {
+    vi.restoreAllMocks()
   })
 
   describe('Initial State', () => {
@@ -89,6 +98,31 @@ describe('Roulette Store', () => {
       store.clearBets()
       expect(store.currentBets).toHaveLength(0)
       expect(store.totalBet).toBe(0)
+    })
+  })
+
+  describe('Undo last bet', () => {
+    it('should remove only the most recently placed bet', () => {
+      store.placeBet('straight', [1], 100)
+      store.placeBet('split', [1, 2], 50)
+      store.undoLastBet()
+
+      expect(store.currentBets).toHaveLength(1)
+      expect(store.currentBets[0].type).toBe('straight')
+      expect(store.totalBet).toBe(100)
+    })
+
+    it('should do nothing when there are no bets', () => {
+      store.undoLastBet()
+      expect(store.currentBets).toHaveLength(0)
+    })
+
+    it('should not undo when not in betting state', () => {
+      store.placeBet('straight', [1], 100)
+      store.gameState = RouletteState.SPINNING
+      store.undoLastBet()
+
+      expect(store.currentBets).toHaveLength(1)
     })
   })
 

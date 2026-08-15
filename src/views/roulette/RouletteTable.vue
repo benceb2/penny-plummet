@@ -1,50 +1,48 @@
 <script setup lang="ts">
+/**
+ * The felt betting table: number grid + outside bets. Purely presentational;
+ * emits `place-bet` with the bet type and numbers it covers, the caller
+ * (RouletteView) decides the amount (the tray's selected chip) and calls the
+ * store. Below lg: outside bets sit in a compact 2-row group above a 3-column
+ * number grid with a full-width zero. At lg+: the classic 12x3 layout with a
+ * tall zero column, outside bets underneath.
+ */
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import ChipStack from '@/components/game/ChipStack.vue'
+import { pocketColor } from '@/utils/rouletteUtil'
 import type { BetType, RouletteBet } from '@/types/RouletteBet'
 
-interface Props {
+const props = withDefaults(defineProps<{
   currentBets: RouletteBet[]
-  currentBetAmount: number
-  onPlaceBet: (type: BetType, numbers: number[], amount: number) => void
-  formatCurrency: (amount: number) => string
-}
+  /** Disables every cell (fieldset) once betting has closed, while keeping the placed bets visible. */
+  disabled?: boolean
+}>(), {
+  disabled: false
+})
 
-const props = defineProps<Props>()
+const emit = defineEmits<{
+  placeBet: [type: BetType, numbers: number[]]
+}>()
+
 const { t } = useI18n()
-// Utility functions
-const redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
 
-const getNumberButtonClass = (num: number): string => {
-  const hasActiveBet = getBetAmount(num) > 0
-  const isRed = redNumbers.includes(num)
-  return `btn ${isRed ? 'btn-danger' : 'btn-dark'} ${hasActiveBet ? 'active position-relative' : ''}`
-}
-
-const getBetAmount = (num: number): number => {
-  return props.currentBets
-    .filter(bet =>
-      bet.numbers.includes(num) &&
-      (bet.type === 'straight' || bet.numbers.length === 1)
-    )
+const straightBetAmount = (num: number): number =>
+  props.currentBets
+    .filter((bet) => bet.type === 'straight' && bet.numbers[0] === num)
     .reduce((total, bet) => total + bet.amount, 0)
-}
 
-const getOutsideBetAmount = (betNumbers: number[]): number => {
-  return props.currentBets
-    .filter(bet =>
-      bet.numbers.length === betNumbers.length &&
-      bet.numbers.every(num => betNumbers.includes(num))
-    )
+const groupBetAmount = (numbers: number[]): number =>
+  props.currentBets
+    .filter((bet) =>
+      bet.numbers.length === numbers.length &&
+      bet.numbers.every((num) => numbers.includes(num)))
     .reduce((total, bet) => total + bet.amount, 0)
-}
 
-// Generate number grid (European style)
 const numberGrid = computed(() => {
-  const grid = []
-  // Create 3 rows
+  const grid: number[][] = []
   for (let row = 1; row <= 3; row++) {
-    const rowNumbers = []
+    const rowNumbers: number[] = []
     for (let col = 0; col < 12; col++) {
       rowNumbers.push(row + (col * 3))
     }
@@ -53,288 +51,318 @@ const numberGrid = computed(() => {
   return grid
 })
 
-// Mobile-friendly grid (3 columns x 12 rows)
 const mobileNumbers = computed(() => Array.from({ length: 36 }, (_, i) => i + 1))
 
-const outsideBets = computed(() => ({
-  dozens: [
-    { type: 'dozen' as BetType, label: t('roulette.table.bets.dozen1'), numbers: Array.from({ length: 12 }, (_, i) => i + 1), btnClass: 'btn-outline-primary' },
-    { type: 'dozen' as BetType, label: t('roulette.table.bets.dozen2'), numbers: Array.from({ length: 12 }, (_, i) => i + 13), btnClass: 'btn-outline-primary' },
-    { type: 'dozen' as BetType, label: t('roulette.table.bets.dozen3'), numbers: Array.from({ length: 12 }, (_, i) => i + 25), btnClass: 'btn-outline-primary' }
-  ],
-  evenMoney: [
-    { type: 'low' as BetType, label: t('roulette.table.bets.low'), numbers: Array.from({ length: 18 }, (_, i) => i + 1), btnClass: 'btn-outline-secondary' },
-    { type: 'even' as BetType, label: t('roulette.table.bets.even'), numbers: Array.from({ length: 18 }, (_, i) => (i + 1) * 2), btnClass: 'btn-outline-secondary' },
-    { type: 'red' as BetType, label: t('roulette.table.bets.red'), numbers: redNumbers, btnClass: 'btn-danger' },
-    { type: 'black' as BetType, label: t('roulette.table.bets.black'), numbers: [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35], btnClass: 'btn-dark' },
-    { type: 'odd' as BetType, label: t('roulette.table.bets.odd'), numbers: Array.from({ length: 18 }, (_, i) => i * 2 + 1), btnClass: 'btn-outline-secondary' },
-    { type: 'high' as BetType, label: t('roulette.table.bets.high'), numbers: Array.from({ length: 18 }, (_, i) => i + 19), btnClass: 'btn-outline-secondary' }
-  ]
-}))
+interface OutsideBet {
+  type: BetType
+  label: string
+  numbers: number[]
+  variant: 'red' | 'black' | 'neutral'
+}
+
+const dozenBets = computed<OutsideBet[]>(() => [
+  { type: 'dozen', label: t('roulette.table.bets.dozen1'), numbers: Array.from({ length: 12 }, (_, i) => i + 1), variant: 'neutral' },
+  { type: 'dozen', label: t('roulette.table.bets.dozen2'), numbers: Array.from({ length: 12 }, (_, i) => i + 13), variant: 'neutral' },
+  { type: 'dozen', label: t('roulette.table.bets.dozen3'), numbers: Array.from({ length: 12 }, (_, i) => i + 25), variant: 'neutral' }
+])
+
+const evenMoneyBets = computed<OutsideBet[]>(() => [
+  { type: 'low', label: t('roulette.table.bets.low'), numbers: Array.from({ length: 18 }, (_, i) => i + 1), variant: 'neutral' },
+  { type: 'even', label: t('roulette.table.bets.even'), numbers: Array.from({ length: 18 }, (_, i) => (i + 1) * 2), variant: 'neutral' },
+  { type: 'red', label: t('roulette.table.bets.red'), numbers: [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36], variant: 'red' },
+  { type: 'black', label: t('roulette.table.bets.black'), numbers: [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35], variant: 'black' },
+  { type: 'odd', label: t('roulette.table.bets.odd'), numbers: Array.from({ length: 18 }, (_, i) => i * 2 + 1), variant: 'neutral' },
+  { type: 'high', label: t('roulette.table.bets.high'), numbers: Array.from({ length: 18 }, (_, i) => i + 19), variant: 'neutral' }
+])
 </script>
 
 <template>
-  <div class="d-flex flex-column gap-3 gap-md-4">
-    <div class="roulette-card">
-      <div class="roulette-card-header">
-        <div>
-          <h3 class="roulette-section-title mb-1">{{ t('roulette.table.quickBetsTitle') }}</h3>
-          <p class="roulette-hint mb-0">{{ t('roulette.table.quickBetsHint') }}</p>
-        </div>
-      </div>
-      <div class="roulette-card-body">
-        <div class="row g-2">
-          <div v-for="bet in outsideBets.dozens" :key="bet.label" class="col-4">
-            <button
-              :class="`btn roulette-btn w-100 ${bet.btnClass} ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
-              :aria-label="t('roulette.ui.placeBetOnGroup', { label: bet.label })"
-              @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
-              {{ bet.label }}
-              <span
-                v-if="getOutsideBetAmount(bet.numbers) > 0"
-                class="position-absolute badge rounded-pill bg-warning text-dark roulette-bet-badge">
-                {{ formatCurrency(getOutsideBetAmount(bet.numbers)) }}
-              </span>
-            </button>
-          </div>
-        </div>
-
-        <div class="row g-2 mt-2">
-          <div v-for="bet in outsideBets.evenMoney" :key="bet.label" class="col-4 col-md-2">
-            <button
-              :class="`btn roulette-btn w-100 ${bet.btnClass} ${getOutsideBetAmount(bet.numbers) > 0 ? 'active position-relative' : ''}`"
-              :aria-label="t('roulette.ui.placeBetOnGroup', { label: bet.label })"
-              @click="onPlaceBet(bet.type, bet.numbers, currentBetAmount)">
-              {{ bet.label }}
-              <span
-                v-if="getOutsideBetAmount(bet.numbers) > 0"
-                class="position-absolute badge rounded-pill bg-warning text-dark roulette-bet-badge">
-                {{ formatCurrency(getOutsideBetAmount(bet.numbers)) }}
-              </span>
-            </button>
-          </div>
-        </div>
-      </div>
+  <fieldset class="roulette-table" :disabled="disabled" :class="{ 'roulette-table--disabled': disabled }">
+    <legend class="visually-hidden">{{ t('roulette.table.legend') }}</legend>
+    <div class="outside-bets" role="group" :aria-label="t('roulette.table.outsideBets')">
+      <button
+        v-for="bet in dozenBets"
+        :key="`dozen-${bet.label}`"
+        type="button"
+        class="outside-cell outside-cell--dozen"
+        :class="{ 'outside-cell--active': groupBetAmount(bet.numbers) > 0 }"
+        :aria-label="t('roulette.aria.placeBetOnGroup', { label: bet.label })"
+        @click="emit('placeBet', bet.type, bet.numbers)">
+        <span class="cell-label">{{ bet.label }}</span>
+        <ChipStack
+          v-if="groupBetAmount(bet.numbers) > 0"
+          aria-hidden="true"
+          class="cell-badge"
+          size="sm"
+          :amount="groupBetAmount(bet.numbers)"
+          :chips="[groupBetAmount(bet.numbers)]" />
+      </button>
+      <button
+        v-for="bet in evenMoneyBets"
+        :key="`even-${bet.label}`"
+        type="button"
+        class="outside-cell outside-cell--even-money"
+        :class="[`outside-cell--${bet.variant}`, { 'outside-cell--active': groupBetAmount(bet.numbers) > 0 }]"
+        :aria-label="t('roulette.aria.placeBetOnGroup', { label: bet.label })"
+        @click="emit('placeBet', bet.type, bet.numbers)">
+        <span class="cell-label">{{ bet.label }}</span>
+        <ChipStack
+          v-if="groupBetAmount(bet.numbers) > 0"
+          aria-hidden="true"
+          class="cell-badge"
+          size="sm"
+          :amount="groupBetAmount(bet.numbers)"
+          :chips="[groupBetAmount(bet.numbers)]" />
+      </button>
     </div>
 
-    <div class="roulette-card">
-      <div class="roulette-card-header">
-        <div>
-          <h3 class="roulette-section-title mb-1">{{ t('roulette.table.numberGridTitle') }}</h3>
-          <p class="roulette-hint mb-0">{{ t('roulette.table.numberGridHint') }}</p>
-        </div>
-        <div class="roulette-chip d-none d-md-inline-flex">
-          {{ t('roulette.table.straightBetLabel') }}
-        </div>
-      </div>
-      <div class="roulette-card-body">
-        <div class="roulette-grid-wrap d-none d-md-grid">
+    <div class="number-board">
+      <div class="number-board-mobile d-lg-none">
+        <button
+          type="button"
+          class="number-cell number-cell--zero number-cell--zero-mobile"
+          :class="{ 'number-cell--active': straightBetAmount(0) > 0 }"
+          :aria-label="t('roulette.aria.placeBetOnNumber', { number: 0 })"
+          @click="emit('placeBet', 'straight', [0])">
+          <span class="cell-label">{{ t('roulette.table.zero') }}</span>
+          <ChipStack
+            v-if="straightBetAmount(0) > 0"
+            aria-hidden="true"
+            class="cell-badge"
+            size="sm"
+            :amount="straightBetAmount(0)"
+            :chips="[straightBetAmount(0)]" />
+        </button>
+        <div class="number-grid number-grid-mobile">
           <button
-            :class="`btn btn-success roulette-zero-btn roulette-btn ${getBetAmount(0) > 0 ? 'active position-relative' : ''}`"
-            :aria-label="t('roulette.ui.placeBetOnNumber', { number: 0 })"
-            @click="onPlaceBet('straight', [0], currentBetAmount)">
-            {{ t('roulette.table.zero') }}
-            <span
-              v-if="getBetAmount(0) > 0"
-              class="position-absolute badge rounded-pill bg-warning text-dark roulette-bet-badge">
-              {{ formatCurrency(getBetAmount(0)) }}
-            </span>
+            v-for="num in mobileNumbers"
+            :key="num"
+            type="button"
+            class="number-cell"
+            :class="[`number-cell--${pocketColor(num)}`, { 'number-cell--active': straightBetAmount(num) > 0 }]"
+            :aria-label="t('roulette.aria.placeBetOnNumber', { number: num })"
+            @click="emit('placeBet', 'straight', [num])">
+            <span class="cell-label">{{ num }}</span>
+            <ChipStack
+              v-if="straightBetAmount(num) > 0"
+              aria-hidden="true"
+              class="cell-badge"
+              size="sm"
+              :amount="straightBetAmount(num)"
+              :chips="[straightBetAmount(num)]" />
           </button>
-          <div class="roulette-number-grid roulette-number-grid-desktop">
-            <template v-for="(row, rowIndex) in numberGrid" :key="rowIndex">
-              <button
-                v-for="num in row"
-                :key="num"
-                :class="getNumberButtonClass(num)"
-                :aria-label="t('roulette.ui.placeBetOnNumber', { number: num })"
-                class="roulette-number-btn roulette-btn fw-bold"
-                @click="onPlaceBet('straight', [num], currentBetAmount)">
-                {{ num }}
-                <span
-                  v-if="getBetAmount(num) > 0"
-                  class="position-absolute badge rounded-pill bg-warning text-dark roulette-bet-badge">
-                  {{ formatCurrency(getBetAmount(num)) }}
-                </span>
-              </button>
-            </template>
-          </div>
         </div>
+      </div>
 
-        <div class="d-md-none">
-          <div class="mb-2">
+      <div class="number-board-desktop d-none d-lg-flex">
+        <button
+          type="button"
+          class="number-cell number-cell--zero number-cell--zero-desktop"
+          :class="{ 'number-cell--active': straightBetAmount(0) > 0 }"
+          :aria-label="t('roulette.aria.placeBetOnNumber', { number: 0 })"
+          @click="emit('placeBet', 'straight', [0])">
+          <span class="cell-label">{{ t('roulette.table.zero') }}</span>
+          <ChipStack
+            v-if="straightBetAmount(0) > 0"
+            aria-hidden="true"
+            class="cell-badge"
+            size="sm"
+            :amount="straightBetAmount(0)"
+            :chips="[straightBetAmount(0)]" />
+        </button>
+        <div class="number-grid number-grid-desktop">
+          <template v-for="(row, rowIndex) in numberGrid" :key="rowIndex">
             <button
-              :class="`btn btn-success roulette-zero-btn roulette-btn w-100 ${getBetAmount(0) > 0 ? 'active position-relative' : ''}`"
-              :aria-label="t('roulette.ui.placeBetOnNumber', { number: 0 })"
-              @click="onPlaceBet('straight', [0], currentBetAmount)">
-              {{ t('roulette.table.zero') }}
-              <span
-                v-if="getBetAmount(0) > 0"
-                class="position-absolute badge rounded-pill bg-warning text-dark roulette-bet-badge">
-                {{ formatCurrency(getBetAmount(0)) }}
-              </span>
-            </button>
-          </div>
-          <div class="roulette-number-grid roulette-number-grid-mobile">
-            <button
-              v-for="num in mobileNumbers"
+              v-for="num in row"
               :key="num"
-              :class="getNumberButtonClass(num)"
-              :aria-label="t('roulette.ui.placeBetOnNumber', { number: num })"
-              class="roulette-number-btn roulette-btn fw-bold"
-              @click="onPlaceBet('straight', [num], currentBetAmount)">
-              {{ num }}
-              <span
-                v-if="getBetAmount(num) > 0"
-                class="position-absolute badge rounded-pill bg-warning text-dark roulette-bet-badge">
-                {{ formatCurrency(getBetAmount(num)) }}
-              </span>
+              type="button"
+              class="number-cell"
+              :class="[`number-cell--${pocketColor(num)}`, { 'number-cell--active': straightBetAmount(num) > 0 }]"
+              :aria-label="t('roulette.aria.placeBetOnNumber', { number: num })"
+              @click="emit('placeBet', 'straight', [num])">
+              <span class="cell-label">{{ num }}</span>
+              <ChipStack
+                v-if="straightBetAmount(num) > 0"
+                aria-hidden="true"
+                class="cell-badge"
+                size="sm"
+                :amount="straightBetAmount(num)"
+                :chips="[straightBetAmount(num)]" />
             </button>
-          </div>
+          </template>
         </div>
       </div>
     </div>
-  </div>
+  </fieldset>
 </template>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700;800&display=swap');
-
-.roulette-hint {
-  color: #475569;
-  font-size: 0.95rem;
-}
-
-.roulette-card {
-  background: #ffffff;
-  color: #1e293b;
-  border: 1px solid #e2e8f0;
-  border-radius: 18px;
-  padding: 1rem;
-  font-family: "Atkinson Hyperlegible", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-}
-
-/* The global dark-ground .btn-outline-primary override (gold text) fails
-   against this card's white background; restore Bootstrap's stock outline
-   styling for this light-card context. */
-.roulette-card .btn-outline-primary {
-  --bs-btn-color: #0d6efd;
-  --bs-btn-border-color: #0d6efd;
-  --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #0d6efd;
-  --bs-btn-hover-border-color: #0d6efd;
-  --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #0d6efd;
-  --bs-btn-active-border-color: #0d6efd;
-}
-
-.roulette-card-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 0.75rem;
-}
-
-.roulette-card-body {
+.roulette-table {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 10px;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
 }
 
-.roulette-section-title {
-  font-size: 1.1rem;
-  font-weight: 700;
+.roulette-table--disabled {
+  opacity: .7;
 }
 
-.roulette-chip {
+.outside-bets {
+  order: 1;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+}
+
+.number-board {
+  order: 2;
+}
+
+@media (min-width: 992px) {
+  .outside-bets {
+    order: 2;
+    grid-template-columns: repeat(12, 1fr);
+    margin-left: calc(64px + 6px);
+  }
+
+  .outside-cell--dozen {
+    grid-column: span 4;
+  }
+
+  .outside-cell--even-money {
+    grid-column: span 2;
+  }
+
+  .number-board {
+    order: 1;
+  }
+}
+
+.outside-cell {
+  min-height: 44px;
+  border-radius: 8px;
+  padding: 4px 3px;
+  display: flex;
   align-items: center;
-  background: #eff6ff;
-  color: #1d4ed8;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 0.35rem 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.roulette-btn {
-  min-height: 44px;
-  font-weight: 700;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.roulette-btn:focus-visible {
-  outline: 3px solid rgba(37, 99, 235, 0.4);
-  outline-offset: 2px;
-}
-
-.roulette-bet-badge {
-  font-size: 0.65rem;
-  z-index: 5;
-  top: -8px;
-  right: -8px;
-}
-
-.roulette-grid-wrap {
-  --roulette-grid-gap: 0.5rem;
-  --roulette-row-height: 46px;
-  display: grid;
-  grid-template-columns: 70px 1fr;
-  gap: var(--roulette-grid-gap);
-  align-items: start;
-}
-
-.roulette-number-grid {
-  display: grid;
-  gap: 0.5rem;
-}
-
-.roulette-number-grid-desktop {
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  grid-auto-rows: var(--roulette-row-height);
-}
-
-.roulette-number-grid-mobile {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-auto-rows: 48px;
-}
-
-.roulette-number-btn {
-  width: 100%;
-  min-height: 44px;
+  justify-content: center;
+  text-align: center;
   position: relative;
-  overflow: visible;
+  background: rgba(0, 0, 0, .22);
+  border: 1px solid var(--pp-line);
+  color: var(--pp-cream);
 }
 
-.roulette-zero-btn {
-  width: 100%;
-  height: calc((var(--roulette-row-height) * 3) + (var(--roulette-grid-gap) * 2));
-  font-size: 1.2rem;
+.outside-cell--dozen {
+  grid-column: span 2;
+}
+
+.outside-cell--even-money {
+  grid-column: span 1;
+}
+
+.outside-cell--red {
+  background: var(--pp-card-red);
+  border-color: transparent;
+}
+
+.outside-cell--black {
+  background: var(--pp-card-black);
+  border-color: transparent;
+}
+
+.outside-cell--active {
+  box-shadow: 0 0 0 2px var(--pp-surface), 0 0 0 4px var(--pp-gold);
+}
+
+.cell-label {
+  font-family: var(--pp-font-ui);
+  font-size: .6875rem;
   font-weight: 800;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  line-height: 1.15;
 }
 
-.btn.active {
-  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.3);
+.number-board-mobile,
+.number-board-desktop {
+  display: flex;
+  gap: 6px;
 }
 
-@media (max-width: 767.98px) {
-  .roulette-card {
-    padding: 0.85rem;
-  }
+.number-board-mobile {
+  flex-direction: column;
+}
 
-  .roulette-title {
-    font-size: 1.4rem;
-  }
+.number-cell {
+  min-height: 44px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, .35);
+  color: var(--pp-cream);
+}
 
-  .roulette-zero-btn {
-    height: auto;
-    padding: 0.65rem 1rem;
-  }
+.number-cell .cell-label {
+  font-size: .9375rem;
+  text-transform: none;
+  letter-spacing: normal;
+  font-variant-numeric: tabular-nums;
+}
+
+.number-cell--red {
+  background: var(--pp-card-red);
+}
+
+.number-cell--black {
+  background: var(--pp-card-black);
+}
+
+.number-cell--zero {
+  background: #1C8A54;
+}
+
+.number-cell--active {
+  box-shadow: 0 0 0 2px var(--pp-surface), 0 0 0 4px var(--pp-gold);
+}
+
+.number-cell--zero-mobile {
+  width: 100%;
+}
+
+.number-grid-mobile {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.number-board-desktop .number-cell--zero-desktop {
+  flex: 0 0 64px;
+}
+
+.number-grid-desktop {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-auto-rows: minmax(44px, 1fr);
+  gap: 6px;
+}
+
+.cell-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  z-index: 2;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .roulette-btn {
+  .number-cell,
+  .outside-cell {
     transition: none;
   }
 }

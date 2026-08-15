@@ -1,409 +1,532 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRouletteStore } from '@/stores/rouletteStore'
-import { useUserStore } from '@/stores/userStore'
-import { formatIntAsCurrency } from '@/utils/numberFormatUtil'
+
+import GameScreen from '@/components/game/GameScreen.vue'
+import GameTray from '@/components/game/GameTray.vue'
+import ChipButton from '@/components/game/ChipButton.vue'
+import ResultBanner from '@/components/game/ResultBanner.vue'
+import RulesSheet from '@/components/game/RulesSheet.vue'
 import RouletteSpinner from '@/views/roulette/RouletteSpinner.vue'
 import RouletteTable from '@/views/roulette/RouletteTable.vue'
-import BaseLayout from '@/components/layout/BaseLayout.vue'
-import GameResult from '@/components/GameResult.vue'
+import { useRouletteStore, PAYOUT_MULTIPLIERS } from '@/stores/rouletteStore'
+import { useUserStore } from '@/stores/userStore'
 import { RouletteState } from '@/types/RouletteState'
 import type { BetType } from '@/types/RouletteBet'
-import type { RouletteResult } from '@/types/RouletteResult'
+import { CHIP_DENOMINATIONS } from '@/utils/chipUtil'
+import { pocketColor } from '@/utils/rouletteUtil'
+import { formatIntAsCurrency } from '@/utils/numberFormatUtil'
 
 const { t } = useI18n()
 
 const gameStore = useRouletteStore()
 const userStore = useUserStore()
-const currentBetAmount = ref(100)
 
-// Game message formatting
-function getGameResultMessage(result: RouletteResult): string {
-  if (result.totalWin > result.totalBet) {
-    return t('roulette.results.win', { amount: formatIntAsCurrency(result.totalWin - result.totalBet) })
-  } else if (result.totalWin === result.totalBet) {
-    return t('roulette.results.push', { amount: formatIntAsCurrency(result.totalBet) })
-  } else {
-    return t('roulette.results.loss', { amount: formatIntAsCurrency(result.totalBet) })
+const showRules = ref(false)
+const showBets = ref(false)
+const showResultBanner = ref(false)
+
+// Recently completed winning numbers, most recent first. Presentation-only
+// (like blackjack's local roundId/lastBet refs) so it does not survive a
+// reload, which is fine: a fresh session simply starts with an empty strip.
+const winningHistory = ref<number[]>([])
+
+const availableChips = computed(() => [...CHIP_DENOMINATIONS].reverse().filter((value) => value <= userStore.chips))
+const hasInsufficientChips = computed(() => userStore.chips < 1)
+
+// The chip picker's current selection: every table tap places this amount.
+// Falls back to the largest still-affordable denomination if a loss makes
+// the previous selection unaffordable.
+const selectedChip = ref(availableChips.value[0] ?? 1)
+watch(availableChips, (chips) => {
+  if (chips.length && !chips.includes(selectedChip.value)) {
+    selectedChip.value = chips[chips.length - 1]
   }
-}
+})
 
-// Game action handlers
-function placeBet(betType: BetType, numbers: number[], amount: number) {
-  if (amount <= 0 || amount > userStore.chips) return
-  const potentialTotalBet = gameStore.totalBet + amount
-  if (potentialTotalBet > userStore.chips) return
+const hasBets = computed(() => gameStore.currentBets.length > 0)
 
-  gameStore.placeBet(betType, numbers, amount)
+function handlePlaceBet(type: BetType, numbers: number[]) {
+  gameStore.placeBet(type, numbers, selectedChip.value)
 }
 
 async function handleSpin() {
   if (!gameStore.isSpinAllowed) return
-
-  try {
-    await gameStore.spin()
-  } catch (error) {
-    console.error('Error during spin:', error)
-  }
+  await gameStore.spin()
 }
 
-function handleNewGame() {
+function handleResultClose() {
   gameStore.reset()
 }
 
-const maxBetAmount = computed(() => userStore.chips)
-
-// Quick bet presets with percentages
-const quickBets = computed(() => {
-  const chips = userStore.chips
-  if (chips <= 0) return []
-
-  const bets = [
-    { amount: Math.max(1, Math.floor(chips * 0.05)), label: '5%' },
-    { amount: Math.max(1, Math.floor(chips * 0.10)), label: '10%' },
-    { amount: Math.max(1, Math.floor(chips * 0.25)), label: '25%' },
-    { amount: Math.max(1, Math.floor(chips * 0.50)), label: '50%' },
-    { amount: chips, label: t('roulette.ui.allIn'), isAllIn: true }
-  ]
-
-  // Filter out duplicates and very small amounts
-  return bets.filter((bet, index, self) =>
-    bet.amount >= 1 &&
-    self.findIndex(b => b.amount === bet.amount) === index
-  )
+watch(() => gameStore.gameState, (state) => {
+  showResultBanner.value = state === RouletteState.COMPLETE
+  if (state === RouletteState.COMPLETE && gameStore.lastResult) {
+    winningHistory.value = [gameStore.lastResult.winningNumber, ...winningHistory.value].slice(0, 8)
+  }
 })
+
+const betsSummary = computed(() => {
+  if (!hasBets.value) return t('roulette.tray.noBets')
+  const amount = formatIntAsCurrency(gameStore.totalBet)
+  const count = gameStore.currentBets.length
+  return count === 1
+    ? t('roulette.tray.betsSummaryOne', { amount })
+    : t('roulette.tray.betsSummary', { amount, count })
+})
+
+const spinLabel = computed(() => t('roulette.tray.spinFor', { amount: formatIntAsCurrency(gameStore.totalBet) }))
 
 function getBetTypeLabel(type: BetType): string {
   return t(`roulette.betTypes.${type}`)
 }
 
-// Get current bet percentage
-const currentBetPercentage = computed(() => {
-  if (userStore.chips === 0) return 0
-  return Math.round((currentBetAmount.value / userStore.chips) * 100)
-})
-
-// Set initial bet amount to a reasonable default
-watch(maxBetAmount, (newMaxAmount) => {
-  if (currentBetAmount.value > newMaxAmount) {
-    currentBetAmount.value = Math.min(Math.floor(newMaxAmount * 0.1), newMaxAmount)
+const resultData = computed(() => {
+  if (gameStore.gameState !== RouletteState.COMPLETE || !gameStore.lastResult) {
+    return { type: 'push' as const, amount: 0, headline: '' }
   }
+
+  const { totalWin, totalBet } = gameStore.lastResult
+  if (totalWin > totalBet) return { type: 'win' as const, amount: totalWin - totalBet, headline: t('roulette.result.win') }
+  if (totalWin === totalBet) return { type: 'push' as const, amount: 0, headline: t('roulette.result.push') }
+  return { type: 'loss' as const, amount: totalBet - totalWin, headline: t('roulette.result.loss') }
 })
 
-// Initialize current bet amount
-if (currentBetAmount.value === 100 && userStore.chips < 100) {
-  currentBetAmount.value = Math.min(10, userStore.chips)
-}
+const resultDetail = computed(() =>
+  gameStore.lastResult ? t('roulette.result.winningNumber', { number: gameStore.lastResult.winningNumber }) : undefined
+)
+
+const payoutRows = computed(() => [
+  { label: t('roulette.rules.payoutStraight'), multiplier: PAYOUT_MULTIPLIERS.straight },
+  { label: t('roulette.rules.payoutDozen'), multiplier: PAYOUT_MULTIPLIERS.dozen },
+  { label: t('roulette.rules.payoutEvenMoney'), multiplier: PAYOUT_MULTIPLIERS.red }
+])
 </script>
 
 <template>
-  <BaseLayout :title="t('roulette.title')" bootstrapIcon="dice-5">
+  <GameScreen :title="t('roulette.title')" wide>
+    <template #stage>
+      <div class="felt">
+        <div class="stage-top">
+          <button
+            type="button"
+            class="rules-trigger"
+            :aria-label="t('game.rulesAndPayouts')"
+            @click="showRules = true">
+            <i class="bi bi-info-circle" aria-hidden="true"></i>
+          </button>
+        </div>
 
-    <GameResult
-      :show="gameStore.lastResult !== null && gameStore.gameState === RouletteState.COMPLETE"
-      :auto-dismiss="false"
-      :result="gameStore.lastResult ? {
-        type: gameStore.lastResult.totalWin > gameStore.lastResult.totalBet ? 'win' :
-          gameStore.lastResult.totalWin === gameStore.lastResult.totalBet ? 'push' : 'loss',
-        amount: gameStore.lastResult.totalWin > gameStore.lastResult.totalBet ?
-          gameStore.lastResult.totalWin - gameStore.lastResult.totalBet :
-          gameStore.lastResult.totalBet,
-        message: getGameResultMessage(gameStore.lastResult),
-        details: t('roulette.results.winningNumber', { number: gameStore.lastResult.winningNumber })
-      } : { type: 'loss', amount: 0 }"
-      @close="handleNewGame" />
-
-    
-    <div v-if="gameStore.gameState === RouletteState.SPINNING" class="mb-2 mb-md-3">
-      <RouletteSpinner
-        :is-spinning="gameStore.gameState === RouletteState.SPINNING"
-        :winning-number="gameStore.winningNumber"
-        @spin-complete="gameStore.completeGame" />
-
-      
-      <div class="row g-2 mt-2">
-        <div class="col-md-6">
-          <div class="card bg-light">
-            <div class="card-body">
-              <p class="card-title h6">{{ t('roulette.ui.yourBets') }}</p>
-              <div class="small">
-                <div v-for="(bet, idx) in gameStore.currentBets.slice(0, 5)" :key="idx"
-                  class="d-flex justify-content-between mb-1">
-                  <span>{{ getBetTypeLabel(bet.type) }} [{{ bet.numbers.slice(0, 3).join(', ') }}{{ bet.numbers.length >
-                    3 ? '...' : ''
-                  }}]</span>
-                  <strong>{{ formatIntAsCurrency(bet.amount) }}</strong>
-                </div>
-                <div v-if="gameStore.currentBets.length > 5" class="text-muted">
-                  {{ t('roulette.ui.moreBets', { count: gameStore.currentBets.length - 5 }) }}
-                </div>
-              </div>
+        <div class="table-wrap">
+          <div class="wheel-area">
+            <RouletteSpinner
+              v-if="gameStore.gameState === RouletteState.SPINNING"
+              :is-spinning="gameStore.gameState === RouletteState.SPINNING"
+              :winning-number="gameStore.winningNumber"
+              @spin-complete="gameStore.completeGame" />
+            <div v-else class="history-strip" role="group" :aria-label="t('roulette.history.label')">
+              <span v-if="winningHistory.length === 0" class="history-empty">{{ t('roulette.history.empty') }}</span>
+              <span
+                v-for="(number, index) in winningHistory"
+                :key="index"
+                class="history-pocket"
+                :class="`history-pocket--${pocketColor(number)}`">
+                {{ number }}
+              </span>
             </div>
           </div>
-        </div>
-        <div class="col-md-6">
-          <div class="card bg-light">
-            <div class="card-body">
-              <p class="card-title h6">{{ t('roulette.ui.waitingForResult') }}</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <span>{{ t('roulette.ui.totalAtRisk') }}:</span>
-                <p class="h4 mb-0 text-danger">{{ formatIntAsCurrency(gameStore.totalBet) }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    
-    <div class="row g-3 roulette-layout" v-if="gameStore.gameState === RouletteState.BETTING">
-      <div class="col-12 col-lg-8 order-2 order-lg-1">
-        <div class="card shadow-sm h-100">
-          <div class="card-header bg-white d-flex align-items-center justify-content-between">
-            <h2 class="h6 mb-0">{{ t('roulette.table.title') }}</h2>
-          </div>
-          <div class="card-body">
-            <RouletteTable
-              :current-bets="gameStore.currentBets"
-              :current-bet-amount="currentBetAmount"
-              :on-place-bet="placeBet"
-              :format-currency="formatIntAsCurrency" />
-          </div>
+          <RouletteTable
+            :current-bets="gameStore.currentBets"
+            :disabled="gameStore.gameState !== RouletteState.BETTING"
+            @place-bet="handlePlaceBet" />
         </div>
       </div>
 
-      <div class="col-12 col-lg-4 order-1 order-lg-2">
-        <div class="card bet-slip-card h-100 shadow-sm">
-          <div class="card-header bg-white">
-            <div class="d-flex align-items-center justify-content-between">
-              <p class="h6 mb-0">{{ t('roulette.ui.betSlip') }}</p>
-              <span class="badge bg-light text-dark">{{ formatIntAsCurrency(userStore.chips) }}</span>
+      <ResultBanner
+        :show="showResultBanner"
+        :type="resultData.type"
+        :amount="resultData.amount"
+        :headline="resultData.headline"
+        :detail="resultDetail"
+        @close="handleResultClose" />
+    </template>
+
+    <template #tray>
+      <GameTray>
+        <template v-if="gameStore.gameState === RouletteState.BETTING">
+          <div v-if="hasInsufficientChips" class="insufficient-funds">
+            <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
+            <div>
+              <strong>{{ t('betAmountSelector.insufficientFunds.title') }}</strong>
+              <span>{{ t('betAmountSelector.insufficientFunds.description') }}</span>
             </div>
           </div>
-          <div class="card-body">
-            <div class="mb-3">
-              <div class="d-flex align-items-center justify-content-between mb-1">
-                <div class="step-label">
-                  <span class="badge bg-secondary me-2">1</span>
-                  <span class="text-muted">{{ t('roulette.ui.stepAmount') }}</span>
-                </div>
-                <small class="text-muted">{{ t('roulette.ui.stepAmountHint') }}</small>
-              </div>
-              <label for="roulette-bet-amount" class="visually-hidden">
-                {{ t('roulette.gameControls.betting.betAmount') }}
-              </label>
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">
-                  <i class="bi bi-coin text-warning" aria-hidden="true"></i>
-                </span>
-                <input
-                  id="roulette-bet-amount"
-                  type="number"
-                  class="form-control"
-                  v-model="currentBetAmount"
-                  :max="maxBetAmount"
-                  :min="1"
-                  :disabled="gameStore.gameState !== RouletteState.BETTING">
-                <span class="input-group-text text-muted">
-                  {{ currentBetPercentage }}%
-                </span>
-              </div>
+          <template v-else>
+            <div class="chip-row">
+              <ChipButton
+                v-for="value in availableChips"
+                :key="value"
+                :value="value"
+                :selected="value === selectedChip"
+                @select="selectedChip = value" />
             </div>
 
-            <div class="mb-3">
-              <div class="d-flex align-items-center justify-content-between mb-2">
-                <div class="step-label">
-                  <span class="badge bg-secondary me-2">2</span>
-                  <span class="text-muted">{{ t('roulette.ui.stepQuick') }}</span>
-                </div>
-              </div>
-              <div class="row g-2 quick-bets">
-                <div v-for="bet in quickBets" :key="bet.amount" class="col-4 col-sm-3 col-lg-6">
-                  <button
-                    class="btn btn-sm w-100 text-nowrap rounded-pill"
-                    :class="[
-                      bet.isAllIn ? 'btn-danger all-in-btn fw-bold' : '',
-                      !bet.isAllIn && currentBetAmount === bet.amount ? 'btn-primary' : '',
-                      !bet.isAllIn && currentBetAmount !== bet.amount ? 'btn-outline-dark' : ''
-                    ]"
-                    @click="currentBetAmount = bet.amount"
-                    :disabled="gameStore.gameState !== RouletteState.BETTING"
-                    :title="t('roulette.ui.quickBetTitle', { amount: formatIntAsCurrency(bet.amount), label: bet.label })">
-                    <span class="text-white" v-if="bet.isAllIn">{{ bet.label }}</span>
-                    <span v-else>
-                      {{ formatIntAsCurrency(bet.amount) }}
-                      <small class="ms-1 text-body">({{ bet.label }})</small>
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <div class="d-flex align-items-center justify-content-between mb-2">
-                <div class="step-label">
-                  <span class="badge bg-secondary me-2">3</span>
-                  <span class="text-muted">{{ t('roulette.ui.stepPlace') }}</span>
-                </div>
-                <span class="badge bg-primary rounded-pill">
-                  {{ gameStore.currentBets.length }}
-                </span>
-              </div>
-              <div v-if="gameStore.currentBets.length > 0" class="mt-2">
-                <details class="bet-details">
-                  <summary class="text-primary">
-                    {{ t('roulette.ui.viewBets') }}
-                  </summary>
-                  <div class="list-group bet-list mt-2">
-                    <div
-                      v-for="(bet, index) in gameStore.currentBets"
-                      :key="index"
-                      class="list-group-item d-flex justify-content-between align-items-center">
-                      <div class="bet-list-label">
-                        <strong>{{ getBetTypeLabel(bet.type) }}</strong>
-                        <small class="text-muted ms-2">
-                          [{{ bet.numbers.join(', ') }}]
-                        </small>
-                      </div>
-                      <span class="badge bg-primary rounded-pill">
-                        {{ formatIntAsCurrency(bet.amount) }}
-                      </span>
-                    </div>
-                  </div>
-                </details>
-              </div>
-              <div v-else class="text-center py-3 text-muted small">
-                <i class="bi bi-inbox d-block mb-2" aria-hidden="true"></i>
-                <div>{{ t('roulette.ui.noBetsTitle') }}</div>
-                <div class="text-muted">{{ t('roulette.ui.noBetsHint') }}</div>
-              </div>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center bet-total gap-2">
-              <div class="d-flex align-items-center gap-2">
-                <span class="text-muted">{{ t('roulette.ui.totalBet') }}</span>
-                <strong class="text-primary">{{ formatIntAsCurrency(gameStore.totalBet) }}</strong>
-              </div>
+            <div class="tray-summary">
+              <span class="tray-summary-text">{{ betsSummary }}</span>
               <button
-                class="btn btn-outline-danger btn-sm"
-                @click="gameStore.clearBets()"
-                :disabled="gameStore.currentBets.length === 0 || gameStore.gameState !== RouletteState.BETTING">
-                <i class="bi bi-x-circle me-2" aria-hidden="true"></i>{{ t('roulette.ui.clearBets') }}
+                type="button"
+                class="view-bets-link"
+                :disabled="!hasBets"
+                @click="showBets = true">
+                {{ t('roulette.bets.viewBets') }}
               </button>
             </div>
-          </div>
-          <div class="card-footer bg-white border-0">
-            <div class="step-label mb-2">
-              <span class="badge bg-secondary me-2">4</span>
-              <span class="text-muted">{{ t('roulette.ui.stepSpin') }}</span>
+
+            <div class="cta-row">
+              <button
+                type="button"
+                class="btn btn-outline-light cta-icon-btn"
+                :aria-label="t('roulette.tray.undoLastBet')"
+                :disabled="!hasBets"
+                @click="gameStore.undoLastBet()">
+                <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i>
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-light cta-btn cta-btn--clear"
+                :disabled="!hasBets"
+                @click="gameStore.clearBets()">
+                {{ t('roulette.tray.clear') }}
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary cta-btn cta-btn--spin cta-btn--amount"
+                :disabled="!gameStore.isSpinAllowed"
+                @click="handleSpin">
+                {{ spinLabel }}
+              </button>
             </div>
-            <button
-              class="btn btn-success w-100"
-              @click="handleSpin"
-              :disabled="!gameStore.isSpinAllowed">
-              <i class="bi bi-play-circle-fill me-2" aria-hidden="true"></i>
-              <span>{{ t('roulette.ui.spinTheWheel') }}</span>
-            </button>
-          </div>
-        </div>
+          </template>
+        </template>
+
+        <template v-else-if="gameStore.gameState === RouletteState.SPINNING">
+          <div class="spin-status">{{ t('roulette.tray.spinning') }}</div>
+        </template>
+      </GameTray>
+    </template>
+  </GameScreen>
+
+  <RulesSheet v-model:open="showRules" :title="t('roulette.rules.title')">
+    <p class="text-body-secondary">{{ t('roulette.rules.summary') }}</p>
+    <ul class="rules-list">
+      <li>{{ t('roulette.rules.singleZero') }}</li>
+      <li>{{ t('roulette.rules.straightBets') }}</li>
+      <li>{{ t('roulette.rules.outsideBets') }}</li>
+      <li>{{ t('roulette.rules.zeroLoses') }}</li>
+    </ul>
+
+    <h3 class="rules-payouts-title">{{ t('roulette.rules.payoutsTitle') }}</h3>
+    <dl class="rules-payouts">
+      <div v-for="row in payoutRows" :key="row.label">
+        <dt>{{ row.label }}</dt>
+        <dd>{{ t('roulette.rules.payoutRatio', { multiplier: row.multiplier }) }}</dd>
       </div>
-    </div>
-  </BaseLayout>
+    </dl>
+  </RulesSheet>
+
+  <RulesSheet v-model:open="showBets" :title="t('roulette.bets.title')">
+    <p v-if="!hasBets" class="text-body-secondary">{{ t('roulette.bets.empty') }}</p>
+    <ul v-else class="bets-list">
+      <li v-for="(bet, index) in gameStore.currentBets" :key="index" class="bets-list-item">
+        <span>
+          {{ getBetTypeLabel(bet.type) }}
+          <template v-if="bet.type === 'straight'"> ({{ bet.numbers[0] }})</template>
+        </span>
+        <strong>{{ formatIntAsCurrency(bet.amount) }}</strong>
+      </li>
+    </ul>
+  </RulesSheet>
 </template>
 
 <style scoped>
-.all-in-btn {
-  background-color: #b02a37;
-  border-color: #842029;
+.felt {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .625rem;
+  padding: .625rem .875rem .75rem;
+  border-radius: 22px;
+  background: radial-gradient(120% 90% at 50% 45%, var(--pp-felt) 0%, var(--pp-felt-deep) 78%, #0A2A1E 100%);
+  box-shadow: inset 0 0 0 1px rgba(225, 178, 90, .14), inset 0 0 60px rgba(0, 0, 0, .35);
+  touch-action: manipulation;
+  user-select: none;
 }
 
-.all-in-btn:hover {
-  background-color: #842029;
-  border-color: #661d28;
+.felt::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border-radius: 22px;
+  border: 1px solid rgba(225, 178, 90, .16);
+  pointer-events: none;
 }
 
-.bet-slip-card {
-  position: sticky;
-  top: 1rem;
+.stage-top {
+  flex: 0 0 auto;
+  display: flex;
 }
 
-.quick-bets .btn {
-  width: 100%;
+.rules-trigger {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, .28);
+  border: 1px solid rgba(244, 238, 223, .18);
+  color: var(--pp-cream);
+  opacity: .85;
 }
 
-/* .text-body forces the themed body colour, which is too light against the
-   gold btn-primary background once a quick bet is selected. Let it inherit
-   the button's own (contrast-correct) text colour instead. */
-.quick-bets .btn-primary .text-body {
-  color: inherit !important;
+/* Absorbs the felt's leftover height on tall desktop viewports (where the
+   table's natural size is smaller than the flex-1 stage) and centres the
+   wheel/history strip + table as a group, instead of leaving a blank green
+   void below the table. On mobile, where the table already needs more room
+   than the stage has, this has no visible effect: there is no extra space
+   left to centre into. */
+.table-wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: .625rem;
 }
 
-@media (min-width: 768px) {
-  .quick-bets .btn {
-    width: auto;
-  }
+.wheel-area {
+  flex: 0 0 auto;
 }
 
-.bet-slip-card .list-group-item {
-  padding: 0.4rem 0.6rem;
-}
-
-.bet-list {
-  max-height: 220px;
-  overflow-y: auto;
-}
-
-.bet-list-label {
-  max-width: 70%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.bet-total {
-  padding-top: 0.5rem;
-  border-top: 1px dashed #dfe3e8;
-}
-
-.bet-details summary {
-  cursor: pointer;
-  list-style: none;
-}
-
-.bet-details summary::-webkit-details-marker {
-  display: none;
-}
-
-.step-label {
-  display: inline-flex;
+.history-strip {
+  min-height: 44px;
+  display: flex;
   align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-@media (max-width: 767px) {
-  .card-body {
-    padding: 0.5rem;
-  }
+.history-empty {
+  color: var(--pp-cream-dim);
+  font-size: .8125rem;
+}
 
-  .quick-bets .btn {
-    font-size: 0.8rem;
-  }
+.history-pocket {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--pp-cream);
+  font-family: var(--pp-font-ui);
+  font-weight: 800;
+  font-size: .8125rem;
+  font-variant-numeric: tabular-nums;
+  border: 1px solid rgba(244, 238, 223, .18);
+}
 
-  .bet-list {
-    max-height: 180px;
-  }
+.history-pocket--red {
+  background: var(--pp-card-red);
+}
 
-  .bet-slip-card {
-    position: static;
-  }
+.history-pocket--black {
+  background: var(--pp-card-black);
+}
 
-  :deep(.base-layout) {
-    padding-top: 0.5rem !important;
-    padding-bottom: 0.5rem !important;
-  }
+.history-pocket--green {
+  background: #1C8A54;
+}
 
-  :deep(.base-layout > .row) {
-    margin-bottom: 0.5rem;
-  }
+.chip-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  padding: .375rem .25rem 0;
+}
+
+.tray-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  padding: 0 .25rem;
+}
+
+.tray-summary-text {
+  font-size: .8125rem;
+  color: var(--pp-cream-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.view-bets-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: .8125rem;
+  font-weight: 700;
+  color: var(--pp-gold-bright);
+  text-decoration: underline;
+}
+
+.view-bets-link:disabled {
+  color: var(--pp-cream-dim);
+  text-decoration: none;
+  opacity: .5;
+}
+
+.cta-row {
+  display: flex;
+  gap: .625rem;
+}
+
+.cta-btn {
+  flex: 1 1 0;
+  height: 54px;
+  border-radius: 14px;
+  font-weight: 800;
+  font-size: .875rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.cta-btn--spin {
+  flex: 1.6 1 0;
+}
+
+/* "Spin · $x" runs noticeably longer than "Clear" once a real amount is
+   interpolated in; a smaller size keeps it on one line at phone widths
+   instead of wrapping inside the 54px button (mirrors blackjack's Deal). */
+.cta-btn--amount {
+  font-size: .75rem;
+  letter-spacing: .06em;
+}
+
+.cta-icon-btn {
+  flex: 0 0 54px;
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  font-size: 1.125rem;
+}
+
+.spin-status {
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--pp-cream-dim);
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-size: .8125rem;
+}
+
+.insufficient-funds {
+  display: flex;
+  align-items: flex-start;
+  gap: .625rem;
+  padding: .25rem;
+  color: var(--pp-cream-dim);
+  font-size: .875rem;
+}
+
+.insufficient-funds i {
+  color: var(--pp-loss);
+  font-size: 1.125rem;
+  margin-top: .125rem;
+}
+
+.insufficient-funds strong {
+  display: block;
+  color: var(--pp-cream);
+}
+
+.rules-list {
+  padding-left: 1.125rem;
+  margin-bottom: 1rem;
+}
+
+.rules-list li {
+  margin-bottom: .5rem;
+  color: var(--pp-cream-dim);
+}
+
+.rules-payouts-title {
+  margin-top: 1.5rem;
+  margin-bottom: .75rem;
+  font-family: var(--pp-font-display);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.rules-payouts {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  margin: 0;
+}
+
+.rules-payouts > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+}
+
+.rules-payouts dt {
+  color: var(--pp-cream-dim);
+  font-weight: 400;
+}
+
+.rules-payouts dd {
+  margin: 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--pp-gold-bright);
+}
+
+.bets-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.bets-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  padding: .5rem 0;
+  border-bottom: 1px solid var(--pp-line);
+  font-size: .875rem;
+}
+
+.bets-list-item:last-child {
+  border-bottom: none;
+}
+
+.bets-list-item strong {
+  font-variant-numeric: tabular-nums;
+  color: var(--pp-gold-bright);
 }
 </style>

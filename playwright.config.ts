@@ -6,17 +6,23 @@ const ROUTE_TESTS = '**/tests/screenshots/routes.spec.ts'
 const ALL_SCREENSHOT_TESTS = '**/tests/screenshots/*.spec.ts'
 
 /**
+ * Reduced motion short-circuits the HUD's animated balance, which would
+ * otherwise still be easing towards its target when the shot is taken. It is a
+ * browser context option rather than a test option, so it only takes effect
+ * under `contextOptions`.
+ */
+const reducedMotion = { reducedMotion: 'reduce' as const }
+
+/**
  * Screenshot projects run Chromium at phone viewports rather than the WebKit
  * device descriptors: one engine keeps a single set of baselines, and the
  * baselines are only comparable when every run renders on the same stack.
- * `reducedMotion` also short-circuits the HUD's animated balance, which would
- * otherwise still be ticking when the shot is taken.
  */
 const phone = {
   ...devices['Desktop Chrome'],
   isMobile: true,
   hasTouch: true,
-  reducedMotion: 'reduce' as const
+  contextOptions: reducedMotion
 }
 
 export default defineConfig({
@@ -29,7 +35,6 @@ export default defineConfig({
       caret: 'hide',
       scale: 'css',
       maxDiffPixelRatio: 0.01,
-      timeout: 15_000,
     },
   },
   snapshotPathTemplate: 'tests/screenshots/__screenshots__/{projectName}/{arg}{ext}',
@@ -69,7 +74,11 @@ export default defineConfig({
     },
     {
       name: 'desktop',
-      use: { ...devices['Desktop Chrome'], reducedMotion: 'reduce', viewport: { width: 1280, height: 800 } },
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1280, height: 800 },
+        contextOptions: reducedMotion,
+      },
       testMatch: ROUTE_TESTS,
       timeout: 60_000,
     },

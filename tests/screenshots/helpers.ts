@@ -9,6 +9,14 @@ import { seedPiniaStore } from '../a11y/helpers'
  */
 export const FIXED_NOW = new Date('2026-01-15T12:00:00.000Z')
 
+/**
+ * Comparison budget per shot. `toHaveScreenshot` re-captures until two frames
+ * match, and the global 5s expect timeout is tight for a full-page capture on a
+ * loaded CI runner. It cannot be set once in the config: `toHaveScreenshot`
+ * takes no `timeout` there, only per assertion.
+ */
+export const SHOT_TIMEOUT = 15_000
+
 const FIXED_NOW_MS = FIXED_NOW.getTime()
 const MINUTE_MS = 60_000
 

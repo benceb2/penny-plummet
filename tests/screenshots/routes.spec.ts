@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { gotoRoute, preparePage, seedTransactions } from './helpers'
+import { SHOT_TIMEOUT, gotoRoute, preparePage, seedTransactions } from './helpers'
 
 type Route = {
   name: string
@@ -30,7 +30,10 @@ for (const route of routes) {
     await preparePage(page)
     await gotoRoute(page, route.path, route.heading)
 
-    await expect(page).toHaveScreenshot(`${route.name}.png`, { fullPage: route.fullPage ?? false })
+    await expect(page).toHaveScreenshot(`${route.name}.png`, {
+      fullPage: route.fullPage ?? false,
+      timeout: SHOT_TIMEOUT
+    })
   })
 }
 
@@ -43,5 +46,5 @@ test('transactions', async ({ page }) => {
   // Four fixtures plus the opening-balance row the app writes on first run.
   await expect(page.locator('.transaction-item')).toHaveCount(5)
 
-  await expect(page).toHaveScreenshot('transactions.png', { fullPage: true })
+  await expect(page).toHaveScreenshot('transactions.png', { fullPage: true, timeout: SHOT_TIMEOUT })
 })

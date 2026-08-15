@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { gotoRoute, preparePage, waitForToastsToClear } from './helpers'
+import { SHOT_TIMEOUT, gotoRoute, preparePage, waitForToastsToClear } from './helpers'
 
 /**
  * States the route screenshots never reach: mid-hand tables, open bottom
@@ -16,7 +16,7 @@ test('blackjack: player turn', async ({ page }) => {
   await page.getByRole('button', { name: 'Hit', exact: true }).waitFor({ state: 'visible' })
   await waitForToastsToClear(page)
 
-  await expect(page).toHaveScreenshot('blackjack-player-turn.png')
+  await expect(page).toHaveScreenshot('blackjack-player-turn.png', { timeout: SHOT_TIMEOUT })
 })
 
 test('blackjack: rules sheet', async ({ page }) => {
@@ -26,7 +26,7 @@ test('blackjack: rules sheet', async ({ page }) => {
   await page.getByRole('button', { name: 'Rules and payouts' }).click()
   await expect(page.locator('.rules-sheet.offcanvas.show')).toBeVisible()
 
-  await expect(page).toHaveScreenshot('blackjack-rules-sheet.png')
+  await expect(page).toHaveScreenshot('blackjack-rules-sheet.png', { timeout: SHOT_TIMEOUT })
 })
 
 test('roulette: bets placed', async ({ page }) => {
@@ -38,7 +38,7 @@ test('roulette: bets placed', async ({ page }) => {
   await expect(page.locator('.outside-cell--active').first()).toBeVisible()
   await waitForToastsToClear(page)
 
-  await expect(page).toHaveScreenshot('roulette-bets-placed.png')
+  await expect(page).toHaveScreenshot('roulette-bets-placed.png', { timeout: SHOT_TIMEOUT })
 })
 
 test('clicker: upgrades sheet', async ({ page }) => {
@@ -48,7 +48,7 @@ test('clicker: upgrades sheet', async ({ page }) => {
   await page.getByRole('button', { name: 'Upgrades' }).click()
   await expect(page.locator('#clickerUpgrades.show')).toBeVisible()
 
-  await expect(page).toHaveScreenshot('clicker-upgrades-sheet.png')
+  await expect(page).toHaveScreenshot('clicker-upgrades-sheet.png', { timeout: SHOT_TIMEOUT })
 })
 
 test('onboarding: consent modal', async ({ page }) => {
@@ -57,7 +57,7 @@ test('onboarding: consent modal', async ({ page }) => {
 
   await expect(page.getByRole('button', { name: 'Accept' })).toBeVisible()
 
-  await expect(page).toHaveScreenshot('onboarding-consent.png')
+  await expect(page).toHaveScreenshot('onboarding-consent.png', { timeout: SHOT_TIMEOUT })
 })
 
 test('onboarding: username modal', async ({ page }) => {
@@ -66,7 +66,7 @@ test('onboarding: username modal', async ({ page }) => {
 
   await expect(page.getByLabel('Please enter your username:')).toBeVisible()
 
-  await expect(page).toHaveScreenshot('onboarding-username.png')
+  await expect(page).toHaveScreenshot('onboarding-username.png', { timeout: SHOT_TIMEOUT })
 })
 
 test('locale: hungarian lobby', async ({ page }) => {
@@ -75,5 +75,5 @@ test('locale: hungarian lobby', async ({ page }) => {
   await page.getByRole('heading', { level: 1 }).waitFor({ state: 'visible' })
   await page.evaluate(() => document.fonts.ready)
 
-  await expect(page).toHaveScreenshot('locale-hungarian-lobby.png')
+  await expect(page).toHaveScreenshot('locale-hungarian-lobby.png', { timeout: SHOT_TIMEOUT })
 })

@@ -35,7 +35,8 @@ onBeforeUnmount(() => {
         class="btn btn-primary tray-btn tray-collect"
         :disabled="clickerStore.clicks < 10"
         @click="clickerStore.collectChips()">
-        {{ t('clicker.collect.button') }}
+        <span class="visually-hidden">{{ t('clicker.collect.button') }}</span>
+        <span aria-hidden="true">{{ t('clicker.collect.tray') }}</span>
         <span class="tray-collect-amount">&middot; {{ clickerStore.formattedClicks }}</span>
         <span class="visually-hidden">{{ t('clicker.collect.minimum') }}</span>
       </button>

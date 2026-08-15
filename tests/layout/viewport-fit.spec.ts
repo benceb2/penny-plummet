@@ -30,12 +30,7 @@ const viewports: ViewportSpec[] = [
 ]
 
 const routes: RouteSpec[] = [
-  {
-    name: 'home',
-    path: '/',
-    readyHeading: 'Welcome to Penny Plummet!',
-    allowVerticalScrollOnMobile: true
-  },
+  { name: 'home', path: '/', readyHeading: 'Welcome to Penny Plummet!' },
   { name: 'clicker', path: '/clicker', readyHeading: 'Earn Chips' },
   { name: 'blackjack', path: '/blackjack', readyHeading: 'Blackjack' },
   {

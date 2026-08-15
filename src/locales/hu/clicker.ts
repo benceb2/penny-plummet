@@ -17,6 +17,7 @@ export default {
     },
     "collect": {
       "button": "Zsetonok Begyűjtése",
+      "tray": "Begyűjt",
       "minimum": "(Min. 10 szükséges)"
     },
     "upgrades": {

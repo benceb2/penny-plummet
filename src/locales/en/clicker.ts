@@ -17,6 +17,7 @@ export default {
     },
     "collect": {
       "button": "Collect Chips",
+      "tray": "Collect",
       "minimum": "(Min. 10 required)"
     },
     "upgrades": {

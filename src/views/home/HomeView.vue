@@ -45,37 +45,49 @@ const recentTransactions = computed(() => transactionStore.latestTransactions.sl
 </script>
 
 <template>
-  <div class="container lobby-view py-3 py-lg-4">
+  <div class="container lobby-view py-2 py-lg-4">
     <h1 class="visually-hidden">{{ t('home.welcome') }}</h1>
 
     <p class="lobby-greeting">{{ greeting }}</p>
 
-    <div class="row g-3 mb-4">
+    <div class="row g-2 g-md-3 mb-3">
       <div class="col-12 col-md-4">
         <RouterLink to="/blackjack" class="game-tile">
-          <i class="bi bi-suit-spade-fill game-tile-icon" aria-hidden="true"></i>
-          <span class="game-tile-name">{{ t('home.games.blackjack.title') }}</span>
-          <span class="game-tile-desc">{{ t('home.games.blackjack.shortDesc') }}</span>
-          <span class="game-tile-stat">{{ t('home.games.blackjack.stat', { count: blackjackHandsPlayed }) }}</span>
+          <span class="game-tile-icon-wrap">
+            <i class="bi bi-suit-spade-fill game-tile-icon" aria-hidden="true"></i>
+          </span>
+          <span class="game-tile-body">
+            <span class="game-tile-name">{{ t('home.games.blackjack.title') }}</span>
+            <span class="game-tile-desc">{{ t('home.games.blackjack.shortDesc') }}</span>
+            <span class="game-tile-stat">{{ t('home.games.blackjack.stat', { count: blackjackHandsPlayed }) }}</span>
+          </span>
         </RouterLink>
       </div>
 
       <div class="col-12 col-md-4">
         <RouterLink to="/roulette" class="game-tile">
-          <i class="bi bi-dice-5-fill game-tile-icon" aria-hidden="true"></i>
-          <span class="game-tile-name">{{ t('home.games.roulette.title') }}</span>
-          <span class="game-tile-desc">{{ t('home.games.roulette.shortDesc') }}</span>
-          <span class="game-tile-stat">{{ t('home.games.roulette.stat', { count: rouletteSpinsPlayed }) }}</span>
+          <span class="game-tile-icon-wrap">
+            <i class="bi bi-dice-5-fill game-tile-icon" aria-hidden="true"></i>
+          </span>
+          <span class="game-tile-body">
+            <span class="game-tile-name">{{ t('home.games.roulette.title') }}</span>
+            <span class="game-tile-desc">{{ t('home.games.roulette.shortDesc') }}</span>
+            <span class="game-tile-stat">{{ t('home.games.roulette.stat', { count: rouletteSpinsPlayed }) }}</span>
+          </span>
         </RouterLink>
       </div>
 
       <div class="col-12 col-md-4">
         <RouterLink to="/clicker" class="game-tile">
-          <i class="bi bi-lightning-charge-fill game-tile-icon" aria-hidden="true"></i>
-          <span class="game-tile-name">{{ t('home.games.clicker.title') }}</span>
-          <span class="game-tile-desc">{{ t('home.games.clicker.shortDesc') }}</span>
-          <span class="game-tile-stat">
-            {{ t('home.games.clicker.stat', { value: `${clickerStore.formattedIncome}${t('clicker.stats.perSecondSuffix')}` }) }}
+          <span class="game-tile-icon-wrap">
+            <i class="bi bi-lightning-charge-fill game-tile-icon" aria-hidden="true"></i>
+          </span>
+          <span class="game-tile-body">
+            <span class="game-tile-name">{{ t('home.games.clicker.title') }}</span>
+            <span class="game-tile-desc">{{ t('home.games.clicker.shortDesc') }}</span>
+            <span class="game-tile-stat">
+              {{ t('home.games.clicker.stat', { value: `${clickerStore.formattedIncome}${t('clicker.stats.perSecondSuffix')}` }) }}
+            </span>
           </span>
         </RouterLink>
       </div>
@@ -145,17 +157,17 @@ const recentTransactions = computed(() => transactionStore.latestTransactions.sl
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--pp-cream);
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
 }
 
 .game-tile {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: .2rem;
-  min-height: 120px;
+  flex-direction: row;
+  align-items: center;
+  gap: .85rem;
+  min-height: 92px;
   height: 100%;
-  padding: 1rem 1.25rem;
+  padding: .75rem 1rem;
   border-radius: var(--pp-radius);
   background:
     radial-gradient(140% 120% at 12% -20%, rgba(225, 178, 90, .12), transparent 60%),
@@ -177,10 +189,28 @@ const recentTransactions = computed(() => transactionStore.latestTransactions.sl
   }
 }
 
+.game-tile-icon-wrap {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(225, 178, 90, .2), rgba(225, 178, 90, .05));
+  border: 1px solid var(--pp-line);
+}
+
+.game-tile-body {
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+  min-width: 0;
+}
+
 .game-tile-icon {
-  font-size: 1.6rem;
+  font-size: 1.15rem;
   color: var(--pp-gold);
-  margin-bottom: .25rem;
 }
 
 .game-tile-name {
@@ -197,11 +227,39 @@ const recentTransactions = computed(() => transactionStore.latestTransactions.sl
 }
 
 .game-tile-stat {
-  margin-top: .35rem;
+  margin-top: .1rem;
   color: var(--pp-gold);
   font-size: .75rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 768px) {
+  .game-tile {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: .2rem;
+    min-height: 120px;
+    padding: 1rem 1.25rem;
+  }
+
+  .game-tile-icon-wrap {
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    background: none;
+    border: 0;
+    margin-bottom: .25rem;
+  }
+
+  .game-tile-icon {
+    font-size: 1.6rem;
+  }
+
+  .game-tile-stat {
+    margin-top: .25rem;
+  }
 }
 
 .lobby-section {

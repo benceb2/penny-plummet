@@ -110,7 +110,16 @@ const { t } = useI18n()
 
 <style scoped>
 .upgrades-panel {
-  --bs-offcanvas-height: 70vh;
+  --bs-offcanvas-height: auto;
+}
+
+@media (max-width: 991.98px) {
+  .upgrades-panel {
+    max-height: 75vh;
+    overflow-y: auto;
+    border-top-left-radius: var(--pp-radius);
+    border-top-right-radius: var(--pp-radius);
+  }
 }
 
 @media (min-width: 992px) {

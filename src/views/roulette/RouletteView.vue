@@ -117,28 +117,30 @@ const payoutRows = computed(() => [
           </button>
         </div>
 
-        <div class="wheel-area">
-          <RouletteSpinner
-            v-if="gameStore.gameState === RouletteState.SPINNING"
-            :is-spinning="gameStore.gameState === RouletteState.SPINNING"
-            :winning-number="gameStore.winningNumber"
-            @spin-complete="gameStore.completeGame" />
-          <div v-else class="history-strip" role="group" :aria-label="t('roulette.history.label')">
-            <span v-if="winningHistory.length === 0" class="history-empty">{{ t('roulette.history.empty') }}</span>
-            <span
-              v-for="(number, index) in winningHistory"
-              :key="index"
-              class="history-pocket"
-              :class="`history-pocket--${pocketColor(number)}`">
-              {{ number }}
-            </span>
+        <div class="table-wrap">
+          <div class="wheel-area">
+            <RouletteSpinner
+              v-if="gameStore.gameState === RouletteState.SPINNING"
+              :is-spinning="gameStore.gameState === RouletteState.SPINNING"
+              :winning-number="gameStore.winningNumber"
+              @spin-complete="gameStore.completeGame" />
+            <div v-else class="history-strip" role="group" :aria-label="t('roulette.history.label')">
+              <span v-if="winningHistory.length === 0" class="history-empty">{{ t('roulette.history.empty') }}</span>
+              <span
+                v-for="(number, index) in winningHistory"
+                :key="index"
+                class="history-pocket"
+                :class="`history-pocket--${pocketColor(number)}`">
+                {{ number }}
+              </span>
+            </div>
           </div>
-        </div>
 
-        <RouletteTable
-          :current-bets="gameStore.currentBets"
-          :disabled="gameStore.gameState !== RouletteState.BETTING"
-          @place-bet="handlePlaceBet" />
+          <RouletteTable
+            :current-bets="gameStore.currentBets"
+            :disabled="gameStore.gameState !== RouletteState.BETTING"
+            @place-bet="handlePlaceBet" />
+        </div>
       </div>
 
       <ResultBanner
@@ -287,6 +289,21 @@ const payoutRows = computed(() => [
   border: 1px solid rgba(244, 238, 223, .18);
   color: var(--pp-cream);
   opacity: .85;
+}
+
+/* Absorbs the felt's leftover height on tall desktop viewports (where the
+   table's natural size is smaller than the flex-1 stage) and centres the
+   wheel/history strip + table as a group, instead of leaving a blank green
+   void below the table. On mobile, where the table already needs more room
+   than the stage has, this has no visible effect: there is no extra space
+   left to centre into. */
+.table-wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: .625rem;
 }
 
 .wheel-area {

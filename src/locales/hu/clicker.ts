@@ -5,6 +5,9 @@ export default {
       "current": "Jelenlegi Bevétel",
       "clickValue": "+"
     },
+    "click": {
+      "ariaLabel": "Kattints {value} zsetonért"
+    },
     "stats": {
       "availableToCollect": "Begyűjthető",
       "income": "Bevétel",
@@ -18,6 +21,7 @@ export default {
     },
     "upgrades": {
       "title": "Fejlesztések",
+      "close": "Fejlesztések bezárása",
       "actions": {
         "buy": "Vedd meg {cost}",
         "upgrade": "Fejleszd {cost}"

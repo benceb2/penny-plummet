@@ -1,65 +1,131 @@
-import { describe, expect, it, vi } from 'vitest';
-import { shallowMount } from '@vue/test-utils';
-import BlackjackView from '../BlackjackView.vue';
-import { BlackjackState } from '@/types/BlackjackGameState';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { mount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
 
-vi.mock('@/stores/userStore', () => ({
-  useUserStore: () => ({
-    chips: 100,
-    stats: {
-      handsPlayed: 0,
-      totalWinnings: 0,
-      biggestWin: 0
+import BlackjackView from '../BlackjackView.vue'
+import ChipButton from '@/components/game/ChipButton.vue'
+import ResultBanner from '@/components/game/ResultBanner.vue'
+import { useBlackjackStore } from '@/stores/blackjackStore'
+import { useUserStore } from '@/stores/userStore'
+import { BlackjackState } from '@/types/BlackjackGameState'
+import i18n from '@/i18n'
+
+const mountView = () => {
+  const pinia = createPinia()
+  setActivePinia(pinia)
+
+  const wrapper = mount(BlackjackView, {
+    attachTo: document.body,
+    global: {
+      plugins: [pinia, i18n],
+      // RulesSheet drives a real Bootstrap Offcanvas; it has its own
+      // dedicated tests, so it is stubbed out of this view-level suite.
+      stubs: { RulesSheet: true }
     }
   })
-}));
 
-vi.mock('@/stores/blackjackStore', () => ({
-  useBlackjackStore: () => ({
-    deck: [],
-    playerHand: [],
-    dealerHand: [],
-    gameState: BlackjackState.GAME_OVER,
-    currentBet: 10,
-    playerScore: 20,
-    dealerScore: 18,
-    sessionStats: {
-      consecutiveWins: 0,
-      maxConsecutiveWins: 0,
-      blackjacks: 0,
-      perfectPlays: 0
-    },
-    isBlackjack: false,
-    dealCards: vi.fn(),
-    hit: vi.fn(),
-    stand: vi.fn(),
-    reset: vi.fn()
-  })
-}));
+  return { wrapper, gameStore: useBlackjackStore(), userStore: useUserStore() }
+}
 
-vi.mock('vue-i18n', () => ({
-  useI18n: () => ({
-    t: (key: string) => key
-  })
-}));
+const chipButton = (wrapper: ReturnType<typeof mountView>['wrapper'], value: number) =>
+  wrapper.findAllComponents(ChipButton).find((chip) => chip.props('value') === value)!
 
 describe('BlackjackView', () => {
-  it('hides the result modal when close is emitted', async () => {
-    const wrapper = shallowMount(BlackjackView, {
-      global: {
-        stubs: {
-          BaseLayout: { template: '<div><slot /></div>' },
-          BetAmountSelector: true,
-          PlayingCard: true,
-          GameResult: { name: 'GameResult', props: ['show'], template: '<div></div>', emits: ['close'] }
-        }
-      }
-    });
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
 
-    const gameResult = wrapper.findComponent({ name: 'GameResult' });
-    gameResult.vm.$emit('close');
-    await wrapper.vm.$nextTick();
+  afterEach(() => {
+    vi.useRealTimers()
+    vi.restoreAllMocks()
+  })
 
-    expect(gameResult.props('show')).toBe(false);
-  });
-});
+  it('shows the insufficient funds message instead of chips when the player is out of chips', () => {
+    const { wrapper, userStore } = mountView()
+    userStore.chips = 0
+
+    return wrapper.vm.$nextTick().then(() => {
+      expect(wrapper.text()).toContain('Insufficient Funds')
+      expect(wrapper.findAllComponents(ChipButton)).toHaveLength(0)
+    })
+  })
+
+  it('hides denominations larger than the player chips', async () => {
+    const { wrapper, userStore } = mountView()
+    userStore.chips = 30
+    await wrapper.vm.$nextTick()
+
+    const values = wrapper.findAllComponents(ChipButton).map((chip) => chip.props('value'))
+    expect(values).toEqual([1, 5, 25])
+  })
+
+  it('builds a bet by tapping chips, supports undo, and deals with the accumulated bet', async () => {
+    const { wrapper, gameStore, userStore } = mountView()
+    userStore.chips = 100
+    await wrapper.vm.$nextTick()
+
+    await chipButton(wrapper, 25).trigger('click')
+    await chipButton(wrapper, 25).trigger('click')
+    expect(wrapper.text()).toContain('$50')
+
+    const dealButton = wrapper.get('button.btn-primary.cta-btn')
+    expect(dealButton.text()).toContain('$50')
+    expect(dealButton.attributes('disabled')).toBeUndefined()
+
+    const undoButton = wrapper.get('[aria-label="Undo last chip"]')
+    await undoButton.trigger('click')
+    expect(wrapper.text()).toContain('$25')
+
+    await chipButton(wrapper, 25).trigger('click')
+    await dealButton.trigger('click')
+
+    expect(gameStore.currentBet).toBe(50)
+    expect(gameStore.gameState).not.toBe(BlackjackState.BETTING)
+    expect(gameStore.playerHand).toHaveLength(2)
+  })
+
+  it('caps the pending bet at the player chips and disables Deal at zero', async () => {
+    const { wrapper, userStore } = mountView()
+    userStore.chips = 30
+    await wrapper.vm.$nextTick()
+
+    const dealButton = wrapper.get('button.btn-primary.cta-btn')
+    expect(dealButton.attributes('disabled')).toBeDefined()
+
+    await chipButton(wrapper, 25).trigger('click')
+    await chipButton(wrapper, 25).trigger('click')
+
+    expect(wrapper.text()).toContain('$25')
+    expect(wrapper.text()).not.toContain('$50')
+  })
+
+  it('shows Hit and Stand during the player turn and calls the store', async () => {
+    const { wrapper, gameStore, userStore } = mountView()
+    userStore.chips = 100
+    gameStore.currentBet = 20
+    gameStore.dealCards()
+    await wrapper.vm.$nextTick()
+
+    const handSizeBeforeHit = gameStore.playerHand.length
+    await wrapper.get('button.btn-primary.cta-btn').trigger('click')
+
+    expect(gameStore.playerHand.length).toBe(handSizeBeforeHit + 1)
+  })
+
+  it('shows the result banner once the round ends and hides it when dismissed', async () => {
+    const { wrapper, gameStore } = mountView()
+    gameStore.gameState = BlackjackState.GAME_OVER
+    await wrapper.vm.$nextTick()
+
+    await vi.advanceTimersByTimeAsync(500)
+    await wrapper.vm.$nextTick()
+
+    const resultBanner = wrapper.findComponent(ResultBanner)
+    expect(resultBanner.props('show')).toBe(true)
+
+    await resultBanner.vm.$emit('close')
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.findComponent(ResultBanner).props('show')).toBe(false)
+  })
+})

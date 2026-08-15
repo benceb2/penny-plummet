@@ -4,6 +4,8 @@ import { RouterLink, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/stores/userStore'
 import { useAchievementStore } from '@/stores/achievementStore'
+import { useAnimatedNumber } from '@/composables/useAnimatedNumber'
+import { formatIntAsCurrency } from '@/utils/numberFormatUtil'
 import { navItems } from './navItems'
 
 const { t } = useI18n()
@@ -12,6 +14,9 @@ const userStore = useUserStore()
 const achievementStore = useAchievementStore()
 
 const isActive = (to: string) => route.path === to
+
+const animatedChips = useAnimatedNumber(computed(() => userStore.chips))
+const formattedAnimatedChips = computed(() => formatIntAsCurrency(Math.round(animatedChips.value)))
 
 const levelProgress = computed(() => Math.min(100, Math.max(0, achievementStore.levelProgress)))
 const ringStyle = computed(() => ({
@@ -41,7 +46,7 @@ const ringStyle = computed(() => ({
       <div class="hud-chips">
         <i class="bi bi-coin" aria-hidden="true"></i>
         <span class="visually-hidden">{{ t('appShell.chipsLabel') }}</span>
-        <span>{{ userStore.formattedChips }}</span>
+        <span>{{ formattedAnimatedChips }}</span>
       </div>
       <RouterLink
         to="/profile"

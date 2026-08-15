@@ -5,10 +5,10 @@ export default {
   },
   "appShell": {
     "brand": "Penny Plummet",
-    "chipsLabel": "Chips balance: {amount}",
+    "chipsLabel": "Chips balance",
     "levelLabel": "Level {level}, {progress}% to next level",
     "nav": {
-      "label": "Primary",
+      "label": "Main navigation",
       "lobby": "Lobby",
       "blackjack": "Blackjack",
       "roulette": "Roulette",
@@ -16,7 +16,7 @@ export default {
       "profile": "Profile"
     },
     "tabBar": {
-      "label": "Primary navigation"
+      "label": "Tab bar"
     }
   },
   "betAmountSelector": {

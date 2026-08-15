@@ -5,7 +5,7 @@ export default {
   },
   "appShell": {
     "brand": "Penny Plummet",
-    "chipsLabel": "Zseton egyenleg: {amount}",
+    "chipsLabel": "Zseton egyenleg",
     "levelLabel": "{level}. szint, {progress}% a következő szintig",
     "nav": {
       "label": "Fő navigáció",
@@ -16,7 +16,7 @@ export default {
       "profile": "Profil"
     },
     "tabBar": {
-      "label": "Fő navigáció"
+      "label": "Lapsáv"
     }
   },
   "betAmountSelector": {

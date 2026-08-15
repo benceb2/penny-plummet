@@ -9,8 +9,8 @@ test.describe('app shell', () => {
     await acceptConsentIfPresent(page)
     await setUsernameIfPrompted(page)
 
-    await expect(page.getByRole('navigation', { name: 'Primary navigation' })).toBeVisible()
-    await expect(page.getByRole('navigation', { name: 'Primary', exact: true })).toBeHidden()
+    await expect(page.getByRole('navigation', { name: 'Tab bar' })).toBeVisible()
+    await expect(page.getByRole('navigation', { name: 'Main navigation' })).toBeHidden()
   })
 
   test('desktop nav is visible and the tab bar is hidden on large viewports', async ({ page }) => {
@@ -20,8 +20,8 @@ test.describe('app shell', () => {
     await acceptConsentIfPresent(page)
     await setUsernameIfPrompted(page)
 
-    await expect(page.getByRole('navigation', { name: 'Primary', exact: true })).toBeVisible()
-    await expect(page.getByRole('navigation', { name: 'Primary navigation' })).toBeHidden()
+    await expect(page.getByRole('navigation', { name: 'Main navigation' })).toBeVisible()
+    await expect(page.getByRole('navigation', { name: 'Tab bar' })).toBeHidden()
   })
 
   test('HUD balance and level stay visible while scrolling a long route', async ({ page }) => {

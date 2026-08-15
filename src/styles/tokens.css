@@ -4,25 +4,17 @@
  */
 
 :root {
-  --pp-ground: #0B100E;
-  /* page/phone ground */
-  --pp-surface: #151D19;
-  /* HUD, tray, sheets */
-  --pp-surface-2: #1E2A24;
-  /* raised pills/inputs */
-  --pp-felt: #216C4A;
-  /* table felt centre */
-  --pp-felt-deep: #0E3A29;
-  /* felt edge */
-  --pp-line: rgba(225, 178, 90, .18);
-  /* gold hairline */
+  --pp-ground: #0B100E;               /* page/phone ground */
+  --pp-surface: #151D19;              /* HUD, tray, sheets */
+  --pp-surface-2: #1E2A24;            /* raised pills/inputs */
+  --pp-felt: #216C4A;                 /* table felt centre */
+  --pp-felt-deep: #0E3A29;            /* felt edge */
+  --pp-line: rgba(225, 178, 90, .18); /* gold hairline */
   --pp-gold: #E1B25A;
   --pp-gold-bright: #F4D48A;
   --pp-gold-deep: #B58432;
-  --pp-cream: #F4EEDF;
-  /* text */
-  --pp-cream-dim: #A9A697;
-  /* muted text */
+  --pp-cream: #F4EEDF;                /* text */
+  --pp-cream-dim: #A9A697;            /* muted text */
   --pp-win: #62D394;
   --pp-loss: #E5645C;
   --pp-card-face: #FBF6EA;
@@ -32,8 +24,7 @@
   --pp-font-display: "Bodoni Moda Variable", "Bodoni Moda", "Bodoni 72", "Didot", "Times New Roman", serif;
   --pp-font-ui: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI", Roboto, system-ui, sans-serif;
   --pp-radius: .875rem;
-  --pp-tray-height: 0px;
-  /* set by GameTray so stage can reserve space if needed */
+  --pp-tray-height: 0px;              /* set by GameTray so stage can reserve space if needed */
   --pp-hud-height: 52px;
   --pp-tabbar-height: 58px;
 }
@@ -67,6 +58,12 @@
   --bs-success-rgb: 98, 211, 148;
   --bs-danger: var(--pp-loss);
   --bs-danger-rgb: 229, 100, 92;
+  /* Stock Bootstrap blue/cyan/yellow have no place in the gold-only palette;
+     fold any leftover info/warning accent into gold tones instead. */
+  --bs-info: var(--pp-gold-bright);
+  --bs-info-rgb: 244, 212, 138;
+  --bs-warning: var(--pp-gold);
+  --bs-warning-rgb: 225, 178, 90;
 }
 
 .btn-primary {
@@ -160,6 +157,19 @@
 
 .badge.bg-danger {
   --bs-badge-color: #2B0705;
+}
+
+.badge.bg-info,
+.badge.bg-warning {
+  --bs-badge-color: #1E1607;
+}
+
+.progress {
+  --bs-progress-bg: var(--pp-surface-2);
+  --bs-progress-bar-bg: var(--pp-gold);
+  /* .progress-bar defaults its own text to white, which fails against the
+     gold bar (same reasoning as the badge overrides above). */
+  --bs-progress-bar-color: #1E1607;
 }
 
 .card,

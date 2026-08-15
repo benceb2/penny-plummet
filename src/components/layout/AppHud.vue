@@ -38,8 +38,9 @@ const ringStyle = computed(() => ({
     </nav>
 
     <div class="hud-right">
-      <div class="hud-chips" :aria-label="t('appShell.chipsLabel', { amount: userStore.formattedChips })">
+      <div class="hud-chips">
         <i class="bi bi-coin" aria-hidden="true"></i>
+        <span class="visually-hidden">{{ t('appShell.chipsLabel') }}</span>
         <span>{{ userStore.formattedChips }}</span>
       </div>
       <RouterLink
@@ -59,12 +60,12 @@ const ringStyle = computed(() => ({
   top: 0;
   z-index: 1030;
   flex: 0 0 auto;
-  height: var(--pp-hud-height);
+  height: calc(var(--pp-hud-height) + env(safe-area-inset-top, 0px));
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: .75rem;
-  padding: 0 .75rem 0 1rem;
+  padding: env(safe-area-inset-top, 0px) .75rem 0 1rem;
   background: var(--pp-surface);
   border-bottom: 1px solid var(--pp-line);
 }

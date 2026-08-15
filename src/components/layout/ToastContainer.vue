@@ -26,8 +26,7 @@ onUnmounted(() => {
     :class="{
       'top-0 start-50 translate-middle-x': isMobile,
       'top-0 end-0': !isMobile
-    }"
-    style="z-index: 1050; max-width: calc(100% - 2rem); padding-top: calc(var(--pp-hud-height) + .75rem) !important;">
+    }">
 
     <TransitionGroup name="toast">
       <div
@@ -89,6 +88,15 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+.toast-container {
+  z-index: 1050;
+  max-width: calc(100% - 2rem);
+  /* Sits below the HUD, clear of the notch/status bar in standalone iOS.
+     !important is required to beat Bootstrap's p-3 utility, which also
+     sets padding-top with !important. */
+  padding-top: calc(var(--pp-hud-height) + env(safe-area-inset-top, 0px) + .75rem) !important;
+}
+
 /* Mobile-specific toast styling */
 .toast-mobile {
   width: calc(100vw - 2rem);

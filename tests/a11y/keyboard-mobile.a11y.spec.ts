@@ -21,7 +21,7 @@ test.describe('keyboard and mobile accessibility', () => {
     await acceptConsentIfPresent(page)
     await setUsernameIfPrompted(page)
 
-    const tabBar = page.getByRole('navigation', { name: 'Primary navigation' })
+    const tabBar = page.getByRole('navigation', { name: 'Tab bar' })
     const blackjackTab = tabBar.getByRole('link', { name: 'Blackjack', exact: true })
     await blackjackTab.focus()
     await page.keyboard.press('Enter')

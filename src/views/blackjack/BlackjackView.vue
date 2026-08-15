@@ -13,7 +13,7 @@ import { useBlackjackStore } from '@/stores/blackjackStore'
 import { useUserStore } from '@/stores/userStore'
 import { BlackjackState } from '@/types/BlackjackGameState'
 import type { Card } from '@/types/Card'
-import { CHIP_DENOMINATIONS } from '@/utils/chipUtil'
+import { CHIP_DENOMINATIONS, chipsForAmount } from '@/utils/chipUtil'
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil'
 
 const { t } = useI18n()
@@ -82,10 +82,15 @@ function handleChangeBet() {
   betChips.value = []
 }
 
+// lastBet is local component state, so it is 0 if the round in progress
+// started before this component mounted (e.g. a mid-round reload). Fall
+// back to the store's persisted currentBet, which it keeps until reset(),
+// so "deal again" still offers a real amount instead of "$0".
 function handleDealAgain() {
-  if (lastBet.value > 0 && lastBet.value <= userStore.chips) {
-    betChips.value = [...lastChips.value]
-    gameStore.currentBet = lastBet.value
+  const bet = lastBet.value || gameStore.currentBet
+  if (bet > 0 && bet <= userStore.chips) {
+    betChips.value = lastBet.value ? [...lastChips.value] : chipsForAmount(bet)
+    gameStore.currentBet = bet
     roundId.value++
     gameStore.dealCards()
   } else {
@@ -158,7 +163,7 @@ const resultData = computed(() => {
 })
 
 const dealLabel = computed(() => t('game.dealFor', { amount: formatIntAsCurrency(pendingBet.value) }))
-const dealAgainLabel = computed(() => t('game.dealAgainFor', { amount: formatIntAsCurrency(lastBet.value) }))
+const dealAgainLabel = computed(() => t('game.dealAgainFor', { amount: formatIntAsCurrency(lastBet.value || gameStore.currentBet) }))
 </script>
 
 <template>
@@ -536,7 +541,8 @@ const dealAgainLabel = computed(() => t('game.dealAgainFor', { amount: formatInt
 .chip-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 1.1rem;
   padding: .375rem .25rem 0;
 }
 

@@ -144,10 +144,6 @@ export default {
         "description": "Accumulate $1,000,000 in chips"
       }
     },
-    "reward": {
-      "chips": "chips",
-      "xp": "XP"
-    },
     "actions": {
       "claimRewards": "Claim Rewards"
     }

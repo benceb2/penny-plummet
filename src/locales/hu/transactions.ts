@@ -1,12 +1,6 @@
 export default {
   "transactions": {
     "title": "Tranzakció Előzmények",
-    "stats": {
-      "netAmount": "Nettó összeg",
-      "wins": "Nyerések",
-      "losses": "Veszteségek",
-      "pushes": "Döntetlenek"
-    },
     "filters": {
       "game": {
         "all": "Összes",

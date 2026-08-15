@@ -17,7 +17,6 @@ export default {
         "description": "Állítsd vissza a haladásodat egy korábban exportált mentés fájlból. Ez helyettesíti a jelenlegi haladásodat.",
         "noFileSelected": "Nincs fájl kiválasztva",
         "readError": "Nem sikerült olvasni a mentés fájlt",
-        "importSuccess": "Mentés sikeresen importálva",
         "importFailed": "Nem sikerült importálni a mentés fájlt",
         "confirmTitle": "Importálás Megerősítése",
         "confirmMessage": "Biztosan importálni szeretnéd ezt a mentés fájlt? Ez helyettesíti a jelenlegi haladásodat.",
@@ -44,8 +43,7 @@ export default {
       }
     },
     "messages": {
-      "operationSuccess": "Művelet sikeresen befejezve!",
-      "genericError": "Hiba történt a művelet során"
+      "operationSuccess": "Művelet sikeresen befejezve!"
     }
   }
 }

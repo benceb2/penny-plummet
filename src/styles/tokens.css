@@ -24,7 +24,6 @@
   --pp-font-display: "Bodoni Moda Variable", "Bodoni Moda", "Bodoni 72", "Didot", "Times New Roman", serif;
   --pp-font-ui: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI", Roboto, system-ui, sans-serif;
   --pp-radius: .875rem;
-  --pp-tray-height: 0px;              /* set by GameTray so stage can reserve space if needed */
   --pp-hud-height: 52px;
   --pp-tabbar-height: 58px;
 }

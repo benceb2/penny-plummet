@@ -89,7 +89,7 @@ const resultData = computed(() => {
   const { totalWin, totalBet } = gameStore.lastResult
   if (totalWin > totalBet) return { type: 'win' as const, amount: totalWin - totalBet, headline: t('roulette.result.win') }
   if (totalWin === totalBet) return { type: 'push' as const, amount: 0, headline: t('roulette.result.push') }
-  return { type: 'loss' as const, amount: totalBet, headline: t('roulette.result.loss') }
+  return { type: 'loss' as const, amount: totalBet - totalWin, headline: t('roulette.result.loss') }
 })
 
 const resultDetail = computed(() =>
@@ -353,7 +353,8 @@ const payoutRows = computed(() => [
 .chip-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 1.1rem;
   padding: .375rem .25rem 0;
 }
 

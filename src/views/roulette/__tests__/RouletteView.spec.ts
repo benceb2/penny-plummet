@@ -126,4 +126,27 @@ describe('RouletteView', () => {
     expect(gameStore.currentBets).toHaveLength(0)
     expect(wrapper.findComponent(ResultBanner).props('show')).toBe(false)
   })
+
+  it('shows the net amount lost, not the gross bet, on a partial loss', async () => {
+    // $5 on red, $5 on 1st 12 and $10 straight on 7; 27 comes up (red, but
+    // outside the other two groups): the red bet pays 10, the rest lose, for
+    // a net loss of 10 on a 20 total bet.
+    const { wrapper, gameStore } = mountView()
+    gameStore.gameState = RouletteState.COMPLETE
+    gameStore.lastResult = {
+      winningNumber: 27,
+      totalBet: 20,
+      totalWin: 10,
+      winningBets: [{ type: 'red', numbers: [], amount: 5 }],
+      losingBets: [
+        { type: 'dozen', numbers: [], amount: 5 },
+        { type: 'straight', numbers: [7], amount: 10 }
+      ]
+    }
+    await wrapper.vm.$nextTick()
+
+    const resultBanner = wrapper.findComponent(ResultBanner)
+    expect(resultBanner.props('type')).toBe('loss')
+    expect(resultBanner.props('amount')).toBe(10)
+  })
 })

@@ -3,26 +3,20 @@ export default {
     "en-GB": "English",
     "hu-HU": "Magyar"
   },
-  "navbar": {
+  "appShell": {
     "brand": "Penny Plummet",
-    "games": {
-      "title": "Játékok",
+    "chipsLabel": "Zseton egyenleg: {amount}",
+    "levelLabel": "{level}. szint, {progress}% a következő szintig",
+    "nav": {
+      "label": "Fő navigáció",
+      "lobby": "Előtér",
       "blackjack": "Blackjack",
-      "roulette": "Rulett"
+      "roulette": "Rulett",
+      "earn": "Pénzt keres",
+      "profile": "Profil"
     },
-    "earn": {
-      "title": "Pénzt keres",
-      "clicker": "Kattintós Játék"
-    },
-    "about": "Rólunk",
-    "wallet": {
-      "transactions": "Tranzakciók"
-    },
-    "profile": {
-      "menu": "Felhasználói menü",
-      "settings": "Beállítások",
-      "viewProfile": "Profil",
-      "achievements": "Eredmények"
+    "tabBar": {
+      "label": "Fő navigáció"
     }
   },
   "betAmountSelector": {

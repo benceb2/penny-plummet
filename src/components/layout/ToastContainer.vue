@@ -24,10 +24,10 @@ onUnmounted(() => {
   <div
     class="toast-container position-fixed p-3"
     :class="{
-      'bottom-0 start-50 translate-middle-x': isMobile,
-      'bottom-0 end-0': !isMobile
+      'top-0 start-50 translate-middle-x': isMobile,
+      'top-0 end-0': !isMobile
     }"
-    style="z-index: 1050; max-width: calc(100% - 2rem);">
+    style="z-index: 1050; max-width: calc(100% - 2rem); padding-top: calc(var(--pp-hud-height) + .75rem) !important;">
 
     <TransitionGroup name="toast">
       <div
@@ -122,10 +122,10 @@ onUnmounted(() => {
   transition: all 0.3s ease;
 }
 
-/* Mobile animations - slide up from bottom */
+/* Mobile animations - slide down from top */
 @media (max-width: 767px) {
   .toast-enter-from {
-    transform: translateY(100%);
+    transform: translateY(-100%);
     opacity: 0;
   }
 

@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { configureAxe } from 'vitest-axe'
 import BaseModal from '@/components/modals/BaseModal.vue'
-import AppFooter from '@/components/layout/AppFooter.vue'
 import BasePagination from '@/components/layout/BasePagination.vue'
 import UnsupportedBrowser from '@/components/UnsupportedBrowser.vue'
 
@@ -33,15 +32,6 @@ describe('Shared components accessibility', () => {
         default: '<p>Modal content</p>',
         footer: '<button type="button">Confirm</button>',
       },
-    })
-
-    await runAxe(wrapper)
-  })
-
-  it('AppFooter has no axe violations', async () => {
-    expect.hasAssertions()
-    const wrapper = mount(AppFooter, {
-      attachTo: document.body,
     })
 
     await runAxe(wrapper)

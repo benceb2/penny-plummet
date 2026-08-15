@@ -11,23 +11,21 @@ test.describe('keyboard and mobile accessibility', () => {
     await acceptConsentIfPresent(page)
     await setUsernameIfPrompted(page)
 
-    const navToggle = page.getByRole('button', { name: 'Toggle navigation' })
-    await navToggle.click()
-
     const results = await new AxeBuilder({ page }).analyze()
     expect(results.violations).toEqual([])
   })
 
-  test('navbar toggle is keyboard operable on mobile', async ({ page }) => {
+  test('tab bar is keyboard operable on mobile', async ({ page }) => {
     await page.goto('/')
 
     await acceptConsentIfPresent(page)
     await setUsernameIfPrompted(page)
 
-    const navToggle = page.getByRole('button', { name: 'Toggle navigation' })
-    await navToggle.focus()
+    const tabBar = page.getByRole('navigation', { name: 'Tab bar' })
+    const blackjackTab = tabBar.getByRole('link', { name: 'Blackjack', exact: true })
+    await blackjackTab.focus()
     await page.keyboard.press('Enter')
 
-    await expect(page.locator('#navbarNav')).toHaveClass(/show/)
+    await expect(page).toHaveURL(/\/blackjack$/)
   })
 })

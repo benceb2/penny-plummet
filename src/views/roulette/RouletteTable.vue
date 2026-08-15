@@ -206,10 +206,25 @@ const outsideBets = computed(() => ({
 
 .roulette-card {
   background: #ffffff;
+  color: #1e293b;
   border: 1px solid #e2e8f0;
   border-radius: 18px;
   padding: 1rem;
   font-family: "Atkinson Hyperlegible", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* The global dark-ground .btn-outline-primary override (gold text) fails
+   against this card's white background; restore Bootstrap's stock outline
+   styling for this light-card context. */
+.roulette-card .btn-outline-primary {
+  --bs-btn-color: #0d6efd;
+  --bs-btn-border-color: #0d6efd;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #0d6efd;
+  --bs-btn-hover-border-color: #0d6efd;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #0d6efd;
+  --bs-btn-active-border-color: #0d6efd;
 }
 
 .roulette-card-header {

@@ -1,0 +1,291 @@
+/*
+ * Design tokens for the dark casino re-skin. Imported in main.ts after
+ * bootstrap.min.css so the Bootstrap variable overrides below win the cascade.
+ */
+
+:root {
+  --pp-ground: #0B100E;               /* page/phone ground */
+  --pp-surface: #151D19;              /* HUD, tray, sheets */
+  --pp-surface-2: #1E2A24;            /* raised pills/inputs */
+  --pp-felt: #216C4A;                 /* table felt centre */
+  --pp-felt-deep: #0E3A29;            /* felt edge */
+  --pp-line: rgba(225, 178, 90, .18); /* gold hairline */
+  --pp-gold: #E1B25A;
+  --pp-gold-bright: #F4D48A;
+  --pp-gold-deep: #B58432;
+  --pp-cream: #F4EEDF;                /* text */
+  --pp-cream-dim: #A9A697;            /* muted text */
+  --pp-win: #62D394;
+  --pp-loss: #E5645C;
+  --pp-card-face: #FBF6EA;
+  --pp-card-red: #B7322F;
+  --pp-card-black: #1B1B1F;
+  --pp-card-back: #7A2230;
+  --pp-font-display: "Bodoni Moda Variable", "Bodoni Moda", "Bodoni 72", "Didot", "Times New Roman", serif;
+  --pp-font-ui: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI", Roboto, system-ui, sans-serif;
+  --pp-radius: .875rem;
+  --pp-tray-height: 0px;              /* set by GameTray so stage can reserve space if needed */
+  --pp-hud-height: 52px;
+  --pp-tabbar-height: 58px;
+}
+
+/* ---------- Bootstrap variable overrides ---------- */
+:root,
+[data-bs-theme=dark] {
+  --bs-body-bg: var(--pp-ground);
+  --bs-body-bg-rgb: 11, 16, 14;
+  --bs-body-color: var(--pp-cream);
+  --bs-body-color-rgb: 244, 238, 223;
+  --bs-secondary-color: var(--pp-cream-dim);
+  --bs-secondary-color-rgb: 169, 166, 151;
+  --bs-tertiary-bg: var(--pp-surface);
+  --bs-secondary-bg: var(--pp-surface-2);
+  --bs-primary: #E1B25A;
+  --bs-primary-rgb: 225, 178, 90;
+  --bs-link-color: var(--pp-gold-bright);
+  --bs-link-hover-color: #fff;
+  --bs-link-color-rgb: 244, 212, 138;
+  --bs-link-hover-color-rgb: 255, 255, 255;
+  --bs-border-color: var(--pp-line);
+  --bs-border-color-translucent: var(--pp-line);
+  --bs-border-radius: var(--pp-radius);
+  --bs-font-sans-serif: var(--pp-font-ui);
+  --bs-emphasis-color: var(--pp-cream);
+  /* Bootstrap's own success/danger text meet AA against its stock dark-theme
+     bg (#212529) but not our darker ground/surface. They also double as our
+     win/loss semantics per the design brief, so point them at those tokens. */
+  --bs-success: var(--pp-win);
+  --bs-success-rgb: 98, 211, 148;
+  --bs-danger: var(--pp-loss);
+  --bs-danger-rgb: 229, 100, 92;
+  /* Stock Bootstrap blue/cyan/yellow have no place in the gold-only palette;
+     fold any leftover info/warning accent into gold tones instead. */
+  --bs-info: var(--pp-gold-bright);
+  --bs-info-rgb: 244, 212, 138;
+  --bs-warning: var(--pp-gold);
+  --bs-warning-rgb: 225, 178, 90;
+}
+
+.btn-primary {
+  --bs-btn-bg: var(--pp-gold);
+  --bs-btn-border-color: var(--pp-gold);
+  --bs-btn-color: #1E1607;
+  --bs-btn-hover-bg: var(--pp-gold-bright);
+  --bs-btn-hover-border-color: var(--pp-gold-bright);
+  --bs-btn-hover-color: #1E1607;
+  --bs-btn-active-bg: var(--pp-gold-deep);
+  --bs-btn-active-border-color: var(--pp-gold-deep);
+  --bs-btn-active-color: #1E1607;
+  --bs-btn-disabled-bg: var(--pp-gold-deep);
+  --bs-btn-disabled-border-color: var(--pp-gold-deep);
+  --bs-btn-disabled-color: #1E1607;
+}
+
+.btn-outline-light {
+  --bs-btn-color: var(--pp-cream);
+  --bs-btn-border-color: rgba(244, 238, 223, .28);
+}
+
+/* Bootstrap's outline-dark is hardcoded to near-black text/border regardless
+   of theme, which disappears against the dark ground. Make it behave like
+   outline-light since there is no "light on dark" distinction to preserve. */
+.btn-outline-dark {
+  --bs-btn-color: var(--pp-cream);
+  --bs-btn-border-color: rgba(244, 238, 223, .28);
+  --bs-btn-hover-color: #1E1607;
+  --bs-btn-hover-bg: var(--pp-cream);
+  --bs-btn-hover-border-color: var(--pp-cream);
+  --bs-btn-active-color: #1E1607;
+  --bs-btn-active-bg: var(--pp-cream);
+  --bs-btn-active-border-color: var(--pp-cream);
+  --bs-btn-disabled-color: rgba(244, 238, 223, .5);
+  --bs-btn-disabled-border-color: rgba(244, 238, 223, .28);
+}
+
+/* Every `.btn-outline-{variant}` bakes its variant's literal Bootstrap hex
+   into --bs-btn-color at build time rather than reading --bs-{variant}, so
+   overriding the root variables above does not reach these. Re-point the
+   ones actually used in the app at tokens that hold up against the dark
+   ground; hover/active states swap to the readable dark-on-token pairing
+   used by the solid buttons. */
+.btn-outline-primary {
+  --bs-btn-color: var(--pp-gold);
+  --bs-btn-border-color: var(--pp-gold);
+  --bs-btn-hover-color: #1E1607;
+  --bs-btn-hover-bg: var(--pp-gold);
+  --bs-btn-hover-border-color: var(--pp-gold);
+  --bs-btn-active-color: #1E1607;
+  --bs-btn-active-bg: var(--pp-gold);
+  --bs-btn-active-border-color: var(--pp-gold);
+  --bs-btn-disabled-color: var(--pp-gold-deep);
+  --bs-btn-disabled-border-color: var(--pp-gold-deep);
+}
+
+.btn-outline-success {
+  --bs-btn-color: var(--pp-win);
+  --bs-btn-border-color: var(--pp-win);
+  --bs-btn-hover-color: #0B2016;
+  --bs-btn-hover-bg: var(--pp-win);
+  --bs-btn-hover-border-color: var(--pp-win);
+  --bs-btn-active-color: #0B2016;
+  --bs-btn-active-bg: var(--pp-win);
+  --bs-btn-active-border-color: var(--pp-win);
+}
+
+.btn-outline-danger {
+  --bs-btn-color: var(--pp-loss);
+  --bs-btn-border-color: var(--pp-loss);
+  --bs-btn-hover-color: #2B0705;
+  --bs-btn-hover-bg: var(--pp-loss);
+  --bs-btn-hover-border-color: var(--pp-loss);
+  --bs-btn-active-color: #2B0705;
+  --bs-btn-active-bg: var(--pp-loss);
+  --bs-btn-active-border-color: var(--pp-loss);
+}
+
+/* .badge always defaults its text to white; that fails against the lighter
+   gold/win/loss tokens now backing bg-primary/bg-success/bg-danger (other
+   bg-* badges already pair explicit text-dark or stay dark enough for white
+   text). */
+.badge.bg-primary {
+  --bs-badge-color: #1E1607;
+}
+
+.badge.bg-success {
+  --bs-badge-color: #0B2016;
+}
+
+.badge.bg-danger {
+  --bs-badge-color: #2B0705;
+}
+
+.badge.bg-info,
+.badge.bg-warning {
+  --bs-badge-color: #1E1607;
+}
+
+.progress {
+  --bs-progress-bg: var(--pp-surface-2);
+  --bs-progress-bar-bg: var(--pp-gold);
+  /* .progress-bar defaults its own text to white, which fails against the
+     gold bar (same reasoning as the badge overrides above). */
+  --bs-progress-bar-color: #1E1607;
+}
+
+.card,
+.modal-content,
+.offcanvas,
+.dropdown-menu,
+.toast {
+  --bs-card-bg: var(--pp-surface);
+  background-color: var(--pp-surface);
+  border-color: var(--pp-line);
+}
+
+.form-control,
+.form-select {
+  background-color: var(--pp-surface-2);
+  border-color: var(--pp-line);
+  color: var(--pp-cream);
+  font-size: 1rem;
+  /* 16px so iOS does not zoom on focus */
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--pp-surface-2);
+  color: var(--pp-cream);
+  border-color: var(--pp-gold);
+  box-shadow: 0 0 0 .25rem rgba(225, 178, 90, .25);
+}
+
+.form-control::placeholder {
+  color: var(--pp-cream-dim);
+}
+
+/*
+ * A handful of legacy views (owned by other PRs, not rebuilt here) still use
+ * the literal Bootstrap `bg-light` / `bg-white` utilities as light card
+ * substrates. Those utilities are fixed neutrals that don't adapt to
+ * `data-bs-theme`, so once `--bs-body-color` (and the success/danger/etc.
+ * variables above) become dark-ground-tuned, any themed text inside them
+ * becomes unreadable against the light island. Re-establish Bootstrap's own
+ * light-theme values scoped to that subtree via the same custom properties
+ * Bootstrap already reads, so descendants (headings included, since
+ * --bs-heading-color defaults to `inherit`) stay legible without touching
+ * those views.
+ */
+.bg-light,
+.bg-white {
+  --bs-body-color: #212529;
+  --bs-body-color-rgb: 33, 37, 41;
+  --bs-secondary-color: rgba(33, 37, 41, .75);
+  --bs-secondary-color-rgb: 33, 37, 41;
+  --bs-primary: #0d6efd;
+  --bs-primary-rgb: 13, 110, 253;
+  --bs-primary-text-emphasis: #052c65;
+  --bs-primary-bg-subtle: #cfe2ff;
+  --bs-primary-border-subtle: #9ec5fe;
+  --bs-success: #198754;
+  --bs-success-rgb: 25, 135, 84;
+  --bs-success-text-emphasis: #0a3622;
+  --bs-success-bg-subtle: #d1e7dd;
+  --bs-success-border-subtle: #a3cfbb;
+  --bs-info: #0dcaf0;
+  --bs-info-rgb: 13, 202, 240;
+  --bs-info-text-emphasis: #055160;
+  --bs-info-bg-subtle: #cff4fc;
+  --bs-info-border-subtle: #9eeaf9;
+  --bs-warning: #ffc107;
+  --bs-warning-rgb: 255, 193, 7;
+  --bs-warning-text-emphasis: #664d03;
+  --bs-warning-bg-subtle: #fff3cd;
+  --bs-warning-border-subtle: #ffe69c;
+  --bs-danger: #dc3545;
+  --bs-danger-rgb: 220, 53, 69;
+  --bs-danger-text-emphasis: #58151c;
+  --bs-danger-bg-subtle: #f8d7da;
+  --bs-danger-border-subtle: #f1aeb5;
+  color: var(--bs-body-color);
+}
+
+/* .btn-outline-dark's global override above (cream, for the dark ground)
+   bakes its own --bs-btn-color directly on the button, which bypasses the
+   ambient text-colour reset just above. Put it back to Bootstrap's stock
+   light-theme outline-dark inside a light island, where dark-on-light is
+   correct again. */
+.bg-light .btn-outline-dark,
+.bg-white .btn-outline-dark {
+  --bs-btn-color: #212529;
+  --bs-btn-border-color: #212529;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #212529;
+  --bs-btn-hover-border-color: #212529;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #212529;
+  --bs-btn-active-border-color: #212529;
+  --bs-btn-disabled-color: #212529;
+  --bs-btn-disabled-border-color: #212529;
+}
+
+/* ---------- Global CSS hygiene ---------- */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+a {
+  touch-action: manipulation;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

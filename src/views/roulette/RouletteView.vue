@@ -332,6 +332,13 @@ if (currentBetAmount.value === 100 && userStore.chips < 100) {
   width: 100%;
 }
 
+/* .text-body forces the themed body colour, which is too light against the
+   gold btn-primary background once a quick bet is selected. Let it inherit
+   the button's own (contrast-correct) text colour instead. */
+.quick-bets .btn-primary .text-body {
+  color: inherit !important;
+}
+
 @media (min-width: 768px) {
   .quick-bets .btn {
     width: auto;

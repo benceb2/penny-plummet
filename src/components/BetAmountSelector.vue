@@ -172,3 +172,12 @@ const buttonSizeClass = computed(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+/* .text-body forces the themed body colour, which is too light against the
+   gold btn-primary background once a preset bet is selected. Let it inherit
+   the button's own (contrast-correct) text colour instead. */
+.btn-primary .text-body {
+  color: inherit !important;
+}
+</style>

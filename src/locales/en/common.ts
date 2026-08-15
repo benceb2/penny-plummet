@@ -3,26 +3,20 @@ export default {
     "en-GB": "English",
     "hu-HU": "Magyar"
   },
-  "navbar": {
+  "appShell": {
     "brand": "Penny Plummet",
-    "games": {
-      "title": "Games",
+    "chipsLabel": "Chips balance",
+    "levelLabel": "Level {level}, {progress}% to next level",
+    "nav": {
+      "label": "Main navigation",
+      "lobby": "Lobby",
       "blackjack": "Blackjack",
-      "roulette": "Roulette"
+      "roulette": "Roulette",
+      "earn": "Earn",
+      "profile": "Profile"
     },
-    "earn": {
-      "title": "Earn",
-      "clicker": "Clicker Game"
-    },
-    "about": "About",
-    "wallet": {
-      "transactions": "Transactions"
-    },
-    "profile": {
-      "menu": "User menu",
-      "settings": "Settings",
-      "viewProfile": "Profile",
-      "achievements": "Achievements"
+    "tabBar": {
+      "label": "Tab bar"
     }
   },
   "betAmountSelector": {

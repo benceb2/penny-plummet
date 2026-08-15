@@ -113,7 +113,7 @@ const recentTransactions = computed(() => {
               <RouterLink
                 to="/achievements"
                 class="btn btn-outline-primary">
-                <i class="fa fa-trophy me-2" aria-hidden="true"></i>
+                <i class="bi bi-trophy-fill me-2" aria-hidden="true"></i>
                 {{ t('home.achievements.viewAll') }}
               </RouterLink>
             </div>
@@ -150,7 +150,7 @@ const recentTransactions = computed(() => {
               <RouterLink
                 to="/transactions"
                 class="btn btn-outline-success">
-                <i class="fa fa-money-bill-wave me-2" aria-hidden="true"></i>
+                <i class="bi bi-cash-stack me-2" aria-hidden="true"></i>
                 {{ t('home.transactions.viewAll') }}
               </RouterLink>
             </div>
@@ -162,13 +162,13 @@ const recentTransactions = computed(() => {
     <div class="row d-md-none g-2">
       <div class="col-6">
         <RouterLink to="/achievements" class="btn btn-outline-primary w-100">
-          <i class="fa fa-trophy me-2" aria-hidden="true"></i>
+          <i class="bi bi-trophy-fill me-2" aria-hidden="true"></i>
           {{ t('home.achievements.viewAll') }}
         </RouterLink>
       </div>
       <div class="col-6">
         <RouterLink to="/transactions" class="btn btn-outline-success w-100">
-          <i class="fa fa-money-bill-wave me-2" aria-hidden="true"></i>
+          <i class="bi bi-cash-stack me-2" aria-hidden="true"></i>
           {{ t('home.transactions.viewAll') }}
         </RouterLink>
       </div>

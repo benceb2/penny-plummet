@@ -3,6 +3,7 @@ import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 
 import BaseLayout from '@/components/layout/BaseLayout.vue'
+import pkg from '../../../package.json'
 
 const { t } = useI18n()
 
@@ -16,7 +17,7 @@ const technologies = computed(() => [
   {
     name: t('about.technology.items.vue.name'),
     description: t('about.technology.items.vue.description'),
-    icon: 'fa-brands fa-vuejs',
+    icon: 'bi bi-diagram-3-fill',
     color: 'success'
   },
   {
@@ -28,19 +29,19 @@ const technologies = computed(() => [
   {
     name: t('about.technology.items.pinia.name'),
     description: t('about.technology.items.pinia.description'),
-    icon: 'fa-solid fa-database',
+    icon: 'bi bi-database-fill',
     color: 'info'
   },
   {
     name: t('about.technology.items.bootstrap.name'),
     description: t('about.technology.items.bootstrap.description'),
-    icon: 'fa-brands fa-bootstrap',
+    icon: 'bi bi-bootstrap-fill',
     color: 'purple'
   },
   {
     name: t('about.technology.items.localStorage.name'),
     description: t('about.technology.items.localStorage.description'),
-    icon: 'fa-solid fa-hard-drive',
+    icon: 'bi bi-hdd-fill',
     color: 'secondary'
   }
 ]);
@@ -125,28 +126,88 @@ const features = computed(() => [
         </div>
       </div>
     </div>
+
+    <footer class="about-footer text-center pt-3">
+      <div class="mb-3">
+        <a
+          href="mailto:contact@bence.im"
+          class="footer-link mx-2"
+          title="Email"
+          aria-label="Email">
+          <i class="bi bi-envelope fs-5" aria-hidden="true"></i>
+        </a>
+        <a
+          href="https://www.linkedin.com/in/bence-b-b787751a2/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="footer-link mx-2"
+          title="LinkedIn"
+          aria-label="LinkedIn">
+          <i class="bi bi-linkedin fs-5" aria-hidden="true"></i>
+        </a>
+        <a
+          href="https://github.com/benceb2"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="footer-link mx-2"
+          title="GitHub"
+          aria-label="GitHub">
+          <i class="bi bi-github fs-5" aria-hidden="true"></i>
+        </a>
+        <a
+          href="https://bence.im/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="footer-link mx-2"
+          title="Portfolio"
+          aria-label="Portfolio">
+          <i class="bi bi-globe fs-5" aria-hidden="true"></i>
+        </a>
+      </div>
+      <div class="d-flex flex-column gap-1">
+        <small class="text-muted">Penny Plummet v{{ pkg.version }}</small>
+        <small class="text-muted">
+          <i class="bi bi-c-circle me-1" aria-hidden="true" />2024 Bence Barkanyi
+        </small>
+      </div>
+    </footer>
   </BaseLayout>
 </template>
 
 <style scoped>
 .tech-item {
   padding: 1rem;
-  border: 1px solid #eee;
+  border: 1px solid var(--pp-line);
   border-radius: 8px;
   height: 100%;
-  background-color: #fff;
+  background-color: var(--pp-surface-2);
 }
 
 .feature-item {
   padding: 1rem;
-  border: 1px solid #eee;
+  border: 1px solid var(--pp-line);
   border-radius: 8px;
-  background-color: #fff;
+  background-color: var(--pp-surface-2);
 }
 
 .tech-item:hover,
 .feature-item:hover {
-  background-color: #f0f0f0;
-  transition: background-color 0.2s ease;
+  border-color: rgba(225, 178, 90, .4);
+  transition: border-color 0.2s ease;
+}
+
+.about-footer {
+  border-top: 1px solid var(--pp-line);
+  margin-top: 1rem;
+}
+
+.footer-link {
+  color: var(--pp-cream-dim);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: var(--pp-gold);
 }
 </style>

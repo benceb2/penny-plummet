@@ -4,30 +4,36 @@
  * explicit `chips` array (denominations, bottom to top) to show the exact
  * composition the player placed; otherwise the stack falls back to a greedy
  * split via chipsForAmount(). The top (last) chip shows its own
- * denomination. Generic across games, no bet logic here.
+ * denomination. `size="sm"` shrinks the stack for use as a compact corner
+ * badge (roulette's table cells); default `md` is unchanged for blackjack's
+ * bet spot. Generic across games, no bet logic here.
  */
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { chipsForAmount, chipStyle } from '@/utils/chipUtil'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   amount: number
   chips?: number[]
-}>()
+  size?: 'sm' | 'md'
+}>(), {
+  size: 'md'
+})
 
 const { t } = useI18n()
 
 const stackChips = computed(() => props.chips ?? chipsForAmount(props.amount))
+const chipOffset = computed(() => props.size === 'sm' ? 3 : 5)
 </script>
 
 <template>
-  <div class="chip-stack" role="img" :aria-label="t('game.betAmount', { amount })">
+  <div class="chip-stack" :class="`chip-stack--${size}`" role="img" :aria-label="t('game.betAmount', { amount })">
     <span
       v-for="(value, index) in stackChips"
       :key="index"
       class="chip-stack-chip"
       :class="{ 'chip-stack-chip--dark': chipStyle(value).dark }"
-      :style="{ backgroundColor: chipStyle(value).background, top: `${-index * 5}px`, zIndex: index }">
+      :style="{ backgroundColor: chipStyle(value).background, top: `${-index * chipOffset}px`, zIndex: index }">
       <template v-if="index === stackChips.length - 1">{{ value }}</template>
     </span>
   </div>
@@ -67,5 +73,28 @@ const stackChips = computed(() => props.chips ?? chipsForAmount(props.amount))
     inset 0 0 0 2px rgba(0, 0, 0, .18),
     inset 0 0 0 5px rgba(0, 0, 0, .05),
     0 3px 6px rgba(0, 0, 0, .45);
+}
+
+.chip-stack--sm {
+  width: 22px;
+  height: 22px;
+}
+
+.chip-stack--sm .chip-stack-chip {
+  width: 22px;
+  height: 22px;
+  font-size: .5rem;
+  border-width: 2px;
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, .28),
+    inset 0 0 0 3px rgba(255, 255, 255, .08),
+    0 2px 4px rgba(0, 0, 0, .45);
+}
+
+.chip-stack--sm .chip-stack-chip.chip-stack-chip--dark {
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, .18),
+    inset 0 0 0 3px rgba(0, 0, 0, .05),
+    0 2px 4px rgba(0, 0, 0, .45);
 }
 </style>

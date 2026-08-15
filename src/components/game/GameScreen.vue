@@ -8,14 +8,19 @@
  * The optional `title` renders as a visually-hidden <h1> so the route still
  * has an accessible, findable heading even though the felt has no visible
  * page title; it also labels the stage region for screen reader users.
+ *
+ * The optional `wide` prop widens the lg+ centred column (560px by default,
+ * matching blackjack's phone-like felt) for a game whose board genuinely
+ * needs more room, e.g. roulette's classic 12x3 table.
  */
 defineProps<{
   title?: string
+  wide?: boolean
 }>()
 </script>
 
 <template>
-  <div class="game-screen d-flex flex-column flex-grow-1">
+  <div class="game-screen d-flex flex-column flex-grow-1" :class="{ 'game-screen--wide': wide }">
     <h1 v-if="title" class="visually-hidden">{{ title }}</h1>
     <div class="game-screen-stage" role="region" :aria-label="title">
       <slot name="stage" />
@@ -57,6 +62,10 @@ defineProps<{
     width: 100%;
     max-width: 560px;
     margin: 1.5rem auto;
+  }
+
+  .game-screen.game-screen--wide {
+    max-width: 860px;
   }
 }
 </style>

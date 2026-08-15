@@ -68,6 +68,7 @@ export default {
     }
   },
   "toast": {
+    "tapToDismiss": "Tap to dismiss",
     "achievementUnlocked": {
       "title": "Achievement Unlocked!",
       "message": "{title} - {description}"

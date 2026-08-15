@@ -96,6 +96,18 @@ onBeforeUnmount(() => {
   font-weight: 700;
 }
 
+/* Bottom sheet only: Bootstrap's default offcanvas-bottom height is a fixed
+   fraction of the viewport, which leaves rules content cramped or the sheet
+   mostly empty depending on how much copy there is. Let it size to its
+   content instead, capped so it never covers the whole screen. */
+.rules-sheet.offcanvas-bottom {
+  --bs-offcanvas-height: auto;
+  max-height: 75vh;
+  overflow-y: auto;
+  border-top-left-radius: var(--pp-radius);
+  border-top-right-radius: var(--pp-radius);
+}
+
 @media (min-width: 992px) {
   .rules-sheet {
     --bs-offcanvas-width: 360px;

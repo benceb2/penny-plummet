@@ -36,8 +36,8 @@ onUnmounted(() => {
         :key="toast.id"
         class="toast show shadow-lg"
         :class="{
-          'bg-dark text-white': toast.type === 'achievement',
-          'bg-primary text-white': toast.type === 'level-up',
+          'toast-achievement': toast.type === 'achievement',
+          'toast-level-up': toast.type === 'level-up',
           'toast-mobile': isMobile,
           'toast-desktop': !isMobile,
           'mb-2': isMobile,
@@ -61,18 +61,16 @@ onUnmounted(() => {
           <button
             v-if="!isMobile"
             type="button"
-            class="btn-close"
-            :class="{ 'btn-close-white': toast.type === 'achievement' || toast.type === 'level-up' }"
+            class="btn-close btn-close-white"
             :aria-label="t('game.close')"
             @click.stop="toastStore.removeToast(toast.id)">
           </button>
 
-          
+
           <small
             v-if="isMobile && index === 0"
-            class="text-muted opacity-75 ms-2"
-            style="font-size: 0.7rem;">
-            tap to dismiss
+            class="toast-hint ms-2">
+            {{ t('toast.tapToDismiss') }}
           </small>
         </div>
 
@@ -98,6 +96,32 @@ onUnmounted(() => {
      !important is required to beat Bootstrap's p-3 utility, which also
      sets padding-top with !important. */
   padding-top: calc(var(--pp-hud-height) + env(safe-area-inset-top, 0px) + .75rem) !important;
+}
+
+/* Toasts sit on the dark ground: opaque surface, cream text, gold accent
+   for the icon and level-up glow (white-on-gold and translucent headers
+   failed AA contrast). */
+.toast {
+  --bs-toast-bg: var(--pp-surface);
+  --bs-toast-color: var(--pp-cream);
+  --bs-toast-header-bg: transparent;
+  --bs-toast-header-color: var(--pp-cream);
+  --bs-toast-border-color: var(--pp-line);
+  border: 1px solid var(--pp-line);
+}
+
+.toast-header {
+  border-bottom-color: var(--pp-line);
+}
+
+.toast-level-up {
+  border-color: rgba(225, 178, 90, .55);
+  box-shadow: 0 0 0 1px rgba(225, 178, 90, .25), 0 10px 30px rgba(0, 0, 0, .5);
+}
+
+.toast-hint {
+  font-size: .7rem;
+  color: var(--pp-cream-dim);
 }
 
 /* Mobile-specific toast styling */

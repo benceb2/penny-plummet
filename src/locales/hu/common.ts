@@ -64,6 +64,7 @@ export default {
     }
   },
   "toast": {
+    "tapToDismiss": "Koppints a bezáráshoz",
     "achievementUnlocked": {
       "title": "Eredmény feloldva!",
       "message": "{title} - {description}"

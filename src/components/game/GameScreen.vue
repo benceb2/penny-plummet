@@ -38,6 +38,12 @@ defineProps<{
   position: relative;
   display: flex;
   flex-direction: column;
+  /* Card deal-in animations translate in from well outside their final box
+     (see PlayingCard's deal keyframes); without clipping, the in-flight card
+     widens document.documentElement.scrollWidth past the viewport, which
+     makes mobile browsers zoom the layout viewport out for the rest of the
+     session. */
+  overflow: clip;
 }
 
 .game-screen-tray {

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { useRouletteStore } from '../rouletteStore'
 import { RouletteState } from '@/types/RouletteState'
@@ -34,6 +34,15 @@ describe('Roulette Store', () => {
     store = useRouletteStore()
     // Reset mocks
     vi.clearAllMocks()
+  })
+
+  // Several tests below spy on Math.random via vi.spyOn, which (unlike
+  // vi.clearAllMocks() above) leaves the mocked implementation in place
+  // until explicitly restored. Without this, a leftover fixed return value
+  // leaks into whichever test file runs next in the same worker, breaking
+  // unrelated randomness (e.g. blackjackUtil's deck shuffle).
+  afterEach(() => {
+    vi.restoreAllMocks()
   })
 
   describe('Initial State', () => {

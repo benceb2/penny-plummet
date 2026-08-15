@@ -144,10 +144,6 @@ export default {
         "description": "Gyűjtsön össze 1000000$ zsetont"
       }
     },
-    "reward": {
-      "chips": "zseton",
-      "xp": "XP"
-    },
     "actions": {
       "claimRewards": "Jutalom igénylése"
     }

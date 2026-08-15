@@ -7,6 +7,10 @@ import pkg from '../../../package.json'
 
 const { t } = useI18n()
 
+/* Bootstrap semantic colours are mostly gold-mapped by tokens.css, but
+   success/danger stay reserved for win/loss and secondary/purple aren't
+   remapped at all, so this list alternates between the two gold tones
+   (primary, info) instead of assigning a distinct semantic colour per item. */
 const technologies = computed(() => [
   {
     name: t('about.technology.items.typescript.name'),
@@ -18,13 +22,13 @@ const technologies = computed(() => [
     name: t('about.technology.items.vue.name'),
     description: t('about.technology.items.vue.description'),
     icon: 'bi bi-diagram-3-fill',
-    color: 'success'
+    color: 'info'
   },
   {
     name: t('about.technology.items.vite.name'),
     description: t('about.technology.items.vite.description'),
     icon: 'bi bi-lightning-charge-fill',
-    color: 'warning'
+    color: 'primary'
   },
   {
     name: t('about.technology.items.pinia.name'),
@@ -36,13 +40,13 @@ const technologies = computed(() => [
     name: t('about.technology.items.bootstrap.name'),
     description: t('about.technology.items.bootstrap.description'),
     icon: 'bi bi-bootstrap-fill',
-    color: 'purple'
+    color: 'primary'
   },
   {
     name: t('about.technology.items.localStorage.name'),
     description: t('about.technology.items.localStorage.description'),
     icon: 'bi bi-hdd-fill',
-    color: 'secondary'
+    color: 'info'
   }
 ]);
 
@@ -87,7 +91,7 @@ const features = computed(() => [
     <div class="card mb-4">
       <div class="card-body">
         <h2 class="card-title d-flex align-items-center section-title">
-          <i class="bi bi-stack me-2 text-success" aria-hidden="true" />
+          <i class="bi bi-stack me-2 text-info" aria-hidden="true" />
           {{ t('about.technology.title') }}
         </h2>
         <div class="row g-3">

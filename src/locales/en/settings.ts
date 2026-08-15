@@ -17,7 +17,6 @@ export default {
         "description": "Restore your progress from a previously exported save file. This will replace your current progress.",
         "noFileSelected": "No file selected",
         "readError": "Failed to read save file",
-        "importSuccess": "Save imported successfully",
         "importFailed": "Failed to import save file",
         "confirmTitle": "Confirm Import",
         "confirmMessage": "Are you sure you want to import this save file? This will replace your current progress.",
@@ -44,8 +43,7 @@ export default {
       }
     },
     "messages": {
-      "operationSuccess": "Operation completed successfully!",
-      "genericError": "An error occurred during the operation"
+      "operationSuccess": "Operation completed successfully!"
     }
   }
 }

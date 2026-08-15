@@ -1,10 +1,6 @@
 export default {
   "clicker": {
     "title": "Earn Chips",
-    "earnings": {
-      "current": "Current Earnings",
-      "clickValue": "+"
-    },
     "click": {
       "ariaLabel": "Click to earn {value} chips"
     },
@@ -30,24 +26,20 @@ export default {
       "autoClickers": {
         "title": "Auto-Clickers",
         "owned": "Owned",
-        "perSecond": "/sec each",
-        "buy": "Buy Auto-Clicker"
+        "perSecond": "/sec each"
       },
       "multiplier": {
         "title": "Click Multiplier",
-        "current": "Current",
-        "upgrade": "Upgrade Multiplier"
+        "current": "Current"
       },
       "critical": {
         "title": "Critical Hits",
         "chance": "{percent}% chance",
-        "damage": "2x damage",
-        "upgrade": "Upgrade"
+        "damage": "2x damage"
       },
       "speed": {
         "title": "Auto-Click Speed",
-        "interval": "{ms}ms interval",
-        "upgrade": "Upgrade"
+        "interval": "{ms}ms interval"
       }
     },
     "combo": {

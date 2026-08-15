@@ -92,6 +92,31 @@ describe('Roulette Store', () => {
     })
   })
 
+  describe('Undo last bet', () => {
+    it('should remove only the most recently placed bet', () => {
+      store.placeBet('straight', [1], 100)
+      store.placeBet('split', [1, 2], 50)
+      store.undoLastBet()
+
+      expect(store.currentBets).toHaveLength(1)
+      expect(store.currentBets[0].type).toBe('straight')
+      expect(store.totalBet).toBe(100)
+    })
+
+    it('should do nothing when there are no bets', () => {
+      store.undoLastBet()
+      expect(store.currentBets).toHaveLength(0)
+    })
+
+    it('should not undo when not in betting state', () => {
+      store.placeBet('straight', [1], 100)
+      store.gameState = RouletteState.SPINNING
+      store.undoLastBet()
+
+      expect(store.currentBets).toHaveLength(1)
+    })
+  })
+
   describe('Spinning', () => {
     beforeEach(() => {
       // Mock Math.random to return predictable values

@@ -61,36 +61,30 @@ function getDetails(): string | undefined {
       
       <div class="flex-grow-1 me-3">
         <div class="d-flex align-items-center mb-1">
-          <span
-            class="badge me-2"
-            :class="{
-              'bg-success': ['win', 'income'].includes(transaction.type),
-              'bg-danger': ['loss', 'purchase'].includes(transaction.type),
-              'bg-secondary': transaction.type === 'push'
-            }">
+          <span class="transaction-pill me-2">
             {{ getTypeLabel(transaction.type) }}
           </span>
-          <span class="badge bg-primary me-2">
+          <span class="transaction-pill me-2">
             {{ getGameLabel(transaction.game) }}
           </span>
-          <small class="text-muted">{{ formatDate(transaction.timestamp) }}</small>
+          <small class="text-body-secondary">{{ formatDate(transaction.timestamp) }}</small>
         </div>
 
         <div
           v-if="showDetails && getDetails()"
-          class="text-muted small">
+          class="text-body-secondary small">
           {{ getDetails() }}
         </div>
       </div>
 
-      
+
       <div class="text-end">
         <span
           class="fs-5"
           :class="{
-            'text-success': ['win', 'income'].includes(transaction.type),
-            'text-danger': ['loss', 'purchase'].includes(transaction.type),
-            'text-muted': transaction.type === 'push'
+            'text-win': ['win', 'income'].includes(transaction.type),
+            'text-loss': ['loss', 'purchase'].includes(transaction.type),
+            'text-body-secondary': transaction.type === 'push'
           }">
           {{ ['win', 'income'].includes(transaction.type) ? '+' : '' }}{{ formatIntAsCurrency(transaction.amount) }}
         </span>
@@ -104,11 +98,32 @@ function getDetails(): string | undefined {
   transition: background-color 0.15s ease;
 }
 
-.transaction-item:hover {
-  background-color: rgba(0, 0, 0, 0.02);
+@media (hover: hover) {
+  .transaction-item:hover {
+    background-color: rgba(255, 255, 255, .03);
+  }
 }
 
 .transaction-item:last-child {
   border-bottom: none;
+}
+
+.transaction-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: .15rem .5rem;
+  border-radius: 999px;
+  background: var(--pp-surface-2);
+  color: var(--pp-cream-dim);
+  font-size: .75rem;
+  font-weight: 600;
+}
+
+.text-win {
+  color: var(--pp-win);
+}
+
+.text-loss {
+  color: var(--pp-loss);
 }
 </style>

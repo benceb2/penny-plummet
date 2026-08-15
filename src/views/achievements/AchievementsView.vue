@@ -77,7 +77,7 @@ watch([selectedCategory], () => {
     <div class="card">
       <div class="card-body">
         <div class="pb-3 mb-4 border-bottom">
-          <div class="d-flex justify-content-center flex-wrap gap-2">
+          <div class="category-scroll">
             <div class="btn-group" role="group">
               <button
                 v-for="category in categories"
@@ -108,3 +108,24 @@ watch([selectedCategory], () => {
     </div>
   </BaseLayout>
 </template>
+
+<style scoped>
+/* The category filter button-group doesn't wrap; on narrow viewports it can
+   run wider than the viewport, which would otherwise push the whole page
+   into horizontal scroll. Let the row itself scroll instead. */
+.category-scroll {
+  display: flex;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+@media (min-width: 768px) {
+  .category-scroll {
+    justify-content: center;
+  }
+}
+
+.category-scroll .btn-group {
+  flex-wrap: nowrap;
+}
+</style>

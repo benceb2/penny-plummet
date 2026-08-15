@@ -172,6 +172,15 @@
   --bs-progress-bar-color: #1E1607;
 }
 
+/* .pagination hardcodes its active page to stock Bootstrap blue rather than
+   reading --bs-primary (same class of bake-in as the outline buttons above). */
+.pagination {
+  --bs-pagination-active-bg: var(--pp-gold);
+  --bs-pagination-active-border-color: var(--pp-gold);
+  --bs-pagination-active-color: #1E1607;
+  --bs-pagination-focus-box-shadow: 0 0 0 .25rem rgba(225, 178, 90, .25);
+}
+
 .card,
 .modal-content,
 .offcanvas,

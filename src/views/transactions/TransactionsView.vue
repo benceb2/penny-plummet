@@ -62,7 +62,7 @@ const goToPage = (page: number) => {
       <div class="card-body">
         
         <div class="row gy-3 pb-3 mb-4 border-bottom align-items-center">
-          <div class="col-12 col-md-auto">
+          <div class="col-12 col-md-auto filter-scroll">
             <div class="btn-group">
               <button
                 v-for="game in gameOptions"
@@ -74,7 +74,7 @@ const goToPage = (page: number) => {
               </button>
             </div>
           </div>
-          <div class="col-12 col-md-auto ms-md-3">
+          <div class="col-12 col-md-auto ms-md-3 filter-scroll">
             <div class="btn-group">
               <button
                 v-for="type in typeOptions"
@@ -134,12 +134,15 @@ const goToPage = (page: number) => {
   overflow-y: auto;
 }
 
-.transaction-item:hover {
-  background-color: rgba(0, 0, 0, 0.02);
+/* The game/type filter button-groups don't wrap; on narrow viewports they
+   can run wider than the column, which would otherwise push the whole page
+   into horizontal scroll. Let the row itself scroll instead. */
+.filter-scroll {
+  overflow-x: auto;
+  max-width: 100%;
 }
 
-.hover-lift:hover {
-  transform: translateY(-2px);
-  transition: transform 0.2s;
+.filter-scroll .btn-group {
+  flex-wrap: nowrap;
 }
 </style>

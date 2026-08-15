@@ -1,4 +1,10 @@
 <script setup lang="ts">
+/**
+ * Coin click area: sits inside ClickerView's felt, below the stats band. It
+ * no longer paints its own felt background (the parent .felt does that) so
+ * it can be stacked with StatsHeader inside a single felt stage; GameScreen
+ * already provides the stage's aria-label region, so this stays unlabelled.
+ */
 import { useI18n } from 'vue-i18n'
 import { useClickerStore } from '@/stores/clickerStore'
 import { computed, ref } from 'vue'
@@ -33,7 +39,7 @@ const handleClickWithAnimation = () => {
 </script>
 
 <template>
-  <div class="click-stage" role="region" :aria-label="t('clicker.title')">
+  <div class="click-stage">
     <div
       v-if="clickerStore.comboCount > 1"
       class="combo-badge">
@@ -88,9 +94,6 @@ const handleClickWithAnimation = () => {
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  border-radius: var(--pp-radius);
-  background: radial-gradient(120% 90% at 50% 45%, var(--pp-felt) 0%, var(--pp-felt-deep) 78%, #0A2A1E 100%);
-  box-shadow: inset 0 0 0 1px rgba(225, 178, 90, .14), inset 0 0 60px rgba(0, 0, 0, .35);
   overflow: hidden;
 }
 

@@ -1,89 +1,116 @@
 <script setup lang="ts">
-import BaseLayout from '@/components/layout/BaseLayout.vue'
+import { useI18n } from 'vue-i18n'
+import { onBeforeUnmount, onMounted } from 'vue'
+import { useClickerStore } from '@/stores/clickerStore'
 import StatsHeader from '@/views/clicker/StatsHeader.vue'
 import ClickArea from '@/views/clicker/ClickArea.vue'
 import UpgradesPanel from '@/views/clicker/UpgradesPanel.vue'
-import { useI18n } from 'vue-i18n'
-import { onBeforeUnmount, onMounted, ref } from 'vue'
-import { useClickerStore } from '@/stores/clickerStore'
 
 const { t } = useI18n()
 const clickerStore = useClickerStore()
-const activePanel = ref<'play' | 'upgrades'>('play')
-const isCompact = ref(false)
-let mediaQuery: MediaQueryList | null = null
-
-const updateCompact = (event: MediaQueryList | MediaQueryListEvent) => {
-  isCompact.value = event.matches
-}
 
 onMounted(() => {
   clickerStore.setClickerActive(true)
-
-  if (typeof window !== 'undefined') {
-    mediaQuery = window.matchMedia('(max-width: 991.98px)')
-    updateCompact(mediaQuery)
-    if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener('change', updateCompact)
-    } else {
-      mediaQuery.addListener(updateCompact)
-    }
-  }
 })
 
 onBeforeUnmount(() => {
   clickerStore.setClickerActive(false)
-  if (mediaQuery) {
-    if (mediaQuery.removeEventListener) {
-      mediaQuery.removeEventListener('change', updateCompact)
-    } else {
-      mediaQuery.removeListener(updateCompact)
-    }
-  }
 })
 </script>
 
 <template>
-  <BaseLayout
-    :title="t('clicker.title')"
-    bootstrapIcon="coin"
-    :showBalance="true">
+  <div class="clicker-view d-flex flex-column flex-grow-1">
+    <h1 class="visually-hidden">{{ t('clicker.title') }}</h1>
 
-    <div class="container-fluid px-0">
-      
-      <StatsHeader />
+    <StatsHeader />
 
-      <div v-if="isCompact" class="d-flex justify-content-center mb-3">
-        <div class="btn-group w-100" role="group" aria-label="Clicker panels">
-          <button
-            type="button"
-            class="btn"
-            :class="activePanel === 'play' ? 'btn-primary' : 'btn-outline-primary'"
-            @click="activePanel = 'play'">
-            {{ t('clicker.title') }}
-          </button>
-          <button
-            type="button"
-            class="btn"
-            :class="activePanel === 'upgrades' ? 'btn-primary' : 'btn-outline-primary'"
-            @click="activePanel = 'upgrades'">
-            {{ t('clicker.upgrades.title') }}
-          </button>
-        </div>
-      </div>
-
-      
-      <div class="row">
-        
-        <div class="col-lg-8" v-show="!isCompact || activePanel === 'play'">
-          <ClickArea />
-        </div>
-
-        
-        <div class="col-lg-4" v-show="!isCompact || activePanel === 'upgrades'">
-          <UpgradesPanel />
-        </div>
-      </div>
+    <div class="clicker-body d-flex flex-grow-1">
+      <ClickArea />
+      <UpgradesPanel />
     </div>
-  </BaseLayout>
+
+    <div class="clicker-tray">
+      <button
+        type="button"
+        class="btn btn-primary tray-btn tray-collect"
+        :disabled="clickerStore.clicks < 10"
+        @click="clickerStore.collectChips()">
+        <span class="visually-hidden">{{ t('clicker.collect.button') }}</span>
+        <span aria-hidden="true">{{ t('clicker.collect.tray') }}</span>
+        <span class="tray-collect-amount">&middot; {{ clickerStore.formattedClicks }}</span>
+        <span class="visually-hidden">{{ t('clicker.collect.minimum') }}</span>
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-light tray-btn tray-upgrades d-lg-none"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#clickerUpgrades"
+        aria-controls="clickerUpgrades">
+        <i class="bi bi-arrow-up-circle" aria-hidden="true"></i>
+        {{ t('clicker.upgrades.title') }}
+      </button>
+    </div>
+  </div>
 </template>
+
+<style scoped>
+.clicker-view {
+  min-height: 0;
+  padding: .75rem 1rem 1rem;
+  gap: .75rem;
+}
+
+.clicker-body {
+  min-height: 0;
+  gap: .75rem;
+}
+
+.clicker-tray {
+  flex: 0 0 auto;
+  display: flex;
+  gap: .75rem;
+  padding: .75rem;
+  border-radius: var(--pp-radius);
+  background: var(--pp-surface);
+  border: 1px solid var(--pp-line);
+}
+
+.tray-btn {
+  min-height: 52px;
+  font-size: .85rem;
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  touch-action: manipulation;
+  transition: transform .1s ease;
+}
+
+@media (min-width: 400px) {
+  .tray-btn {
+    font-size: 1rem;
+    letter-spacing: .08em;
+  }
+}
+
+.tray-btn:active:not(:disabled) {
+  transform: scale(.97);
+}
+
+.tray-collect {
+  flex: 1 1 auto;
+}
+
+.tray-collect-amount {
+  opacity: .82;
+  font-weight: 700;
+  margin-left: .25rem;
+}
+
+.tray-upgrades {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+}
+</style>

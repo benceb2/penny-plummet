@@ -5,6 +5,9 @@ export default {
       "current": "Current Earnings",
       "clickValue": "+"
     },
+    "click": {
+      "ariaLabel": "Click to earn {value} chips"
+    },
     "stats": {
       "availableToCollect": "Available To Collect",
       "income": "Income",
@@ -14,10 +17,12 @@ export default {
     },
     "collect": {
       "button": "Collect Chips",
+      "tray": "Collect",
       "minimum": "(Min. 10 required)"
     },
     "upgrades": {
       "title": "Upgrades",
+      "close": "Close upgrades",
       "actions": {
         "buy": "Buy {cost}",
         "upgrade": "Upgrade {cost}"

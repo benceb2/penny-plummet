@@ -19,15 +19,7 @@ const glowIntensity = computed(() => {
   return 1
 })
 
-const comboColor = computed(() => {
-  if (clickerStore.comboCount > 20) return 'text-danger'
-  if (clickerStore.comboCount > 10) return 'text-warning'
-  if (clickerStore.comboCount > 5) return 'text-info'
-  return 'text-primary'
-})
-
 const clickScale = ref(1)
-const collectButtonScale = ref(1)
 
 const handleClickWithAnimation = () => {
   clickerStore.handleClick()
@@ -38,446 +30,202 @@ const handleClickWithAnimation = () => {
     clickScale.value = 1
   }, 100)
 }
-
-const handleCollectWithAnimation = () => {
-  clickerStore.collectChips()
-
-  // Collect button animation
-  collectButtonScale.value = 0.9
-  setTimeout(() => {
-    collectButtonScale.value = 1.1
-    setTimeout(() => {
-      collectButtonScale.value = 1
-    }, 200)
-  }, 100)
-}
 </script>
 
 <template>
-  <div class="card shadow-sm h-100 rounded-4">
-    <div class="card-body d-flex flex-column justify-content-center align-items-center p-3 click-area-body">
+  <div class="click-stage" role="region" :aria-label="t('clicker.title')">
+    <div
+      v-if="clickerStore.comboCount > 1"
+      class="combo-badge">
+      <i class="bi bi-lightning-fill" aria-hidden="true"></i>
+      {{ t('clicker.combo.label', { count: clickerStore.comboCount }) }}
+      <span class="combo-bonus">
+        {{ t('clicker.combo.bonus', { percent: (clickerStore.comboMultiplier * 100 - 100).toFixed(0) }) }}
+      </span>
+    </div>
 
-      
-      <div class="position-relative w-100 d-flex justify-content-center mb-3" style="height: 0;">
-        <div v-if="clickerStore.comboCount > 1" class="combo-badge position-absolute" style="top: 10px; z-index: 10;">
-          <span :class="`badge ${comboColor} fs-6 pulse px-3 py-1`">
-            <i class="bi bi-lightning-fill me-1" aria-hidden="true"></i>
-            {{ t('clicker.combo.label', { count: clickerStore.comboCount }) }}
-            <span class="ms-1 opacity-75">
-              {{ t('clicker.combo.bonus', { percent: (clickerStore.comboMultiplier * 100 - 100).toFixed(0) }) }}
-            </span>
-          </span>
-        </div>
-      </div>
+    <div class="coin-wrap">
+      <button
+        type="button"
+        class="coin-btn"
+        :style="{
+          transform: `scale(${buttonScale * clickScale})`,
+          '--glow': glowIntensity
+        }"
+        :aria-label="t('clicker.click.ariaLabel', { value: clickerStore.formattedClickValue })"
+        @click="handleClickWithAnimation">
+        <i class="bi bi-coin coin-icon" aria-hidden="true"></i>
+        <span class="coin-value">+{{ clickerStore.formattedClickValue }}</span>
+        <span v-if="clickerStore.criticalChance > 0.1" class="coin-crit">
+          {{ t('clicker.combo.critical', { percent: (clickerStore.criticalChance * 100).toFixed(0) }) }}
+        </span>
+      </button>
 
-      
-      <div class="position-relative mb-4 p-3 d-flex justify-content-center align-items-center flex-grow-1">
-        <button
-          class="main-click-btn btn btn-warning rounded-circle p-0 position-relative shadow"
+      <div class="floating-animations-container" aria-hidden="true">
+        <div
+          v-for="animation in clickerStore.clickAnimations"
+          :key="animation.id"
+          class="floating-number"
+          :class="{ 'floating-critical': animation.isCritical }"
           :style="{
-            transform: `scale(${buttonScale * clickScale})`,
-            boxShadow: glowIntensity > 0 ?
-              `0 12px 40px rgba(255, 215, 0, ${0.4 + glowIntensity * 0.4}),
- 0 0 ${30 + glowIntensity * 20}px rgba(255, 193, 7, ${glowIntensity * 0.6})` :
-              '0 12px 40px rgba(255, 215, 0, 0.3)'
-          }"
-          @click="handleClickWithAnimation">
-
-          <div class="click-content text-white">
-            <i class="bi bi-coin click-icon d-block mb-2" aria-hidden="true"></i>
-            <div class="fw-bold fs-5 mb-1">+{{ clickerStore.formattedClickValue }}</div>
-            <div class="small opacity-90" v-if="clickerStore.criticalChance > 0.1">
-              {{ t('clicker.combo.critical', { percent: (clickerStore.criticalChance * 100).toFixed(0) }) }}
-            </div>
-          </div>
-
-          
-          <div class="click-ripple" aria-hidden="true"></div>
-        </button>
-
-        
-        <div class="floating-animations-container position-absolute"
-          style="top: 50%; left: 50%; pointer-events: none; z-index: 15;"
-          aria-hidden="true">
-          <div
-            v-for="animation in clickerStore.clickAnimations"
-            :key="animation.id"
-            class="floating-number position-absolute fw-bold"
-            :class="animation.isCritical ? 'text-warning floating-critical' : 'text-success floating-normal'"
-            :style="{
-              left: `${animation.x}px`,
-              top: `${animation.y}px`,
-              transform: 'translate(-50%, -50%)',
-              fontSize: animation.isCritical ? '1.6rem' : '1.3rem',
-              textShadow: animation.isCritical ?
-                '0 0 15px rgba(255, 193, 7, 1), 0 2px 4px rgba(0, 0, 0, 0.8)' :
-                '0 0 10px rgba(40, 167, 69, 0.8), 0 2px 4px rgba(0, 0, 0, 0.8)'
-            }">
-            +{{ animation.value.toLocaleString() }}
-            <i v-if="animation.isCritical" class="bi bi-exclamation-diamond-fill ms-1" aria-hidden="true"></i>
-          </div>
+            left: `${animation.x}px`,
+            top: `${animation.y}px`
+          }">
+          +{{ animation.value.toLocaleString() }}
+          <i v-if="animation.isCritical" class="bi bi-exclamation-diamond-fill ms-1" aria-hidden="true"></i>
         </div>
-      </div>
-
-      
-      <div class="d-flex gap-3 w-75 mx-auto">
-        <button
-          class="collect-btn btn btn-success btn-lg flex-fill position-relative overflow-hidden"
-          :style="{ transform: `scale(${collectButtonScale})` }"
-          @click="handleCollectWithAnimation"
-          :disabled="clickerStore.clicks < 10">
-
-          
-          <div class="collect-bg-animation" aria-hidden="true"></div>
-
-          
-          <div class="position-relative z-2 d-flex align-items-center justify-content-center">
-            <i class="bi bi-gem me-2 collect-icon" aria-hidden="true"></i>
-            <div>
-              <div class="fw-bold">{{ t('clicker.collect.button') }}</div>
-              <small class="opacity-90">{{ t('clicker.collect.minimum') }}</small>
-            </div>
-
-            
-            <div class="sparkles position-absolute" aria-hidden="true">
-              <div class="sparkle sparkle-1">✨</div>
-              <div class="sparkle sparkle-2">💎</div>
-              <div class="sparkle sparkle-3">⭐</div>
-            </div>
-          </div>
-        </button>
-
-
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-/* Main click button */
-.main-click-btn {
-  width: 240px;
-  height: 240px;
-  border: 4px solid rgba(255, 255, 255, 0.9) !important;
-  background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%) !important;
-  box-shadow: 0 12px 40px rgba(255, 215, 0, 0.3);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+.click-stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  border-radius: var(--pp-radius);
+  background: radial-gradient(120% 90% at 50% 45%, var(--pp-felt) 0%, var(--pp-felt-deep) 78%, #0A2A1E 100%);
+  box-shadow: inset 0 0 0 1px rgba(225, 178, 90, .14), inset 0 0 60px rgba(0, 0, 0, .35);
   overflow: hidden;
 }
 
-.main-click-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 12px 40px rgba(255, 215, 0, 0.5);
-  border-color: rgba(255, 255, 255, 1) !important;
-  background: linear-gradient(135deg, #FFE55C 0%, #FFB84D 50%, #FF9500 100%) !important;
-}
-
-.main-click-btn:active {
-  transform: scale(0.95);
-}
-
-.click-content {
-  position: relative;
-  z-index: 2;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.click-icon {
-  font-size: 3.5rem;
-}
-
-/* collect button */
-.collect-btn {
-  border: none !important;
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
-  transition: background 0.3s ease;
-  min-height: 80px;
-}
-
-.collect-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #32d74b 0%, #17a2b8 100%) !important;
-}
-
-.collect-btn:disabled {
-  opacity: 0.6;
-}
-
-.click-area-body {
-  min-height: 600px;
-}
-
-/* Animated background for collect button */
-.collect-bg-animation {
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.6s ease;
-}
-
-.collect-btn:hover:not(:disabled) .collect-bg-animation {
-  left: 100%;
-}
-
-/* Sparkle animations */
-.sparkles {
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.sparkle {
-  position: absolute;
-  font-size: 1rem;
-  opacity: 0;
-  animation: sparkleFloat 2s infinite ease-in-out;
-}
-
-.sparkle-1 {
-  top: 20%;
-  right: 15%;
-  animation-delay: 0s;
-}
-
-.sparkle-2 {
-  bottom: 25%;
-  right: 20%;
-  animation-delay: 0.7s;
-}
-
-.sparkle-3 {
-  top: 60%;
-  right: 10%;
-  animation-delay: 1.4s;
-}
-
-.collect-btn:hover:not(:disabled) .sparkle {
-  animation: sparkleActive 1.5s infinite ease-in-out;
-}
-
-.collect-icon {
-  animation: gemGlow 2s ease-in-out infinite alternate;
-}
-
-/* Click ripple effect */
-.click-ripple {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.4);
-  transform: translate(-50%, -50%);
-  transition: all 0.3s ease;
-  pointer-events: none;
-}
-
-.main-click-btn:active .click-ripple {
-  width: 300px;
-  height: 300px;
-  opacity: 0;
-}
-
-/* Game-specific animations */
 .combo-badge {
-  animation: bounceIn 0.5s ease;
-}
-
-.floating-number {
-  pointer-events: none;
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .3rem .75rem;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, .35);
+  border: 1px solid rgba(225, 178, 90, .5);
+  color: var(--pp-gold-bright);
+  font-size: .8rem;
   font-weight: 700;
   white-space: nowrap;
+}
+
+.combo-bonus {
+  opacity: .8;
+  font-weight: 600;
+}
+
+.coin-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.coin-btn {
+  width: clamp(170px, min(46vw, 34vh), 250px);
+  height: clamp(170px, min(46vw, 34vh), 250px);
+  border-radius: 50%;
+  border: 3px solid var(--pp-cream);
+  background: linear-gradient(135deg, var(--pp-gold-bright) 0%, var(--pp-gold) 55%, var(--pp-gold-deep) 100%);
+  color: #1E1607;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .25rem;
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, .45),
+    0 0 calc(20px + var(--glow, 0) * 30px) rgba(225, 178, 90, calc(.35 + var(--glow, 0) * .45));
+  transition: transform .15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow .2s ease;
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
   user-select: none;
   -webkit-user-select: none;
 }
 
-.floating-normal {
-  animation: floatUpImproved 2s ease-out forwards;
+.coin-btn:active {
+  transform: scale(0.94) !important;
+}
+
+@media (hover: hover) {
+  .coin-btn:hover {
+    box-shadow:
+      0 14px 36px rgba(0, 0, 0, .5),
+      0 0 calc(28px + var(--glow, 0) * 30px) rgba(225, 178, 90, calc(.45 + var(--glow, 0) * .45));
+  }
+}
+
+.coin-icon {
+  font-size: clamp(2rem, 8vw, 3.25rem);
+}
+
+.coin-value {
+  font-weight: 800;
+  font-size: clamp(1.1rem, 4vw, 1.5rem);
+  font-variant-numeric: tabular-nums;
+}
+
+.coin-crit {
+  font-size: .7rem;
+  font-weight: 700;
+  opacity: .85;
+}
+
+.floating-animations-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  pointer-events: none;
+}
+
+.floating-number {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--pp-cream);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, .8);
+  white-space: nowrap;
+  user-select: none;
+  animation: floatUp 2s ease-out forwards;
 }
 
 .floating-critical {
-  animation: floatUpCritical 2.2s ease-out forwards;
+  color: var(--pp-gold-bright);
+  font-size: 1.6rem;
+  text-shadow: 0 0 12px rgba(225, 178, 90, .8), 0 2px 4px rgba(0, 0, 0, .8);
+  animation-duration: 2.2s;
 }
 
-.pulse {
-  animation: pulse 0.8s ease-in-out infinite alternate;
-}
-
-/* Keyframe animations */
-@keyframes sparkleFloat {
-
-  0%,
-  100% {
-    opacity: 0;
-    transform: translateY(0px) scale(0.8);
-  }
-
-  50% {
-    opacity: 0.6;
-    transform: translateY(-10px) scale(1);
-  }
-}
-
-@keyframes sparkleActive {
-
-  0%,
-  100% {
-    opacity: 0;
-    transform: translateY(0px) scale(0.8) rotate(0deg);
-  }
-
-  25% {
-    opacity: 1;
-    transform: translateY(-15px) scale(1.2) rotate(90deg);
-  }
-
-  75% {
-    opacity: 0.8;
-    transform: translateY(-8px) scale(1) rotate(180deg);
-  }
-}
-
-@keyframes gemGlow {
-  from {
-    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
-  }
-
-  to {
-    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8));
-  }
-}
-
-@keyframes bounceIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.3);
-  }
-
-  50% {
-    opacity: 1;
-    transform: scale(1.05);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes pulse {
-  from {
-    transform: scale(1);
-  }
-
-  to {
-    transform: scale(1.05);
-  }
-}
-
-@keyframes floatUpImproved {
+@keyframes floatUp {
   0% {
     opacity: 1;
-    transform: translate(-50%, -50%) translateY(0px) scale(1) rotate(0deg);
-  }
-
-  10% {
-    opacity: 1;
-    transform: translate(-50%, -50%) translateY(-10px) scale(1.1) rotate(-2deg);
+    transform: translate(-50%, -50%) translateY(0) scale(1);
   }
 
   30% {
-    opacity: 0.9;
-    transform: translate(-50%, -50%) translateY(-35px) scale(1.05) rotate(1deg);
-  }
-
-  70% {
-    opacity: 0.4;
-    transform: translate(-50%, -50%) translateY(-65px) scale(0.9) rotate(-1deg);
+    opacity: .9;
+    transform: translate(-50%, -50%) translateY(-35px) scale(1.05);
   }
 
   100% {
     opacity: 0;
-    transform: translate(-50%, -50%) translateY(-100px) scale(0.7) rotate(0deg);
+    transform: translate(-50%, -50%) translateY(-100px) scale(0.7);
   }
 }
 
-@keyframes floatUpCritical {
-  0% {
-    opacity: 1;
-    transform: translate(-50%, -50%) translateY(0px) scale(1) rotate(0deg);
+@media (prefers-reduced-motion: reduce) {
+  .coin-btn {
+    transition: none;
   }
 
-  5% {
-    opacity: 1;
-    transform: translate(-50%, -50%) translateY(-5px) scale(1.3) rotate(-3deg);
-  }
-
-  15% {
-    opacity: 1;
-    transform: translate(-50%, -50%) translateY(-20px) scale(1.2) rotate(2deg);
-  }
-
-  35% {
-    opacity: 0.9;
-    transform: translate(-50%, -50%) translateY(-45px) scale(1.1) rotate(-1deg);
-  }
-
-  70% {
-    opacity: 0.3;
-    transform: translate(-50%, -50%) translateY(-75px) scale(0.95) rotate(1deg);
-  }
-
-  100% {
+  .floating-number {
+    animation: none;
     opacity: 0;
-    transform: translate(-50%, -50%) translateY(-120px) scale(0.6) rotate(0deg);
-  }
-}
-
-/* Responsive adjustments */
-@media (max-width: 991px) {
-  .click-area-body {
-    min-height: 520px;
-  }
-
-  .main-click-btn {
-    width: 200px;
-    height: 200px;
-  }
-
-  .click-icon {
-    font-size: 3rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .click-area-body {
-    min-height: 420px;
-  }
-
-  .main-click-btn {
-    width: 180px;
-    height: 180px;
-  }
-
-  .click-icon {
-    font-size: 2.5rem;
-  }
-}
-
-@media (max-width: 575px) {
-  .click-area-body {
-    min-height: 340px;
-  }
-
-  .collect-btn {
-    min-height: 64px;
-  }
-
-  .click-icon {
-    font-size: 2.2rem;
   }
 }
 </style>

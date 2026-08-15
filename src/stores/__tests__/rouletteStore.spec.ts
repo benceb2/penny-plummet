@@ -11,10 +11,11 @@ vi.mock('../achievementStore', () => ({
   })
 }))
 
-// Mock the transaction store
+// Mock the transaction store (hoisted so tests can assert on calls made by the store)
+const addTransaction = vi.fn()
 vi.mock('../transactionStore', () => ({
   useTransactionStore: () => ({
-    addTransaction: vi.fn()
+    addTransaction
   })
 }))
 
@@ -163,6 +164,46 @@ describe('Roulette Store', () => {
       store.reset()
       vi.spyOn(Math, 'random').mockReturnValue(0.5) // Different number
       store.placeBet('straight', [3], 100)
+      await store.spin()
+      store.completeGame()
+
+      expect(store.sessionStats.consecutiveWins).toBe(0)
+    })
+
+    it('should record a loss transaction for the net amount on a partial loss (some bets win, others lose)', async () => {
+      // Winning number is 3. $5 on red (covering 3) wins; $15 on black (not covering 3) loses.
+      store.placeBet('red', [3], 5) // wins: payout = 5 * (1 + 1) = 10
+      store.placeBet('black', [10], 15) // loses
+
+      const result = await store.spin()
+      expect(result.totalBet).toBe(20)
+      expect(result.totalWin).toBe(10) // less than totalBet, but more than 0
+
+      store.completeGame()
+
+      // The net loss (totalBet - totalWin = 10) must still be charged to the player,
+      // since chips only ever change via transactionStore.addTransaction.
+      expect(addTransaction).toHaveBeenCalledWith(
+        expect.objectContaining({
+          amount: -10,
+          type: 'loss',
+          game: 'roulette',
+          detailsKey: 'transactions.details.roulette.loss'
+        })
+      )
+    })
+
+    it('should reset consecutive wins on a partial loss', async () => {
+      // First spin - win, to build up a streak
+      store.placeBet('straight', [3], 100)
+      await store.spin()
+      store.completeGame()
+      expect(store.sessionStats.consecutiveWins).toBe(1)
+
+      // Reset and second spin - partial loss
+      store.reset()
+      store.placeBet('red', [3], 5)
+      store.placeBet('black', [10], 15)
       await store.spin()
       store.completeGame()
 

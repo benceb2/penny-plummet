@@ -68,7 +68,6 @@ watch([selectedCategory], () => {
             aria-valuemin="0"
             aria-valuemax="100"
             :aria-label="t('profile.stats.achievements')">
-            {{ achievementProgress.percentage }}%
           </div>
         </div>
       </div>
@@ -117,6 +116,12 @@ watch([selectedCategory], () => {
   display: flex;
   overflow-x: auto;
   max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.category-scroll::-webkit-scrollbar {
+  display: none;
 }
 
 @media (min-width: 768px) {

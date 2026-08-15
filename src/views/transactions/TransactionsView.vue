@@ -140,6 +140,12 @@ const goToPage = (page: number) => {
 .filter-scroll {
   overflow-x: auto;
   max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.filter-scroll::-webkit-scrollbar {
+  display: none;
 }
 
 .filter-scroll .btn-group {

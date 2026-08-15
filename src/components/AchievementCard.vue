@@ -36,21 +36,7 @@ function claimReward() {
       'achievement-card--unclaimed': achievement.completed && !achievement.claimed,
       'achievement-card--locked': !achievement.completed
     }">
-    <div class="card-body d-flex flex-column position-relative">
-
-      <div
-        class="position-absolute top-0 end-0 mt-2 me-2 d-flex align-items-center gap-2">
-        <small class="reward-pill">
-          <i class="bi bi-coin me-1"></i>
-          {{ formatIntAsCurrency(achievement.reward.chips) }}
-        </small>
-        <small class="reward-pill">
-          <i class="bi bi-star me-1"></i>
-          {{ achievement.reward.xp }} XP
-        </small>
-      </div>
-
-
+    <div class="card-body d-flex flex-column">
       <h3 class="card-title d-flex align-items-center h5">
         {{ t(`${achievementKey}.title`) }}
         <span v-if="achievement.completed && achievement.claimed" class="achievement-card-check ms-2">
@@ -64,6 +50,16 @@ function claimReward() {
 
       <p class="card-text text-body-secondary">{{ t(`${achievementKey}.description`) }}</p>
 
+      <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+        <small class="reward-pill">
+          <i class="bi bi-coin me-1"></i>
+          {{ formatIntAsCurrency(achievement.reward.chips) }}
+        </small>
+        <small class="reward-pill">
+          <i class="bi bi-star me-1"></i>
+          {{ achievement.reward.xp }} XP
+        </small>
+      </div>
 
       <div v-if="!achievement.completed" class="mb-3">
         <div class="d-flex align-items-center mb-2">

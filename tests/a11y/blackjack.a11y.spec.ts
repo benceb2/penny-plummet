@@ -43,8 +43,15 @@ test('placing a bet with chips and dealing has no detectable axe violations in t
   await page.getByRole('button', { name: 'Hit' }).waitFor({ state: 'visible' })
   // The Deal tap can leave the pointer resting over the Hit/Stand row once
   // the tray relayouts, freezing a :hover transition mid-flight; move it
-  // away so axe reads the settled resting styles.
+  // away so axe reads the settled resting styles. Moving the pointer only
+  // starts the un-hover transition though - .btn-outline-light crossfades
+  // color/background-color/border-color over 150ms (Bootstrap's .btn
+  // transition), and axe can still sample mid-fade, catching a transient
+  // blended colour pair that dips below the 4.5:1 AA contrast ratio even
+  // though neither the hover nor the resting state is actually a violation.
+  // Wait out the transition so axe reads the settled state.
   await page.mouse.move(0, 0)
+  await page.waitForTimeout(200)
 
   const results = await new AxeBuilder({ page }).analyze()
   expect(results.violations).toEqual([])

@@ -87,5 +87,26 @@ export default {
     "push": "PUSH",
     "unknown": "UNKNOWN",
     "dismissHint": "Click to dismiss or press ESC"
+  },
+  "game": {
+    "betAmount": "Bet {amount}",
+    "undo": "Undo",
+    "undoLastChip": "Undo last chip",
+    "deal": "Deal",
+    "dealFor": "Deal · {amount}",
+    "hit": "Hit",
+    "stand": "Stand",
+    "changeBet": "Change bet",
+    "dealAgain": "Deal again",
+    "dealAgainFor": "Deal again · {amount}",
+    "tapToContinue": "Tap anywhere to continue",
+    "rules": "Rules",
+    "rulesAndPayouts": "Rules and payouts",
+    "you": "You",
+    "dealer": "Dealer",
+    "bust": "Bust",
+    "blackjackPays": "Blackjack pays 3 to 2",
+    "dealerStands": "Dealer stands on all 17s",
+    "close": "Close"
   }
 }

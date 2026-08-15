@@ -87,5 +87,26 @@ export default {
     "push": "DÖNTETLEN",
     "unknown": "ISMERETLEN",
     "dismissHint": "Kattints a bezáráshoz vagy nyomd meg az ESC-et"
+  },
+  "game": {
+    "betAmount": "{amount} tét",
+    "undo": "Visszavonás",
+    "undoLastChip": "Utolsó zseton visszavonása",
+    "deal": "Osztás",
+    "dealFor": "Osztás · {amount}",
+    "hit": "Lapot kérek",
+    "stand": "Megállok",
+    "changeBet": "Tét módosítása",
+    "dealAgain": "Új kör",
+    "dealAgainFor": "Új kör · {amount}",
+    "tapToContinue": "Koppints bárhová a folytatáshoz",
+    "rules": "Szabályok",
+    "rulesAndPayouts": "Szabályok és kifizetések",
+    "you": "Ön",
+    "dealer": "Osztó",
+    "bust": "Túllépés",
+    "blackjackPays": "A blackjack 3:2 arányban fizet",
+    "dealerStands": "Az osztó minden 17-nél megáll",
+    "close": "Bezárás"
   }
 }

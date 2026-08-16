@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import type { Card } from '@/types/Card'
-import { achievements as achievementsRef } from '@/utils/achievementUitl'
+import { achievements as achievementsRef } from '@/utils/achievementUtil'
 import { useAchievementStore } from '../achievementStore'
 import { useBlackjackStore } from '../blackjackStore'
 import { useClickerStore } from '../clickerStore'

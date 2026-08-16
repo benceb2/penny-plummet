@@ -3,7 +3,7 @@ import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { usePagination } from '@/composables/usePagination';
 import { useAchievementStore } from '@/stores/achievementStore';
-import { filterAndSortAchievements } from '@/utils/achievementUitl';
+import { filterAndSortAchievements } from '@/utils/achievementUtil';
 import BaseLayout from '@/components/layout/BaseLayout.vue';
 import BasePagination from '@/components/layout/BasePagination.vue';
 import AchievementCard from '@/components/AchievementCard.vue';

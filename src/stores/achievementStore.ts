@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { calculateStorageKey, createGameSerializer } from '@/utils/gameSaveSerializerUtil';
-import { achievements } from '@/utils/achievementUitl';
+import { achievements } from '@/utils/achievementUtil';
 import type { Achievement } from '@/types/Achievement';
 import type { Level } from '@/types/Level';
 import i18n from '@/i18n';

@@ -8,7 +8,7 @@ import { useAchievementStore } from '@/stores/achievementStore';
 import { useTransactionStore } from '@/stores/transactionStore';
 import { useClickerStore } from '@/stores/clickerStore';
 import { useRouletteStore } from '@/stores/rouletteStore';
-import { sortAchievementsByPriority } from '@/utils/achievementUitl';
+import { sortAchievementsByPriority } from '@/utils/achievementUtil';
 import { formatNumber } from '@/utils/numberFormatUtil';
 
 const { t } = useI18n();

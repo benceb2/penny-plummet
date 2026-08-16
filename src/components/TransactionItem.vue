@@ -56,7 +56,8 @@ function getDetails(): string | undefined {
 
 <template>
   <div
-    class="transaction-item border-bottom p-3">
+    class="transaction-item border-bottom"
+    :class="compact ? 'transaction-item--compact' : 'p-3'">
     <div class="d-flex align-items-start justify-content-between">
       
       <div class="flex-grow-1 me-3">
@@ -106,6 +107,13 @@ function getDetails(): string | undefined {
 
 .transaction-item:last-child {
   border-bottom: none;
+}
+
+/* Tighter rows for embedded lists such as the lobby's "Recent" card. Kept
+   as a scoped rule rather than a Bootstrap spacing utility so a parent can
+   still adjust it (utilities are !important and would win). */
+.transaction-item--compact {
+  padding: .6rem 0;
 }
 
 .transaction-pill {

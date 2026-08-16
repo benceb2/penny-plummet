@@ -8,6 +8,7 @@ import ResultBanner from '@/components/game/ResultBanner.vue'
 import { useBlackjackStore } from '@/stores/blackjackStore'
 import { useUserStore } from '@/stores/userStore'
 import { BlackjackState } from '@/types/BlackjackGameState'
+import type { Card } from '@/types/Card'
 import i18n from '@/i18n'
 
 const mountView = () => {
@@ -29,6 +30,8 @@ const mountView = () => {
 
 const chipButton = (wrapper: ReturnType<typeof mountView>['wrapper'], value: number) =>
   wrapper.findAllComponents(ChipButton).find((chip) => chip.props('value') === value)!
+
+const card = (suit: Card['suit'], value: number, display: string): Card => ({ suit, value, display, faceUp: true })
 
 describe('BlackjackView', () => {
   beforeEach(() => {
@@ -121,13 +124,23 @@ describe('BlackjackView', () => {
     const { wrapper, gameStore, userStore } = mountView()
     userStore.chips = 100
     gameStore.currentBet = 20
-    gameStore.dealCards()
+    // Set the hand up directly rather than dealing from a shuffled deck: a
+    // natural blackjack on either side (roughly one deal in ten) ends the
+    // round on the spot and swaps the tray to "Deal again", which deals a
+    // fresh two-card hand instead of hitting.
+    gameStore.playerHand = [card('hearts', 9, '9'), card('spades', 8, '8')]
+    gameStore.dealerHand = [card('diamonds', 7, '7'), { ...card('clubs', 6, '6'), faceUp: false }]
+    gameStore.deck = [card('clubs', 2, '2')]
+    gameStore.gameState = BlackjackState.PLAYER_TURN
     await wrapper.vm.$nextTick()
 
-    const handSizeBeforeHit = gameStore.playerHand.length
-    await wrapper.get('button.btn-primary.cta-btn').trigger('click')
+    const hitButton = wrapper.get('button.btn-primary.cta-btn')
+    expect(hitButton.text()).toBe('Hit')
+    expect(wrapper.get('button.btn-outline-light.cta-btn').text()).toBe('Stand')
 
-    expect(gameStore.playerHand.length).toBe(handSizeBeforeHit + 1)
+    await hitButton.trigger('click')
+
+    expect(gameStore.playerHand).toHaveLength(3)
   })
 
   it('shows the result banner once the round ends and hides it when dismissed', async () => {

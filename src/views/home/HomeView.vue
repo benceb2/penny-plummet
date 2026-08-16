@@ -329,10 +329,6 @@ const recentTransactions = computed(() => transactionStore.latestTransactions.sl
   font-variant-numeric: tabular-nums;
 }
 
-.lobby-transactions :deep(.transaction-item) {
-  padding: .6rem 0;
-}
-
 .lobby-transactions :deep(.transaction-item:first-child) {
   padding-top: 0;
 }

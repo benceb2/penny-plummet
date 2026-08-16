@@ -3,7 +3,7 @@ export default {
     "title": "Rólunk",
     "game": {
       "title": "A Játékról",
-      "description": "A Penny Plummet egy böngésző-alapú kaszinó játék, amely ötvözi a klasszikus szerencsejátékokat a modern webtechnológiákkal. Próbálja ki szerencséjét a Blackjack-nél vagy tesztelje kattintási sebességét a Kattintós minijátékban!"
+      "description": "A Penny Plummet egy böngésző-alapú kaszinó játék, amely ötvözi a klasszikus asztali játékokat a modern webtechnológiákkal. Játsszon Blackjacket az osztó ellen, tegye meg tétjeit a rulettasztalnál, vagy építsen passzív jövedelmet a Kattintós minijátékban!"
     },
     "technology": {
       "title": "Technológiai Stack",
@@ -38,15 +38,15 @@ export default {
       "title": "Játék Funkciók",
       "blackjack": {
         "title": "Blackjack",
-        "description": "Sajátítsd el a 21-es művészetét ebben a klasszikus kártyajátékban. Győzd le az osztót stratégiai játékkal, nyiss fel eredményeket és mássz fel a ranglistán."
+        "description": "Sajátítsa el a 21 művészetét ebben a klasszikus kártyajátékban. Győzze le az osztót stratégiai játékkal, oldjon fel eredményeket és gyarapítsa zsetonkészletét."
       },
       "roulette": {
         "title": "Rulett",
-        "description": "Pörgesd meg a szerencse kerekeit! Tedd fel tétedet számokra, színekre vagy kombinációkra ebben az időtlen kaszinó kedvencben progresszív jutalmakkal."
+        "description": "Pörgesse meg a szerencsekereket! Tegye meg tétjeit számokra, színekre vagy tucatokra ebben az időtlen kaszinóklasszikusban, egy nullás európai asztalon."
       },
       "clicker": {
         "title": "Kattintós Játék",
-        "description": "Kattintsd magad a gazdagsághoz! Építs kombókat, nyiss fel szorzókat és prestízsálj hatalmas jutalmakért ebben a függőséget okozó idle játékban."
+        "description": "Kattintson a gazdagságig! Építsen kombókat, üssön kritikusakat, vásároljon auto-kattintókat és szorzókat, és keressen akkor is, amikor távol van, ebben a függőséget okozó idle játékban."
       }
     }
   }

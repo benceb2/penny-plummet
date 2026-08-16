@@ -59,6 +59,24 @@ describe('BlackjackView', () => {
     expect(values).toEqual([1, 5, 25])
   })
 
+  it('offers larger denominations with compact labels once the balance runs into the millions', async () => {
+    const { wrapper, gameStore, userStore } = mountView()
+    userStore.chips = 47_900_000
+    await wrapper.vm.$nextTick()
+
+    const chips = wrapper.findAllComponents(ChipButton)
+    expect(chips.map((chip) => chip.props('value'))).toEqual([100_000, 500_000, 1_000_000, 5_000_000, 25_000_000])
+    expect(chips.map((chip) => chip.text())).toEqual(['100K', '500K', '1M', '5M', '25M'])
+    expect(chips[4].attributes('aria-label')).toBe('Bet 25M')
+
+    await chipButton(wrapper, 25_000_000).trigger('click')
+    await chipButton(wrapper, 5_000_000).trigger('click')
+    expect(wrapper.get('.bet-amount').text()).toBe('$30M')
+
+    await wrapper.get('button.btn-primary.cta-btn').trigger('click')
+    expect(gameStore.currentBet).toBe(30_000_000)
+  })
+
   it('builds a bet by tapping chips, supports undo, and deals with the accumulated bet', async () => {
     const { wrapper, gameStore, userStore } = mountView()
     userStore.chips = 100

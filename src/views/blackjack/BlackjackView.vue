@@ -13,7 +13,7 @@ import { useBlackjackStore } from '@/stores/blackjackStore'
 import { useUserStore } from '@/stores/userStore'
 import { BlackjackState } from '@/types/BlackjackGameState'
 import type { Card } from '@/types/Card'
-import { CHIP_DENOMINATIONS, chipsForAmount } from '@/utils/chipUtil'
+import { chipDenominationsFor, chipsForAmount } from '@/utils/chipUtil'
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil'
 
 const { t } = useI18n()
@@ -38,7 +38,7 @@ const roundId = ref(0)
 
 const pendingBet = computed(() => betChips.value.reduce((sum, value) => sum + value, 0))
 const lastTappedChip = computed(() => betChips.value.length ? betChips.value[betChips.value.length - 1] : null)
-const availableChips = computed(() => [...CHIP_DENOMINATIONS].reverse().filter((value) => value <= userStore.chips))
+const availableChips = computed(() => chipDenominationsFor(userStore.chips))
 const hasInsufficientChips = computed(() => userStore.chips < 1)
 
 // betChips is local component state, so it does not survive a page reload

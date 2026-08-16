@@ -4,13 +4,14 @@
  * explicit `chips` array (denominations, bottom to top) to show the exact
  * composition the player placed; otherwise the stack falls back to a greedy
  * split via chipsForAmount(). The top (last) chip shows its own
- * denomination. `size="sm"` shrinks the stack for use as a compact corner
- * badge (roulette's table cells); default `md` is unchanged for blackjack's
- * bet spot. Generic across games, no bet logic here.
+ * denomination in compact form (500, 1K, 25M). `size="sm"` shrinks the stack
+ * for use as a compact corner badge (roulette's table cells); default `md` is
+ * unchanged for blackjack's bet spot. Generic across games, no bet logic here.
  */
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { chipsForAmount, chipStyle } from '@/utils/chipUtil'
+import { formatNumber } from '@/utils/numberFormatUtil'
 
 const props = withDefaults(defineProps<{
   amount: number
@@ -27,14 +28,14 @@ const chipOffset = computed(() => props.size === 'sm' ? 3 : 5)
 </script>
 
 <template>
-  <div class="chip-stack" :class="`chip-stack--${size}`" role="img" :aria-label="t('game.betAmount', { amount })">
+  <div class="chip-stack" :class="`chip-stack--${size}`" role="img" :aria-label="t('game.betAmount', { amount: formatNumber(amount) })">
     <span
       v-for="(value, index) in stackChips"
       :key="index"
       class="chip-stack-chip"
       :class="{ 'chip-stack-chip--dark': chipStyle(value).dark }"
       :style="{ backgroundColor: chipStyle(value).background, top: `${-index * chipOffset}px`, zIndex: index }">
-      <template v-if="index === stackChips.length - 1">{{ value }}</template>
+      <template v-if="index === stackChips.length - 1">{{ formatNumber(value) }}</template>
     </span>
   </div>
 </template>
@@ -75,15 +76,18 @@ const chipOffset = computed(() => props.size === 'sm' ? 3 : 5)
     0 3px 6px rgba(0, 0, 0, .45);
 }
 
+/* Sized so a four-character face ("500K", "2.5K") clears the dashed ring at
+   this font size; anything shorter has room to spare. */
 .chip-stack--sm {
-  width: 22px;
-  height: 22px;
+  width: 26px;
+  height: 26px;
 }
 
 .chip-stack--sm .chip-stack-chip {
-  width: 22px;
-  height: 22px;
-  font-size: .5rem;
+  width: 26px;
+  height: 26px;
+  font-size: .45rem;
+  letter-spacing: -.02em;
   border-width: 2px;
   box-shadow:
     inset 0 0 0 1px rgba(0, 0, 0, .28),

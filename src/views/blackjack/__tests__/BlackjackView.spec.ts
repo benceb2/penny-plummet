@@ -8,6 +8,7 @@ import ResultBanner from '@/components/game/ResultBanner.vue'
 import { useBlackjackStore } from '@/stores/blackjackStore'
 import { useUserStore } from '@/stores/userStore'
 import { BlackjackState } from '@/types/BlackjackGameState'
+import type { Card } from '@/types/Card'
 import i18n from '@/i18n'
 
 const mountView = () => {
@@ -29,6 +30,8 @@ const mountView = () => {
 
 const chipButton = (wrapper: ReturnType<typeof mountView>['wrapper'], value: number) =>
   wrapper.findAllComponents(ChipButton).find((chip) => chip.props('value') === value)!
+
+const card = (suit: Card['suit'], value: number, display: string): Card => ({ suit, value, display, faceUp: true })
 
 describe('BlackjackView', () => {
   beforeEach(() => {
@@ -57,6 +60,24 @@ describe('BlackjackView', () => {
 
     const values = wrapper.findAllComponents(ChipButton).map((chip) => chip.props('value'))
     expect(values).toEqual([1, 5, 25])
+  })
+
+  it('offers larger denominations with compact labels once the balance runs into the millions', async () => {
+    const { wrapper, gameStore, userStore } = mountView()
+    userStore.chips = 47_900_000
+    await wrapper.vm.$nextTick()
+
+    const chips = wrapper.findAllComponents(ChipButton)
+    expect(chips.map((chip) => chip.props('value'))).toEqual([100_000, 500_000, 1_000_000, 5_000_000, 25_000_000])
+    expect(chips.map((chip) => chip.text())).toEqual(['100K', '500K', '1M', '5M', '25M'])
+    expect(chips[4].attributes('aria-label')).toBe('Bet 25M')
+
+    await chipButton(wrapper, 25_000_000).trigger('click')
+    await chipButton(wrapper, 5_000_000).trigger('click')
+    expect(wrapper.get('.bet-amount').text()).toBe('$30M')
+
+    await wrapper.get('button.btn-primary.cta-btn').trigger('click')
+    expect(gameStore.currentBet).toBe(30_000_000)
   })
 
   it('builds a bet by tapping chips, supports undo, and deals with the accumulated bet', async () => {
@@ -103,13 +124,23 @@ describe('BlackjackView', () => {
     const { wrapper, gameStore, userStore } = mountView()
     userStore.chips = 100
     gameStore.currentBet = 20
-    gameStore.dealCards()
+    // Set the hand up directly rather than dealing from a shuffled deck: a
+    // natural blackjack on either side (roughly one deal in ten) ends the
+    // round on the spot and swaps the tray to "Deal again", which deals a
+    // fresh two-card hand instead of hitting.
+    gameStore.playerHand = [card('hearts', 9, '9'), card('spades', 8, '8')]
+    gameStore.dealerHand = [card('diamonds', 7, '7'), { ...card('clubs', 6, '6'), faceUp: false }]
+    gameStore.deck = [card('clubs', 2, '2')]
+    gameStore.gameState = BlackjackState.PLAYER_TURN
     await wrapper.vm.$nextTick()
 
-    const handSizeBeforeHit = gameStore.playerHand.length
-    await wrapper.get('button.btn-primary.cta-btn').trigger('click')
+    const hitButton = wrapper.get('button.btn-primary.cta-btn')
+    expect(hitButton.text()).toBe('Hit')
+    expect(wrapper.get('button.btn-outline-light.cta-btn').text()).toBe('Stand')
 
-    expect(gameStore.playerHand.length).toBe(handSizeBeforeHit + 1)
+    await hitButton.trigger('click')
+
+    expect(gameStore.playerHand).toHaveLength(3)
   })
 
   it('shows the result banner once the round ends and hides it when dismissed', async () => {

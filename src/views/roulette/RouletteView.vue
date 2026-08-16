@@ -13,7 +13,7 @@ import { useRouletteStore, PAYOUT_MULTIPLIERS } from '@/stores/rouletteStore'
 import { useUserStore } from '@/stores/userStore'
 import { RouletteState } from '@/types/RouletteState'
 import type { BetType } from '@/types/RouletteBet'
-import { CHIP_DENOMINATIONS } from '@/utils/chipUtil'
+import { chipDenominationsFor } from '@/utils/chipUtil'
 import { pocketColor } from '@/utils/rouletteUtil'
 import { formatIntAsCurrency } from '@/utils/numberFormatUtil'
 
@@ -31,16 +31,17 @@ const showResultBanner = ref(false)
 // reload, which is fine: a fresh session simply starts with an empty strip.
 const winningHistory = ref<number[]>([])
 
-const availableChips = computed(() => [...CHIP_DENOMINATIONS].reverse().filter((value) => value <= userStore.chips))
+const availableChips = computed(() => chipDenominationsFor(userStore.chips))
 const hasInsufficientChips = computed(() => userStore.chips < 1)
 
 // The chip picker's current selection: every table tap places this amount.
-// Falls back to the largest still-affordable denomination if a loss makes
-// the previous selection unaffordable.
+// The row slides with the balance, so when the selection drops off it (a
+// loss took the top chip away, or a win pushed the row up past the smallest
+// one) fall back to the nearest denomination still on offer.
 const selectedChip = ref(availableChips.value[0] ?? 1)
 watch(availableChips, (chips) => {
   if (chips.length && !chips.includes(selectedChip.value)) {
-    selectedChip.value = chips[chips.length - 1]
+    selectedChip.value = selectedChip.value < chips[0] ? chips[0] : chips[chips.length - 1]
   }
 })
 

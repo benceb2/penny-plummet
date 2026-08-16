@@ -53,6 +53,42 @@ describe('RouletteView', () => {
     expect(values).toEqual([1, 5, 25])
   })
 
+  it('offers larger denominations once the balance runs into the millions and bets them on the table', async () => {
+    const { wrapper, gameStore, userStore } = mountView()
+    userStore.chips = 47_900_000
+    await wrapper.vm.$nextTick()
+
+    const values = wrapper.findAllComponents(ChipButton).map((chip) => chip.props('value'))
+    expect(values).toEqual([100_000, 500_000, 1_000_000, 5_000_000, 25_000_000])
+
+    await chipButton(wrapper, 5_000_000).trigger('click')
+    await numberCell(wrapper, 17).trigger('click')
+
+    expect(gameStore.currentBets).toEqual([{ type: 'straight', numbers: [17], amount: 5_000_000 }])
+    expect(wrapper.get('.cta-btn--spin').text()).toContain('$5M')
+  })
+
+  it('moves the selection to the nearest chip still on offer when the row slides', async () => {
+    const { wrapper, userStore } = mountView()
+    userStore.chips = 5_000
+    await wrapper.vm.$nextTick()
+
+    const selectedValue = () => wrapper.findAllComponents(ChipButton).find((chip) => chip.props('selected'))!.props('value')
+
+    // The smallest chip is selected by default; a win that pushes the row up
+    // past it lands on the new smallest chip, not the largest.
+    expect(selectedValue()).toBe(25)
+    userStore.chips = 30_000
+    await wrapper.vm.$nextTick()
+    expect(selectedValue()).toBe(100)
+
+    // A loss that takes the selected top chip away falls back to the new top chip.
+    await chipButton(wrapper, 25_000).trigger('click')
+    userStore.chips = 900
+    await wrapper.vm.$nextTick()
+    expect(selectedValue()).toBe(500)
+  })
+
   it('places a straight bet by selecting a chip and tapping a table cell', async () => {
     const { wrapper, gameStore, userStore } = mountView()
     userStore.chips = 1000

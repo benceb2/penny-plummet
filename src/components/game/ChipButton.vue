@@ -8,6 +8,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { chipStyle } from '@/utils/chipUtil'
+import { formatNumber } from '@/utils/numberFormatUtil'
 
 const props = withDefaults(defineProps<{
   value: number
@@ -27,6 +28,9 @@ defineEmits<{
 const { t } = useI18n()
 
 const style = computed(() => chipStyle(props.value))
+// Compact face label (500, 1K, 25M) so large denominations fit the chip; the
+// accessible name uses the same text so it matches what is on screen.
+const label = computed(() => formatNumber(props.value))
 </script>
 
 <template>
@@ -36,10 +40,10 @@ const style = computed(() => chipStyle(props.value))
     :class="[`chip-button--${size}`, { 'chip-button--selected': selected, 'chip-button--dark': style.dark }]"
     :style="{ backgroundColor: style.background }"
     :aria-pressed="selected"
-    :aria-label="t('game.betAmount', { amount: value })"
+    :aria-label="t('game.betAmount', { amount: label })"
     :disabled="disabled"
     @click="$emit('select')">
-    {{ value }}
+    {{ label }}
   </button>
 </template>
 

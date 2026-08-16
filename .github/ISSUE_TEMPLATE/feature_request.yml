@@ -1,0 +1,21 @@
+name: Feature request
+description: Suggest a new game, mechanic or improvement
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like to see?
+      description: Describe the feature or change.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why is it useful?
+      description: What problem does it solve, or what would it make more fun?
+  - type: textarea
+    id: extra
+    attributes:
+      label: Alternatives or extra context
+      description: Other approaches you considered, sketches, links, anything that helps.
